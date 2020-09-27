@@ -31,7 +31,7 @@ Todos têm permissão para copiar e distribuir este documento de licença como o
 
 ================================================================================
 
-Newtonsoft.Json nuget package used in parts of this project:
+MaterialDesignColors and MaterialDesignThemes nuget packages used in parts of this project:
 The MIT License (MIT)
 
 Copyright (c) 2020 James Willock
