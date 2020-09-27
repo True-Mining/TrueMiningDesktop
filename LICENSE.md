@@ -1,6 +1,6 @@
 # TRUE MINING LICENSE
 
-> Version 1.0, Setembro de 2020
+> Version 1.1, Setembro de 2020
 
 > Copyright (C) 2019-2020 True Mining
 
@@ -27,7 +27,11 @@ Todos têm permissão para copiar e distribuir este documento de licença como o
 
 7. Não infrinja as leis do seu país ou jurisdição. O cumprimento das leis e as consequências do descumprimento delas são de total responsabilidade do usuário.
 
-8. Usando o software ou fazendo qualquer coisa especificada neste documento de licença você concorda com os termos dispostos.
+8. A licença pode ser alterada a qualquer momento sem aviso prévio. A aceitação dos novos termos é automática.
+
+9. Entre em contato com o desenvolvedor se quiser negociar algo ou tiver dúvidas sobre a licença.
+
+10. Usando o software ou fazendo qualquer coisa especificada neste documento de licença você concorda com os termos dispostos.
 
 ================================================================================
 
