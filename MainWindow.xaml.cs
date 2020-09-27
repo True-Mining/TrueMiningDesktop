@@ -27,13 +27,6 @@ namespace True_Mining_v4
         {
             User.Settings.SettingsRecover();
 
-            if (!User.Settings.User.LICENSE_read)
-            if (MessageBoxResult.Yes == MessageBox.Show("By using the software in any way you are agreeing to the license located at " + AppDomain.CurrentDomain.BaseDirectory + @"LICENSE.txt."+ "\n\nContinue?", "Accept True Mining License", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
-            {
-                    User.Settings.User.LICENSE_read = true;
-            }
-            else { this.Close(); }
-
             InitializeComponent();
 
             Device.cpu.what(); new Device();
@@ -124,6 +117,19 @@ namespace True_Mining_v4
         {
             if (User.Settings.User.StartHide) { Hide(); }
 
+            if (!User.Settings.User.LICENSE_read)
+            {
+                if (MessageBoxResult.Yes == MessageBox.Show("By using the software in any way you are agreeing to the license located at " + AppDomain.CurrentDomain.BaseDirectory + @"LICENSE.md" + "\n\nContinue?", "Accept True Mining License", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                {
+                    User.Settings.User.LICENSE_read = true;
+                }
+                else { this.Close(); }
+            }
+
+            this.IsEnabled = false;
+            if (User.Settings.User.StartHide) { new Janelas.CheckerPopup("TrueMining", true).ShowDialog(); } else { new Janelas.CheckerPopup("TrueMining").ShowDialog(); }
+            this.IsEnabled = true;
+
             if (User.Settings.User.AutostartMining)
             {
                 if (!String.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
@@ -140,11 +146,9 @@ namespace True_Mining_v4
             nIcon.MouseDown -= notifier_MouseDown;
             nIcon.MouseDown += notifier_MouseDown;
 
-            this.IsEnabled = false;
-            if (User.Settings.User.StartHide) { new Janelas.CheckerPopup("TrueMining", true).ShowDialog(); } else { new Janelas.CheckerPopup("TrueMining").ShowDialog(); }
-            this.IsEnabled = true;
-
             MenuMenu.SelectedIndex = 0; // mostra a tela Home
+
+            User.Settings.SettingsSaver();
         }
 
         private void notifier_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)

@@ -16,11 +16,10 @@ namespace True_Mining_v4.Core
                 return;
             }
 
-            if (User.Settings.User.StartHide) { new Janelas.CheckerPopup("TrueMining"); } else { new Janelas.CheckerPopup("TrueMining").ShowDialog(); }
-
             if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (String.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || String.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || String.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
             {
                 IsMining = true;
+                if (User.Settings.User.StartHide) { new Janelas.CheckerPopup("TrueMining"); } else { new Janelas.CheckerPopup("TrueMining").ShowDialog(); }
                 XMRig.XMRig.CreateConfigFile();
                 XMRig.XMRig.Start();
             }

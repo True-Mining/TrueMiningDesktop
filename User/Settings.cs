@@ -38,6 +38,7 @@ namespace True_Mining_v4.User
                 User.StartHide = up.StartHide;
                 User.Payment_Coin = up.Payment_Coin;
                 User.Payment_Wallet = up.Payment_Wallet;
+                User.LICENSE_read = up.LICENSE_read;
             }
 
             loadingSettings = false;
