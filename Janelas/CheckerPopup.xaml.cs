@@ -152,6 +152,7 @@ namespace True_Mining_v4.Janelas
                 webClient.DownloadFileAsync(new Uri(url), System.IO.Path.GetTempPath() + fileName);
 
                 while (webClient.IsBusy) { Thread.Sleep(1000); }
+
                 if (String.Compare(Tools.FileSHA256(System.IO.Path.GetTempPath() + fileName), sha256, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     if (Tools.IsFileLocked(new FileInfo(path + fileName)))
