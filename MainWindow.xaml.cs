@@ -233,12 +233,12 @@ namespace True_Mining_v4
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            clicado = false;
+            if (clicado) clicado = false;
         }
 
         private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            clicado = false;
+            if (clicado) clicado = false;
         }
     }
 }

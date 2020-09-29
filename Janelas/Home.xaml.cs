@@ -29,7 +29,6 @@ namespace True_Mining_v4.Janelas
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

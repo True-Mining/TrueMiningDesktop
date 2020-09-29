@@ -35,26 +35,24 @@ namespace True_Mining_v4.Server
 
         public void UpdateDashboardInfo()
         {
+            int hoursRound = DateTime.UtcNow.Hour;
 
-                int hoursRound = DateTime.UtcNow.Hour;
+            int minutesRound = DateTime.UtcNow.Minute;
 
-                int minutesRound = DateTime.UtcNow.Minute;
+            if (hoursRound == 0)
+            {
+                hoursRound = 1;
+            }
 
-                if (hoursRound == 0)
-                {
-                    hoursRound = 1;
-                }
+            if (minutesRound == 0)
+            {
+                minutesRound = 1;
+            }
 
-                if (minutesRound == 0)
-                {
-                    minutesRound = 1;
-                }
-
-                int hoursRemaining = 24 - DateTime.UtcNow.Hour;
-                int minutesRemaining = 60 - DateTime.UtcNow.Minute;
+            int hoursRemaining = 24 - DateTime.UtcNow.Hour;
+            int minutesRemaining = 60 - DateTime.UtcNow.Minute;
             if (Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
             {
-
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     if (isUpdatingBalances)
@@ -114,10 +112,10 @@ namespace True_Mining_v4.Server
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     if (isUpdatingBalances)
-                {
-                    Pages.Dashboard.loadingVisualElement.Visibility = Visibility.Visible;
-                    Pages.Dashboard.DashboardContent.IsEnabled = false;
-                }
+                    {
+                        Pages.Dashboard.loadingVisualElement.Visibility = Visibility.Visible;
+                        Pages.Dashboard.DashboardContent.IsEnabled = false;
+                    }
                 });
 
                 while (!Tools.IsConnected()) { Thread.Sleep(5000); }
@@ -132,7 +130,6 @@ namespace True_Mining_v4.Server
                 }
                 catch (Exception e)
                 {
-                    
                 }
 
                 AccumulatedBalance_Points = XMR_nanopool.AvghashratelimitedThisworker.data * hoursRound * 60 * 60 / 52.5 / 1200 / 8;

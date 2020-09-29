@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:True_Mining_v4.Janelas" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="485              " d:DesignWidth="650              " Background="White" Loaded="UserControl_Loaded" >
+             d:DesignHeight="485              " d:DesignWidth="650              " Background="White" Loaded="UserControl_Loaded">
     <Grid>
-        <ProgressBar x:Name="loadingVisualElement"  Style="{StaticResource MaterialDesignCircularProgressBar}" VerticalAlignment="Top" HorizontalAlignment="Center" Height="200" Width="200" Margin="0,142,0,0" Foreground="#992196F3" Value="0" IsIndeterminate="True"/>
+        <ProgressBar x:Name="loadingVisualElement"  Style="{StaticResource MaterialDesignCircularProgressBar}" VerticalAlignment="Top" HorizontalAlignment="Center" Height="200" Width="200" Margin="0,142,0,0" Foreground="#992196F3" Value="0" IsIndeterminate="True" />
         <WrapPanel x:Name="DashboardContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
             <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
                 <materialDesign:PackIcon Width="30" Height="70" Kind="ViewDashboardOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />

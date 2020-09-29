@@ -25,7 +25,7 @@ namespace True_Mining_v4.Janelas
         public string LabelWarning { get { return labelWarning; } set { labelWarning = value; xLabelWarning.Content = value; } }
         public Visibility WarningWrapVisibility { get { return warningWrapVisibility; } set { warningWrapVisibility = value; xWarningWrapVisibility.Visibility = value; } }
 
-        bool firstTimeLoad = false;
+        private bool firstTimeLoad = false;
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {

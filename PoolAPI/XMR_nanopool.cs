@@ -1,6 +1,6 @@
 ﻿namespace True_Mining_v4.PoolAPI
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class Minute
     {
         public double coins { get; set; } = 0;
@@ -86,6 +86,7 @@
     {
         public bool status { get; set; } = true;
         private double datA = 0;
+
         public double data
         {
             get { return datA; }
@@ -93,12 +94,10 @@
         }
     }
 
-        public class XMR_nanopool
-        {
-            public static XMR_nanopool_avghashratelimited AvghashratelimitedAll = new XMR_nanopool_avghashratelimited();
-            public static XMR_nanopool_avghashratelimited AvghashratelimitedThisworker = new XMR_nanopool_avghashratelimited();
-            public static approximated_earnings approximated_earnings = new approximated_earnings();
-        }
-
-    
+    public class XMR_nanopool
+    {
+        public static XMR_nanopool_avghashratelimited AvghashratelimitedAll = new XMR_nanopool_avghashratelimited();
+        public static XMR_nanopool_avghashratelimited AvghashratelimitedThisworker = new XMR_nanopool_avghashratelimited();
+        public static approximated_earnings approximated_earnings = new approximated_earnings();
+    }
 }

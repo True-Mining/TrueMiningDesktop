@@ -18,7 +18,6 @@ namespace True_Mining_v4.Core
 
             if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (String.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || String.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || String.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
             {
-
                 if (User.Settings.User.StartHide) { new Janelas.CheckerPopup("all", true).ShowDialog(); } else { new Janelas.CheckerPopup("all").ShowDialog(); }
                 IsMining = true;
                 XMRig.XMRig.CreateConfigFile();

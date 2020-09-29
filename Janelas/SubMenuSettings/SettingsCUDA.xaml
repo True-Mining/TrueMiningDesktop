@@ -9,7 +9,7 @@
     <Grid>
         <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
             <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
-                <materialDesign:PackIcon Width="30" Height="70" Kind="Settings" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF"/>
+                <materialDesign:PackIcon Width="30" Height="70" Kind="Settings" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                 <Label Content="CUDA Settings (NVIDIA GPU)" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
             </WrapPanel>
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" Foreground="DarkGray" Background="#FF3A3A3A" />

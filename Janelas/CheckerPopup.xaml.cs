@@ -159,7 +159,11 @@ namespace True_Mining_v4.Janelas
                     {
                         File.Move(path + fileName, path + fileName + ".old", true);
                     }
-                    File.Move(System.IO.Path.GetTempPath() + fileName, path + fileName, true);
+                    try
+                    {
+                        File.Move(System.IO.Path.GetTempPath() + fileName, path + fileName, true);
+                    }
+                    catch { File.Move(path + fileName, path + fileName + ".old", true); File.Move(System.IO.Path.GetTempPath() + fileName, path + fileName, true); }
                 }
                 if (!File.Exists(path + fileName) || Tools.FileSHA256(path + fileName) != sha256) { /* mensagem de erro; Notify.Invoke(null, null);*/ }
             }

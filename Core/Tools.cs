@@ -7,7 +7,6 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Windows;
 
 namespace True_Mining_v4.Core
 {
