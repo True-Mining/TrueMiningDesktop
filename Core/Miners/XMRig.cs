@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -41,6 +42,7 @@ namespace True_Mining_v4.Core.XMRig
             }
             catch (Exception)
             {
+                Miner.IsMining = false;
                 MessageBox.Show("XMRig can't start. Try add True Mining's folder in Antivirus exclusions");
             }
         }
