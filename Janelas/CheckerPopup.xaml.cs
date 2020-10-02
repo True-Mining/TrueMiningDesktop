@@ -57,15 +57,20 @@ namespace True_Mining_v4.Janelas
             while (!Tools.IsConnected()) { Thread.Sleep(2000); }
             try
             {
-                string[] arquivos = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
-                foreach (var arq in arquivos)
+                string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
+                foreach (var arq in arquivosOdl)
+                {
+                    if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                }
+                string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
+                foreach (var arq in arquivosDl)
                 {
                     if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
                 }
 
                 SoftwareParameters.Update(uri);
 
-                if (toCheck == "all" || toCheck == "TrueMining")
+                if (toCheck == "all" && toCheck == "TrueMining")
                 {
                     FileName = "Checking True Mining Version";
                     Thread.Sleep(200);
@@ -149,11 +154,11 @@ namespace True_Mining_v4.Janelas
 
                 webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
 
-                webClient.DownloadFileAsync(new Uri(url), System.IO.Path.GetTempPath() + fileName);
+                webClient.DownloadFileAsync(new Uri(url), path + fileName + ".dl");
 
                 while (webClient.IsBusy) { Thread.Sleep(1000); }
 
-                if (String.Compare(Tools.FileSHA256(System.IO.Path.GetTempPath() + fileName), sha256, StringComparison.OrdinalIgnoreCase) == 0)
+                if (String.Compare(Tools.FileSHA256(path + fileName + ".dl"), sha256, StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     if (Tools.IsFileLocked(new FileInfo(path + fileName)))
                     {
@@ -161,9 +166,9 @@ namespace True_Mining_v4.Janelas
                     }
                     try
                     {
-                        File.Move(System.IO.Path.GetTempPath() + fileName, path + fileName, true);
+                        File.Move(path + fileName + ".dl", path + fileName, true);
                     }
-                    catch { File.Move(path + fileName, path + fileName + ".old", true); File.Move(System.IO.Path.GetTempPath() + fileName, path + fileName, true); }
+                    catch { File.Move(path + fileName, path + fileName + ".old", true); File.Move(path + fileName + ".dl", path + fileName, true); }
                 }
                 if (!File.Exists(path + fileName) || Tools.FileSHA256(path + fileName) != sha256) { /* mensagem de erro; Notify.Invoke(null, null);*/ }
             }

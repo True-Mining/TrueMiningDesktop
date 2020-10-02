@@ -7,24 +7,39 @@
              mc:Ignorable="d"
              d:DesignHeight="485              " d:DesignWidth="650              " Background="White" Loaded="UserControl_Loaded">
     <Grid>
-        <ProgressBar x:Name="loadingVisualElement"  Style="{StaticResource MaterialDesignCircularProgressBar}" VerticalAlignment="Top" HorizontalAlignment="Center" Height="200" Width="200" Margin="0,142,0,0" Foreground="#992196F3" Value="0" IsIndeterminate="True" />
+        <ProgressBar x:Name="loadingVisualElement"  Style="{StaticResource MaterialDesignCircularProgressBar}" VerticalAlignment="Top" HorizontalAlignment="Center" Height="200" Width="200" Margin="0,142,0,0" Foreground="#992196F3" Value="0" IsIndeterminate="True" Visibility="Hidden" />
         <WrapPanel x:Name="DashboardContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
             <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
                 <materialDesign:PackIcon Width="30" Height="70" Kind="ViewDashboardOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                 <Label Content="DashBoard" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
             </WrapPanel>
-            <WrapPanel Margin="20,10,20,10">
+            <WrapPanel Margin="35,9,20,10">
                 <Label Content="Next Payout in " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
                 <Label x:Name="xLabelNextPayout" Content="{Binding LabelNextPayout}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
             </WrapPanel>
-            <WrapPanel Margin="20,10,20,10">
+            <WrapPanel Margin="35,10,20,10">
                 <Label Content="Accumulated balance " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
                 <Label x:Name="xLabelAccumulatedBalance" Content="{Binding LabelAccumulatedBalance}" FontWeight="Bold" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
             </WrapPanel>
-            <WrapPanel x:Name="xWarningWrapVisibility" Margin="20,10,20,10" Orientation="Vertical" Visibility="{Binding WarningWrapVisibility}">
+            <WrapPanel x:Name="xWarningWrapVisibility" Margin="35,10,20,10" Orientation="Vertical" Visibility="{Binding WarningWrapVisibility}">
                 <Label Content="Warnings: " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
                 <Label x:Name="xLabelWarning" Content="{Binding LabelWarning}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
             </WrapPanel>
+
+        </WrapPanel>
+        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,2,0,50">
+            <Button Height="51" Width="198" Margin="20,0,20,0">
+                <WrapPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Width="40" Height="40" Kind="CalculatorVariant" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Grid.IsSharedSizeScope="True" Margin="0,0,5,0" />
+                    <Label Content="Calculator" FontWeight="Bold" FontFamily="Gadugi" FontSize="13" VerticalAlignment="Center"/>
+                </WrapPanel>
+            </Button>
+            <Button Height="51" Width="198" Margin="20,0,20,0">
+                <WrapPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Width="40" Height="40" Kind="ChartFinance" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Grid.IsSharedSizeScope="True" Margin="0,0,5,0" />
+                    <Label Content="Exchange Rates" FontWeight="Bold" FontFamily="Gadugi" FontSize="13" VerticalAlignment="Center"/>
+                </WrapPanel>
+            </Button>
         </WrapPanel>
     </Grid>
 </UserControl>
