@@ -203,7 +203,7 @@ namespace True_Mining_v4.Core
         public static void KillMiners()
         {
             Process mataminers = new Process();
-            mataminers.StartInfo = new ProcessStartInfo("taskkill", "/F /IM xmrig.exe /IM xmrig-gcc-win64.exe /IM xmrig-msvc-win64.exe");
+            mataminers.StartInfo = new ProcessStartInfo("taskkill", "/F /IM xmrig.exe /IM xmrig-gcc.exe /IM xmrig-msvc.exe");
             mataminers.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             mataminers.Start();
             mataminers.WaitForExit();

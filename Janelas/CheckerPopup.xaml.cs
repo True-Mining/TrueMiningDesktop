@@ -52,7 +52,7 @@ namespace True_Mining_v4.Janelas
             ProgressBar_IsIndeterminate = true;
             FileName = "Initializing";
             StatusTitle = "Checking Instalation";
-            Thread.Sleep(100);
+            Thread.Sleep(10);
 
             while (!Tools.IsConnected()) { Thread.Sleep(2000); }
             try
@@ -70,10 +70,10 @@ namespace True_Mining_v4.Janelas
 
                 SoftwareParameters.Update(uri);
 
-                if (toCheck == "all" && toCheck == "TrueMining")
+                if (toCheck == "all" || toCheck == "TrueMining")
                 {
                     FileName = "Checking True Mining Version";
-                    Thread.Sleep(200);
+                    Thread.Sleep(20);
 
                     var versionRunning = new Version(Convert.ToString(typeof(String).Assembly.GetName().Version));
                     var versionUpdate = new Version(SoftwareParameters.ServerConfig.TrueMiningFiles.assemblyVersion);
@@ -83,7 +83,7 @@ namespace True_Mining_v4.Janelas
                         foreach (FileDetails file in SoftwareParameters.ServerConfig.TrueMiningFiles.files)
                         {
                             FileName = "Checking Files";
-                            Thread.Sleep(200);
+                            Thread.Sleep(20);
 
                             file.path = Tools.FormatPath(file.path);
 
@@ -115,7 +115,7 @@ namespace True_Mining_v4.Janelas
                     foreach (FileDetails file in SoftwareParameters.ServerConfig.ThirdPartyBinaries.files)
                     {
                         FileName = "Checking Files";
-                        Thread.Sleep(200);
+                        Thread.Sleep(20);
 
                         file.path = Tools.FormatPath(file.path);
                         if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
@@ -128,7 +128,7 @@ namespace True_Mining_v4.Janelas
             catch { }
 
             FileName = "Complete";
-            Thread.Sleep(500);
+            Thread.Sleep(100);
 
             Dispatcher.BeginInvoke((Action)(() => { this.Close(); }));
         }
@@ -137,7 +137,7 @@ namespace True_Mining_v4.Janelas
         {
             FileName = fileName;
             StatusTitle = "Downloading necessary files";
-            Thread.Sleep(50);
+            Thread.Sleep(20);
 
             ProgressBar_IsIndeterminate = true;
 
@@ -156,7 +156,7 @@ namespace True_Mining_v4.Janelas
 
                 webClient.DownloadFileAsync(new Uri(url), path + fileName + ".dl");
 
-                while (webClient.IsBusy) { Thread.Sleep(1000); }
+                while (webClient.IsBusy) { Thread.Sleep(100); }
 
                 if (String.Compare(Tools.FileSHA256(path + fileName + ".dl"), sha256, StringComparison.OrdinalIgnoreCase) == 0)
                 {

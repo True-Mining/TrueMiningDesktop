@@ -101,6 +101,9 @@ namespace True_Mining_v4.Server
         public double AccumulatedBalance_Points = 0;
         public double AccumulatedBalance_Coins = 0;
 
+        public double conversionHashrateToPoints;
+        public double exchangeRatePontosToMiningCoin;
+
         private static DateTime lastUpdated = DateTime.Now.AddMinutes(-10);
 
         public void UpdateBalances()
@@ -133,6 +136,7 @@ namespace True_Mining_v4.Server
                 }
 
                 AccumulatedBalance_Points = XMR_nanopool.AvghashratelimitedThisworker.data * hoursRound * 60 * 60 / 52.5 / 1200 / 8;
+                conversionHashrateToPoints = 24 * 60 * 60 / 52.5 / 1200 / 8;
 
                 double totalXMRmineradoTrueMining = XMR_nanopool.approximated_earnings.data.hour.coins * PoolAPI.XMR_nanopool.AvghashratelimitedAll.data * hoursRound * 60 * 60 / 52.5 / 1200 / 8;
 
@@ -172,7 +176,7 @@ namespace True_Mining_v4.Server
                     }
                 }
 
-                double exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * XMRfinalPrice / COINfinalPrice * 4;
+                exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * XMRfinalPrice / COINfinalPrice * 4;
 
                 AccumulatedBalance_Coins = Math.Round((exchangeRatePontosToMiningCoin * AccumulatedBalance_Points * (100 - 3) / 100), 3); //fee
 

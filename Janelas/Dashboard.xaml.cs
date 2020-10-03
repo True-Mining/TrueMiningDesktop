@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using True_Mining_v4.Janelas.Popups;
 using True_Mining_v4.Server;
 
 namespace True_Mining_v4.Janelas
@@ -27,15 +28,27 @@ namespace True_Mining_v4.Janelas
 
         private bool firstTimeLoad = false;
 
+        Saldo saldo;
+
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             if (!firstTimeLoad)
             {
                 loadingVisualElement.Visibility = Visibility.Visible;
                 DashboardContent.IsEnabled = false;
-                Saldo saldo = new Saldo();
+                saldo = new Saldo();
                 firstTimeLoad = true;
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            new Calculator(saldo.conversionHashrateToPoints, saldo.exchangeRatePontosToMiningCoin).ShowDialog();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Em construção");
         }
     }
 }
