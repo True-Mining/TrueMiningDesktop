@@ -28,7 +28,7 @@ namespace True_Mining_v4.Janelas
 
         private bool firstTimeLoad = false;
 
-        Saldo saldo;
+        private Saldo saldo;
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -41,14 +41,14 @@ namespace True_Mining_v4.Janelas
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Calculator_Popup(object sender, RoutedEventArgs e)
         {
             new Calculator(saldo.conversionHashrateToPoints, saldo.exchangeRatePontosToMiningCoin).ShowDialog();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_ExchangeRates_Popup(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Em construção");
+            new ExchangeRates(saldo.exchangeRatePontosToMiningCoin).ShowDialog();
         }
     }
 }

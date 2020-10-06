@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
-    <AssemblyVersion>4.0.10.03</AssemblyVersion>
-    <FileVersion>4.0.10.03</FileVersion>
+    <AssemblyVersion>4.0.10.06</AssemblyVersion>
+    <FileVersion>4.0.10.06</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <StartupObject>True_Mining_v4.App</StartupObject>
     <AssemblyName>True Mining v4 BETA</AssemblyName>
@@ -52,6 +52,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Janelas\Popups\ExhangeRates.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="UserControl3.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -64,6 +67,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Janelas\Popups\ExhangeRates.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="UserControl3.xaml">
       <SubType>Designer</SubType>
     </Page>

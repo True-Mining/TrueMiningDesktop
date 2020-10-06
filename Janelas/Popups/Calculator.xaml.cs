@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using True_Mining_v4.Core;
 
@@ -11,10 +9,10 @@ namespace True_Mining_v4.Janelas.Popups
     /// </summary>
     public partial class Calculator : Window
     {
-        double HasrateToPoints_day;
-        double PointsToCoins;
+        private double HasrateToPoints_day;
+        private double PointsToCoins;
 
-            System.Timers.Timer timerUpdate = new System.Timers.Timer(2000);
+        private System.Timers.Timer timerUpdate = new System.Timers.Timer(2000);
 
         public Calculator(double hasrateToPoints_day, double pointsToCoins)
         {
@@ -26,7 +24,7 @@ namespace True_Mining_v4.Janelas.Popups
             timerUpdate.Elapsed += TimerUpdate_Elapsed;
             timerUpdate.AutoReset = false;
             timerUpdate.Start();
-            
+
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
                 loadingVisualElement.Visibility = Visibility.Visible;

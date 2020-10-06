@@ -25,19 +25,18 @@
                 <Label Content="Warnings: " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
                 <Label x:Name="xLabelWarning" Content="{Binding LabelWarning}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
             </WrapPanel>
-
         </WrapPanel>
         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,25">
-            <Button Height="40" Width="190" Margin="20,0,20,0" Click="Button_Click">
+            <Button Height="40" Width="190" Margin="20,0,20,0" Click="Button_Calculator_Popup">
                 <WrapPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Width="30" Height="30" Kind="CalculatorVariant" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Grid.IsSharedSizeScope="True" Margin="0,0,5,0" />
-                    <Label Content="Calculator" FontWeight="Bold" FontFamily="Gadugi" FontSize="12" VerticalAlignment="Center"/>
+                    <Label Content="Calculator" FontWeight="Bold" FontFamily="Gadugi" FontSize="12" VerticalAlignment="Center" />
                 </WrapPanel>
             </Button>
-            <Button Height="40" Width="190" Margin="20,0,20,0" Click="Button_Click_1">
+            <Button Height="40" Width="190" Margin="20,0,20,0" Click="Button_ExchangeRates_Popup">
                 <WrapPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Width="30" Height="30" Kind="ChartFinance" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Grid.IsSharedSizeScope="True" Margin="0,0,5,0" />
-                    <Label Content="Exchange Rates" FontWeight="Bold" FontFamily="Gadugi" FontSize="12" VerticalAlignment="Center"/>
+                    <Label Content="Exchange Rates" FontWeight="Bold" FontFamily="Gadugi" FontSize="12" VerticalAlignment="Center" />
                 </WrapPanel>
             </Button>
         </WrapPanel>
