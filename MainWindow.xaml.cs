@@ -86,18 +86,21 @@ namespace True_Mining_v4
                 SwitchScreen(((UserControlItemMenu)((ListView)sender).SelectedItem).Screen);
             }
 
-            bool expandItem = ((UserControlItemMenu)((ListView)sender).SelectedItem).ExpanderMenu.IsExpanded ? false : true;
+            bool expandItem = ((UserControlItemMenu)((ListView)sender).SelectedItem).ExpanderMenu.IsExpanded && ((UserControlItemMenu)((ListView)sender).SelectedItem) == ((UserControlItemMenu)((ListView)MenuMenu).SelectedItem) ? false : true;
 
             for (int item = ((ListView)sender).Items.Count - 1; 0 <= item; item--)
             {
-                ((UserControlItemMenu)((ListView)sender).Items[item]).ExpanderMenu.IsExpanded = false;
+                if (((UserControlItemMenu)((ListView)sender).Items[item]) == ((UserControlItemMenu)((ListView)sender).SelectedItem))
+                {
+                    ((UserControlItemMenu)((ListView)sender).Items[item]).ExpanderMenu.IsExpanded = true;
+                }
+                else
+                {
+                    ((UserControlItemMenu)((ListView)sender).Items[item]).ExpanderMenu.IsExpanded = false;
+                }
             }
 
-                ((UserControlItemMenu)((ListView)sender).SelectedItem).ExpanderMenu.IsExpanded = expandItem;
-
-            User.Settings.SettingsSaver();
-
-            MenuMenu.ScrollIntoView(MenuMenu.Items[0]); //scroll to top
+            Task.Run(() => User.Settings.SettingsSaver());
         }
 
         private void Menu_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -110,7 +113,7 @@ namespace True_Mining_v4
 
         private void WrapPanel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            User.Settings.SettingsSaver();
+            Task.Run(() => User.Settings.SettingsSaver());
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -148,7 +151,7 @@ namespace True_Mining_v4
 
             MenuMenu.SelectedIndex = 0; // mostra a tela Home
 
-            User.Settings.SettingsSaver();
+            Task.Run(() => User.Settings.SettingsSaver());
         }
 
         private void notifier_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
