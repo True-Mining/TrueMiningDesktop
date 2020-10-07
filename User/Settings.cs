@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using True_Mining_v4.Core;
 
@@ -13,12 +14,19 @@ namespace True_Mining_v4.User
         public static UserPreferences User = new UserPreferences();
 
         public static bool loadingSettings = true;
+        public static bool savingSettings = true;
 
         public static void SettingsSaver()
         {
-            //    System.Windows.MessageBox.Show("saving settings");
+            while (savingSettings) { Thread.Sleep(1000); }
+            Thread.Sleep(new Random().Next(1, 7777));
+
+            savingSettings = true;
+
             File.WriteAllText("configsDevices.txt", JsonConvert.SerializeObject(Device, Formatting.Indented));
             File.WriteAllText("configsUser.txt", JsonConvert.SerializeObject(User, Formatting.Indented));
+
+            savingSettings = false;
         }
 
         public static void SettingsRecover()
