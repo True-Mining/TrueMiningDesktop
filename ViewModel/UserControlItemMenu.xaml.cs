@@ -31,5 +31,11 @@ namespace True_Mining_v4.ViewModel
         }
 
         public UserControl Screen { get; private set; }
+
+        private void UserControl_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (ListViewMenu.SelectedIndex >= 0)
+                _context.SwitchScreen(((SubItem)((ListView)this.ListViewMenu).SelectedItem).Screen);
+        }
     }
 }
