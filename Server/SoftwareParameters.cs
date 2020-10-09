@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 
-namespace True_Mining_v4.Server
+namespace True_Mining_Desktop.Server
 {
     public class Pool
     {

@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using True_Mining_v4.Core;
+using True_Mining_Desktop.Core;
 
-namespace True_Mining_v4.Janelas
+namespace True_Mining_Desktop.Janelas
 {
     /// <summary>
     /// Interação lógica para Home.xam

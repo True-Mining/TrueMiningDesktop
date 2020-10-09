@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Timers;
-using True_Mining_v4.Core;
+using True_Mining_Desktop.Core;
 
-namespace True_Mining_v4.User
+namespace True_Mining_Desktop.User
 {
     public static class Settings
     {

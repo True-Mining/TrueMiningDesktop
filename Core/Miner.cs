@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
-using True_Mining_v4.Janelas;
+using True_Mining_Desktop.Janelas;
 
-namespace True_Mining_v4.Core
+namespace True_Mining_Desktop.Core
 {
     public static class Miner
     {

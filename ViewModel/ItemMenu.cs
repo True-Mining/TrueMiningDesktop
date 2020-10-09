@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace True_Mining_v4.ViewModel
+namespace True_Mining_Desktop.ViewModel
 {
     public class ItemMenu
     {

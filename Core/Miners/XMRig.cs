@@ -7,9 +7,9 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Windows;
-using True_Mining_v4.User;
+using True_Mining_Desktop.User;
 
-namespace True_Mining_v4.Core.XMRig
+namespace True_Mining_Desktop.Core.XMRig
 {
     public static class XMRig
     {

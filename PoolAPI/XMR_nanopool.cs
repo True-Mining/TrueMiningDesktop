@@ -1,6 +1,5 @@
-﻿namespace True_Mining_v4.PoolAPI
+﻿namespace True_Mining_Desktop.PoolAPI
 {
-    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class Minute
     {
         public double coins { get; set; } = 0;

@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:True_Mining_v4.Janelas"
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="True_Mining_v4.Janelas.Home"
+             xmlns:local="clr-namespace:True_Mining_Desktop.Janelas"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="True_Mining_Desktop.Janelas.Home"
              mc:Ignorable="d"
              d:DesignHeight="485              " d:DesignWidth="650              " Background="White">
     <Grid>

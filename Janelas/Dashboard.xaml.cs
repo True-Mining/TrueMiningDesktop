@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using True_Mining_v4.Janelas.Popups;
-using True_Mining_v4.Server;
+using True_Mining_Desktop.Janelas.Popups;
+using True_Mining_Desktop.Server;
 
-namespace True_Mining_v4.Janelas
+namespace True_Mining_Desktop.Janelas
 {
     /// <summary>
     /// Interação lógica para Dashboard.xam

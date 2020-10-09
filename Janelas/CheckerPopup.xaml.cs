@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using True_Mining_v4.Core;
-using True_Mining_v4.Server;
+using True_Mining_Desktop.Core;
+using True_Mining_Desktop.Server;
 
-namespace True_Mining_v4.Janelas
+namespace True_Mining_Desktop.Janelas
 {
     /// <summary>
     /// Lógica interna para UpdateWindow.xaml
@@ -25,7 +25,7 @@ namespace True_Mining_v4.Janelas
             this.BorderBrush.Opacity = 0;
             this.ShowInTaskbar = false;
 
-            ThreadChecker = new Thread(() => Checker(new Uri("https://truemining.online/v4.json"), toCheck));
+            ThreadChecker = new Thread(() => Checker(new Uri("https://truemining.online/TrueMiningDesktop.json"), toCheck));
             ThreadChecker.Start();
         }
 
@@ -88,23 +88,17 @@ namespace True_Mining_v4.Janelas
                     FileName = "Checking True Mining Version";
                     Thread.Sleep(20);
 
-                    var versionRunning = new Version(Convert.ToString(typeof(String).Assembly.GetName().Version));
-                    var versionUpdate = new Version(SoftwareParameters.ServerConfig.TrueMiningFiles.assemblyVersion);
-
-                    if (versionRunning.CompareTo(versionUpdate) < 0)
+                    foreach (FileDetails file in SoftwareParameters.ServerConfig.TrueMiningFiles.files)
                     {
-                        foreach (FileDetails file in SoftwareParameters.ServerConfig.TrueMiningFiles.files)
+                        FileName = "Checking Files";
+                        Thread.Sleep(20);
+
+                        file.path = Tools.FormatPath(file.path);
+
+                        if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
                         {
-                            FileName = "Checking Files";
-                            Thread.Sleep(20);
-
-                            file.path = Tools.FormatPath(file.path);
-
-                            if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
-                            {
-                                Downloader(file.dlLink, file.path, file.fileName, file.sha256);
-                                needRestart = true;
-                            }
+                            Downloader(file.dlLink, file.path, file.fileName, file.sha256);
+                            needRestart = true;
                         }
                     }
 
@@ -115,6 +109,7 @@ namespace True_Mining_v4.Janelas
                         StatusTitle = "Complete update, restart required";
                         User.Settings.SettingsSaver(true);
                         Thread.Sleep(3000);
+                        Tape = false;
 
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {

@@ -3,15 +3,15 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>True_Mining_v4</RootNamespace>
+    <RootNamespace>True_Mining_Desktop</RootNamespace>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
     <AssemblyVersion>4.0.10.09</AssemblyVersion>
     <FileVersion>4.0.10.09</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <StartupObject>True_Mining_v4.App</StartupObject>
-    <AssemblyName>True Mining v4 BETA</AssemblyName>
+    <StartupObject>True_Mining_Desktop.App</StartupObject>
+    <AssemblyName>True Mining Desktop</AssemblyName>
     <Nullable></Nullable>
     <Company>True Mining</Company>
     <Authors>Matheus Bach</Authors>
@@ -20,24 +20,19 @@
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <Description>True Mining Desktop</Description>
-    <Version>4.0.10.03 - BETA</Version>
+    <Version>rolling release </Version>
     <RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Core\ServerCall.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="logo.png" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <None Include="LICENSE.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="logo.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 
@@ -55,14 +50,11 @@
     <Compile Update="Janelas\Popups\ExhangeRates.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="UserControl3.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Resources\icone.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
@@ -70,9 +62,5 @@
     <Page Update="Janelas\Popups\ExhangeRates.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="UserControl3.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
-
 </Project>

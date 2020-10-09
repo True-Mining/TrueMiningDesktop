@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
-using True_Mining_v4.Core;
+using True_Mining_Desktop.Core;
 
-namespace True_Mining_v4.Janelas.Popups
+namespace True_Mining_Desktop.Janelas.Popups
 {
     /// <summary>
     /// Lógica interna para Calculator.xaml

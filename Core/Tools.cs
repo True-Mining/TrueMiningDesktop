@@ -7,9 +7,9 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using True_Mining_v4.Janelas;
+using True_Mining_Desktop.Janelas;
 
-namespace True_Mining_v4.Core
+namespace True_Mining_Desktop.Core
 {
     public class Tools
     {
@@ -168,7 +168,6 @@ namespace True_Mining_v4.Core
             }
         }
 
-        // Import SetThreadExecutionState Win32 API and necessary flags
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         public static extern uint SetThreadExecutionState(uint esFlags);
 
@@ -219,107 +218,5 @@ namespace True_Mining_v4.Core
 
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr windowIdentifier, int nCmdShow);
-
-        /*
-        private void ChecarArquiteturaSO()
-        {
-            if (Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") == "x86")
-            {
-                arquiteturaCPU = "win32";
-                nvidiaMiningCheck.CheckState = CheckState.Unchecked;
-                amdMiningCheck.CheckState = CheckState.Unchecked;
-                nvidiaMiningCheck.Enabled = false;
-                amdMiningCheck.Enabled = false;
-
-                MessageBox.Show("True Mining não oferece suporte a sistemas operacionais de 32 bits. Caso você tenha um processador 64 bits, instale um sistema operacional de 64 bits. Caso seu processador seja 32 bits, o True Mining é simplesmente incompatível com seu computador. O software será fechado", "Problema detectado", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
-            else if (Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") == "AMD64")
-            {
-                arquiteturaCPU = "win64";
-                nvidiaMiningCheck.Enabled = true;
-                amdMiningCheck.Enabled = true;
-            }
-            else if (Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE") == "AI64")
-            {
-                arquiteturaCPU = "win64";
-                nvidiaMiningCheck.Enabled = true;
-                amdMiningCheck.Enabled = true;
-            }
-            else
-            {
-                nvidiaMiningCheck.Enabled = true;
-                amdMiningCheck.Enabled = true;
-            }
-        }
-
-        private void ChecarIntegridade()
-        {
-            Dictionary<string, FileInfo> arquivosMiner = new Dictionary<string, FileInfo>
-            {
-               { "xmrig00", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\bin.b64") },
-               { "xmrig01", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\nvrtc-builtins64_101.dll") },
-               { "xmrig02", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\nvrtc-builtins64_100.dll") },
-               { "xmrig03", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\nvrtc-builtins64_90.dll") },
-               { "xmrig04", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\nvrtc64_101_0.dll") },
-               { "xmrig05", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\nvrtc64_100_0.dll") },
-               { "xmrig06", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\nvrtc64_90.dll") },
-               { "xmrig07", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\WinRing0x64.sys") },
-               { "xmrig08", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\xmrig-cuda_101.dll") },
-               { "xmrig09", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\xmrig-cuda_100.dll") },
-               { "xmrig10", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\xmrig-cuda_90.dll") },
-               { "xmrig11", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\xmrig-msvc-win64.exe") },
-               { "xmrig12", new FileInfo(AppDomain.CurrentDomain.BaseDirectory + @"\bin\xmrig\xmrig-gcc-win64.exe") }
-            };
-
-            bool erroEncontrado = false;
-
-            foreach (KeyValuePair<string, FileInfo> arquivo in arquivosMiner)
-            {
-                if (!File.Exists(arquivo.Value.ToString())) { erroEncontrado = true; }
-            }
-
-            if (!erroEncontrado && !HashIsOK())
-            {
-                erroEncontrado = true;
-            }
-
-            Mataminers(true);
-
-            while (atualizandoTM) { Esperar(10000); }
-
-            if (erroEncontrado && !atualizandoTM) { Corrigir(); }
-        }
-
-        private bool HashIsOK()
-        {
-            if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\bin\bin.b64"))
-            {
-                var arquivo = AppDomain.CurrentDomain.BaseDirectory + @"\bin\bin.b64";
-                var hashBin = CalcularHash(arquivo);
-                var hashBinString = BitConverter.ToString(hashBin).Replace("-", "").ToUpper();
-
-                if (dynamicParametros.bin64.sha256 == hashBinString.ToUpper())
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        static Thread Esperar(int time)
-        {
-            Thread.Sleep(time);
-            return null;
-        }
-    }
-    */
     }
 }

@@ -1,9 +1,9 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System;
-using True_Mining_v4.Core;
-using True_Mining_v4.ViewModel;
+using True_Mining_Desktop.Core;
+using True_Mining_Desktop.ViewModel;
 
-namespace True_Mining_v4.Janelas
+namespace True_Mining_Desktop.Janelas
 {
     public class DeviceInfo : OverviewDeviceSimplified
     {

@@ -4,11 +4,11 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using True_Mining_v4.Core;
-using True_Mining_v4.Janelas;
-using True_Mining_v4.PoolAPI;
+using True_Mining_Desktop.Core;
+using True_Mining_Desktop.Janelas;
+using True_Mining_Desktop.PoolAPI;
 
-namespace True_Mining_v4.Server
+namespace True_Mining_Desktop.Server
 {
     public class Saldo
     {
@@ -18,7 +18,7 @@ namespace True_Mining_v4.Server
         {
             Task.Run(() =>
             {
-                Server.SoftwareParameters.Update(new Uri("https://truemining.online/v4.json"));
+                Server.SoftwareParameters.Update(new Uri("https://truemining.online/TrueMiningDesktop.json"));
 
                 while (User.Settings.loadingSettings) { Thread.Sleep(500); }
 
