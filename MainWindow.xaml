@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:True_Mining_v4"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="True_Mining_v4.MainWindow"
         mc:Ignorable="d"
-        Title="True Mining Desktop" Height="500" Width="950" FontSize="10" WindowStartupLocation="CenterScreen" HorizontalContentAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeMode="CanMinimize" ScrollViewer.VerticalScrollBarVisibility="Disabled" WindowStyle="None" Icon="/logo.png" Loaded="Window_Loaded" Closing="Window_Closing" BorderThickness="1,1,1,1" BorderBrush="#FF3E3E3E" StateChanged="Window_StateChanged" IsVisibleChanged="Window_IsVisibleChanged">
+        Title="True Mining Desktop" Height="500" Width="950" FontSize="10" WindowStartupLocation="CenterScreen" HorizontalContentAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeMode="CanMinimize" ScrollViewer.VerticalScrollBarVisibility="Disabled" WindowStyle="None" Icon="/logo.png" Loaded="Window_Loaded" Closing="Window_Closing" BorderThickness="1,1,1,1" BorderBrush="#FF3E3E3E" StateChanged="Window_StateChanged" IsVisibleChanged="Window_IsVisibleChanged" LostMouseCapture="Window_LostMouseCapture">
     <Window.Background>
         <SolidColorBrush Color="White" />
     </Window.Background>
     <Grid Background="White" HorizontalAlignment="Center" Width="950">
 
-        <Grid x:Name="AllWindow" Background="White" Width="950" MouseDown="Down" MouseMove="Move" MouseUp="Up">
+        <Grid x:Name="AllWindow" Background="White" Width="950" PreviewMouseDown="Down" MouseMove="Move" MouseUp="Up">
             <StackPanel Width="300" HorizontalAlignment="Left" Background="#FF8086FF" MouseUp="Up" MouseMove="Move" MouseDown="Down">
                 <Canvas Height="90" Background="Transparent">
                     <Image Height="90" Width="65" Canvas.Left="10" Canvas.Top="0" Source="/logo.png" />

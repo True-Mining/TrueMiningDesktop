@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using True_Mining_v4.Core;
+using True_Mining_v4.Janelas;
 using True_Mining_v4.ViewModel;
 using Application = System.Windows.Application;
 using ListView = System.Windows.Controls.ListView;
@@ -183,7 +184,7 @@ namespace True_Mining_v4
                 ContextMenu menu = (ContextMenu)this.FindResource("NotifierContextMenu");
                 menu.IsOpen = true;
                 menu.StaysOpen = true;
-                new Task(() => { Thread.Sleep(5000); Application.Current.Dispatcher.Invoke((Action)delegate { menu.IsOpen = false; }); }).Start();
+                new Task(() => { Thread.Sleep(5000); Dispatcher.BeginInvoke((Action)(() => { menu.IsOpen = false; })); }).Start();
             }
         }
 
@@ -211,10 +212,22 @@ namespace True_Mining_v4
                 if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
                 {
                     Miner.StopMiner();
-                    User.Settings.timerSaveSettings.Stop();
                 }
-                else { e.Cancel = true; }
+                else { e.Cancel = true; return; }
             }
+
+            if (MessageBoxResult.Yes == MessageBox.Show("True Mining is checking and updating software files. Closing True Mining, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+            {
+            }
+            else { e.Cancel = true; return; }
+
+            Core.Miner.EmergencyExit = true;
+            User.Settings.SettingsSaver(true);
+            Application.Current.Shutdown();
+
+            Tools.CheckerPopup.Close();
+            nIcon.Visible = false;
+
         }
 
         public static bool clicado = false;
@@ -223,6 +236,7 @@ namespace True_Mining_v4
         public void Down(object sender, MouseButtonEventArgs e)
         {
             clicado = true;
+
             this.lm.X = System.Windows.Forms.Control.MousePosition.X;
             this.lm.Y = System.Windows.Forms.Control.MousePosition.Y;
             this.lm.X = Convert.ToInt16(this.Left) - this.lm.X;
@@ -231,11 +245,12 @@ namespace True_Mining_v4
 
         public void Move(object sender, MouseEventArgs e)
         {
-            if (clicado)
+            if (clicado && e.LeftButton == MouseButtonState.Pressed)
             {
                 this.Left = (System.Windows.Forms.Control.MousePosition.X + this.lm.X);
                 this.Top = (System.Windows.Forms.Control.MousePosition.Y + this.lm.Y);
             }
+            else { clicado = false; }
         }
 
         public void Up(object sender, MouseButtonEventArgs e)
@@ -270,6 +285,11 @@ namespace True_Mining_v4
         }
 
         private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (clicado) clicado = false;
+        }
+
+        private void Window_LostMouseCapture(object sender, MouseEventArgs e)
         {
             if (clicado) clicado = false;
         }
