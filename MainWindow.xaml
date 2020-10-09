@@ -27,13 +27,13 @@
         </Grid>
 
         <Grid x:Name="ImutableElements">
-            <WrapPanel x:Name="PanelTapeAll" Margin="0" Opacity="100" Visibility="Hidden" Background="#01FFFFFF" ></WrapPanel>
-
             <WrapPanel Margin="0,3,3,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="100" Height="30" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" MouseDown="WrapPanel_MouseDown">
                 <materialDesign:PackIcon Kind="Hide" HorizontalAlignment="Right" Width="30" Height="30" Foreground="#FF404040" Background="#FFB3CBFF" Margin="0,0,5,0" Cursor="Hand" BorderThickness="0.5,0.5,0.5,0.5" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_1" />
                 <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Right" Width="30" Height="30" Foreground="#FF3E3E3E" Background="#FFACACAC" Margin="0,0,5,0" Cursor="Hand" BorderThickness="0.5,0.5,0.5,0.5" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_2" />
                 <materialDesign:PackIcon Kind="WindowClose" HorizontalAlignment="Right" Width="30" Height="30" Foreground="#FF7C0000" Background="#FFFFA1A1" Margin="0,0,0,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown" />
             </WrapPanel>
+            <WrapPanel x:Name="PanelTapeAll" Margin="0" Opacity="100" Visibility="Hidden" Background="#01FFFFFF" ></WrapPanel>
+            
         </Grid>
     </Grid>
 

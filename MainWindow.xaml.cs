@@ -145,14 +145,6 @@ namespace True_Mining_Desktop
                 else { this.Close(); }
             }
 
-            this.IsEnabled = false;
-
-            Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");
-            Tools.CheckerPopup.ShowDialog();
-
-            this.IsEnabled = true;
-
-            this.ShowInTaskbar = true;
             this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
 
             nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico");
@@ -167,6 +159,9 @@ namespace True_Mining_Desktop
                 this.Activate();
                 this.Focus();
             }
+
+            Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");
+            Tools.CheckerPopup.ShowDialog();
 
             Task.Run(() => User.Settings.SettingsSaver());
 
