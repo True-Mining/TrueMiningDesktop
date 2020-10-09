@@ -20,7 +20,6 @@ namespace True_Mining_Desktop.Server
 
     public class TrueMiningFiles
     {
-        public string assemblyVersion;
         public string changelogLink;
         public List<FileDetails> files;
     }
