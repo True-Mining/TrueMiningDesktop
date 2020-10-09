@@ -220,7 +220,7 @@ namespace True_Mining_Desktop
 
             if (Tools.CheckerPopup.Tape)
             {
-                if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly)) ;
+                if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
                 { e.Cancel = true; return; }
             }
 
