@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using True_Mining_v4.Core;
 
 namespace True_Mining_v4.User
@@ -14,19 +14,24 @@ namespace True_Mining_v4.User
         public static UserPreferences User = new UserPreferences();
 
         public static bool loadingSettings = true;
-        public static bool savingSettings = true;
+        public static bool settingsSavedFirstTime = true;
 
-        public static void SettingsSaver()
+        public static System.Timers.Timer timerSaveSettings = new System.Timers.Timer(5000);
+
+        public static void SettingsSaver(bool now = false)
         {
-            while (savingSettings) { Thread.Sleep(1000); }
-            Thread.Sleep(new Random().Next(1, 7777));
+            if (now) { WriteSettings(); } else { timerSaveSettings.Elapsed -= TimerSaveSettings_Elapsed; timerSaveSettings.Elapsed += TimerSaveSettings_Elapsed; timerSaveSettings.AutoReset = false; timerSaveSettings.Stop(); timerSaveSettings.Start(); }
+        }
 
-            savingSettings = true;
+        private static void TimerSaveSettings_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            WriteSettings();
+        }
 
+        private static void WriteSettings()
+        {
             File.WriteAllText("configsDevices.txt", JsonConvert.SerializeObject(Device, Formatting.Indented));
             File.WriteAllText("configsUser.txt", JsonConvert.SerializeObject(User, Formatting.Indented));
-
-            savingSettings = false;
         }
 
         public static void SettingsRecover()
