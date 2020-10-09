@@ -30,6 +30,7 @@ namespace True_Mining_v4.User
 
         private static void WriteSettings()
         {
+            timerSaveSettings.Stop();
             File.WriteAllText("configsDevices.txt", JsonConvert.SerializeObject(Device, Formatting.Indented));
             File.WriteAllText("configsUser.txt", JsonConvert.SerializeObject(User, Formatting.Indented));
         }

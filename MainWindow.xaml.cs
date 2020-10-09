@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using True_Mining_v4.Core;
-using True_Mining_v4.Janelas;
 using True_Mining_v4.ViewModel;
 using Application = System.Windows.Application;
 using ListView = System.Windows.Controls.ListView;
@@ -227,7 +226,6 @@ namespace True_Mining_v4
 
             Tools.CheckerPopup.Close();
             nIcon.Visible = false;
-
         }
 
         public static bool clicado = false;

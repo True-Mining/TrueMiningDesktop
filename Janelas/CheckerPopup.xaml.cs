@@ -16,12 +16,14 @@ namespace True_Mining_v4.Janelas
     public partial class CheckerPopup : Window
     {
         public bool Tape = false;
+        private Thread ThreadChecker = new Thread(() => { });
 
         public CheckerPopup(string toCheck = "all")
         {
             InitializeComponent();
 
-            new Thread(() => Checker(new Uri("https://truemining.online/v4.json"), toCheck)).Start();
+            ThreadChecker = new Thread(() => Checker(new Uri("https://truemining.online/v4.json"), toCheck));
+            ThreadChecker.Start();
         }
 
         private bool property_finish = false;
@@ -256,6 +258,7 @@ namespace True_Mining_v4.Janelas
         {
             Tape = false;
             Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
+            ThreadChecker.Interrupt();
         }
     }
 }

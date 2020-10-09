@@ -21,9 +21,12 @@ namespace True_Mining_v4.Core
                 Tools.CheckerPopup = new Janelas.CheckerPopup("all");
                 Tools.CheckerPopup.ShowDialog();
 
-                IsMining = true;
-                XMRig.XMRig.CreateConfigFile();
-                XMRig.XMRig.Start();
+                if (!EmergencyExit)
+                {
+                    IsMining = true;
+                    XMRig.XMRig.CreateConfigFile();
+                    XMRig.XMRig.Start();
+                }
             }
         }
 
@@ -68,6 +71,8 @@ namespace True_Mining_v4.Core
 
             return -1;
         }
+
+        public static bool EmergencyExit = false;
 
         private static bool isMining = false;
 

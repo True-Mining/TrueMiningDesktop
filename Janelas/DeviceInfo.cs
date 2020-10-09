@@ -56,7 +56,7 @@ namespace True_Mining_v4.Janelas
         public string MiningAlgo { get; set; }
 
         private decimal hashrate = -1;
-        public decimal Hashrate { get { return hashrate; } set { hashrate = value; System.Windows.Application.Current.Dispatcher.Invoke((System.Action)delegate { OverviewDeviceSimplified.RefreshDataContext(this); }); } }
+        public decimal Hashrate { get { return hashrate; } set { hashrate = value; Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); })); } }
 
         private bool isSelected = true;
         public bool IsSelected { get { return isSelected; } set { isSelected = value; OnChanged(null); } }
