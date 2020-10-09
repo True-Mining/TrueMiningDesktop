@@ -205,7 +205,9 @@ namespace True_Mining_v4.Core
         {
             Process mataminers = new Process();
             mataminers.StartInfo = new ProcessStartInfo("taskkill", "/F /IM xmrig.exe /IM xmrig-gcc.exe /IM xmrig-msvc.exe");
+            mataminers.StartInfo.UseShellExecute = false;
             mataminers.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            mataminers.StartInfo.CreateNoWindow = true;
             mataminers.Start();
             mataminers.WaitForExit();
         }

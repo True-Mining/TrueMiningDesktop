@@ -21,6 +21,9 @@ namespace True_Mining_v4.Janelas
         public CheckerPopup(string toCheck = "all")
         {
             InitializeComponent();
+            this.Height = 0;
+            this.BorderBrush.Opacity = 0;
+            this.ShowInTaskbar = false;
 
             ThreadChecker = new Thread(() => Checker(new Uri("https://truemining.online/v4.json"), toCheck));
             ThreadChecker.Start();
@@ -47,13 +50,7 @@ namespace True_Mining_v4.Janelas
 
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                if (!Application.Current.MainWindow.IsVisible)
-                {
-                    this.Height = 0;
-                    BorderBrush.Opacity = 0;
-
-                    this.ShowInTaskbar = false;
-                }
+                ShowOrNot();
 
                 Application.Current.MainWindow.PreviewMouseDown += MainWindow_GotMouseCapture; ;
 

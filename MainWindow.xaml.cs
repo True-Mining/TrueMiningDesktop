@@ -29,6 +29,8 @@ namespace True_Mining_v4
         {
             User.Settings.SettingsRecover();
 
+            this.ShowInTaskbar = false;
+
             InitializeComponent();
 
             TapeAllRequest += CheckerPopup_TapeAllRequest;
@@ -161,6 +163,7 @@ namespace True_Mining_v4
 
             if (!User.Settings.User.StartHide)
             {
+                this.ShowInTaskbar = true;
                 this.Activate();
                 this.Focus();
             }
@@ -215,10 +218,11 @@ namespace True_Mining_v4
                 else { e.Cancel = true; return; }
             }
 
-            if (MessageBoxResult.Yes == MessageBox.Show("True Mining is checking and updating software files. Closing True Mining, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+            if (Tools.CheckerPopup.Tape)
             {
+                if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly)) ;
+                { e.Cancel = true; return; }
             }
-            else { e.Cancel = true; return; }
 
             Core.Miner.EmergencyExit = true;
             User.Settings.SettingsSaver(true);
