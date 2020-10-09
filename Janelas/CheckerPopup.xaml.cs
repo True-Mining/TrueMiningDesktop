@@ -15,11 +15,13 @@ namespace True_Mining_v4.Janelas
     /// </summary>
     public partial class CheckerPopup : Window
     {
-        public CheckerPopup(string toCheck = "all", bool hide = false)
+        public bool Tape = false;
+
+        public CheckerPopup(string toCheck = "all")
         {
             InitializeComponent();
 
-            new Thread(() => Checker(new Uri("https://truemining.online/v4.json"), toCheck, hide)).Start();
+            new Thread(() => Checker(new Uri("https://truemining.online/v4.json"), toCheck)).Start();
         }
 
         private bool property_finish = false;
@@ -37,16 +39,28 @@ namespace True_Mining_v4.Janelas
 
         public bool allDone = false;
 
-        public void Checker(Uri uri, string toCheck, bool hide)
+        public void Checker(Uri uri, string toCheck)
         {
-            if (hide)
+            Tape = true;
+
+            Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                Application.Current.Dispatcher.Invoke((Action)delegate
+                if (!Application.Current.MainWindow.IsVisible)
                 {
                     this.Height = 0;
                     BorderBrush.Opacity = 0;
-                });
-            }
+
+                    this.ShowInTaskbar = false;
+                }
+
+                Application.Current.MainWindow.PreviewMouseDown += MainWindow_GotMouseCapture; ;
+
+                Application.Current.MainWindow.IsVisibleChanged += MainWindow_IsVisibleChanged;
+                Application.Current.MainWindow.StateChanged += MainWindow_StateChanged;
+                Application.Current.MainWindow.Activated += MainWindow_Activated; ;
+            });
+
+            Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
 
             ProgressBar_Value = 0;
             ProgressBar_IsIndeterminate = true;
@@ -70,7 +84,7 @@ namespace True_Mining_v4.Janelas
 
                 SoftwareParameters.Update(uri);
 
-                if (toCheck == "all" || toCheck == "TrueMining")
+                if (!File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") && (toCheck == "all" || toCheck == "TrueMining"))
                 {
                     FileName = "Checking True Mining Version";
                     Thread.Sleep(20);
@@ -100,6 +114,7 @@ namespace True_Mining_v4.Janelas
                         ProgressBar_Value = 0;
                         FileName = "Restarting";
                         StatusTitle = "Complete update, restart required";
+                        User.Settings.SettingsSaver(true);
                         Thread.Sleep(3000);
 
                         Application.Current.Dispatcher.Invoke((Action)delegate
@@ -131,6 +146,34 @@ namespace True_Mining_v4.Janelas
             Thread.Sleep(100);
 
             Dispatcher.BeginInvoke((Action)(() => { this.Close(); }));
+        }
+
+        private void MainWindow_Activated(object sender, EventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action)(() => { this.Focus(); }));
+        }
+
+        private void MainWindow_GotMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            this.Activate();
+            this.Focus();
+        }
+
+        private void MainWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            this.Activate();
+            this.Focus();
+            Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.clicado = false));
+        }
+
+        private void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            ShowOrNot();
+        }
+
+        private void MainWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            ShowOrNot();
         }
 
         public void Downloader(string url, string path, string fileName, string sha256)
@@ -178,6 +221,41 @@ namespace True_Mining_v4.Janelas
         {
             ProgressBar_Value = e.ProgressPercentage;
             ProgressBar_IsIndeterminate = true;
+        }
+
+        private void ShowOrNot()
+        {
+            if (Application.Current.MainWindow.IsVisible)
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    this.Height = 100;
+                    BorderBrush.Opacity = 100;
+
+                    this.ShowInTaskbar = true;
+
+                    this.Activate();
+                    this.Focus();
+                });
+            }
+            else
+            {
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    this.Height = 0;
+                    BorderBrush.Opacity = 0;
+
+                    this.ShowInTaskbar = false;
+                });
+            }
+
+            this.WindowState = Application.Current.MainWindow.WindowState;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Tape = false;
+            Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
         }
     }
 }

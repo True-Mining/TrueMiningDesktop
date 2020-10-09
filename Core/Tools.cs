@@ -7,6 +7,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using True_Mining_v4.Janelas;
 
 namespace True_Mining_v4.Core
 {
@@ -208,6 +209,8 @@ namespace True_Mining_v4.Core
             mataminers.Start();
             mataminers.WaitForExit();
         }
+
+        public static CheckerPopup CheckerPopup;
 
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);

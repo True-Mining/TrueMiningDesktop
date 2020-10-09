@@ -23,11 +23,15 @@ namespace True_Mining_v4
     {
         private System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
 
+        public static event EventHandler TapeAllRequest;
+
         public MainWindow()
         {
             User.Settings.SettingsRecover();
 
             InitializeComponent();
+
+            TapeAllRequest += CheckerPopup_TapeAllRequest;
 
             Device.cpu.what(); new Device();
 
@@ -68,6 +72,16 @@ namespace True_Mining_v4
             Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseUp += this.Up;
 
             Tools.KillMiners();
+        }
+
+        public static void DispararEvento()
+        {
+            TapeAllRequest.Invoke(null, null);
+        }
+
+        private void CheckerPopup_TapeAllRequest(object sender, EventArgs e)
+        {
+            if (Tools.CheckerPopup.Tape) { this.PanelTapeAll.Visibility = Visibility.Visible; } else { this.PanelTapeAll.Visibility = Visibility.Hidden; }
         }
 
         internal void SwitchScreen(UserControl userControl)
@@ -130,8 +144,28 @@ namespace True_Mining_v4
             }
 
             this.IsEnabled = false;
-            if (User.Settings.User.StartHide) { new Janelas.CheckerPopup("TrueMining", true).ShowDialog(); } else { new Janelas.CheckerPopup("TrueMining").ShowDialog(); }
+
+            Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");
+            Tools.CheckerPopup.ShowDialog();
+
             this.IsEnabled = true;
+
+            this.ShowInTaskbar = true;
+            this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
+
+            nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico");
+            nIcon.Visible = true;
+            nIcon.MouseDown += notifier_MouseDown;
+
+            MenuMenu.SelectedIndex = 0; // mostra a tela Home
+
+            if (!User.Settings.User.StartHide)
+            {
+                this.Activate();
+                this.Focus();
+            }
+
+            Task.Run(() => User.Settings.SettingsSaver());
 
             if (User.Settings.User.AutostartMining)
             {
@@ -140,18 +174,6 @@ namespace True_Mining_v4
                     if (!Miner.IsMining) { Miner.StartMiner(); }
                 }
             }
-
-            this.ShowInTaskbar = true;
-            this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
-
-            nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico");
-            nIcon.Visible = true;
-            nIcon.MouseDown -= notifier_MouseDown;
-            nIcon.MouseDown += notifier_MouseDown;
-
-            MenuMenu.SelectedIndex = 0; // mostra a tela Home
-
-            Task.Run(() => User.Settings.SettingsSaver());
         }
 
         private void notifier_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -168,6 +190,13 @@ namespace True_Mining_v4
         private void Menu_Show(object sender, RoutedEventArgs e)
         {
             this.Show();
+            this.Activate();
+            this.Focus();
+        }
+
+        private void Menu_Hide(object sender, RoutedEventArgs e)
+        {
+            this.Hide();
         }
 
         private void Menu_Close(object sender, RoutedEventArgs e)
@@ -182,12 +211,13 @@ namespace True_Mining_v4
                 if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
                 {
                     Miner.StopMiner();
+                    User.Settings.timerSaveSettings.Stop();
                 }
                 else { e.Cancel = true; }
             }
         }
 
-        private bool clicado = false;
+        public static bool clicado = false;
         private Point lm = new Point();
 
         public void Down(object sender, MouseButtonEventArgs e)

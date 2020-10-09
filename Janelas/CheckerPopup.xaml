@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="UpdateWindow" Height="100" Width="400" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" WindowStyle="None" BorderThickness="1,1,1,1" BorderBrush="#FF3C3C3C" AllowsTransparency="True" Visibility="Visible">
+        Title="UpdateWindow" Height="100" Width="400" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" WindowStyle="None" BorderThickness="1,1,1,1" BorderBrush="#FF3C3C3C" AllowsTransparency="True" Visibility="Visible" Closed="Window_Closed">
     <Grid>
         <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Vertical">
             <Label x:Name="statusTitle" Height="43" Width="400" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Gadugi" />
