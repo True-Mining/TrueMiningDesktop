@@ -80,7 +80,7 @@ namespace True_Mining_v4.User
 
     public class NVIDIASettings
     {
-        private bool miningSelected = true;
+        private bool miningSelected = false;
         public bool MiningSelected { get { return miningSelected; } set { miningSelected = value; if (!Settings.loadingSettings) { Settings.SettingsSaver(); } } }
         public bool Autoconfig { get; set; } = true;
         public String Algorithm { get; set; } = "RandomX";
@@ -90,7 +90,7 @@ namespace True_Mining_v4.User
 
     public class AMDSettings
     {
-        private bool miningSelected = true;
+        private bool miningSelected = false;
         public bool MiningSelected { get { return miningSelected; } set { miningSelected = value; if (!Settings.loadingSettings) { Settings.SettingsSaver(); } } }
         public bool Autoconfig { get; set; } = true;
         public String Algorithm { get; set; } = "RandomX";
@@ -150,13 +150,13 @@ namespace True_Mining_v4.User
         public List<string> Payment_CoinsList { get; set; } = new List<string>();
         private bool showCLI = false;
         public bool ShowCLI { get { return showCLI; } set { showCLI = value; Miner.ShowHideCLI(); } }
-        private bool autostartSoftwareWithWindows = true;
+        private bool autostartSoftwareWithWindows = false;
         public bool AutostartSoftwareWithWindows { get { return autostartSoftwareWithWindows; } set { autostartSoftwareWithWindows = value; Core.Tools.AutostartSoftwareWithWindowsRegistryWriter(); if (!Settings.loadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
-        private bool autostartMining = true;
+        private bool autostartMining = false;
         public bool AutostartMining { get { return autostartMining; } set { autostartMining = value; if (!Settings.loadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
         private bool startHide = false;
         public bool StartHide { get { return startHide; } set { startHide = value; if (!Settings.loadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
-        private bool avoidWindowsSuspend = false;
+        private bool avoidWindowsSuspend = true;
         public bool AvoidWindowsSuspend { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; Task.Run(() => Core.Tools.KeepSystemAwake()); } }
 
         public int PaymentCoinComboBox_SelectedIndex
