@@ -147,7 +147,7 @@ namespace True_Mining_Desktop
 
             this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
 
-            nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico");
+            try { nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { }
             nIcon.Visible = true;
             nIcon.MouseDown += notifier_MouseDown;
 
@@ -162,6 +162,8 @@ namespace True_Mining_Desktop
 
             Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");
             Tools.CheckerPopup.ShowDialog();
+
+            nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico");
 
             Task.Run(() => User.Settings.SettingsSaver());
 
