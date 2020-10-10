@@ -67,74 +67,87 @@ namespace True_Mining_Desktop.Janelas
             StatusTitle = "Checking Instalation";
             Thread.Sleep(10);
 
-            while (!Tools.IsConnected()) { Thread.Sleep(2000); }
-            try
+            FileName = "trying to connect";
+            StatusTitle = "Internet Connection";
+
+            while (!Tools.IsConnected()) { StatusTitle = "Internet Error"; FileName = "Waiting for Internet Connection. Check your network connection."; Thread.Sleep(3000); }
+
+            StatusTitle = "Checking Instalation";
+
+            bool trying = true;
+
+            while (trying)
             {
-                string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
-                foreach (var arq in arquivosOdl)
+                try
                 {
-                    if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
-                }
-                string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
-                foreach (var arq in arquivosDl)
-                {
-                    if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
-                }
-
-                SoftwareParameters.Update(uri);
-
-                if (!File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") && (toCheck == "all" || toCheck == "TrueMining"))
-                {
-                    FileName = "Checking True Mining Version";
-                    Thread.Sleep(20);
-
-                    foreach (FileDetails file in SoftwareParameters.ServerConfig.TrueMiningFiles.files)
+                    FileName = "Removing old files";
+                    string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
+                    foreach (var arq in arquivosOdl)
                     {
-                        FileName = "Checking Files";
+                        if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                    }
+                    string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
+                    foreach (var arq in arquivosDl)
+                    {
+                        if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                    }
+
+                    SoftwareParameters.Update(uri);
+
+                    if (!File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") && (toCheck == "all" || toCheck == "TrueMining"))
+                    {
+                        FileName = "Checking True Mining Version";
                         Thread.Sleep(20);
 
-                        file.path = Tools.FormatPath(file.path);
-
-                        if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
+                        foreach (FileDetails file in SoftwareParameters.ServerConfig.TrueMiningFiles.files)
                         {
-                            Downloader(file.dlLink, file.path, file.fileName, file.sha256);
-                            needRestart = true;
+                            FileName = "Checking Files";
+                            Thread.Sleep(20);
+
+                            file.path = Tools.FormatPath(file.path);
+
+                            if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
+                            {
+                                Downloader(file.dlLink, file.path, file.fileName, file.sha256);
+                                needRestart = true;
+                            }
+                        }
+
+                        if (needRestart)
+                        {
+                            ProgressBar_Value = 0;
+                            FileName = "Restarting";
+                            StatusTitle = "Complete update, restart required";
+                            User.Settings.SettingsSaver(true);
+                            Thread.Sleep(3000);
+                            Tape = false;
+
+                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                System.Diagnostics.Process.Start(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                                Application.Current.Shutdown();
+                            });
                         }
                     }
 
-                    if (needRestart)
+                    if (toCheck == "all" || toCheck == "ThirdPartyBinaries")
                     {
-                        ProgressBar_Value = 0;
-                        FileName = "Restarting";
-                        StatusTitle = "Complete update, restart required";
-                        User.Settings.SettingsSaver(true);
-                        Thread.Sleep(3000);
-                        Tape = false;
-
-                        Application.Current.Dispatcher.Invoke((Action)delegate
+                        foreach (FileDetails file in SoftwareParameters.ServerConfig.ThirdPartyBinaries.files)
                         {
-                            System.Diagnostics.Process.Start(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-                            Application.Current.Shutdown();
-                        });
-                    }
-                }
+                            FileName = "Checking Files";
+                            Thread.Sleep(20);
 
-                if (toCheck == "all" || toCheck == "ThirdPartyBinaries")
-                {
-                    foreach (FileDetails file in SoftwareParameters.ServerConfig.ThirdPartyBinaries.files)
-                    {
-                        FileName = "Checking Files";
-                        Thread.Sleep(20);
-
-                        file.path = Tools.FormatPath(file.path);
-                        if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
-                        {
-                            Downloader(file.dlLink, file.path, file.fileName, file.sha256);
+                            file.path = Tools.FormatPath(file.path);
+                            if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
+                            {
+                                Downloader(file.dlLink, file.path, file.fileName, file.sha256);
+                            }
                         }
                     }
+                    trying = false;
                 }
+                catch { }
             }
-            catch { }
 
             FileName = "Complete";
             Thread.Sleep(100);
@@ -172,13 +185,18 @@ namespace True_Mining_Desktop.Janelas
 
         public void Downloader(string url, string path, string fileName, string sha256)
         {
-            FileName = fileName;
-            StatusTitle = "Downloading necessary files";
-            Thread.Sleep(20);
-
             ProgressBar_IsIndeterminate = true;
 
             int count = 0;
+
+            FileName = "trying to connect";
+            StatusTitle = "Internet Connection";
+
+            while (!Tools.IsConnected()) { StatusTitle = "Internet Error"; FileName = "Waiting for Internet Connection. Check your network connection."; Thread.Sleep(3000); }
+
+            FileName = fileName;
+            StatusTitle = "Downloading Files";
+            Thread.Sleep(20);
 
             while (!File.Exists(path + fileName) || Tools.FileSHA256(path + fileName) != sha256)
             {

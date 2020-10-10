@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
+using True_Mining_Desktop.Core;
 
 namespace True_Mining_Desktop.Server
 {
@@ -52,10 +54,22 @@ namespace True_Mining_Desktop.Server
 
         public static void Update(Uri uri)
         {
+            while (!Tools.IsConnected()) { Thread.Sleep(3000); }
+
             if (lastUpdated.AddHours(1).Ticks < DateTime.Now.Ticks)
             {
-                lastUpdated = DateTime.Now;
-                SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<Kind>(new WebClient().DownloadString(uri)); //update parameters
+                bool trying = true;
+
+                while (trying)
+                {
+                    lastUpdated = DateTime.Now;
+                    try
+                    {
+                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<Kind>(new WebClient().DownloadString(uri)); //update parameters
+                        trying = false;
+                    }
+                    catch { }
+                }
             }
         }
     }
