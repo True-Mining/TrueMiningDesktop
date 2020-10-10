@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using True_Mining_Desktop.Janelas;
@@ -210,6 +211,8 @@ namespace True_Mining_Desktop.Core
             mataminers.Start();
             mataminers.WaitForExit();
         }
+
+        public static bool HaveADM => new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator);
 
         public static CheckerPopup CheckerPopup;
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -21,12 +22,13 @@ namespace True_Mining_Desktop.Core.XMRig
         {
             if (XMRIGminer.StartInfo != XMRigProcessStartInfo)
             {
+
                 XMRigProcessStartInfo.UseShellExecute = true;
                 XMRigProcessStartInfo.RedirectStandardError = false;
                 XMRigProcessStartInfo.RedirectStandardOutput = false;
                 XMRigProcessStartInfo.CreateNoWindow = false;
+                if (Tools.HaveADM) { XMRigProcessStartInfo.Verb = "runas"; }
                 XMRigProcessStartInfo.WorkingDirectory = @"Miners\xmrig";
-
                 XMRIGminer.StartInfo = XMRigProcessStartInfo;
             }
 
