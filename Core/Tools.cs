@@ -113,25 +113,27 @@ namespace True_Mining_Desktop.Core
                 return false;
             }
 
-            switch (User.Settings.User.Payment_Coin)
-            {
-                case "RDCT":
-                    {
-                        if (!address.StartsWith("R"))
-                        {
-                            return false;
-                        }
-                        break;
-                    }
-                case "DOGE":
-                    {
-                        if (!address.StartsWith("D"))
-                        {
-                            return false;
-                        }
-                        break;
-                    }
-            }
+            if (!address.StartsWith('D') && !address.StartsWith('R')) { return false; }
+
+            //switch (User.Settings.User.Payment_Coin)
+            //{
+            //    case "RDCT":
+            //        {
+            //            if (!address.StartsWith("R"))
+            //            {
+            //                return false;
+            //            }
+            //            break;
+            //        }
+            //    case "DOGE":
+            //        {
+            //            if (!address.StartsWith("D"))
+            //            {
+            //                return false;
+            //            }
+            //            break;
+            //        }
+            //}
 
             return true;
         }

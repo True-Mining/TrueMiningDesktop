@@ -11,8 +11,8 @@ namespace True_Mining_Desktop.Core
         {
             if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
             {
-                MessageBox.Show("Your wallet address is not correct. Check it.");
                 Miner.IsMining = false;
+                if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Your wallet address is not correct. Check it."); }
                 return;
             }
 

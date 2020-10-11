@@ -97,6 +97,8 @@ namespace True_Mining_Desktop
 
         private void Menu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            clicado = false;
+
             if (((UserControlItemMenu)((ListView)sender).SelectedItem).ListViewMenu.Items.Count <= 0)
             {
                 SwitchScreen(((UserControlItemMenu)((ListView)sender).SelectedItem).Screen);

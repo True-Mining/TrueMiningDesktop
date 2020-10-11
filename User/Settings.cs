@@ -111,14 +111,6 @@ namespace True_Mining_Desktop.User
                 if (payment_Wallet != null)
                 {
                     payment_Wallet.Replace(" ", "");
-                    if (payment_Wallet.Length == 34)
-                    {
-                        // linkLabel3.Visible = false;
-                    }
-                    else
-                    {
-                        // linkLabel3.Visible = true;
-                    }
 
                     if (payment_Wallet.StartsWith("R"))
                     { Payment_Coin = "RDCT"; }
