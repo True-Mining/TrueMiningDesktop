@@ -22,7 +22,7 @@ namespace True_Mining_Desktop.Core
             try
             {
                 PingReply pr = p.Send("8.8.8.8", 3000);
-                return true;
+                if (pr.Status == IPStatus.Success) { return true; } else { return false; }
             }
             catch { return false; }
         }
