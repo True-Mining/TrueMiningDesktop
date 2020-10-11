@@ -92,6 +92,7 @@ namespace True_Mining_Desktop.Janelas
                         if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
                     }
 
+                    FileName = "Updating software parameters";
                     SoftwareParameters.Update(uri);
 
                     if (!File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") && (toCheck == "all" || toCheck == "TrueMining"))
@@ -200,7 +201,8 @@ namespace True_Mining_Desktop.Janelas
 
             while (!File.Exists(path + fileName) || Tools.FileSHA256(path + fileName) != sha256)
             {
-                if (count > 2) { new Task(() => MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining in the exceptions / exclusions of your antivirus, firewall and windows defender")).Start(); return; }
+                if (count > 3) { Tools.AddTrueMiningDestopToWinDefenderExclusions(); }
+                if (count > 4) { new Task(() => MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining in the exceptions / exclusions of your antivirus, firewall and windows defender")).Start(); return; }
                 count++;
 
                 while (!Tools.IsConnected()) { Thread.Sleep(2000); }

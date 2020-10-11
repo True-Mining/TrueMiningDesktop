@@ -8,7 +8,6 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
-using System.Windows;
 using True_Mining_Desktop.Janelas;
 
 namespace True_Mining_Desktop.Core
@@ -197,6 +196,30 @@ namespace True_Mining_Desktop.Core
                         Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
                         key.DeleteValue("True Mining");
                     }
+                }
+            }
+            catch { }
+        }
+
+        public static void AddTrueMiningDestopToWinDefenderExclusions()
+        {
+            try
+            {
+                if (Tools.HaveADM)
+                {
+                    var command = @"Add-MpPreference -ExclusionPath " + '"' + System.AppDomain.CurrentDomain.BaseDirectory + '"' + " -Force";
+                    var commandBytes = System.Text.Encoding.Unicode.GetBytes(command);
+                    var commandBase64 = Convert.ToBase64String(commandBytes);
+
+                    var startInfo = new ProcessStartInfo()
+                    {
+                        FileName = "powershell.exe",
+                        Arguments = $"-NoProfile -ExecutionPolicy unrestricted -EncodedCommand {commandBase64}",
+                        UseShellExecute = false,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        CreateNoWindow = true
+                    };
+                    Process.Start(startInfo).WaitForExit();
                 }
             }
             catch { }
