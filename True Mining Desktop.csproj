@@ -7,12 +7,11 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
-    <AssemblyVersion>4.0.10.10</AssemblyVersion>
-    <FileVersion>4.0.10.10</FileVersion>
+    <AssemblyVersion>4.0.10.11</AssemblyVersion>
+    <FileVersion>4.0.10.11</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <StartupObject>True_Mining_Desktop.App</StartupObject>
     <AssemblyName>True Mining Desktop</AssemblyName>
-    <Nullable></Nullable>
     <Company>True Mining</Company>
     <Authors>Matheus Bach</Authors>
     <Product>True Mining Desktop</Product>
@@ -20,14 +19,9 @@
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <Description>True Mining Desktop</Description>
-    <Version>rolling release </Version>
     <RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="logo.png" />
-  </ItemGroup>
-  
   <ItemGroup>
     <None Include="LICENSE.md">
       <Pack>True</Pack>

@@ -131,9 +131,7 @@ namespace True_Mining_Desktop.Server
                     PoolAPI.Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient().DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.Payment_Coin + "-BTC")));
                     XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/35")));
                 }
-                catch (Exception e)
-                {
-                }
+                catch { }
 
                 AccumulatedBalance_Points = XMR_nanopool.AvghashratelimitedThisworker.data * hoursRound * 60 * 60 / 52.5 / 1200 / 8;
                 conversionHashrateToPoints = 24 * 60 * 60 / 52.5 / 1200 / 8;
