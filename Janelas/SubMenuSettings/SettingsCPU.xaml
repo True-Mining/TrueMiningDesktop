@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="True_Mining_Desktop.Janelas.SubMenuSettings.SettingsCPU"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:True_Mining_Desktop.Janelas" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="485              " d:DesignWidth="650              " Background="White">
+    <Grid>
+        <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
+            <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
+                <materialDesign:PackIcon Width="30" Height="70" Kind="Settings" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
+                <Label Content="CPU Settings" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
+            </WrapPanel>
+            <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
+            <WrapPanel VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
+                <CheckBox IsChecked="{Binding Autoconfig}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Configure automatically" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                <WrapPanel x:Name="WrapPanel_ManualConfig" VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
+                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <Label Content="Mining Algorithm" FontFamily="Gadugi" FontWeight="Normal" Margin="0,0,0,0" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <ComboBox ItemsSource="{Binding AlgorithmsList}" SelectedIndex="0" VerticalAlignment="Top" Width="120" FontFamily="Gadugi" FontWeight="Normal" Margin="5,0,0,0" FontSize="13" SnapsToDevicePixels="True" Foreground="Black" BorderBrush="#4C000000" />
+                    </WrapPanel>
+                    <CheckBox IsChecked="{Binding NoYield}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Prefer maximum hashrate rather than system response/stability" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <Label Content="Low process priority" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <Slider Width="222" Maximum="2" TickPlacement="Both" Value="{Binding Priority}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" Margin="5,0,5,0" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" />
+                        <Label Content="Normal process priority" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                    </WrapPanel>
+                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <Label Content="Maximum CPU usage config hint" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <Slider Width="276" Maximum="100" TickPlacement="None" Value="{Binding MaxUsageHint}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" VerticalAlignment="Center" Margin="10,0,0,0" ValueChanged="Slider_ValueChanged" />
+                    </WrapPanel>
+                </WrapPanel>
+            </WrapPanel>
+        </WrapPanel>
+    </Grid>
+</UserControl>

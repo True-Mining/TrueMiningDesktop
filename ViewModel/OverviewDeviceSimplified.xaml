@@ -1,0 +1,34 @@
+﻿    <UserControl x:Class="True_Mining_Desktop.ViewModel.OverviewDeviceSimplified"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:True_Mining_Desktop.ViewModel" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="75" d:DesignWidth="600">
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+        <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" Opacity="50">
+            <Grid VerticalAlignment="Center">
+                <materialDesign:PackIcon x:Name="ovIcon" Height="45" Width="45"  Foreground="Gray" Margin="0,0,10,0" />
+            </Grid>
+            <Grid VerticalAlignment="Center" Height="70">
+                <Label Content="Device" Height="25" Foreground="DarkOrange" FontSize="11" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
+                <Label x:Name="ovDeviceName" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="20" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="150" VerticalContentAlignment="Center" Padding="4,6,4,0" />
+            </Grid>
+            <Grid VerticalAlignment="Center">
+                <Label Content="Mining Algorithm" Height="25" Foreground="DarkOrange" FontSize="11" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
+                <Label x:Name="ovMiningAlgo" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="20" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="130" VerticalContentAlignment="Center" HorizontalAlignment="Center" Padding="4,6,4,0" />
+            </Grid>
+            <Grid VerticalAlignment="Center">
+                <Label Content="Hashrate" Height="25" Foreground="DarkOrange" FontSize="11" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
+                <Label x:Name="ovHashrate" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="20" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="160" VerticalContentAlignment="Center" HorizontalAlignment="Left" Padding="4,6,4,0" Margin="5,0,0,0" />
+            </Grid>
+            <Grid VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,0,0">
+                <Label Content="Enabled" Height="25" Foreground="DarkOrange" FontSize="11" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
+                <ToggleButton x:Name="ovDeviceIsSelected"
+                    Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                    ToolTip="Select device to mine with this" materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="ForestGreen" materialDesign:ToggleButtonAssist.SwitchTrackOffBackground="Gray" Height="60" Padding="0,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Margin="0,7,0,0" Checked="DeviceIsSelected_Checked" Unchecked="DeviceIsSelected_Unchecked" FontFamily="Gadugi" />
+            </Grid>
+        </WrapPanel>
+    </Grid>
+</UserControl>

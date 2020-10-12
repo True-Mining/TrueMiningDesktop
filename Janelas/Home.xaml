@@ -1,0 +1,34 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:True_Mining_Desktop.Janelas"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="True_Mining_Desktop.Janelas.Home"
+             mc:Ignorable="d"
+             d:DesignHeight="485              " d:DesignWidth="650              " Background="White">
+    <Grid>
+        <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
+            <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
+                <materialDesign:PackIcon Width="30" Height="70" Kind="Pickaxe" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
+                <Label Content="Mining Status" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
+            </WrapPanel>
+            <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
+            <Grid x:Name="GridUserWalletCoin" VerticalAlignment="Center" Height="40" Width="605">
+                <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Wallet Address: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" Foreground="#DD000000" VerticalContentAlignment="Center" Margin="0" FontWeight="Bold" FontSize="11" />
+                    <TextBox x:Name="TextBox_PaymentAddress" Text="{Binding Payment_Wallet}" materialDesign:HintAssist.Hint="insert your wallet address here" Width="300" Margin="5,0,0,0" FontSize="11" FontWeight="Bold" Foreground="#D8000000" TextChanged="TextBox_TextChanged" BorderBrush="#4C000000" />
+                    <Button x:Name="Button_CreateWallet" Content="Create Wallet" Height="20" Width="80" FontSize="11.5" Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Margin="-80,0,0,0" Click="Button_CreateWallet_Click" FontWeight="Normal" Background="#CC2196F3" />
+                    <Label Content="Coin:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="11" Foreground="#DD000000" VerticalContentAlignment="Center" Margin="60,0,0,0" HorizontalAlignment="Stretch" FontWeight="Bold" />
+                    <ComboBox x:Name="ComboBox_PaymentCoin" materialDesign:HintAssist.Hint="select" HorizontalAlignment="Center" Width="89" Margin="5,0,0,0" FontWeight="Bold" FontSize="11" Foreground="#D8000000" ItemsSource="{Binding Payment_CoinsList}" SelectedIndex="{Binding PaymentCoinComboBox_SelectedIndex}" BorderBrush="#4C000000" />
+                </WrapPanel>
+            </Grid>
+            <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
+            <ScrollViewer x:Name="ScrollViewerDevices" MaxHeight="225" Margin="20,0,20,0">
+                <WrapPanel x:Name="listDevicesOverview" HorizontalAlignment="Center" />
+            </ScrollViewer>
+            <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
+            <Button x:Name="StartStopButton" Content="Start Mining" Height="30" Width="150" Click="StartStopMining_Click" Margin="0,10,0,0" Background="DodgerBlue" BorderBrush="DodgerBlue" />
+        </WrapPanel>
+    </Grid>
+</UserControl>
