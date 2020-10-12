@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:True_Mining_Desktop.ViewModel"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" MouseLeftButtonDown="UserControl_MouseLeftButtonDown">
-    <Grid Width="270">
+    <Grid Width="270" Margin="0,-5,0,-5">
         <materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="25" Height="25" Margin="10,11,10,10" Foreground="Black" />
         <Expander x:Name="ExpanderMenu" Header="{Binding Path=Header}" Width="245" HorizontalAlignment="Left" Background="{x:Null}" Foreground="Black" Margin="35,0,0,0" VerticalContentAlignment="Center" IsExpanded="{Binding Path=Expanded}">
             <ListView x:Name="ListViewMenu" ItemsSource="{Binding Path=SubItems}" Foreground="Black" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="ListViewMenu_SelectionChanged" materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True">

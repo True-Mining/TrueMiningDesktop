@@ -54,6 +54,8 @@ namespace True_Mining_Desktop
             menuConfigHardware.Add(new SubItem("NVIDIA GPU", Janelas.Pages.SettingsCUDA));
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Hardware Config", menuConfigHardware, PackIconKind.Gpu), this));
 
+            MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Other Stuff", new Janelas.Other(), PackIconKind.PlusBoxMultiple), this));
+
             Janelas.Pages.Home.TitleWrapPanel.MouseDown += this.Down;
             Janelas.Pages.Home.TitleWrapPanel.MouseMove += this.Move;
             Janelas.Pages.Home.TitleWrapPanel.MouseUp += this.Up;

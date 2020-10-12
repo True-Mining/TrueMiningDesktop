@@ -13,6 +13,7 @@
                 <materialDesign:PackIcon Width="30" Height="70" Kind="ViewDashboardOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                 <Label Content="DashBoard" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
             </WrapPanel>
+            <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
             <WrapPanel Margin="35,9,20,10">
                 <Label Content="Next Payout in " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
                 <Label x:Name="xLabelNextPayout" Content="{Binding LabelNextPayout}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
