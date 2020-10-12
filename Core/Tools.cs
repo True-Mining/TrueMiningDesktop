@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using True_Mining_Desktop.Janelas;
 
 namespace True_Mining_Desktop.Core
@@ -159,6 +160,19 @@ namespace True_Mining_Desktop.Core
                     if (!versions.Contains(ver))
                         versions.Add(ver);
                 }
+            }
+        }
+
+        public static void OpenLinkInBrowser(string link)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(link) { UseShellExecute = true, Verb = "open" });
+            }
+            catch
+            {
+                Clipboard.SetText(link);
+                MessageBox.Show("Acess >>" + link + "<< in your browser. This is in your clipboard now.");
             }
         }
 

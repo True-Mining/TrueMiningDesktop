@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using True_Mining_Desktop.Core;
 
@@ -58,17 +57,7 @@ namespace True_Mining_Desktop.Janelas
 
         private void Button_CreateWallet_Click(object sender, RoutedEventArgs e)
         {
-            string referalLink = "https://www.4stake.com/truemining";
-
-            try
-            {
-                Process.Start(new ProcessStartInfo(referalLink) { UseShellExecute = true, Verb = "open" });
-            }
-            catch
-            {
-                Clipboard.SetText(referalLink);
-                MessageBox.Show("Acess >>" + referalLink + "<< in your browser. This is in your clipboard now.");
-            }
+            Tools.OpenLinkInBrowser("https://www.4stake.com/truemining");
         }
     }
 }
