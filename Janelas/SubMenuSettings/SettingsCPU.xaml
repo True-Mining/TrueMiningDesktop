@@ -23,12 +23,12 @@
                     <CheckBox IsChecked="{Binding NoYield}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Prefer maximum hashrate rather than system response/stability" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <Label Content="Low process priority" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
-                        <Slider Width="222" Maximum="2" TickPlacement="Both" Value="{Binding Priority}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" Margin="5,0,5,0" VerticalAlignment="Center" />
+                        <Slider Width="222" Maximum="2" TickPlacement="Both" Value="{Binding Priority}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" Margin="5,0,5,0" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" />
                         <Label Content="Normal process priority" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                     </WrapPanel>
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <Label Content="Maximum CPU usage config hint" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
-                        <Slider Width="276" Maximum="100" TickPlacement="None" Value="{Binding MaxUsageHint}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" VerticalAlignment="Center" Margin="10,0,0,0" />
+                        <Slider Width="276" Maximum="100" TickPlacement="None" Value="{Binding MaxUsageHint}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" VerticalAlignment="Center" Margin="10,0,0,0" ValueChanged="Slider_ValueChanged" />
                     </WrapPanel>
                 </WrapPanel>
             </WrapPanel>

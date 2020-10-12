@@ -23,5 +23,10 @@ namespace True_Mining_Desktop.Janelas.SubMenuSettings
         {
             WrapPanel_ManualConfig.IsEnabled = true;
         }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            MainWindow.clicado = false;
+        }
     }
 }
