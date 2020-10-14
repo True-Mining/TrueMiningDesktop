@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:True_Mining_Desktop"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="True_Mining_Desktop.MainWindow"
         mc:Ignorable="d"
-        Title="True Mining Desktop" Height="500" Width="950" FontSize="10" WindowStartupLocation="CenterScreen" HorizontalContentAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeMode="CanMinimize" ScrollViewer.VerticalScrollBarVisibility="Disabled" WindowStyle="None" Icon="/logo.png" Loaded="Window_Loaded" Closing="Window_Closing" BorderThickness="1,1,1,1" BorderBrush="#FF3E3E3E" StateChanged="Window_StateChanged" IsVisibleChanged="Window_IsVisibleChanged" LostMouseCapture="Window_LostMouseCapture" ClipToBounds="True" SnapsToDevicePixels="True" ShowInTaskbar="False">
+        Title="True Mining Desktop" Height="500" Width="950" FontSize="10" WindowStartupLocation="CenterScreen" HorizontalContentAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeMode="CanMinimize" ScrollViewer.VerticalScrollBarVisibility="Disabled" WindowStyle="None" Icon="/logo.png" Loaded="Window_Loaded" Closing="Window_Closing" BorderThickness="1,1,1,1" BorderBrush="#FF3E3E3E" StateChanged="Window_StateChanged" IsVisibleChanged="Window_IsVisibleChanged" LostMouseCapture="Window_LostMouseCapture" SnapsToDevicePixels="True" ShowInTaskbar="False">
     <Window.Background>
         <SolidColorBrush Color="White" />
     </Window.Background>
