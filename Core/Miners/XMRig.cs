@@ -16,6 +16,8 @@ namespace True_Mining_Desktop.Core.XMRig
         public static Process XMRIGminer = new Process();
         private static ProcessStartInfo XMRigProcessStartInfo = new ProcessStartInfo(@"xmrig-gcc.exe");
         private static bool inXMRIGexitEvent = false;
+        private static DateTime holdTime = DateTime.UtcNow;
+        private static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
 
         public static void Start()
         {
@@ -25,6 +27,7 @@ namespace True_Mining_Desktop.Core.XMRig
                 XMRigProcessStartInfo.RedirectStandardError = false;
                 XMRigProcessStartInfo.RedirectStandardOutput = false;
                 XMRigProcessStartInfo.CreateNoWindow = false;
+                XMRigProcessStartInfo.ErrorDialog = false;
                 //  if (Tools.HaveADM) { XMRigProcessStartInfo.Verb = "runas"; }
                 XMRigProcessStartInfo.WorkingDirectory = @"Miners\xmrig";
                 XMRIGminer.StartInfo = XMRigProcessStartInfo;
@@ -38,6 +41,7 @@ namespace True_Mining_Desktop.Core.XMRig
             try
             {
                 XMRIGminer.Start();
+                startedSince = DateTime.UtcNow;
             }
             catch (Exception)
             {
@@ -50,6 +54,14 @@ namespace True_Mining_Desktop.Core.XMRig
         {
             try { XMRIGminer.Kill(); } catch { }
             Thread.Sleep(200);
+        }
+
+        public static void ChangeCompiler()
+        {
+            if (XMRigProcessStartInfo.FileName == @"xmrig-gcc.exe")
+            { XMRigProcessStartInfo.FileName = @"xmrig-msvc.exe"; }
+            else
+            { XMRigProcessStartInfo.FileName = @"xmrig-gcc.exe"; }
         }
 
         public static void Show()
@@ -128,16 +140,8 @@ namespace True_Mining_Desktop.Core.XMRig
                 {
                     inXMRIGexitEvent = true;
 
-                    Thread.Sleep(5000);
-
-                    if (stringXMRIGcompilador == "gcc")
-                    {
-                        stringXMRIGcompilador = "msvc";
-                    }
-                    else
-                    {
-                        stringXMRIGcompilador = "gcc";
-                    }
+                    if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
+                    else { ChangeCompiler(); }
 
                     Start();
 
@@ -226,6 +230,5 @@ namespace True_Mining_Desktop.Core.XMRig
         }
 
         private static int APIport { get; } = 20202;
-        public static string stringXMRIGcompilador { get; set; } = "gcc";
     }
 }
