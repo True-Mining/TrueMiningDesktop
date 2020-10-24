@@ -20,7 +20,7 @@
                         <Label Content="Mining Algorithm" FontFamily="Gadugi" FontWeight="Normal" Margin="0,0,0,0" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                         <ComboBox ItemsSource="{Binding AlgorithmsList}" SelectedIndex="0" VerticalAlignment="Top" Width="120" FontFamily="Gadugi" FontWeight="Normal" Margin="5,0,0,0" FontSize="13" SnapsToDevicePixels="True" Foreground="Black" BorderBrush="#4C000000" />
                     </WrapPanel>
-                    <CheckBox IsChecked="{Binding NoYield}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Prefer maximum hashrate rather than system response/stability" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                    <CheckBox IsChecked="{Binding Yield}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Prefer system response/stability over maximum hashrate" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <Label Content="Low process priority" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                         <Slider Width="222" Maximum="2" TickPlacement="Both" Value="{Binding Priority}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" Margin="5,0,5,0" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" />

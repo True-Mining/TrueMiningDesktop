@@ -75,7 +75,7 @@ namespace True_Mining_Desktop.User
         public List<string> AlgorithmsList { get; set; } = new List<string>();
         public int Priority { get; set; } = 1;
         public int MaxUsageHint { get; set; } = 100;
-        public bool NoYield { get; set; } = true;
+        public bool Yield { get; set; } = true;
     }
 
     public class NVIDIASettings
