@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using True_Mining_Desktop.User;
 
@@ -35,13 +36,23 @@ namespace True_Mining_Desktop.Core.XMRig
             XMRIGminer.Exited -= XMRIGminer_Exited;
             XMRIGminer.Exited += XMRIGminer_Exited;
             XMRIGminer.EnableRaisingEvents = true;
-            Miner.ShowHideCLI("XMRig");
 
             try
             {
                 XMRIGminer.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
                 XMRIGminer.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
                 XMRIGminer.Start();
+
+                new Task(() =>
+                {
+                    try
+                    {
+                        DateTime initializingTask = DateTime.UtcNow;
+                        while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && Miner.IsMining && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(1); }
+                        Miner.ShowHideCLI();
+                    }
+                    catch { }
+                }).Start();
 
                 startedSince = DateTime.UtcNow;
             }
@@ -174,7 +185,6 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("       \"restricted\": true");
             conf.AppendLine("   },");
             conf.AppendLine("   \"autosave\": false,");
-            conf.AppendLine("   \"background\": false,");
             conf.AppendLine("   \"colors\": true,");
             conf.AppendLine("   \"title\": \"True Mining running XMRig\",");
             conf.AppendLine("   \"cpu\": {");
