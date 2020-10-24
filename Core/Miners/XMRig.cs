@@ -14,7 +14,7 @@ namespace True_Mining_Desktop.Core.XMRig
     public static class XMRig
     {
         public static Process XMRIGminer = new Process();
-        private static ProcessStartInfo XMRigProcessStartInfo = new ProcessStartInfo(@"xmrig-gcc.exe");
+        private static ProcessStartInfo XMRigProcessStartInfo = new ProcessStartInfo(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe");
         private static bool inXMRIGexitEvent = false;
         private static DateTime holdTime = DateTime.UtcNow;
         private static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
@@ -23,13 +23,12 @@ namespace True_Mining_Desktop.Core.XMRig
         {
             if (XMRIGminer.StartInfo != XMRigProcessStartInfo)
             {
-                XMRigProcessStartInfo.UseShellExecute = true;
-                XMRigProcessStartInfo.RedirectStandardError = false;
+                XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
+                XMRigProcessStartInfo.UseShellExecute = false;
+                XMRigProcessStartInfo.RedirectStandardError = true;
                 XMRigProcessStartInfo.RedirectStandardOutput = false;
                 XMRigProcessStartInfo.CreateNoWindow = false;
                 XMRigProcessStartInfo.ErrorDialog = false;
-                //  if (Tools.HaveADM) { XMRigProcessStartInfo.Verb = "runas"; }
-                XMRigProcessStartInfo.WorkingDirectory = @"Miners\xmrig";
                 XMRIGminer.StartInfo = XMRigProcessStartInfo;
             }
 
@@ -40,14 +39,22 @@ namespace True_Mining_Desktop.Core.XMRig
 
             try
             {
+                XMRIGminer.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
+                XMRIGminer.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
                 XMRIGminer.Start();
+
                 startedSince = DateTime.UtcNow;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 Miner.IsMining = false;
-                MessageBox.Show("XMRig can't start. Try add True Mining's folder in Antivirus exclusions");
+                MessageBox.Show("XMRig can't start. Try add True Mining's folder in Antivirus exclusions." + e.Message);
             }
+        }
+
+        private static void XMRIGminer_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Tools.KillProcess(XMRIGminer.ProcessName); Stop();
         }
 
         public static void Stop()
@@ -58,10 +65,10 @@ namespace True_Mining_Desktop.Core.XMRig
 
         public static void ChangeCompiler()
         {
-            if (XMRigProcessStartInfo.FileName == @"xmrig-gcc.exe")
-            { XMRigProcessStartInfo.FileName = @"xmrig-msvc.exe"; }
+            if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe")
+            { XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe"; }
             else
-            { XMRigProcessStartInfo.FileName = @"xmrig-gcc.exe"; }
+            { XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe"; }
         }
 
         public static void Show()

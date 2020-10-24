@@ -243,8 +243,14 @@ namespace True_Mining_Desktop.Core
 
         public static void KillMiners()
         {
+            KillProcess("xmrig-gcc.exe");
+            KillProcess("xmrig-msvc.exe");
+        }
+
+        public static void KillProcess(string processName)
+        {
             Process mataminers = new Process();
-            mataminers.StartInfo = new ProcessStartInfo("taskkill", "/F /IM xmrig.exe /IM xmrig-gcc.exe /IM xmrig-msvc.exe");
+            mataminers.StartInfo = new ProcessStartInfo("taskkill", "/F /IM " + processName);
             mataminers.StartInfo.UseShellExecute = false;
             mataminers.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             mataminers.StartInfo.CreateNoWindow = true;
