@@ -30,6 +30,48 @@
                         <Label Content="Maximum CPU usage config hint" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                         <Slider Width="276" Maximum="100" TickPlacement="None" Value="{Binding MaxUsageHint}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" VerticalAlignment="Center" Margin="10,0,0,0" ValueChanged="Slider_ValueChanged" />
                     </WrapPanel>
+                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
+                        <Label Content="CPU Threads" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <ComboBox SelectedIndex="{Binding Threads}" Width="90" FontFamily="Gadugi" FontWeight="Normal" FontSize="13" SnapsToDevicePixels="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="6,6,0,6" Margin="10,0,0,0">
+                            <ComboBoxItem IsSelected="True">auto-config</ComboBoxItem>
+                            <ComboBoxItem>1</ComboBoxItem>
+                            <ComboBoxItem>2</ComboBoxItem>
+                            <ComboBoxItem>3</ComboBoxItem>
+                            <ComboBoxItem>4</ComboBoxItem>
+                            <ComboBoxItem>5</ComboBoxItem>
+                            <ComboBoxItem>6</ComboBoxItem>
+                            <ComboBoxItem>7</ComboBoxItem>
+                            <ComboBoxItem>8</ComboBoxItem>
+                            <ComboBoxItem>9</ComboBoxItem>
+                            <ComboBoxItem>10</ComboBoxItem>
+                            <ComboBoxItem>11</ComboBoxItem>
+                            <ComboBoxItem>12</ComboBoxItem>
+                            <ComboBoxItem>13</ComboBoxItem>
+                            <ComboBoxItem>14</ComboBoxItem>
+                            <ComboBoxItem>15</ComboBoxItem>
+                            <ComboBoxItem>16</ComboBoxItem>
+                            <ComboBoxItem>17</ComboBoxItem>
+                            <ComboBoxItem>18</ComboBoxItem>
+                            <ComboBoxItem>19</ComboBoxItem>
+                            <ComboBoxItem>20</ComboBoxItem>
+                            <ComboBoxItem>21</ComboBoxItem>
+                            <ComboBoxItem>22</ComboBoxItem>
+                            <ComboBoxItem>23</ComboBoxItem>
+                            <ComboBoxItem>24</ComboBoxItem>
+                            <ComboBoxItem>25</ComboBoxItem>
+                            <ComboBoxItem>26</ComboBoxItem>
+                            <ComboBoxItem>27</ComboBoxItem>
+                            <ComboBoxItem>28</ComboBoxItem>
+                            <ComboBoxItem>29</ComboBoxItem>
+                            <ComboBoxItem>30</ComboBoxItem>
+                            <ComboBoxItem>31</ComboBoxItem>
+                            <ComboBoxItem>32</ComboBoxItem>
+                            <ComboBoxItem>33</ComboBoxItem>
+                            <ComboBoxItem>34</ComboBoxItem>
+                            <ComboBoxItem>35</ComboBoxItem>
+                            <ComboBoxItem>36</ComboBoxItem>
+                        </ComboBox>
+                    </WrapPanel>
                 </WrapPanel>
             </WrapPanel>
         </WrapPanel>

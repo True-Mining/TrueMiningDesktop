@@ -177,24 +177,25 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("   \"background\": false,");
             conf.AppendLine("   \"colors\": true,");
             conf.AppendLine("   \"title\": \"True Mining running XMRig\",");
-            conf.AppendLine("   \"randomx\": {");
-            conf.AppendLine("       \"init\": -1,");
-            conf.AppendLine("       \"mode\": \"auto\",");
-            conf.AppendLine("       \"1gb-pages\": true,");
-            conf.AppendLine("       \"rdmsr\": true,");
-            conf.AppendLine("       \"wrmsr\": true,");
-            conf.AppendLine("       \"cache_qos\": true,");
-            conf.AppendLine("       \"numa\": true");
-            conf.AppendLine("   },");
             conf.AppendLine("   \"cpu\": {");
             conf.AppendLine("       \"enabled\": " + Settings.Device.cpu.MiningSelected.ToString().ToLowerInvariant() + ",");
             conf.AppendLine("       \"huge-pages\": true,");
             conf.AppendLine("       \"hw-aes\": null,");
             if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"priority\": " + Settings.Device.cpu.Priority + ","); }
             conf.AppendLine("       \"memory-pool\": true,");
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"yield\": " + Settings.Device.cpu.NoYield.ToString().ToLowerInvariant() + ","); }
+            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"yield\": " + Settings.Device.cpu.Yield.ToString().ToLowerInvariant() + ","); }
             conf.AppendLine("       \"asm\": true,");
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"max-threads-hint\": " + Settings.Device.cpu.MaxUsageHint); }
+            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"max-threads-hint\": " + Settings.Device.cpu.MaxUsageHint + ","); }
+            conf.AppendLine("       \"rx\": {");
+            conf.AppendLine("           \"init\": -1,");
+            conf.AppendLine("           \"mode\": \"auto\",");
+            conf.AppendLine("           \"1gb-pages\": true,");
+            conf.AppendLine("           \"rdmsr\": true,");
+            conf.AppendLine("           \"wrmsr\": true,");
+            conf.AppendLine("           \"cache_qos\": true,");
+            conf.AppendLine("           \"numa\": true,");
+            if (!Settings.Device.cpu.Autoconfig && Settings.Device.cpu.Threads > 0) { conf.AppendLine("           \"threads\": " + Settings.Device.cpu.Threads + ","); }
+            conf.AppendLine("       }");
             conf.AppendLine("   },");
             conf.AppendLine("   \"opencl\": {");
             conf.AppendLine("       \"enabled\": " + Settings.Device.opencl.MiningSelected.ToString().ToLowerInvariant() + ",");
