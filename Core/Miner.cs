@@ -90,6 +90,13 @@ namespace True_Mining_Desktop.Core
                 if (Device.opencl.IsSelected) { Device.opencl.IsMining = true; }
                 if (Device.cuda.IsSelected) { Device.cuda.IsMining = true; }
 
+                Pages.SettingsCPU.AllContent.IsEnabled = false;
+                Pages.SettingsCUDA.AllContent.IsEnabled = false;
+                Pages.SettingsOPENCL.AllContent.IsEnabled = false;
+                Pages.SettingsCPU.LockWarning.Visibility = Visibility.Visible;
+                Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible;
+                Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible;
+
                 if (isMining)
                 {
                     Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = false;
@@ -117,6 +124,13 @@ namespace True_Mining_Desktop.Core
                     Device.cpu.IsMining = false;
                     Device.opencl.IsMining = false;
                     Device.cuda.IsMining = false;
+
+                    Pages.SettingsCPU.AllContent.IsEnabled = true;
+                    Pages.SettingsCUDA.AllContent.IsEnabled = true;
+                    Pages.SettingsOPENCL.AllContent.IsEnabled = true;
+                    Pages.SettingsCPU.LockWarning.Visibility = Visibility.Hidden;
+                    Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Hidden;
+                    Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Hidden;
 
                     Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = true;
 
