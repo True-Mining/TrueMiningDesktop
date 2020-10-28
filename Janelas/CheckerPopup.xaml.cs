@@ -54,11 +54,9 @@ namespace True_Mining_Desktop.Janelas
             {
                 ShowOrNot();
 
-                Application.Current.MainWindow.PreviewMouseDown += MainWindow_GotMouseCapture; ;
-
                 Application.Current.MainWindow.IsVisibleChanged += MainWindow_IsVisibleChanged;
                 Application.Current.MainWindow.StateChanged += MainWindow_StateChanged;
-                Application.Current.MainWindow.Activated += MainWindow_Activated; ;
+                Application.Current.MainWindow.Activated += MainWindow_Activated;
             });
 
             Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
@@ -165,12 +163,7 @@ namespace True_Mining_Desktop.Janelas
 
         private void MainWindow_Activated(object sender, EventArgs e)
         {
-            ShowOrNot();
-        }
-
-        private void MainWindow_GotMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            ShowOrNot();
+            Dispatcher.BeginInvoke((Action)(() => { this.Focus(); }));
         }
 
         private void MainWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -273,6 +266,12 @@ namespace True_Mining_Desktop.Janelas
         private void Window_Closed(object sender, EventArgs e)
         {
             Tape = false;
+
+            Application.Current.MainWindow.IsVisibleChanged -= MainWindow_IsVisibleChanged;
+            Application.Current.MainWindow.StateChanged -= MainWindow_StateChanged;
+            Application.Current.MainWindow.Activated -= MainWindow_Activated;
+            this.StateChanged -= CheckerPopup_StateChanged;
+
             Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
         }
     }
