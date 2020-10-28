@@ -197,6 +197,8 @@ namespace True_Mining_Desktop
 
         private void Menu_Show(object sender, RoutedEventArgs e)
         {
+            this.WindowState = WindowState.Normal;
+            this.ShowInTaskbar = true;
             this.Show();
             this.Activate();
             this.Focus();
