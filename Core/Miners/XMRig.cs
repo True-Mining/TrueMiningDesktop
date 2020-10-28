@@ -191,11 +191,11 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("       \"enabled\": " + Settings.Device.cpu.MiningSelected.ToString().ToLowerInvariant() + ",");
             conf.AppendLine("       \"huge-pages\": true,");
             conf.AppendLine("       \"hw-aes\": null,");
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"priority\": " + Settings.Device.cpu.Priority + ","); }
+            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("       \"priority\": " + Settings.Device.cpu.Priority + ","); }
             conf.AppendLine("       \"memory-pool\": true,");
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"yield\": " + Settings.Device.cpu.Yield.ToString().ToLowerInvariant() + ","); }
+            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("       \"yield\": " + (!Settings.Device.cpu.Yield).ToString().ToLowerInvariant() + ","); }
             conf.AppendLine("       \"asm\": true,");
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"max-threads-hint\": " + Settings.Device.cpu.MaxUsageHint + ","); }
+            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("       \"max-threads-hint\": " + Settings.Device.cpu.MaxUsageHint + ","); }
             conf.AppendLine("       \"rx\": {");
             conf.AppendLine("           \"init\": -1,");
             conf.AppendLine("           \"mode\": \"auto\",");

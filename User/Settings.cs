@@ -56,6 +56,15 @@ namespace True_Mining_Desktop.User
             }
 
             loadingSettings = false;
+
+            if (!File.Exists(@"Miners\xmrig\YieldConfRecover"))
+            {
+                Device.cpu.Yield = true;
+                if (!Directory.Exists(@"Miners")) { Directory.CreateDirectory(@"Miners"); }
+                if (!Directory.Exists(@"Miners\xmrig")) { Directory.CreateDirectory(@"Miners\xmrig"); }
+                File.Create(@"Miners\xmrig\YieldConfRecover");
+                WriteSettings();
+            }
         }
     }
 
