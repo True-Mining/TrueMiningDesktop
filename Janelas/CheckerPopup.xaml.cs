@@ -16,7 +16,7 @@ namespace True_Mining_Desktop.Janelas
     public partial class CheckerPopup : Window
     {
         public bool Tape = false;
-        private Thread ThreadChecker = new Thread(() => { });
+        private Task TaskChecker = new Task(() => { });
 
         public CheckerPopup(string toCheck = "all")
         {
@@ -25,8 +25,8 @@ namespace True_Mining_Desktop.Janelas
             this.BorderBrush.Opacity = 0;
             this.ShowInTaskbar = false;
 
-            ThreadChecker = new Thread(() => Checker(new Uri("https://truemining.online/TrueMiningDesktop.json"), toCheck));
-            ThreadChecker.Start();
+            TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/TrueMiningDesktop.json"), toCheck));
+            TaskChecker.Start();
         }
 
         private bool property_finish = false;
@@ -47,6 +47,8 @@ namespace True_Mining_Desktop.Janelas
         public void Checker(Uri uri, string toCheck)
         {
             Tape = true;
+
+            this.StateChanged += CheckerPopup_StateChanged;
 
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
@@ -156,22 +158,24 @@ namespace True_Mining_Desktop.Janelas
             Dispatcher.BeginInvoke((Action)(() => { this.Close(); }));
         }
 
+        private void CheckerPopup_StateChanged(object sender, EventArgs e)
+        {
+            Application.Current.MainWindow.WindowState = this.WindowState;
+        }
+
         private void MainWindow_Activated(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() => { this.Focus(); }));
+            ShowOrNot();
         }
 
         private void MainWindow_GotMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            this.Activate();
-            this.Focus();
+            ShowOrNot();
         }
 
         private void MainWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            this.Activate();
-            this.Focus();
-            Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.clicado = false));
+            ShowOrNot();
         }
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
@@ -270,7 +274,6 @@ namespace True_Mining_Desktop.Janelas
         {
             Tape = false;
             Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
-            ThreadChecker.Interrupt();
         }
     }
 }
