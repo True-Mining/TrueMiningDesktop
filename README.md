@@ -4,7 +4,7 @@
 
 #### True Mining Desktop comes to facilitate the mining of the end user, providing an easy-to-use graphical iterface so that the user can mine Dogecoin, RDCT and other currencies that will soon be implemented.
 
-![](https://github.com/True-Mining/TrueMiningDesktop/blob/beta/True%20Mining%20Desktop%20-%20Screenshot.png)
+![](https://raw.githubusercontent.com/True-Mining/TrueMiningDesktop/master/True%20Mining%20Desktop%20-%20Screenshot.png)
 
 #### Features:
 - Select which types of devices will be used for mining;
