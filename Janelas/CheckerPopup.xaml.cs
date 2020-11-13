@@ -277,5 +277,17 @@ namespace True_Mining_Desktop.Janelas
 
             Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
         }
+
+        private void ButtonCloseAction(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (MessageBoxResult.Yes == MessageBox.Show("Closing this popup, True Mining Desktop will be closed. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+            {
+                Core.Miner.EmergencyExit = true;
+                Application.Current.Shutdown();
+
+                Tools.CheckerPopup.Close();
+            }
+            else { return; }
+        }
     }
 }
