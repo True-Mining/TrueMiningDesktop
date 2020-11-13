@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 using True_Mining_Desktop.Core;
 using True_Mining_Desktop.Server;
@@ -37,7 +38,7 @@ namespace True_Mining_Desktop.Janelas
 
         public bool Finish { get { return property_finish; } set { property_finish = value; } }
         public string StatusTitle { get { return property_statusTitle; } set { property_statusTitle = value; Dispatcher.BeginInvoke((Action)(() => { statusTitle.Content = value; })); } }
-        public string FileName { get { return property_fileName; } set { property_fileName = value; Dispatcher.BeginInvoke((Action)(() => { fileName.Content = value; })); } }
+        public string FileName { get { return property_fileName; } set { property_fileName = value; Dispatcher.BeginInvoke((Action)(() => { fileName.Content = new TextBlock() { Text = value, TextWrapping = TextWrapping.WrapWithOverflow }; })); } }
         public int ProgressBar_Value { get { return property_progressBar_Value; } set { property_progressBar_Value = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.Value = value; })); } }
         public bool ProgressBar_IsIndeterminate { get { return property_progressBar_IsIndeterminate; } set { property_progressBar_IsIndeterminate = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.IsIndeterminate = value; })); } }
         private bool needRestart = false;
@@ -67,10 +68,7 @@ namespace True_Mining_Desktop.Janelas
             StatusTitle = "Checking Instalation";
             Thread.Sleep(10);
 
-            FileName = "trying to connect";
-            StatusTitle = "Internet Connection";
-
-            while (!Tools.IsConnected()) { StatusTitle = "Internet Error"; FileName = "Waiting for Internet Connection. Check your network connection."; Thread.Sleep(3000); }
+            CheckInternet();
 
             StatusTitle = "Checking Instalation";
 
@@ -187,10 +185,7 @@ namespace True_Mining_Desktop.Janelas
 
             int count = 0;
 
-            FileName = "trying to connect";
-            StatusTitle = "Internet Connection";
-
-            while (!Tools.IsConnected()) { StatusTitle = "Internet Error"; FileName = "Waiting for Internet Connection. Check your network connection."; Thread.Sleep(3000); }
+            CheckInternet();
 
             FileName = fileName;
             StatusTitle = "Downloading Files";
@@ -224,8 +219,16 @@ namespace True_Mining_Desktop.Janelas
                     }
                     catch { File.Move(path + fileName, path + fileName + ".old", true); File.Move(path + fileName + ".dl", path + fileName, true); }
                 }
-                if (!File.Exists(path + fileName) || Tools.FileSHA256(path + fileName) != sha256) { /* mensagem de erro; Notify.Invoke(null, null);*/ }
             }
+        }
+
+        private void CheckInternet()
+        {
+            FileName = "trying to connect";
+            StatusTitle = "Internet Connection";
+
+            int internetErrorTryes = 0;
+            while (!Tools.IsConnected()) { internetErrorTryes++; if (internetErrorTryes <= 3) { StatusTitle = "Internet Error"; FileName = "Waiting for Internet Connection. Check your network connection."; } else { StatusTitle = "Internet Error. Waiting for Internet Connection"; FileName = "If you have internet, start True Mining Desktop as administrator at least once to try add Windows Firewall rules."; } Thread.Sleep(3000); }
         }
 
         private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
