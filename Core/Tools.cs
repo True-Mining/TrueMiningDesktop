@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -23,9 +24,19 @@ namespace True_Mining_Desktop.Core
             try
             {
                 PingReply pr = p.Send("8.8.8.8", 3000);
-                if (pr.Status == IPStatus.Success) { return true; } else { if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); } return false; }
+                if (pr.Status == IPStatus.Success) { return true; }
             }
-            catch { if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); } return false; }
+            catch { }
+
+            try
+            {
+                if (new WebClient().DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
+            }
+            catch { }
+
+            if (HaveADM && !firewallRuleAdded)
+            { AddFirewallPingRule(); }
+            return false;
         }
 
         public static string FileSHA256(string filePath)
