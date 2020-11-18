@@ -23,7 +23,7 @@ namespace True_Mining_Desktop.Core
             try
             {
                 PingReply pr = p.Send("8.8.8.8", 3000);
-                if (pr.Status == IPStatus.Success) { return true; } else { if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); }  return false; }
+                if (pr.Status == IPStatus.Success) { return true; } else { if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); } return false; }
             }
             catch { if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); } return false; }
         }
@@ -63,7 +63,8 @@ namespace True_Mining_Desktop.Core
             return path;
         }
 
-        static bool firewallRuleAdded = false;
+        private static bool firewallRuleAdded = false;
+
         public static void AddFirewallPingRule()
         {
             Process addfwrule = new Process();

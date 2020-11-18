@@ -11,7 +11,7 @@
         <SolidColorBrush Color="White" />
     </Window.Background>
     <Grid Background="White" HorizontalAlignment="Center" Width="950">
-                 <Grid x:Name="AllWindow" Background="White" Width="950" PreviewMouseDown="Down" MouseMove="Move" MouseUp="Up">
+        <Grid x:Name="AllWindow" Background="White" Width="950" PreviewMouseDown="Down" MouseMove="Move" MouseUp="Up">
             <StackPanel Width="300" HorizontalAlignment="Left" Background="#FF8086FF" MouseUp="Up" MouseMove="Move" MouseDown="Down">
                 <Canvas Height="90" Background="Transparent">
                     <Image Height="90" Width="65" Canvas.Left="10" Canvas.Top="0" Source="/logo.png" />
