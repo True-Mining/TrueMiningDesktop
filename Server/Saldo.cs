@@ -35,22 +35,6 @@ namespace True_Mining_Desktop.Server
 
         public void UpdateDashboardInfo()
         {
-            int hoursRound = DateTime.UtcNow.Hour;
-
-            int minutesRound = DateTime.UtcNow.Minute;
-
-            if (hoursRound == 0)
-            {
-                hoursRound = 1;
-            }
-
-            if (minutesRound == 0)
-            {
-                minutesRound = 1;
-            }
-
-            int hoursRemaining = 24 - DateTime.UtcNow.Hour;
-            int minutesRemaining = 60 - DateTime.UtcNow.Minute;
             if (Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
@@ -72,10 +56,10 @@ namespace True_Mining_Desktop.Server
                         UpdateBalances();
                     }
 
-                    Janelas.Pages.Dashboard.LabelNextPayout = hoursRemaining + " hours, " + minutesRemaining + " minutes";
-                    Janelas.Pages.Dashboard.LabelAccumulatedBalance = Math.Round(AccumulatedBalance_Points, 0) + " points ⇒ ≈ " + Math.Round(AccumulatedBalance_Coins, 4) + ' ' + User.Settings.User.Payment_Coin;
-                    Janelas.Pages.Dashboard.WarningWrapVisibility = System.Windows.Visibility.Hidden;
-                    Janelas.Pages.Dashboard.LabelWarning = null;
+                    Pages.Dashboard.LabelNextPayout = ((int)23 - (int)DateTime.UtcNow.Hour) + " hours, " + ((int)59 - (int)DateTime.UtcNow.Minute) + " minutes";
+                    Pages.Dashboard.LabelAccumulatedBalance = Math.Round(AccumulatedBalance_Points, 0) + " points ⇒ ≈ " + Math.Round(AccumulatedBalance_Coins, 4) + ' ' + User.Settings.User.Payment_Coin;
+                    Pages.Dashboard.WarningWrapVisibility = System.Windows.Visibility.Hidden;
+                    Pages.Dashboard.LabelWarning = null;
                 });
             }
             else
@@ -85,18 +69,17 @@ namespace True_Mining_Desktop.Server
                     Pages.Dashboard.loadingVisualElement.Visibility = Visibility.Hidden;
                     Pages.Dashboard.DashboardContent.IsEnabled = true;
 
-                    Janelas.Pages.Dashboard.LabelNextPayout = hoursRemaining + " hours, " + minutesRemaining + " minutes";
-                    Janelas.Pages.Dashboard.LabelAccumulatedBalance = "??? points ⇒ ≈ ??? COINs";
-                    Janelas.Pages.Dashboard.WarningWrapVisibility = System.Windows.Visibility.Visible;
-                    Janelas.Pages.Dashboard.LabelWarning = "you need to enter your wallet address on the home screen so we can view your balances";
+                    Pages.Dashboard.LabelNextPayout = ((int)23 - (int)DateTime.UtcNow.Hour) + " hours, " + ((int)59 - (int)DateTime.UtcNow.Minute) + " minutes";
+                    Pages.Dashboard.LabelAccumulatedBalance = "??? points ⇒ ≈ ??? COINs";
+                    Pages.Dashboard.WarningWrapVisibility = System.Windows.Visibility.Visible;
+                    Pages.Dashboard.LabelWarning = "you need to enter your wallet address on the home screen so we can view your balances";
                 });
             }
         }
 
         public bool isUpdatingBalances;
 
-        public int hoursRound = DateTime.UtcNow.Hour;
-        public int minutesRound = DateTime.UtcNow.Minute;
+        public int hoursRound = DateTime.UtcNow.Hour + 1;
 
         public double AccumulatedBalance_Points = 0;
         public double AccumulatedBalance_Coins = 0;
@@ -110,6 +93,8 @@ namespace True_Mining_Desktop.Server
         {
             Task.Run(() =>
             {
+                hoursRound = DateTime.UtcNow.Hour + 1;
+
                 isUpdatingBalances = true;
 
                 Application.Current.Dispatcher.Invoke((Action)delegate
@@ -176,7 +161,7 @@ namespace True_Mining_Desktop.Server
 
                 exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * XMRfinalPrice / COINfinalPrice * 4;
 
-                AccumulatedBalance_Coins = Math.Round((exchangeRatePontosToMiningCoin * AccumulatedBalance_Points * (100 - 3) / 100), 3); //fee
+                AccumulatedBalance_Coins = Math.Round((exchangeRatePontosToMiningCoin * AccumulatedBalance_Points * (100 - 3) / 100), 4); //fee
 
                 isUpdatingBalances = false;
             });
