@@ -23,9 +23,9 @@ namespace True_Mining_Desktop.Core
             try
             {
                 PingReply pr = p.Send("8.8.8.8", 3000);
-                if (pr.Status == IPStatus.Success) { return true; } else { return false; }
+                if (pr.Status == IPStatus.Success) { return true; } else { if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); }  return false; }
             }
-            catch { return false; }
+            catch { if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); } return false; }
         }
 
         public static string FileSHA256(string filePath)
@@ -61,6 +61,27 @@ namespace True_Mining_Desktop.Core
             CreateMissingPatch(path);
 
             return path;
+        }
+
+        static bool firewallRuleAdded = false;
+        public static void AddFirewallPingRule()
+        {
+            Process addfwrule = new Process();
+            addfwrule.StartInfo.FileName = "netsh";
+            addfwrule.StartInfo.UseShellExecute = false;
+            addfwrule.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            addfwrule.StartInfo.CreateNoWindow = true;
+            addfwrule.StartInfo.Arguments = "advfirewall firewall del rule name=\"ping\"";
+            addfwrule.Start();
+            addfwrule.WaitForExit();
+            addfwrule.StartInfo.Arguments = "advfirewall firewall add rule name=\"ping\" protocol=ICMPV4 dir=in action=allow";
+            addfwrule.Start();
+            addfwrule.WaitForExit();
+            addfwrule.StartInfo.Arguments = "advfirewall firewall add rule name=\"ping\" protocol=ICMPV4 dir=out action=allow";
+            addfwrule.Start();
+            addfwrule.WaitForExit();
+
+            firewallRuleAdded = true;
         }
 
         public static void CreateMissingPatch(string path)
