@@ -1,4 +1,4 @@
-# TrueMiningDesktop
+# True Mining Desktop
 
 >True Mining Desktop is a software integrated with the True Mining and True Payment Platform.
 
