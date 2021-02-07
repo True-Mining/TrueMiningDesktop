@@ -96,6 +96,18 @@ namespace True_Mining_Desktop.Core
             firewallRuleAdded = true;
         }
 
+        public static void TryChangeTaskbarIconAsSettingsOrder()
+        {
+            if (User.Settings.User.ChangeTbIcon)
+            {
+                try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/iconeTaskbar2.ico"); } catch { try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { } }
+            }
+            else
+            {
+                try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { }
+            }
+        }
+
         public static void CreateMissingPatch(string path)
         {
             if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }

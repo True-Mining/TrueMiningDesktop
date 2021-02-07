@@ -23,7 +23,7 @@ namespace True_Mining_Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        private System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
+        public static System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
 
         public static event EventHandler TapeAllRequest;
 
@@ -155,7 +155,7 @@ namespace True_Mining_Desktop
 
             this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
 
-            try { nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { }
+            Tools.TryChangeTaskbarIconAsSettingsOrder();
             nIcon.Visible = true;
             nIcon.MouseDown += notifier_MouseDown;
 
@@ -171,7 +171,7 @@ namespace True_Mining_Desktop
             Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");
             Tools.CheckerPopup.ShowDialog();
 
-            nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico");
+            Tools.TryChangeTaskbarIconAsSettingsOrder();
 
             Task.Run(() => User.Settings.SettingsSaver());
 

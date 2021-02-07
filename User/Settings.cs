@@ -50,6 +50,7 @@ namespace True_Mining_Desktop.User
                 User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
                 User.ShowCLI = up.ShowCLI;
                 User.StartHide = up.StartHide;
+                User.ChangeTbIcon = up.ChangeTbIcon;
                 User.Payment_Coin = up.Payment_Coin;
                 User.Payment_Wallet = up.Payment_Wallet;
                 User.LICENSE_read = up.LICENSE_read;
@@ -158,6 +159,10 @@ namespace True_Mining_Desktop.User
         public bool AutostartMining { get { return autostartMining; } set { autostartMining = value; if (!Settings.loadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
         private bool startHide = false;
         public bool StartHide { get { return startHide; } set { startHide = value; if (!Settings.loadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
+
+        private bool changeTbIcon = false;
+        public bool ChangeTbIcon { get { return changeTbIcon; } set { changeTbIcon = value; if (value) { Tools.TryChangeTaskbarIconAsSettingsOrder(); } } }
+
         private bool avoidWindowsSuspend = true;
         public bool AvoidWindowsSuspend { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; Task.Run(() => Core.Tools.KeepSystemAwake()); } }
 
