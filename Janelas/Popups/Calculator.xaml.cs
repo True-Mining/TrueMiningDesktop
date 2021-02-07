@@ -18,6 +18,8 @@ namespace True_Mining_Desktop.Janelas.Popups
         {
             InitializeComponent();
 
+            this.Closing += Calculator_Closing;
+
             HasrateToPoints_day = hasrateToPoints_day;
             PointsToCoins = pointsToCoins;
 
@@ -30,6 +32,11 @@ namespace True_Mining_Desktop.Janelas.Popups
                 loadingVisualElement.Visibility = Visibility.Visible;
                 AllContent.Visibility = Visibility.Hidden;
             });
+        }
+
+        private void Calculator_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            timerUpdate.Stop();
         }
 
         private void TimerUpdate_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
