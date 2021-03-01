@@ -210,7 +210,7 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("   },");
             conf.AppendLine("   \"opencl\": {");
             conf.AppendLine("       \"enabled\": " + Settings.Device.opencl.MiningSelected.ToString().ToLowerInvariant() + ",");
-            if (!Settings.Device.opencl.Autoconfig) { conf.AppendLine("     \"cache\": " + Settings.Device.opencl.Cache + ","); }
+            if (!Settings.Device.opencl.Autoconfig) { conf.AppendLine("       \"cache\": " + Settings.Device.opencl.Cache.ToString().ToLowerInvariant() + ","); }
             conf.AppendLine("       \"loader\": null,");
             conf.AppendLine("       \"platform\": \"AMD\",");
             conf.AppendLine("       \"adl\": true,");
@@ -220,7 +220,7 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("   \"cuda\": {");
             conf.AppendLine("       \"enabled\": " + Settings.Device.cuda.MiningSelected.ToString().ToLowerInvariant() + ",");
             conf.AppendLine("       \"loader\": null,");
-            if (!Settings.Device.opencl.Autoconfig) { conf.AppendLine("     \"nvml\": " + Settings.Device.cuda.NVML.ToString().ToLowerInvariant()); }
+            if (!Settings.Device.opencl.Autoconfig) { conf.AppendLine("       \"nvml\": " + Settings.Device.cuda.NVML.ToString().ToLowerInvariant()); }
             conf.AppendLine("   },");
             conf.AppendLine("   \"donate-level\": 1,");
             conf.AppendLine("   \"donate-over-proxy\": 1,");
