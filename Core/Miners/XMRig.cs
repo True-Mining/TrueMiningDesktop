@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using True_Mining_Desktop.User;
 using True_Mining_Desktop.Server;
+using True_Mining_Desktop.User;
 
 namespace True_Mining_Desktop.Core.XMRig
 {

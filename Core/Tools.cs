@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using True_Mining_Desktop.Janelas;
 
@@ -106,6 +107,41 @@ namespace True_Mining_Desktop.Core
             {
                 try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { }
             }
+        }
+
+        public static void RestartAsAdministrator()
+        {
+            Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = true, startHiden = false, startMining = Miner.IsMining });
+
+            Process TrueMiningAsAdmin = new Process();
+            TrueMiningAsAdmin.StartInfo = new ProcessStartInfo()
+            {
+                FileName = Process.GetCurrentProcess().MainModule.FileName,
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+            try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
+
+            Process thisProcess = Process.GetCurrentProcess();
+
+            new Task(() =>
+            {
+                while (!TrueMiningAsAdmin.HasExited)
+                {
+                    Thread.Sleep(100);
+
+                    Process[] processesWithTrueMiningName = Process.GetProcessesByName(thisProcess.ProcessName);
+
+                    foreach (Process process in processesWithTrueMiningName)
+                    {
+                        if (process.Id != thisProcess.Id && process.Responding)
+                        {
+                            MainWindow.nIcon.Visible = false;
+                            thisProcess.Kill();
+                        }
+                    }
+                }
+            }).Start();
         }
 
         public static void CreateMissingPatch(string path)

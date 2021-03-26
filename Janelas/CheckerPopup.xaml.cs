@@ -93,7 +93,7 @@ namespace True_Mining_Desktop.Janelas
                     FileName = "Updating software parameters";
                     SoftwareParameters.Update(uri);
 
-                    if (!File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") && (toCheck == "all" || toCheck == "TrueMining"))
+                    if (!(File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates)) && (toCheck == "all" || toCheck == "TrueMining"))
                     {
                         FileName = "Checking True Mining Version";
                         Thread.Sleep(20);

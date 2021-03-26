@@ -101,7 +101,8 @@ namespace True_Mining_Desktop.Core
                 {
                     Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = false;
 
-                    Pages.Home.StartStopButton.Content = "Stop Mining";
+                    Pages.Home.StartStopButton_text.Content = "Stop Mining";
+                    Pages.Home.StartStopButton_icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.StopCircleOutline;
 
                     Pages.Home.StartStopButton.Background = Brushes.DarkOrange;
                     Pages.Home.StartStopButton.BorderBrush = Brushes.DarkOrange;
@@ -134,7 +135,9 @@ namespace True_Mining_Desktop.Core
 
                     Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = true;
 
-                    Pages.Home.StartStopButton.Content = "Start Mining";
+                    Pages.Home.StartStopButton_text.Content = "Start Mining";
+                    Pages.Home.StartStopButton_icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.PlayOutline;
+
                     Pages.Home.StartStopButton.Background = Brushes.DodgerBlue;
                     Pages.Home.StartStopButton.BorderBrush = Brushes.DodgerBlue;
 

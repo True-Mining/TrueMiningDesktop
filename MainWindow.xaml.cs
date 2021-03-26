@@ -142,8 +142,6 @@ namespace True_Mining_Desktop
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (User.Settings.User.StartHide) { Hide(); }
-
             if (!User.Settings.User.LICENSE_read)
             {
                 if (MessageBoxResult.Yes == MessageBox.Show("By using the software in any way you are agreeing to the license located at " + AppDomain.CurrentDomain.BaseDirectory + @"LICENSE.md" + "\n\nContinue?", "Accept True Mining License", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
@@ -159,14 +157,26 @@ namespace True_Mining_Desktop
             nIcon.Visible = true;
             nIcon.MouseDown += notifier_MouseDown;
 
-            MenuMenu.SelectedIndex = 0; // mostra a tela Home
+            Core.NextStart.Actions.Load();
 
-            if (!User.Settings.User.StartHide)
+            if (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions)
             {
-                this.ShowInTaskbar = true;
-                this.Activate();
-                this.Focus();
+                if (Core.NextStart.Actions.loadedNextStartInstructions.startHiden) { Hide(); }
             }
+            else
+            {
+                if (User.Settings.User.StartHide) { Hide(); }
+                else
+                {
+                    this.ShowInTaskbar = true;
+                    this.Activate();
+                    this.Focus();
+                }
+            }
+
+            if (!Tools.HaveADM) { Janelas.Pages.Home.RestartAsAdministratorButton.Visibility = Visibility.Visible; } else { Janelas.Pages.Home.RestartAsAdministratorButton.Visibility = Visibility.Collapsed; }
+
+            MenuMenu.SelectedIndex = 0; // mostra a tela Home
 
             Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");
             Tools.CheckerPopup.ShowDialog();
@@ -175,11 +185,24 @@ namespace True_Mining_Desktop
 
             Task.Run(() => User.Settings.SettingsSaver());
 
-            if (User.Settings.User.AutostartMining)
+            if (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions)
             {
-                if (!String.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
+                if (Core.NextStart.Actions.loadedNextStartInstructions.startMining)
                 {
-                    if (!Miner.IsMining) { Miner.StartMiner(); }
+                    if (!String.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
+                    {
+                        if (!Miner.IsMining) { Miner.StartMiner(); }
+                    }
+                }
+            }
+            else
+            {
+                if (User.Settings.User.AutostartMining)
+                {
+                    if (!String.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
+                    {
+                        if (!Miner.IsMining) { Miner.StartMiner(); }
+                    }
                 }
             }
         }

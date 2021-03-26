@@ -59,5 +59,10 @@ namespace True_Mining_Desktop.Janelas
         {
             Tools.OpenLinkInBrowser("https://www.4stake.com/truemining");
         }
+
+        private void RestartAsAdministrator_Click(object sender, RoutedEventArgs e)
+        {
+            Tools.RestartAsAdministrator();
+        }
     }
 }
