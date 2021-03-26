@@ -72,7 +72,7 @@ namespace True_Mining_Desktop.Core.XMRig
         public static void Stop()
         {
             try { XMRIGminer.Kill(); } catch { }
-            Thread.Sleep(200);
+            Thread.Sleep(500);
         }
 
         public static void ChangeCompiler()
