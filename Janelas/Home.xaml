@@ -16,11 +16,11 @@
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
             <Grid x:Name="GridUserWalletCoin" VerticalAlignment="Center" Height="40" Width="605">
                 <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Label Content="Wallet Address: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" Foreground="#DD000000" VerticalContentAlignment="Center" Margin="0" FontWeight="Bold" FontSize="11" />
-                    <TextBox x:Name="TextBox_PaymentAddress" Text="{Binding Payment_Wallet}" materialDesign:HintAssist.Hint="insert your wallet address here" Width="300" Margin="5,0,0,0" FontSize="11" FontWeight="Bold" Foreground="#D8000000" TextChanged="TextBox_TextChanged" BorderBrush="#4C000000" />
-                    <Button x:Name="Button_CreateWallet" Content="Create Wallet" Height="20" Width="80" FontSize="11.5" Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Margin="-80,0,0,0" Click="Button_CreateWallet_Click" FontWeight="Normal" Background="#CC2196F3" />
-                    <Label Content="Coin:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="11" Foreground="#DD000000" VerticalContentAlignment="Center" Margin="60,0,0,0" HorizontalAlignment="Stretch" FontWeight="Bold" />
-                    <ComboBox x:Name="ComboBox_PaymentCoin" materialDesign:HintAssist.Hint="select" HorizontalAlignment="Center" Width="89" Margin="5,0,0,0" FontWeight="Bold" FontSize="11" Foreground="#D8000000" ItemsSource="{Binding Payment_CoinsList}" SelectedIndex="{Binding PaymentCoinComboBox_SelectedIndex}" BorderBrush="#4C000000" />
+                    <Label Content="Wallet Address: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" Foreground="#DD000000" VerticalContentAlignment="Center" Margin="0" FontWeight="Bold" FontSize="12" />
+                    <TextBox x:Name="TextBox_PaymentAddress" Text="{Binding Payment_Wallet}" materialDesign:HintAssist.Hint="insert your wallet address here" Width="300" Margin="5,0,0,0" FontWeight="Bold" Foreground="#D8000000" TextChanged="TextBox_TextChanged" BorderBrush="#4C000000" FontSize="11.5" Padding="0,1.5,0,0" />
+                    <Button x:Name="Button_CreateWallet" Content="Create Wallet" Height="20" Width="80" FontSize="12" Padding="0,0,0,0" Grid.IsSharedSizeScope="True" Margin="-80,0,0,0" Click="Button_CreateWallet_Click" FontWeight="Normal" Background="#CC2196F3" />
+                    <Label Content="Coin:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" Foreground="#DD000000" VerticalContentAlignment="Center" Margin="60,0,0,0" HorizontalAlignment="Stretch" FontWeight="Bold" FontSize="12.1" />
+                    <ComboBox x:Name="ComboBox_PaymentCoin" materialDesign:HintAssist.Hint="select" HorizontalAlignment="Center" Width="89" Margin="5,0,0,0" FontWeight="Bold" Foreground="#D8000000" ItemsSource="{Binding Payment_CoinsList}" SelectedIndex="{Binding PaymentCoinComboBox_SelectedIndex}" BorderBrush="#4C000000" FontSize="11.5" Padding="0,7,0,5" />
                 </WrapPanel>
             </Grid>
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
@@ -42,6 +42,9 @@
                         <Label Content="Restart as ADM" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
                     </WrapPanel>
                 </Button>
+            </WrapPanel>
+            <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Stretch" Orientation="Horizontal" Margin="25,10,25,0">
+                <TextBlock x:Name="WarningsTextBlock" TextWrapping="WrapWithOverflow" TextTrimming="WordEllipsis" HorizontalAlignment="Left" FontSize="11.5" />
             </WrapPanel>
         </WrapPanel>
     </Grid>

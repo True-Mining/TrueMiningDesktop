@@ -174,7 +174,7 @@ namespace True_Mining_Desktop
                 }
             }
 
-            if (!Tools.HaveADM) { Janelas.Pages.Home.RestartAsAdministratorButton.Visibility = Visibility.Visible; } else { Janelas.Pages.Home.RestartAsAdministratorButton.Visibility = Visibility.Collapsed; }
+            if (!Tools.HaveADM) { Janelas.Pages.Home.RestartAsAdministratorButton.Visibility = Visibility.Visible; Janelas.Pages.Home.WarningsTextBlock.Text += "You haven't opened True Mining as an administrator. Restart as ADM is recommended and generally results in a better hashrate"; } else { Janelas.Pages.Home.RestartAsAdministratorButton.Visibility = Visibility.Collapsed; }
 
             MenuMenu.SelectedIndex = 0; // mostra a tela Home
 
