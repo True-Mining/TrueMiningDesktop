@@ -144,6 +144,13 @@ namespace True_Mining_Desktop.Core
             }).Start();
         }
 
+        public static string GetAssemblyVersion()
+        {
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetEntryAssembly();
+            FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(assembly.Location);
+            return fileVersion.FileVersion.TrimEnd('.', '0');
+        }
+
         public static void CreateMissingPatch(string path)
         {
             if (!Directory.Exists(path)) { Directory.CreateDirectory(path); }

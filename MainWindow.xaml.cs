@@ -151,6 +151,13 @@ namespace True_Mining_Desktop
                 else { this.Close(); }
             }
 
+            try
+            {
+                this.CanvasSoftwareVersion.Text = "v" + Tools.GetAssemblyVersion();
+                this.CanvasSoftwareVersion.TextDecorations = null;
+            }
+            catch { }
+
             this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
 
             Tools.TryChangeTaskbarIconAsSettingsOrder();
