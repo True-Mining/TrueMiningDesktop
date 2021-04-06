@@ -105,7 +105,8 @@ namespace True_Mining_Desktop.Core
             }
             else
             {
-                try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { }
+                try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); }
+                catch { }
             }
         }
 

@@ -9,12 +9,12 @@ namespace True_Mining_Desktop.Janelas.Popups
     /// </summary>
     public partial class Calculator : Window
     {
-        private double HasrateToPoints_day;
-        private double PointsToCoins;
+        private decimal HasrateToPoints_day;
+        private decimal PointsToCoins;
 
         private System.Timers.Timer timerUpdate = new System.Timers.Timer(2000);
 
-        public Calculator(double hasrateToPoints_day, double pointsToCoins)
+        public Calculator(decimal hasrateToPoints_day, decimal pointsToCoins)
         {
             InitializeComponent();
 
@@ -52,18 +52,18 @@ namespace True_Mining_Desktop.Janelas.Popups
             }
             else
             {
-                CPU_hashrate_double = Convert.ToDouble(Miner.GetHashrate("cpu", User.Settings.Device.cpu.Algorithm));
-                OPENCL_hashrate_double = Convert.ToDouble(Miner.GetHashrate("opencl", User.Settings.Device.opencl.Algorithm));
-                CUDA_hashrate_double = Convert.ToDouble(Miner.GetHashrate("cuda", User.Settings.Device.cuda.Algorithm));
+                CPU_hashrate_decimal = Convert.ToDecimal(Miner.GetHashrate("cpu", User.Settings.Device.cpu.Algorithm));
+                OPENCL_hashrate_decimal = Convert.ToDecimal(Miner.GetHashrate("opencl", User.Settings.Device.opencl.Algorithm));
+                CUDA_hashrate_decimal = Convert.ToDecimal(Miner.GetHashrate("cuda", User.Settings.Device.cuda.Algorithm));
 
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     CoinName = User.Settings.User.Payment_Coin;
 
                     CPU_algorithm = User.Settings.Device.cpu.Algorithm;
-                    if (CPU_hashrate_double == -1) { CPUpannel.IsEnabled = false; CPU_hashrate_double = 0; } else { CPUpannel.IsEnabled = true; }
-                    CPU_hashrate = Math.Round(CPU_hashrate_double, 2).ToString() + " H/s";
-                    CPUestimated_day_Coins = CPU_hashrate_double * HasrateToPoints_day * PointsToCoins;
+                    if (CPU_hashrate_decimal == -1) { CPUpannel.IsEnabled = false; CPU_hashrate_decimal = 0; } else { CPUpannel.IsEnabled = true; }
+                    CPU_hashrate = Math.Round(CPU_hashrate_decimal, 2).ToString() + " H/s";
+                    CPUestimated_day_Coins = CPU_hashrate_decimal * HasrateToPoints_day * PointsToCoins;
                     CPUestimated_day_Sats = CPUestimated_day_Coins * PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
                     CPUestimated_day_USD = CPUestimated_day_Sats * PoolAPI.BitcoinPrice.FIAT_rates.USD.Last;
                     CPUestimated_day_Coins_string = Math.Round(CPUestimated_day_Coins, 4).ToString();
@@ -71,9 +71,9 @@ namespace True_Mining_Desktop.Janelas.Popups
                     CPUestimated_day_USD_string = Math.Round(CPUestimated_day_USD, 2).ToString();
 
                     OPENCL_algorithm = User.Settings.Device.opencl.Algorithm;
-                    if (OPENCL_hashrate_double == -1) { OPENCLpannel.IsEnabled = false; OPENCL_hashrate_double = 0; } else { OPENCLpannel.IsEnabled = true; }
-                    OPENCL_hashrate = Math.Round(OPENCL_hashrate_double, 2).ToString() + " H/s";
-                    OPENCLestimated_day_Coins = OPENCL_hashrate_double * HasrateToPoints_day * PointsToCoins;
+                    if (OPENCL_hashrate_decimal == -1) { OPENCLpannel.IsEnabled = false; OPENCL_hashrate_decimal = 0; } else { OPENCLpannel.IsEnabled = true; }
+                    OPENCL_hashrate = Math.Round(OPENCL_hashrate_decimal, 2).ToString() + " H/s";
+                    OPENCLestimated_day_Coins = OPENCL_hashrate_decimal * HasrateToPoints_day * PointsToCoins;
                     OPENCLestimated_day_Sats = OPENCLestimated_day_Coins * PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
                     OPENCLestimated_day_USD = OPENCLestimated_day_Sats * PoolAPI.BitcoinPrice.FIAT_rates.USD.Last;
                     OPENCLestimated_day_Coins_string = Math.Round(OPENCLestimated_day_Coins, 4).ToString();
@@ -81,9 +81,9 @@ namespace True_Mining_Desktop.Janelas.Popups
                     OPENCLestimated_day_USD_string = Math.Round(OPENCLestimated_day_USD, 2).ToString();
 
                     CUDA_algorithm = User.Settings.Device.cuda.Algorithm;
-                    if (CUDA_hashrate_double == -1) { CUDApannel.IsEnabled = false; CUDA_hashrate_double = 0; } else { CUDApannel.IsEnabled = true; }
-                    CUDA_hashrate = Math.Round(CUDA_hashrate_double, 2).ToString() + " H/s";
-                    CUDAestimated_day_Coins = CUDA_hashrate_double * HasrateToPoints_day * PointsToCoins;
+                    if (CUDA_hashrate_decimal == -1) { CUDApannel.IsEnabled = false; CUDA_hashrate_decimal = 0; } else { CUDApannel.IsEnabled = true; }
+                    CUDA_hashrate = Math.Round(CUDA_hashrate_decimal, 2).ToString() + " H/s";
+                    CUDAestimated_day_Coins = CUDA_hashrate_decimal * HasrateToPoints_day * PointsToCoins;
                     CUDAestimated_day_Sats = CUDAestimated_day_Coins * PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
                     CUDAestimated_day_USD = CUDAestimated_day_Sats * PoolAPI.BitcoinPrice.FIAT_rates.USD.Last;
                     CUDAestimated_day_Coins_string = Math.Round(CUDAestimated_day_Coins, 4).ToString();
@@ -93,7 +93,7 @@ namespace True_Mining_Desktop.Janelas.Popups
                     timerUpdate.Enabled = true;
                 });
 
-                if (CPU_hashrate_double <= 0 && OPENCL_hashrate_double <= 0 && CUDA_hashrate_double <= 0)
+                if (CPU_hashrate_decimal <= 0 && OPENCL_hashrate_decimal <= 0 && CUDA_hashrate_decimal <= 0)
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -116,32 +116,32 @@ namespace True_Mining_Desktop.Janelas.Popups
 
         public string CoinName { get; set; }
 
-        public double CPU_hashrate_double { get; set; } = 0;
+        public decimal CPU_hashrate_decimal { get; set; } = 0;
         public string CPU_hashrate { get; set; }
         public string CPU_algorithm { get; set; }
-        public double CPUestimated_day_Coins { get; set; }
-        public double CPUestimated_day_Sats { get; set; }
-        public double CPUestimated_day_USD { get; set; }
+        public decimal CPUestimated_day_Coins { get; set; }
+        public decimal CPUestimated_day_Sats { get; set; }
+        public decimal CPUestimated_day_USD { get; set; }
         public string CPUestimated_day_Coins_string { get; set; }
         public string CPUestimated_day_Sats_string { get; set; }
         public string CPUestimated_day_USD_string { get; set; }
 
-        public double OPENCL_hashrate_double { get; set; } = 0;
+        public decimal OPENCL_hashrate_decimal { get; set; } = 0;
         public string OPENCL_hashrate { get; set; }
         public string OPENCL_algorithm { get; set; }
-        public double OPENCLestimated_day_Coins { get; set; }
-        public double OPENCLestimated_day_Sats { get; set; }
-        public double OPENCLestimated_day_USD { get; set; }
+        public decimal OPENCLestimated_day_Coins { get; set; }
+        public decimal OPENCLestimated_day_Sats { get; set; }
+        public decimal OPENCLestimated_day_USD { get; set; }
         public string OPENCLestimated_day_Coins_string { get; set; }
         public string OPENCLestimated_day_Sats_string { get; set; }
         public string OPENCLestimated_day_USD_string { get; set; }
 
-        public double CUDA_hashrate_double { get; set; } = 0;
+        public decimal CUDA_hashrate_decimal { get; set; } = 0;
         public string CUDA_hashrate { get; set; }
         public string CUDA_algorithm { get; set; }
-        public double CUDAestimated_day_Coins { get; set; }
-        public double CUDAestimated_day_Sats { get; set; }
-        public double CUDAestimated_day_USD { get; set; }
+        public decimal CUDAestimated_day_Coins { get; set; }
+        public decimal CUDAestimated_day_Sats { get; set; }
+        public decimal CUDAestimated_day_USD { get; set; }
         public string CUDAestimated_day_Coins_string { get; set; }
         public string CUDAestimated_day_Sats_string { get; set; }
         public string CUDAestimated_day_USD_string { get; set; }

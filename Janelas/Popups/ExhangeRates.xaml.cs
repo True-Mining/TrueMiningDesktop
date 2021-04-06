@@ -10,7 +10,7 @@ namespace True_Mining_Desktop.Janelas.Popups
     {
         private System.Timers.Timer timerUpdate = new System.Timers.Timer(2000);
 
-        public ExchangeRates(double pointsToCoins)
+        public ExchangeRates(decimal pointsToCoins)
         {
             InitializeComponent();
             new System.Threading.Tasks.Task(() =>

@@ -9,6 +9,8 @@ namespace True_Mining_Desktop.Janelas
     /// </summary>
     public partial class Home : UserControl
     {
+        public bool walletIsChanged { get; set; } = false;
+
         public Home()
         {
             InitializeComponent();
@@ -48,10 +50,11 @@ namespace True_Mining_Desktop.Janelas
             if (TextBox_PaymentAddress.Text.Length == 34 && Tools.WalletAddressIsValid(TextBox_PaymentAddress.Text))
             {
                 Button_CreateWallet.Visibility = Visibility.Hidden;
+                walletIsChanged = true;
             }
             else
             {
-                Button_CreateWallet.Visibility = Visibility.Visible;
+                //Button_CreateWallet.Visibility = Visibility.Visible;
             }
         }
 

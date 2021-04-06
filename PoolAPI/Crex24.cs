@@ -4,14 +4,14 @@ namespace True_Mining_Desktop.PoolAPI
 {
     public class BuyLevel
     {
-        public double price { get; set; } = 1;
-        public double volume { get; set; } = 0;
+        public decimal price { get; set; } = 1;
+        public decimal volume { get; set; } = 0;
     }
 
     public class SellLevel
     {
-        public double price { get; set; } = 1;
-        public double volume { get; set; } = 0;
+        public decimal price { get; set; } = 1;
+        public decimal volume { get; set; } = 0;
     }
 
     public class Orderbook

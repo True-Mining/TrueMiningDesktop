@@ -161,7 +161,7 @@ namespace True_Mining_Desktop.User
         public bool StartHide { get { return startHide; } set { startHide = value; if (!Settings.loadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
 
         private bool changeTbIcon = false;
-        public bool ChangeTbIcon { get { return changeTbIcon; } set { changeTbIcon = value; if (value) { Tools.TryChangeTaskbarIconAsSettingsOrder(); } } }
+        public bool ChangeTbIcon { get { return changeTbIcon; } set { changeTbIcon = value; Tools.TryChangeTaskbarIconAsSettingsOrder(); } }
 
         private bool avoidWindowsSuspend = true;
         public bool AvoidWindowsSuspend { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; Task.Run(() => Core.Tools.KeepSystemAwake()); } }

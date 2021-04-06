@@ -5,13 +5,13 @@ namespace True_Mining_Desktop.PoolAPI
     public class FIAT
     {
         [JsonProperty("last")]
-        public double Last { get; set; } = 0;
+        public decimal Last { get; set; } = 0;
 
         [JsonProperty("buy")]
-        public double Buy { get; set; } = 0;
+        public decimal Buy { get; set; } = 0;
 
         [JsonProperty("sell")]
-        public double Sell { get; set; } = 0;
+        public decimal Sell { get; set; } = 0;
 
         [JsonProperty("symbol")]
         public string Symbol { get; set; } = null;
