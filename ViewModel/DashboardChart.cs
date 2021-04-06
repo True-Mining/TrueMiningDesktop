@@ -5,12 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using True_Mining_Desktop.Janelas;
 
 namespace True_Mining_Desktop.ViewModel
 {
-    class DashboardChart
+    internal class DashboardChart
     {
         public static void UpdateAxes(Dictionary<int, int> dados, int zoomInterval)
         {
@@ -21,7 +20,6 @@ namespace True_Mining_Desktop.ViewModel
                 TitleFontSize = 15,
                 TitleHorizontalAlignment = TitleHorizontalAlignment.CenteredWithinView,
                 PlotAreaBorderThickness = new OxyThickness(0, 0, 0, 0),
-
             };
 
             Dictionary<int, int> dataToShow = new Dictionary<int, int>();
@@ -182,4 +180,4 @@ namespace True_Mining_Desktop.ViewModel
             Pages.Dashboard.chart_visibility = Visibility.Visible;
         }
     }
-    }
+}

@@ -145,15 +145,15 @@ namespace True_Mining_Desktop.Server
                 }
                 catch { }
 
-            int sumHashrate_user =
-            PoolAPI.XMR_nanopool.hashrateHistory_user
-            .Where((KeyValuePair<int, int> value) =>
-            value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-            .Select((KeyValuePair<int, int> value) => value.Value)
-            .Aggregate(0, (acc, now) =>
-            {
-                return acc + now;
-            });
+                int sumHashrate_user =
+                PoolAPI.XMR_nanopool.hashrateHistory_user
+                .Where((KeyValuePair<int, int> value) =>
+                value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
+                .Select((KeyValuePair<int, int> value) => value.Value)
+                .Aggregate(0, (acc, now) =>
+                {
+                    return acc + now;
+                });
 
                 int sumHashrate_tm =
                 PoolAPI.XMR_nanopool.hashrateHistory_tm
@@ -206,6 +206,9 @@ namespace True_Mining_Desktop.Server
                         BTCpraVirarCOIN -= Crex24.MiningCoinBTC_Orderbook.sellLevels[I].price * Crex24.MiningCoinBTC_Orderbook.sellLevels[I].volume;
                     }
                 }
+
+                exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * XMRfinalPrice / COINfinalPrice * 4;
+                conversionHashrateToPoints = (decimal)((1) / (52.5 * 4));
 
                 AccumulatedBalance_Coins = (double)Math.Round((totalXMRmineradoTrueMining * (XMRfinalPrice / COINfinalPrice) * (AverageHashrateUser / AverageHashrateTrueMining) * (100 - 3) / 100), 4); //fee
 
