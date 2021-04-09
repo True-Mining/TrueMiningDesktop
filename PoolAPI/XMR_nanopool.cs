@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace True_Mining_Desktop.PoolAPI
 {
@@ -83,10 +84,17 @@ namespace True_Mining_Desktop.PoolAPI
         public Data data = new Data();
     }
 
+    public class share_coefficient
+    {
+        public bool status { get; set; } = true;
+        public decimal data { get; set; } = (decimal)52.5;
+    }
+
     public class XMR_nanopool
     {
-        public static Dictionary<int, int> hashrateHistory_user = new Dictionary<int, int>();
-        public static Dictionary<int, int> hashrateHistory_tm = new Dictionary<int, int>();
+        public static Dictionary<int, Int64> hashrateHistory_user = new Dictionary<int, Int64>();
+        public static Dictionary<int, Int64> hashrateHistory_tm = new Dictionary<int, Int64>();
         public static approximated_earnings approximated_earnings = new approximated_earnings();
+        public static share_coefficient sharecoef = new share_coefficient();
     }
 }

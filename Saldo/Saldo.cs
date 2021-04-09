@@ -32,7 +32,11 @@ namespace True_Mining_Desktop.Server
 
         private void timerUpdateDashboard_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            UpdateDashboardInfo();
+            try
+            {
+                UpdateDashboardInfo();
+            }
+            catch { }
         }
 
         public void UpdateDashboardInfo()
@@ -61,7 +65,7 @@ namespace True_Mining_Desktop.Server
                     }
 
                     Pages.Dashboard.LabelNextPayout = ((int)23 - (int)DateTime.UtcNow.Hour) + " hours, " + ((int)59 - (int)DateTime.UtcNow.Minute) + " minutes";
-                    Pages.Dashboard.LabelAccumulatedBalance = Math.Round(AccumulatedBalance_Points, 0) + " points ⇒ ≈ " + Math.Round(AccumulatedBalance_Coins, 4) + ' ' + User.Settings.User.Payment_Coin;
+                    Pages.Dashboard.LabelAccumulatedBalance = Decimal.Round(AccumulatedBalance_Points, 0) + " points ⇒ ≈ " + Decimal.Round(AccumulatedBalance_Coins, 4) + ' ' + User.Settings.User.Payment_Coin;
                     if (Pages.Dashboard.DashboardWarnings.Contains(warningMessage)) Janelas.Pages.Dashboard.DashboardWarnings.Remove(warningMessage); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                 });
             }
@@ -83,13 +87,17 @@ namespace True_Mining_Desktop.Server
 
         public DateTime lastPayment = DateTime.UtcNow.AddHours(-(DateTime.UtcNow.Hour)).AddMinutes(-(DateTime.UtcNow.Minute));
 
-        public double AccumulatedBalance_Points = 0;
-        public double AccumulatedBalance_Coins = 0;
+        public decimal AccumulatedBalance_Points = 0;
+        public decimal AccumulatedBalance_Coins = 0;
 
-        public decimal conversionHashrateToPoints;
+        public decimal HashesPerPoint;
         public decimal exchangeRatePontosToMiningCoin;
 
         private static DateTime lastUpdated = DateTime.Now.AddMinutes(-10);
+
+        private static int secondsPerAveragehashrateReportInterval = 60 * 10;
+        public decimal pointsMultiplier = secondsPerAveragehashrateReportInterval * 16;
+        public int hashesToCompare = 1000;
 
         public void UpdateBalances()
         {
@@ -116,7 +124,8 @@ namespace True_Mining_Desktop.Server
 
                     Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient().DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")));
                     Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient().DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.Payment_Coin + "-BTC")));
-                    XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/1000")));
+                    XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)));
+                    XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/pool/sharecoef")));
 
                     PoolAPI.XMR_nanopool.hashrateHistory_user.Clear();
 
@@ -145,33 +154,28 @@ namespace True_Mining_Desktop.Server
                 }
                 catch { }
 
-                int sumHashrate_user =
+                Int64 sumHashrate_user =
                 PoolAPI.XMR_nanopool.hashrateHistory_user
-                .Where((KeyValuePair<int, int> value) =>
+                .Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-                .Select((KeyValuePair<int, int> value) => value.Value)
-                .Aggregate(0, (acc, now) =>
+                .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
+                .Aggregate(0, (Func<Int64, Int64, Int64>)((acc, now) =>
                 {
                     return acc + now;
-                });
+                }));
 
-                int sumHashrate_tm =
+                Int64 sumHashrate_tm =
                 PoolAPI.XMR_nanopool.hashrateHistory_tm
-                .Where((KeyValuePair<int, int> value) =>
+                .Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-                .Select((KeyValuePair<int, int> value) => value.Value)
-                .Aggregate(0, (acc, now) =>
+                .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
+                .Aggregate(0, (Func<Int64, Int64, Int64>)((acc, now) =>
                 {
                     return acc + now;
-                });
+                }));
+                decimal totalXMRmineradoTrueMining = (decimal)XMR_nanopool.approximated_earnings.data.day.coins / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm;
 
-                decimal AverageHashrateUser = (decimal)Math.Floor((decimal)(sumHashrate_user / (sinceLastPayment.TotalMinutes / 10)));
-
-                decimal AverageHashrateTrueMining = (decimal)Math.Floor((decimal)(sumHashrate_tm / (sinceLastPayment.TotalMinutes / 10)));
-
-                decimal totalXMRmineradoTrueMining = XMR_nanopool.approximated_earnings.data.minute.coins * AverageHashrateTrueMining / 1000m * 10m * (decimal)(sinceLastPayment.TotalMinutes / 10);
-
-                decimal XMRpraVirarBTC = totalXMRmineradoTrueMining;
+                decimal XMRpraVirarBTC = (decimal)totalXMRmineradoTrueMining;
 
                 decimal XMRfinalPrice = 0;
 
@@ -189,7 +193,7 @@ namespace True_Mining_Desktop.Server
                     }
                 }
 
-                decimal BTCpraVirarCOIN = totalXMRmineradoTrueMining * XMRfinalPrice;
+                decimal BTCpraVirarCOIN = (decimal)totalXMRmineradoTrueMining * XMRfinalPrice;
 
                 decimal COINfinalPrice = 0;
 
@@ -207,12 +211,12 @@ namespace True_Mining_Desktop.Server
                     }
                 }
 
-                exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * XMRfinalPrice / COINfinalPrice * 4;
-                conversionHashrateToPoints = (decimal)((1) / (52.5 * 4));
+                HashesPerPoint = XMR_nanopool.sharecoef.data * pointsMultiplier;
+                AccumulatedBalance_Points = (decimal)sumHashrate_user / HashesPerPoint;
 
-                AccumulatedBalance_Coins = (double)Math.Round((totalXMRmineradoTrueMining * (XMRfinalPrice / COINfinalPrice) * (AverageHashrateUser / AverageHashrateTrueMining) * (100 - 3) / 100), 4); //fee
+                exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * 0.97m / hashesToCompare / 60 / 60 * XMRfinalPrice / COINfinalPrice * HashesPerPoint;
+                AccumulatedBalance_Coins = Decimal.Round(Decimal.Multiply(totalXMRmineradoTrueMining * Decimal.Divide(XMRfinalPrice, COINfinalPrice) * Decimal.Divide(sumHashrate_user, sumHashrate_tm), 0.97m), 4); //fee
 
-                AccumulatedBalance_Points = sumHashrate_user / 840;
 
                 string warningMessage = "Balance less than 1 DOGE will be paid once a week when you reach the minimum amount. Your balance will disappear from the dashboard, but it will still be saved in our system";
                 string warningMessage2 = "Mined points take an average of 10-20 minutes to be displayed on the dashboard.";

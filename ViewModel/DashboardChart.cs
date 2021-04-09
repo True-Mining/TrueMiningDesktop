@@ -11,7 +11,7 @@ namespace True_Mining_Desktop.ViewModel
 {
     internal class DashboardChart
     {
-        public static void UpdateAxes(Dictionary<int, int> dados, int zoomInterval)
+        public static void UpdateAxes(Dictionary<int, Int64> dados, int zoomInterval)
         {
             PlotModel plotModel = new PlotModel()
             {
@@ -34,9 +34,9 @@ namespace True_Mining_Desktop.ViewModel
             {
                 zoomInterval = (int)new TimeSpan((int)Math.Floor(TimeSpan.FromSeconds(zoomInterval).TotalHours) - 1, DateTime.UtcNow.Minute, DateTime.UtcNow.Second).TotalSeconds;
 
-                dataToShow = dados.Where((KeyValuePair<int, int> value) =>
+                dataToShow = dados.Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, int> value) => new KeyValuePair<int, int>(value.Key, value.Value / 840))
+                .Select((KeyValuePair<int, Int64> value) => new KeyValuePair<int, int>(value.Key, (int)(value.Value / 840)))
                 .OrderBy((KeyValuePair<int, int> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
@@ -67,9 +67,9 @@ namespace True_Mining_Desktop.ViewModel
             {
                 zoomInterval = (int)new TimeSpan((int)Math.Floor(TimeSpan.FromSeconds(zoomInterval).TotalDays) - 1, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second).TotalSeconds;
 
-                dataToShow = dados.Where((KeyValuePair<int, int> value) =>
+                dataToShow = dados.Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, int> value) => new KeyValuePair<int, int>(value.Key, value.Value / 840))
+                .Select((KeyValuePair<int, Int64> value) => new KeyValuePair<int, int>(value.Key, (int)value.Value / 840))
                 .OrderBy((KeyValuePair<int, int> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
@@ -143,9 +143,9 @@ namespace True_Mining_Desktop.ViewModel
             plotModel.Series.Add(Pages.Dashboard.columnChartSerie);
 
             ////////////////////////////////
-            int chart_max_value = (int)Math.Ceiling(d: (decimal)dataToShow_formated.Max((KeyValuePair<string, int> value) => value.Value));
+            int chart_max_value = dataToShow_formated.Count > 0 ? (int)Math.Ceiling(d: (decimal)dataToShow_formated.Max((KeyValuePair<string, int> value) => value.Value)) : 10;
             int chart_max_range = (int)((int)Math.Ceiling(chart_max_value / Math.Pow(10, chart_max_value.ToString().Length - 1)) * Math.Pow(10, (chart_max_value.ToString().Length - 1)));
-            int chart_Yaxis_major_step = (int)Math.Ceiling((double)(chart_max_range / 5));
+            int chart_Yaxis_major_step = (int)Math.Ceiling((decimal)(chart_max_range / 5));
 
             plotModel.Axes.Add(new OxyPlot.Axes.CategoryAxis()
             {

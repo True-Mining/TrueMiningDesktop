@@ -8,9 +8,7 @@ namespace True_Mining_Desktop.Janelas.Popups
     /// </summary>
     public partial class ExchangeRates : Window
     {
-        private System.Timers.Timer timerUpdate = new System.Timers.Timer(2000);
-
-        public ExchangeRates(decimal pointsToCoins)
+        public ExchangeRates(decimal exchangeRatePontosToMiningCoin)
         {
             InitializeComponent();
             new System.Threading.Tasks.Task(() =>
@@ -22,7 +20,6 @@ namespace True_Mining_Desktop.Janelas.Popups
 
                     if (Janelas.Pages.Dashboard.loadingVisualElement.Visibility == Visibility.Visible)
                     {
-                        timerUpdate.Stop();
                         this.Close();
 
                         MessageBox.Show("Wait for Dashboard load first"); return;
@@ -31,17 +28,17 @@ namespace True_Mining_Desktop.Janelas.Popups
                     {
                         CoinName = User.Settings.User.Payment_Coin;
 
-                        BTCToCoinRate = Math.Round(BTCToBTCRate / Convert.ToDecimal(((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2)));
+                        BTCToCoinRate = Decimal.Round(BTCToBTCRate / (PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2);
                         BTCToBTCRate = 1;
-                        BTCToUSDRate = Convert.ToDecimal(Math.Round(PoolAPI.BitcoinPrice.FIAT_rates.USD.Last, 2));
+                        BTCToUSDRate = Decimal.Round(PoolAPI.BitcoinPrice.FIAT_rates.USD.Last, 2);
 
                         CoinToCoinRate = 1;
-                        CoinToBTCRate = Math.Round((Convert.ToDecimal((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2) / BTCToBTCRate), 8);
-                        CoinToUSDRate = Math.Round((Convert.ToDecimal((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2) / BTCToBTCRate * BTCToUSDRate), 5);
+                        CoinToBTCRate = Decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate, 8);
+                        CoinToUSDRate = Decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate * BTCToUSDRate, 5);
 
-                        PointToCoinRate = Math.Round(Convert.ToDecimal(pointsToCoins), 5);
-                        PointToBTCRate = Math.Round((Convert.ToDecimal((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2) * Convert.ToDecimal(pointsToCoins) / BTCToBTCRate), 8);
-                        PointToUSDRate = Math.Round((Convert.ToDecimal((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2) * Convert.ToDecimal(pointsToCoins) / BTCToBTCRate * BTCToUSDRate), 5);
+                        PointToCoinRate = Decimal.Round(exchangeRatePontosToMiningCoin, 5);
+                        PointToBTCRate = Decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate, 8);
+                        PointToUSDRate = Decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate * BTCToUSDRate, 5);
 
                         loadingVisualElement.Visibility = Visibility.Hidden;
                         AllContent.Visibility = Visibility.Visible;
@@ -51,10 +48,6 @@ namespace True_Mining_Desktop.Janelas.Popups
                     }
                 });
             }).Start();
-        }
-
-        private void TimerUpdate_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
         }
 
         public string CoinName { get; set; }
