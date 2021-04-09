@@ -29,10 +29,6 @@ namespace True_Mining_Desktop.Janelas
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (TextBox_PaymentAddress.Text != null)

@@ -70,22 +70,34 @@ namespace True_Mining_Desktop.Janelas
 
         private void Button_Calculator_Popup(object sender, RoutedEventArgs e)
         {
-            new Calculator(saldo.conversionHashrateToPoints, saldo.exchangeRatePontosToMiningCoin).ShowDialog();
+            try
+            {
+                new Calculator(saldo.HashesPerPoint, saldo.exchangeRatePontosToMiningCoin).ShowDialog();
+            }
+            catch { }
         }
 
         private void Button_ExchangeRates_Popup(object sender, RoutedEventArgs e)
         {
-            new ExchangeRates(saldo.exchangeRatePontosToMiningCoin).ShowDialog();
+            try
+            {
+                new ExchangeRates(saldo.exchangeRatePontosToMiningCoin).ShowDialog();
+            }
+            catch { }
+
         }
 
         public void changeChartZoom(object sender, RoutedEventArgs e)
         {
             string content = null;
-            try
+            if (sender != null)
             {
-                content = (sender as Button).Content.ToString();
+                try
+                {
+                    content = (sender as Button).Content.ToString();
+                }
+                catch { }
             }
-            catch { }
 
             switch (content)
             {
