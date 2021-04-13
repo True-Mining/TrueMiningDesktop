@@ -168,11 +168,23 @@ namespace True_Mining_Desktop
 
             if (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions)
             {
-                if (Core.NextStart.Actions.loadedNextStartInstructions.startHiden) { Hide(); }
+                if (Core.NextStart.Actions.loadedNextStartInstructions.startHiden) 
+                {
+                    Hide(); 
+                }
+                else
+                {
+                    this.ShowInTaskbar = true;
+                    this.Activate();
+                    this.Focus();
+                }
             }
             else
             {
-                if (User.Settings.User.StartHide) { Hide(); }
+                if (User.Settings.User.StartHide) 
+                {
+                    Hide();
+                }
                 else
                 {
                     this.ShowInTaskbar = true;
