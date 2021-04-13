@@ -14,7 +14,7 @@ namespace True_Mining_Desktop.Server
 {
     public class Saldo
     {
-        private System.Timers.Timer timerUpdateDashboard = new System.Timers.Timer(100);
+        private System.Timers.Timer timerUpdateDashboard = new System.Timers.Timer(1000);
 
         public Saldo()
         {
@@ -27,6 +27,8 @@ namespace True_Mining_Desktop.Server
                 timerUpdateDashboard.Elapsed += timerUpdateDashboard_Elapsed;
 
                 timerUpdateDashboard.Start();
+
+                timerUpdateDashboard_Elapsed(null, null);
             });
         }
 
