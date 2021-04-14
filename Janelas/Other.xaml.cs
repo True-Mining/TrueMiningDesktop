@@ -35,7 +35,7 @@ namespace True_Mining_Desktop.Janelas
         private void Button_whatsapp_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("You will be redirected to an interactive group. Do not send subjects not related to True Mining. You can be banned without notice.");
-            Tools.OpenLinkInBrowser("https://chat.whatsapp.com/BxV5ZsSHWoD2zzE5kDTQay");
+            Tools.OpenLinkInBrowser("https://chat.whatsapp.com/GmZheo5aQmoFbWXP6ZXQh2");
         }
     }
 }
