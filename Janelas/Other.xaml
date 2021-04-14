@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="485              " d:DesignWidth="650              " Background="White">
     <Grid Height="485" Width="650">
-       <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Width="650">
+        <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Width="650">
             <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
                 <materialDesign:PackIcon Width="30" Height="70" Kind="PlusBoxMultiple" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                 <Label Content="Other Stuff" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
@@ -51,6 +51,7 @@
                         </WrapPanel>
                     </Button>
                 </WrapPanel>
+                <Image Height="250" Width="250" Source="http://truemining.online/TrueMiningFiles/Resources/other_image.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"/>
             </WrapPanel>
         </WrapPanel>
     </Grid>
