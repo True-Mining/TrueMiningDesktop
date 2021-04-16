@@ -41,8 +41,8 @@
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CoinToCoinRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CoinToPointRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
                     <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
