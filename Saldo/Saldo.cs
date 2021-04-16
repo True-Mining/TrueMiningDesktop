@@ -101,6 +101,8 @@ namespace True_Mining_Desktop.Server
         public decimal pointsMultiplier = secondsPerAveragehashrateReportInterval * 16;
         public int hashesToCompare = 1000;
 
+        public decimal feeMultiplier = Decimal.Divide(100 - SoftwareParameters.ServerConfig.DynamicFee, 100);
+
         public void UpdateBalances()
         {
             Task.Run(() =>
@@ -175,7 +177,7 @@ namespace True_Mining_Desktop.Server
                 {
                     return acc + now;
                 }));
-                decimal totalXMRmineradoTrueMining = (decimal)XMR_nanopool.approximated_earnings.data.day.coins / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm;
+                decimal totalXMRmineradoTrueMining = ((decimal)XMR_nanopool.approximated_earnings.data.day.coins * 0.99m) /*desconto da fee da pool que não está sendo inserida no cálculo*/ / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm;
 
                 decimal XMRpraVirarBTC = (decimal)totalXMRmineradoTrueMining;
 
@@ -216,8 +218,8 @@ namespace True_Mining_Desktop.Server
                 HashesPerPoint = XMR_nanopool.sharecoef.data * pointsMultiplier;
                 AccumulatedBalance_Points = (decimal)sumHashrate_user / HashesPerPoint;
 
-                exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * 0.97m / hashesToCompare / 60 / 60 * XMRfinalPrice / COINfinalPrice * HashesPerPoint;
-                AccumulatedBalance_Coins = Decimal.Round(Decimal.Multiply(totalXMRmineradoTrueMining * Decimal.Divide(XMRfinalPrice, COINfinalPrice) * Decimal.Divide(sumHashrate_user, sumHashrate_tm), 0.97m), 4); //fee
+                exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * feeMultiplier / hashesToCompare / 60 / 60 * XMRfinalPrice / COINfinalPrice * HashesPerPoint;
+                AccumulatedBalance_Coins = Decimal.Round(Decimal.Multiply(totalXMRmineradoTrueMining * Decimal.Divide(XMRfinalPrice, COINfinalPrice) * Decimal.Divide(sumHashrate_user, sumHashrate_tm), feeMultiplier), 4);
 
 
                 string warningMessage = "Balance less than 1 DOGE will be paid once a week when you reach the minimum amount. Your balance will disappear from the dashboard, but it will still be saved in our system";

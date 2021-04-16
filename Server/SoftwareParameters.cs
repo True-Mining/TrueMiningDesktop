@@ -41,9 +41,10 @@ namespace True_Mining_Desktop.Server
 
     public class Kind
     {
+        public List<Pool> Pools;
+        public int DynamicFee = 2;
         public TrueMiningFiles TrueMiningFiles;
         public ThirdPartyBinaries ThirdPartyBinaries;
-        public List<Pool> Pools;
     }
 
     public class SoftwareParameters
