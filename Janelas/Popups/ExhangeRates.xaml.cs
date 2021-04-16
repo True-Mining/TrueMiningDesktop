@@ -22,7 +22,7 @@ namespace True_Mining_Desktop.Janelas.Popups
                     {
                         this.Close();
 
-                        MessageBox.Show("Aguarda carregar, porra"); return;
+                        MessageBox.Show("Wait for Dashboard load first"); return;
                     }
                     else
                     {
