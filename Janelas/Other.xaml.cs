@@ -34,8 +34,14 @@ namespace True_Mining_Desktop.Janelas
 
         private void Button_whatsapp_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("You will be redirected to an interactive group. Do not send subjects not related to True Mining. You can be banned without notice.");
+            MessageBox.Show("You will be redirected to an support group. Only True Mining support, request help or help a friend.");
             Tools.OpenLinkInBrowser("https://chat.whatsapp.com/GmZheo5aQmoFbWXP6ZXQh2");
+        }
+
+        private void Button_whatsapp_offtopic_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("You will be redirected to an offtopic interactive group. Be respectfull and don't scam your friends.");
+            Tools.OpenLinkInBrowser("https://chat.whatsapp.com/LEWSKLAMKwj2iwcT64AIXg");
         }
     }
 }
