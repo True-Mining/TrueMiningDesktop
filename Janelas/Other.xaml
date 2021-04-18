@@ -53,13 +53,13 @@
 
                     <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_whatsapp_Click">
                         <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                            <materialDesign:PackIcon Kind="Whatsapp" Width="25" Height="25" Foreground="#FF098303" RenderTransformOrigin="0.5,0.5" >
+                            <materialDesign:PackIcon Kind="Whatsapp" Width="25" Height="25" Foreground="#FF098303" RenderTransformOrigin="0.5,0.5">
                                 <materialDesign:PackIcon.RenderTransform>
                                     <TransformGroup>
-                                        <ScaleTransform ScaleX="-1" ScaleY="-1"/>
-                                        <SkewTransform/>
-                                        <RotateTransform/>
-                                        <TranslateTransform/>
+                                        <ScaleTransform ScaleX="-1" ScaleY="-1" />
+                                        <SkewTransform />
+                                        <RotateTransform />
+                                        <TranslateTransform />
                                     </TransformGroup>
                                 </materialDesign:PackIcon.RenderTransform>
                             </materialDesign:PackIcon>
@@ -67,7 +67,7 @@
                         </WrapPanel>
                     </Button>
                 </WrapPanel>
-                <Image Height="250" Width="250" Source="http://truemining.online/TrueMiningFiles/Resources/other_image.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform"/>
+                <Image Height="250" Width="250" Source="http://truemining.online/TrueMiningFiles/Resources/other_image.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" />
             </WrapPanel>
         </WrapPanel>
     </Grid>

@@ -60,7 +60,7 @@ namespace True_Mining_Desktop.Core.XMRig
             catch (Exception e)
             {
                 Miner.IsMining = false;
-                MessageBox.Show("XMRig can't start. Try add True Mining's folder in Antivirus exclusions." + e.Message);
+                MessageBox.Show("XMRig can't start. Try add True Mining's folder in Antivirus exclusions. " + e.Message);
             }
         }
 
