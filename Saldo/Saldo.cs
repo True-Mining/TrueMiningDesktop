@@ -221,7 +221,6 @@ namespace True_Mining_Desktop.Server
                 exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * feeMultiplier / hashesToCompare / 60 / 60 * XMRfinalPrice / COINfinalPrice * HashesPerPoint;
                 AccumulatedBalance_Coins = Decimal.Round(Decimal.Multiply(totalXMRmineradoTrueMining * Decimal.Divide(XMRfinalPrice, COINfinalPrice) * Decimal.Divide(sumHashrate_user, sumHashrate_tm), feeMultiplier), 4);
 
-
                 string warningMessage = "Balance less than 1 DOGE will be paid once a week when you reach the minimum amount. Your balance will disappear from the dashboard, but it will still be saved in our system";
                 string warningMessage2 = "Mined points take an average of 10-20 minutes to be displayed on the dashboard.";
 

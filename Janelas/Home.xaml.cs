@@ -50,13 +50,13 @@ namespace True_Mining_Desktop.Janelas
             }
             else
             {
-                //Button_CreateWallet.Visibility = Visibility.Visible;
+                Button_CreateWallet.Visibility = Visibility.Visible;
             }
         }
 
         private void Button_CreateWallet_Click(object sender, RoutedEventArgs e)
         {
-            Tools.OpenLinkInBrowser("https://www.4stake.com/truemining");
+            new ViewModel.PageCreateWallet().ShowDialog();
         }
 
         private void RestartAsAdministrator_Click(object sender, RoutedEventArgs e)

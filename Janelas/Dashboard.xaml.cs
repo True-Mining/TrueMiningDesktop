@@ -84,7 +84,6 @@ namespace True_Mining_Desktop.Janelas
                 new ExchangeRates(saldo.exchangeRatePontosToMiningCoin).ShowDialog();
             }
             catch { }
-
         }
 
         public void changeChartZoom(object sender, RoutedEventArgs e)

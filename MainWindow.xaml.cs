@@ -168,9 +168,9 @@ namespace True_Mining_Desktop
 
             if (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions)
             {
-                if (Core.NextStart.Actions.loadedNextStartInstructions.startHiden) 
+                if (Core.NextStart.Actions.loadedNextStartInstructions.startHiden)
                 {
-                    Hide(); 
+                    Hide();
                 }
                 else
                 {
@@ -181,7 +181,7 @@ namespace True_Mining_Desktop
             }
             else
             {
-                if (User.Settings.User.StartHide) 
+                if (User.Settings.User.StartHide)
                 {
                     Hide();
                 }
