@@ -22,6 +22,7 @@
     <RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
     <Version>4.3.3</Version>
     <PackageProjectUrl>https://truemining.online</PackageProjectUrl>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
