@@ -226,11 +226,11 @@ namespace True_Mining_Desktop.Janelas
                     catch { File.Move(path + fileName, path + fileName + ".old", true); File.Move(path + fileName + ".dl", path + fileName, true); }
                 }
 
-                Thread.Sleep(500);
+                Thread.Sleep(250);
 
                 ProgressDetails = "checking file";
 
-                Thread.Sleep(1500);
+                Thread.Sleep(500);
             }
         }
 

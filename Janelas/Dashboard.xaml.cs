@@ -143,5 +143,10 @@ namespace True_Mining_Desktop.Janelas
                 MessageBox.Show(warning);
             }
         }
+
+        private void HelpButton_Click(object sender, RoutedEventArgs e)
+        {
+            Core.Tools.OpenLinkInBrowser("https://gist.github.com/matheusbach/462558744709625db1149b7a1e5d384e");
+        }
     }
 }
