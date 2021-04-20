@@ -36,6 +36,7 @@ namespace True_Mining_Desktop.Janelas
         private int property_progressBar_Value = 0;
         private bool property_progressBar_IsIndeterminate = true;
         private string progressDetails_Content = null;
+        private Visibility hostFilesAd_Visibility = Visibility.Collapsed;
 
         public bool Finish { get { return property_finish; } set { property_finish = value; ProgressDetails = null; } }
         public string StatusTitle { get { return property_statusTitle; } set { property_statusTitle = value; Dispatcher.BeginInvoke((Action)(() => { statusTitle.Content = value; ProgressDetails = null; })); } }
@@ -43,6 +44,8 @@ namespace True_Mining_Desktop.Janelas
         public int ProgressBar_Value { get { return property_progressBar_Value; } set { property_progressBar_Value = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.Value = value; })); } }
         public bool ProgressBar_IsIndeterminate { get { return property_progressBar_IsIndeterminate; } set { property_progressBar_IsIndeterminate = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.IsIndeterminate = value; })); } }
         public string ProgressDetails { get { return progressDetails_Content; } set { progressDetails_Content = value; Dispatcher.BeginInvoke((Action)(() => { progressDetails.Content = value; })); } }
+        public Visibility HostFilesAd_Visibility { get { return hostFilesAd_Visibility; } set { hostFilesAd_Visibility = value; Dispatcher.BeginInvoke((Action)(() => { HostFilesAd.Visibility = value; })); } }
+
         private bool needRestart = false;
 
         public bool allDone = false;
@@ -116,6 +119,7 @@ namespace True_Mining_Desktop.Janelas
 
                         if (needRestart)
                         {
+                            HostFilesAd_Visibility = Visibility.Collapsed;
                             ProgressBar_Value = 0;
                             FileName = "Restarting";
                             StatusTitle = "Complete update, restart required";
@@ -145,6 +149,7 @@ namespace True_Mining_Desktop.Janelas
                             }
                         }
                     }
+                    HostFilesAd_Visibility = Visibility.Collapsed;
                     trying = false;
                 }
                 catch { }
@@ -184,6 +189,7 @@ namespace True_Mining_Desktop.Janelas
         public void Downloader(string url, string path, string fileName, string sha256)
         {
             ProgressBar_IsIndeterminate = true;
+            HostFilesAd_Visibility = Visibility.Visible;
 
             int count = 0;
 
@@ -302,6 +308,11 @@ namespace True_Mining_Desktop.Janelas
                 Tools.CheckerPopup.Close();
             }
             else { return; }
+        }
+
+        private void HostFilesAd_Click(object sender, RoutedEventArgs e)
+        {
+            Tools.OpenLinkInBrowser("https://www.utivirtual.com.br/");
         }
     }
 }
