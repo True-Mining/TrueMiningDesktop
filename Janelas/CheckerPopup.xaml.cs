@@ -129,7 +129,17 @@ namespace True_Mining_Desktop.Janelas
 
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                System.Diagnostics.Process.Start(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+                                System.Diagnostics.Process TrueMiningAsAdmin = new System.Diagnostics.Process();
+                                TrueMiningAsAdmin.StartInfo = new System.Diagnostics.ProcessStartInfo()
+                                {
+                                    FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName,
+                                    UseShellExecute = false,
+                                };
+                                if (Tools.HaveADM) { TrueMiningAsAdmin.StartInfo.Verb = "runas"; }
+
+                                try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); }
+
+
                                 Application.Current.Shutdown();
                             });
                         }

@@ -31,6 +31,7 @@ namespace True_Mining_Desktop.Core.XMRig
                 XMRigProcessStartInfo.RedirectStandardOutput = false;
                 XMRigProcessStartInfo.CreateNoWindow = false;
                 XMRigProcessStartInfo.ErrorDialog = false;
+                XMRigProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 XMRIGminer.StartInfo = XMRigProcessStartInfo;
             }
 
