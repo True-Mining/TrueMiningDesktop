@@ -67,7 +67,7 @@
                         </WrapPanel>
                     </Button>
                 </WrapPanel>
-                <Image Height="250" Width="250" Source="http://truemining.online/TrueMiningFiles/Resources/other_image.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" />
+                <Image Height="250" Width="250" Source="http://truemining.online/TrueMiningDesktop/TrueMiningFiles/Resources/other_image.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" />
             </WrapPanel>
         </WrapPanel>
     </Grid>
