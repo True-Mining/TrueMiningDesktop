@@ -48,6 +48,7 @@ namespace True_Mining_Desktop.User
                 User.AutostartMining = up.AutostartMining;
                 User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                 User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
+                User.UseAllInterfacesInsteadLocalhost = up.UseAllInterfacesInsteadLocalhost;
                 User.ShowCLI = up.ShowCLI;
                 User.StartHide = up.StartHide;
                 User.ChangeTbIcon = up.ChangeTbIcon;
@@ -178,5 +179,8 @@ namespace True_Mining_Desktop.User
             }
             set { }
         }
+
+        private bool useAllInterfacesInsteadLocalhost = false;
+        public bool UseAllInterfacesInsteadLocalhost { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
     }
 }

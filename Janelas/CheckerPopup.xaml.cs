@@ -139,7 +139,6 @@ namespace True_Mining_Desktop.Janelas
 
                                 try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); }
 
-
                                 Application.Current.Shutdown();
                             });
                         }

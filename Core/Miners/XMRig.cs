@@ -100,7 +100,7 @@ namespace True_Mining_Desktop.Core.XMRig
 
             try
             {
-                string backendPureData = new WebClient().DownloadString("http://127.0.0.1:" + APIport + "/2/backends");
+                string backendPureData = new WebClient().DownloadString("http://localhost:" + APIport + "/2/backends");
                 dynamic backendsAPI = JsonConvert.DeserializeObject(backendPureData);
 
                 decimal hashrate = -1;
@@ -181,7 +181,7 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("   },");
             conf.AppendLine("   \"http\": {");
             conf.AppendLine("       \"enabled\": true,");
-            conf.AppendLine("       \"host\": \"127.0.0.1\",");
+            conf.AppendLine("       \"host\": \"" + (User.Settings.User.UseAllInterfacesInsteadLocalhost ? "0.0.0.0" : "127.0.0.1") + "\",");
             conf.AppendLine("       \"port\": " + APIport + ",");
             conf.AppendLine("       \"access-token\": null,");
             conf.AppendLine("       \"restricted\": true");
