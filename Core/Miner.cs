@@ -9,6 +9,8 @@ namespace True_Mining_Desktop.Core
     {
         public static void StartMiner()
         {
+            intentToMine = true;
+
             if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
             {
                 Miner.IsMining = false;
@@ -28,6 +30,8 @@ namespace True_Mining_Desktop.Core
                     XMRig.XMRig.Start();
                 }
             }
+
+            intentToMine = false;
         }
 
         public static void StopMiner()
@@ -75,6 +79,7 @@ namespace True_Mining_Desktop.Core
         public static bool EmergencyExit = false;
 
         private static bool isMining = false;
+        public static bool intentToMine = false;
 
         public static bool IsMining
         {

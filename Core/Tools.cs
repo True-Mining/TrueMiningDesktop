@@ -112,37 +112,40 @@ namespace True_Mining_Desktop.Core
 
         public static void RestartAsAdministrator()
         {
-            Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = true, startHiden = false, startMining = Miner.IsMining });
-
-            Process TrueMiningAsAdmin = new Process();
-            TrueMiningAsAdmin.StartInfo = new ProcessStartInfo()
+            Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                FileName = Process.GetCurrentProcess().MainModule.FileName,
-                UseShellExecute = true,
-                Verb = "runas"
-            };
-            try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
+                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = (True_Mining_Desktop.App.Current.MainWindow.Visibility == Visibility.Visible ? false : true), startMining = Miner.IsMining || Miner.intentToMine });
 
-            Process thisProcess = Process.GetCurrentProcess();
-
-            new Task(() =>
-            {
-                while (!TrueMiningAsAdmin.HasExited)
+                Process TrueMiningAsAdmin = new Process();
+                TrueMiningAsAdmin.StartInfo = new ProcessStartInfo()
                 {
-                    Thread.Sleep(100);
+                    FileName = Process.GetCurrentProcess().MainModule.FileName,
+                    UseShellExecute = true,
+                    Verb = "runas"
+                };
+                try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
 
-                    Process[] processesWithTrueMiningName = Process.GetProcessesByName(thisProcess.ProcessName);
+                Process thisProcess = Process.GetCurrentProcess();
 
-                    foreach (Process process in processesWithTrueMiningName)
+                new Task(() =>
+                {
+                    while (!TrueMiningAsAdmin.HasExited)
                     {
-                        if (process.Id != thisProcess.Id && process.Responding)
+                        Thread.Sleep(100);
+
+                        Process[] processesWithTrueMiningName = Process.GetProcessesByName(thisProcess.ProcessName);
+
+                        foreach (Process process in processesWithTrueMiningName)
                         {
-                            MainWindow.nIcon.Visible = false;
-                            thisProcess.Kill();
+                            if (process.Id != thisProcess.Id && process.Responding)
+                            {
+                                MainWindow.nIcon.Visible = false;
+                                thisProcess.Kill();
+                            }
                         }
                     }
-                }
-            }).Start();
+                }).Start();
+            });
         }
 
         public static string GetAssemblyVersion()
@@ -306,11 +309,11 @@ namespace True_Mining_Desktop.Core
             catch { }
         }
 
-        public static void AddTrueMiningDestopToWinDefenderExclusions()
+        public static void AddTrueMiningDestopToWinDefenderExclusions(bool forceAdmin = false)
         {
             try
             {
-                if (Tools.HaveADM)
+                if (Tools.HaveADM || forceAdmin)
                 {
                     var command = @"Add-MpPreference -ExclusionPath " + '"' + System.AppDomain.CurrentDomain.BaseDirectory + '"' + " -Force";
                     var commandBytes = System.Text.Encoding.Unicode.GetBytes(command);
@@ -320,9 +323,10 @@ namespace True_Mining_Desktop.Core
                     {
                         FileName = "powershell.exe",
                         Arguments = $"-NoProfile -ExecutionPolicy unrestricted -EncodedCommand {commandBase64}",
-                        UseShellExecute = false,
+                        UseShellExecute = true,
                         WindowStyle = ProcessWindowStyle.Hidden,
-                        CreateNoWindow = true
+                        CreateNoWindow = true,
+                        Verb = "runas"
                     };
                     Process.Start(startInfo).WaitForExit();
                 }

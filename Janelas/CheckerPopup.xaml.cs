@@ -200,7 +200,7 @@ namespace True_Mining_Desktop.Janelas
             ProgressBar_IsIndeterminate = true;
             HostFilesAd_Visibility = Visibility.Visible;
 
-            int count = 0;
+            int count = 1;
 
             CheckInternet();
 
@@ -212,8 +212,9 @@ namespace True_Mining_Desktop.Janelas
             {
                 ProgressDetails = "checking file";
 
-                if (count >= 2) { Tools.AddTrueMiningDestopToWinDefenderExclusions(); }
-                if (count >= 3) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender"); }
+                if (count > 2) { if (!Tools.HaveADM) { Tools.RestartAsAdministrator(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
+                if (count > 3) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
+
                 count++;
 
                 while (!Tools.IsConnected()) { Thread.Sleep(2000); }
@@ -221,25 +222,28 @@ namespace True_Mining_Desktop.Janelas
                 WebClient webClient = new WebClient();
 
                 webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
-
-                webClient.DownloadFileAsync(new Uri(url), path + fileName + ".dl");
-
-                while (webClient.IsBusy) { Thread.Sleep(100); }
-
-                ProgressDetails = "Moving file";
-
-                if (String.Compare(Tools.FileSHA256(path + fileName + ".dl"), sha256, StringComparison.OrdinalIgnoreCase) == 0)
+                try
                 {
-                    if (Tools.IsFileLocked(new FileInfo(path + fileName)))
+                    webClient.DownloadFileAsync(new Uri(url), path + fileName + ".dl");
+
+                    while (webClient.IsBusy) { Thread.Sleep(100); }
+
+                    ProgressDetails = "Moving file";
+
+                    if (String.Compare(Tools.FileSHA256(path + fileName + ".dl"), sha256, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        File.Move(path + fileName, path + fileName + ".old", true);
+                        if (Tools.IsFileLocked(new FileInfo(path + fileName)))
+                        {
+                            File.Move(path + fileName, path + fileName + ".old", true);
+                        }
+                        try
+                        {
+                            File.Move(path + fileName + ".dl", path + fileName, true);
+                        }
+                        catch { File.Move(path + fileName, path + fileName + ".old", true); File.Move(path + fileName + ".dl", path + fileName, true); }
                     }
-                    try
-                    {
-                        File.Move(path + fileName + ".dl", path + fileName, true);
-                    }
-                    catch { File.Move(path + fileName, path + fileName + ".old", true); File.Move(path + fileName + ".dl", path + fileName, true); }
                 }
+                catch { }
 
                 Thread.Sleep(250);
 

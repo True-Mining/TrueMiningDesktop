@@ -23,6 +23,8 @@ namespace True_Mining_Desktop.Core.XMRig
 
         public static void Start()
         {
+            Miner.intentToMine = true;
+
             if (XMRIGminer.StartInfo != XMRigProcessStartInfo)
             {
                 XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
