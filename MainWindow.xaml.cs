@@ -33,8 +33,6 @@ namespace True_Mining_Desktop
 
             User.Settings.SettingsRecover();
 
-            this.ShowInTaskbar = false;
-
             InitializeComponent();
 
             TapeAllRequest += CheckerPopup_TapeAllRequest;
@@ -233,6 +231,7 @@ namespace True_Mining_Desktop
                 ContextMenu menu = (ContextMenu)this.FindResource("NotifierContextMenu");
                 menu.IsOpen = true;
                 menu.StaysOpen = true;
+
                 new Task(() => { Thread.Sleep(5000); Dispatcher.BeginInvoke((Action)(() => { menu.IsOpen = false; })); }).Start();
             }
         }

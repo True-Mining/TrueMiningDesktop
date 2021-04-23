@@ -9,7 +9,7 @@ namespace True_Mining_Desktop.Core
     {
         public static void StartMiner()
         {
-            intentToMine = true;
+            IntentToMine = true;
 
             if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
             {
@@ -31,7 +31,7 @@ namespace True_Mining_Desktop.Core
                 }
             }
 
-            intentToMine = false;
+            IntentToMine = false;
         }
 
         public static void StopMiner()
@@ -91,16 +91,9 @@ namespace True_Mining_Desktop.Core
             {
                 isMining = value;
 
-                if (Device.cpu.IsSelected) { Device.cpu.IsMining = true; }
-                if (Device.opencl.IsSelected) { Device.opencl.IsMining = true; }
-                if (Device.cuda.IsSelected) { Device.cuda.IsMining = true; }
-
-                Pages.SettingsCPU.AllContent.IsEnabled = false;
-                Pages.SettingsCUDA.AllContent.IsEnabled = false;
-                Pages.SettingsOPENCL.AllContent.IsEnabled = false;
-                Pages.SettingsCPU.LockWarning.Visibility = Visibility.Visible;
-                Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible;
-                Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible;
+                if (Device.cpu.IsSelected) { Device.cpu.IsMining = true; Pages.SettingsCPU.AllContent.IsEnabled = false; Pages.SettingsCPU.LockWarning.Visibility = Visibility.Visible; }
+                if (Device.opencl.IsSelected) { Device.opencl.IsMining = true; Pages.SettingsOPENCL.AllContent.IsEnabled = false; Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible; }
+                if (Device.cuda.IsSelected) { Device.cuda.IsMining = true; Pages.SettingsCUDA.AllContent.IsEnabled = false; Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible; }
 
                 if (isMining)
                 {
@@ -159,6 +152,89 @@ namespace True_Mining_Desktop.Core
                         Device.opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
                     }
                 }
+            }
+        }
+
+        public static bool IntentToMine
+        {
+            get
+            {
+                return intentToMine;
+            }
+            set
+            {
+                intentToMine = value;
+
+                Pages.SettingsCPU.AllContent.IsEnabled = false;
+                Pages.SettingsCUDA.AllContent.IsEnabled = false;
+                Pages.SettingsOPENCL.AllContent.IsEnabled = false;
+                Pages.SettingsCPU.LockWarning.Visibility = Visibility.Visible;
+                Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible;
+                Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible;
+
+                if (intentToMine)
+                {
+                    Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = false;
+
+                    Pages.Home.StartStopButton_text.Content = "Loading";
+                    Pages.Home.StartStopButton_icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.AutoFix;
+
+                    Pages.Home.StartStopButton_icon.Width = 20;
+
+                    Pages.Home.StartStopButton.Background = Brushes.ForestGreen;
+                    Pages.Home.StartStopButton.BorderBrush = Brushes.ForestGreen;
+
+                    if (Device.cpu.IsSelected)
+                    {
+                        Device.cpu.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                    }
+                    if (Device.cuda.IsSelected)
+                    {
+                        Device.cuda.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                    }
+                    if (Device.opencl.IsSelected)
+                    {
+                        Device.opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                    }
+                }
+                else
+                {
+                    Device.cpu.IsMining = false;
+                    Device.opencl.IsMining = false;
+                    Device.cuda.IsMining = false;
+
+                    Pages.SettingsCPU.AllContent.IsEnabled = true;
+                    Pages.SettingsCUDA.AllContent.IsEnabled = true;
+                    Pages.SettingsOPENCL.AllContent.IsEnabled = true;
+                    Pages.SettingsCPU.LockWarning.Visibility = Visibility.Hidden;
+                    Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Hidden;
+                    Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Hidden;
+
+                    Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = true;
+
+                    Pages.Home.StartStopButton_text.Content = "Start Mining";
+                    Pages.Home.StartStopButton_icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.PlayOutline;
+
+                    Pages.Home.StartStopButton_icon.Width = 25;
+
+                    Pages.Home.StartStopButton.Background = Brushes.DodgerBlue;
+                    Pages.Home.StartStopButton.BorderBrush = Brushes.DodgerBlue;
+
+                    if (Device.cpu.IsSelected)
+                    {
+                        Device.cpu.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
+                    }
+                    if (Device.cuda.IsSelected)
+                    {
+                        Device.cuda.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
+                    }
+                    if (Device.opencl.IsSelected)
+                    {
+                        Device.opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
+                    }
+                }
+
+                if (IsMining) { IsMining = IsMining; }
             }
         }
     }

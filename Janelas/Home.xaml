@@ -29,14 +29,14 @@
             </ScrollViewer>
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
             <WrapPanel HorizontalAlignment="Center" VerticalAlignment="Stretch" Orientation="Horizontal" Margin="0,10,0,0">
-                <Button x:Name="StartStopButton" Height="30" Width="252" Click="StartStopMining_Click" Background="DodgerBlue" BorderBrush="DodgerBlue">
+                <Button x:Name="StartStopButton" Height="30" Width="180" Click="StartStopMining_Click" Background="DodgerBlue" BorderBrush="DodgerBlue">
                     <WrapPanel Orientation="Horizontal">
                         <materialDesign:PackIcon x:Name="StartStopButton_icon" Width="25" Height="25" Kind="PlayOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" />
                         <Label x:Name="StartStopButton_text" Content="Start Mining" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
                     </WrapPanel>
                 </Button>
 
-                <Button x:Name="RestartAsAdministratorButton" Height="30" Width="165" Click="RestartAsAdministrator_Click" Background="DodgerBlue" BorderBrush="DodgerBlue" Margin="10,0,10,0">
+                <Button x:Name="RestartAsAdministratorButton" Height="30" Width="180" Click="RestartAsAdministrator_Click" Background="DodgerBlue" BorderBrush="DodgerBlue" Margin="10,0,10,0">
                     <WrapPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Width="20" Height="20" Kind="ShieldCheckOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" />
                         <Label Content="Restart as ADM" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />

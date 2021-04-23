@@ -1,11 +1,13 @@
 ﻿<UserControl x:Class="True_Mining_Desktop.Janelas.Other"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:True_Mining_Desktop.Janelas" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
-             d:DesignHeight="485              " d:DesignWidth="650              " Background="White">
+             d:DesignHeight="485              " d:DesignWidth="650              " Background="White"
+             RenderOptions.BitmapScalingMode="HighQuality">
+
     <Grid Height="485" Width="650">
         <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Width="650">
             <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">

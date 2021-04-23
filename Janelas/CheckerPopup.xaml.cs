@@ -217,7 +217,10 @@ namespace True_Mining_Desktop.Janelas
 
                 count++;
 
-                while (!Tools.IsConnected()) { Thread.Sleep(2000); }
+                ProgressDetails = "Checking network connection";
+                while (!Tools.IsConnected()) { ProgressDetails = "Waiting for internet connection..."; Thread.Sleep(2000); }
+
+                ProgressDetails = "Starting download";
 
                 WebClient webClient = new WebClient();
 

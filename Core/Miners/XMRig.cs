@@ -23,8 +23,6 @@ namespace True_Mining_Desktop.Core.XMRig
 
         public static void Start()
         {
-            Miner.intentToMine = true;
-
             if (XMRIGminer.StartInfo != XMRigProcessStartInfo)
             {
                 XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
@@ -165,7 +163,10 @@ namespace True_Mining_Desktop.Core.XMRig
                     if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
                     else { ChangeCompiler(); }
 
-                    Start();
+                    if (Miner.IsMining)
+                    {
+                        Start();
+                    }
 
                     inXMRIGexitEvent = false;
                 }
@@ -223,7 +224,7 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("   \"cuda\": {");
             conf.AppendLine("       \"enabled\": " + Settings.Device.cuda.MiningSelected.ToString().ToLowerInvariant() + ",");
             conf.AppendLine("       \"loader\": null,");
-            if (!Settings.Device.opencl.Autoconfig) { conf.AppendLine("       \"nvml\": " + Settings.Device.cuda.NVML.ToString().ToLowerInvariant()); }
+            if (!Settings.Device.cuda.Autoconfig) { conf.AppendLine("       \"nvml\": " + Settings.Device.cuda.NVML.ToString().ToLowerInvariant()); }
             conf.AppendLine("   },");
             conf.AppendLine("   \"donate-level\": 1,");
             conf.AppendLine("   \"donate-over-proxy\": 1,");

@@ -17,17 +17,21 @@
                 </Button>
             </WrapPanel>
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
-            <WrapPanel Margin="35,5,20,5">
-                <Label Content="Next Payout in " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
-                <Label x:Name="xLabelNextPayout" Content="{Binding LabelNextPayout}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
+            <WrapPanel Margin="35,5,20,7">
+                <Label Content="Next Payout in " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
+                <Label x:Name="xLabelNextPayout" Content="{Binding LabelNextPayout}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
             </WrapPanel>
-            <WrapPanel Margin="35,5,20,5">
-                <Label Content="Wallet accumulated balance " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
-                <Label x:Name="xLabelAccumulatedBalance" Content="{Binding LabelAccumulatedBalance}" FontWeight="Bold" FontFamily="Gadugi" FontSize="13" Padding="0,4,0,4"></Label>
+            <WrapPanel Margin="35,5,20,7">
+                <Label Content="Your wallet address is " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
+                <Label Content="{Binding WalletAddress}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
+            </WrapPanel>
+            <WrapPanel Margin="35,5,20,7">
+                <Label Content="Wallet accumulated balance " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
+                <Label x:Name="xLabelAccumulatedBalance" Content="{Binding LabelAccumulatedBalance}" FontWeight="Bold" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
             </WrapPanel>
             <WrapPanel x:Name="xWarningWrapVisibility" Margin="35,5,20,5" Orientation="Horizontal" Visibility="{Binding WarningWrapVisibility}">
                 <Label Content="Warnings: " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,0,0,0"></Label>
-                <Button Content="Click here to show your warnings" Click="show_warnings" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="187" Height="20" FontFamily="Gadugi" FontSize="12" />
+                <Button Content="Click here to show your warnings" Click="show_warnings" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="187" Height="20" FontFamily="Gadugi" FontSize="12" />
             </WrapPanel>
         </WrapPanel>
         <oxy:PlotView Model="{Binding chart_model, Mode=OneWay}" Controller="{Binding chart_controller}" Height="155" Margin="20,5,20,120" Visibility="{Binding chart_visibility}" VerticalAlignment="Bottom" />
@@ -38,16 +42,16 @@
             <Button Content="5d" Click="changeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Gadugi" FontSize="12"></Button>
         </WrapPanel>
         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,25">
-            <Button Height="40" Width="190" Margin="20,0,20,0" Click="Button_Calculator_Popup">
+            <Button Height="35" Width="170" Margin="20,0,20,0" Click="Button_Calculator_Popup" Background="#FF2196F3">
                 <WrapPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Width="30" Height="30" Kind="CalculatorVariant" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Grid.IsSharedSizeScope="True" Margin="0,0,5,0" />
-                    <Label Content="Calculator" FontWeight="Bold" FontFamily="Gadugi" FontSize="12" VerticalAlignment="Center" />
+                    <materialDesign:PackIcon Width="25" Height="25" Kind="CalculatorVariant" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Grid.IsSharedSizeScope="True" Margin="0,0,5,0" Foreground="#FF404040" />
+                    <Label Content="Calculator" FontWeight="SemiBold" FontFamily="Gadugi" FontSize="12" VerticalAlignment="Center" />
                 </WrapPanel>
             </Button>
-            <Button Height="40" Width="190" Margin="20,0,20,0" Click="Button_ExchangeRates_Popup">
+            <Button Height="35" Width="170" Margin="20,0,20,0" Click="Button_ExchangeRates_Popup">
                 <WrapPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Width="30" Height="30" Kind="ChartFinance" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Grid.IsSharedSizeScope="True" Margin="0,0,5,0" />
-                    <Label Content="Exchange Rates" FontWeight="Bold" FontFamily="Gadugi" FontSize="12" VerticalAlignment="Center" />
+                    <materialDesign:PackIcon Width="25" Height="25" Kind="ChartFinance" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Grid.IsSharedSizeScope="True" Margin="0,0,5,0" Foreground="#FF404040" />
+                    <Label Content="Exchange Rates" FontWeight="SemiBold" FontFamily="Gadugi" FontSize="12" VerticalAlignment="Center" />
                 </WrapPanel>
             </Button>
         </WrapPanel>
