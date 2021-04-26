@@ -78,6 +78,15 @@ namespace True_Mining_Desktop
             Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseUp += this.Up;
 
             Tools.KillMiners();
+
+            Microsoft.Win32.SystemEvents.SessionEnding += SystemEvents_SessionEnding;
+        }
+
+        private void SystemEvents_SessionEnding(object sender, Microsoft.Win32.SessionEndingEventArgs e)
+        {
+            Miner.EmergencyExit = true;
+            Miner.StopMiner();
+            Application.Current.Shutdown();
         }
 
         public static void DispararEvento()
