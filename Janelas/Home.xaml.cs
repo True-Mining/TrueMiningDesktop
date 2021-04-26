@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using True_Mining_Desktop.Core;
 
@@ -62,6 +64,37 @@ namespace True_Mining_Desktop.Janelas
         private void RestartAsAdministrator_Click(object sender, RoutedEventArgs e)
         {
             Tools.RestartAsAdministrator();
+        }
+
+        private void UninstallWarsawDiebold_Click(object sender, RoutedEventArgs e)
+        {
+            new System.Threading.Tasks.Task(() =>
+            {
+                if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Diebold\Warsaw\unins000.exe"))
+                {
+                    MessageBox.Show("True Mining Desktop will open uninstaller for you. Uninstall it");
+
+                    System.Diagnostics.Process removeDiebold;
+                    removeDiebold = new System.Diagnostics.Process() { StartInfo = new System.Diagnostics.ProcessStartInfo(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Diebold\Warsaw\unins000.exe") };
+
+                    removeDiebold.Start();
+                    removeDiebold.WaitForExit();
+                }
+
+                int count = 20;
+
+                while (count > 0)
+                {
+                    count--;
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        Janelas.Pages.Home.WarningsTextBlock.Text = Janelas.Pages.Home.WarningsTextBlock.Text.Replace("\nWarsaw Diebold found on your system. It is highly recommended to uninstall this agent. Click \"Remove Warsaw\"", "");
+
+                        if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Diebold\Warsaw\unins000.exe")) { Janelas.Pages.Home.UninstallWarsawDiebold.Visibility = Visibility.Visible; Janelas.Pages.Home.WarningsTextBlock.Text += "\nWarsaw Diebold found on your system. It is highly recommended to uninstall this agent. Click \"Remove Warsaw\""; } else { Janelas.Pages.Home.UninstallWarsawDiebold.Visibility = Visibility.Collapsed; }
+                    });
+                    System.Threading.Thread.Sleep(5000);
+                }
+            }).Start();
         }
     }
 }

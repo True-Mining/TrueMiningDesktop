@@ -202,6 +202,8 @@ namespace True_Mining_Desktop
 
             if (!Tools.HaveADM) { Janelas.Pages.Home.RestartAsAdministratorButton.Visibility = Visibility.Visible; Janelas.Pages.Home.WarningsTextBlock.Text += "You haven't opened True Mining as an administrator. Restart as ADM is recommended and generally results in a better hashrate"; } else { Janelas.Pages.Home.RestartAsAdministratorButton.Visibility = Visibility.Collapsed; }
 
+            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Diebold\Warsaw\unins000.exe")) { Janelas.Pages.Home.UninstallWarsawDiebold.Visibility = Visibility.Visible; Janelas.Pages.Home.WarningsTextBlock.Text += "\nWarsaw Diebold found on your system. It is highly recommended to uninstall this agent. Click \"Remove Warsaw\""; } else { Janelas.Pages.Home.UninstallWarsawDiebold.Visibility = Visibility.Collapsed; }
+
             MenuMenu.SelectedIndex = 0; // mostra a tela Home
 
             Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");

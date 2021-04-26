@@ -36,10 +36,17 @@
                     </WrapPanel>
                 </Button>
 
-                <Button x:Name="RestartAsAdministratorButton" Height="30" Width="180" Click="RestartAsAdministrator_Click" Background="DodgerBlue" BorderBrush="DodgerBlue" Margin="10,0,10,0">
+                <Button x:Name="RestartAsAdministratorButton" Height="30" Width="180" Click="RestartAsAdministrator_Click" Background="DodgerBlue" BorderBrush="DodgerBlue" Margin="10,0,0,0">
                     <WrapPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Width="20" Height="20" Kind="ShieldCheckOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" />
                         <Label Content="Restart as ADM" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
+                    </WrapPanel>
+                </Button>
+
+                <Button x:Name="UninstallWarsawDiebold" Height="25" Width="180" Click="UninstallWarsawDiebold_Click" Background="#FFFF2E2E" BorderBrush="#FFFF2E2E" Margin="10,0,0,0" HorizontalAlignment="Left" Padding="0,0,0,0" UseLayoutRounding="False">
+                    <WrapPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Width="20" Height="20" Kind="RemoveCircleOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" />
+                        <Label Content="Remove Warsaw" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
                     </WrapPanel>
                 </Button>
             </WrapPanel>
