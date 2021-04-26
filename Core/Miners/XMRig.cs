@@ -26,8 +26,8 @@ namespace True_Mining_Desktop.Core.XMRig
             if (XMRIGminer.StartInfo != XMRigProcessStartInfo)
             {
                 XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
-                XMRigProcessStartInfo.UseShellExecute = false;
-                XMRigProcessStartInfo.RedirectStandardError = true;
+                XMRigProcessStartInfo.UseShellExecute = true;
+                XMRigProcessStartInfo.RedirectStandardError = false;
                 XMRigProcessStartInfo.RedirectStandardOutput = false;
                 XMRigProcessStartInfo.CreateNoWindow = false;
                 XMRigProcessStartInfo.ErrorDialog = false;
