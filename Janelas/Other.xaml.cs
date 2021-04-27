@@ -21,6 +21,11 @@ namespace True_Mining_Desktop.Janelas
             Tools.OpenLinkInBrowser("https://github.com/True-Mining");
         }
 
+        private void Button_YtTutorial_Click(object sender, RoutedEventArgs e)
+        {
+            Tools.OpenLinkInBrowser("https://www.youtube.com/watch?v=3VbH1y4o7Ak");
+        }
+
         private void Button_telegramGroup_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("You will be redirected to an interactive group. Do not send subjects not related to True Mining. You can be banned without notice.");
