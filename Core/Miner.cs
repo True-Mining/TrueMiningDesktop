@@ -36,7 +36,7 @@ namespace True_Mining_Desktop.Core
 
         public static void StopMiner()
         {
-            if ((User.Settings.Device.cpu.MiningSelected | User.Settings.Device.opencl.MiningSelected | User.Settings.Device.cuda.MiningSelected) && (String.Equals(User.Settings.Device.cpu.Algorithm, "RandomX", StringComparison.OrdinalIgnoreCase) | String.Equals(User.Settings.Device.opencl.Algorithm, "RandomX", StringComparison.OrdinalIgnoreCase) | String.Equals(User.Settings.Device.cuda.Algorithm, "RandomX", StringComparison.OrdinalIgnoreCase)))
+            if (IsMining)
             {
                 IsMining = false;
                 XMRig.XMRig.Stop();
@@ -65,14 +65,20 @@ namespace True_Mining_Desktop.Core
 
         public static decimal GetHashrate(string alias, string algo)
         {
-            if (Core.Device.cpu.IsSelected)
+            try
             {
-                if (String.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
+                if (Device.DevicesList.Find(x => x.Alias.Equals(alias, StringComparison.OrdinalIgnoreCase)).IsSelected)
                 {
-                    return XMRig.XMRig.GetHasrate(alias);
+                    if (String.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return XMRig.XMRig.GetHasrate(alias);
+                    }
                 }
             }
-
+            catch
+            {
+                return -1;
+            }
             return -1;
         }
 

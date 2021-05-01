@@ -17,6 +17,8 @@ namespace True_Mining_Desktop.Core
             opencl.PropertieChanged += new EventHandler(openclChanged);
         }
 
+        public static System.Collections.Generic.List<DeviceInfo> DevicesList = new System.Collections.Generic.List<DeviceInfo>() { cpu, opencl, cuda };
+
         private void openclChanged(object sender, EventArgs e)
         {
             User.Settings.Device.opencl.MiningSelected = opencl.IsSelected;
