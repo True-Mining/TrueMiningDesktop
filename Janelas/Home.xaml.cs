@@ -49,6 +49,7 @@ namespace True_Mining_Desktop.Janelas
             {
                 Button_CreateWallet.Visibility = Visibility.Hidden;
                 walletIsChanged = true;
+                Janelas.Pages.Dashboard.xWalletAddress.Content = TextBox_PaymentAddress.Text;
             }
             else
             {

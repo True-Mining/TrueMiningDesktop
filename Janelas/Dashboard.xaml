@@ -23,7 +23,7 @@
             </WrapPanel>
             <WrapPanel Margin="35,5,20,7">
                 <Label Content="Your wallet address is " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
-                <Label Content="{Binding WalletAddress}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
+                <Label x:Name="xWalletAddress" Content="{Binding WalletAddress}" FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
             </WrapPanel>
             <WrapPanel Margin="35,5,20,7">
                 <Label Content="Wallet accumulated balance " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0"></Label>
