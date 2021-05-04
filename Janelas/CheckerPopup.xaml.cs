@@ -103,16 +103,16 @@ namespace True_Mining_Desktop.Janelas
                         FileName = "Checking True Mining Version";
                         Thread.Sleep(20);
 
-                        foreach (FileDetails file in SoftwareParameters.ServerConfig.TrueMiningFiles.files)
+                        foreach (FileToDownload file in SoftwareParameters.ServerConfig.TrueMiningFiles.Files)
                         {
                             FileName = "Checking Files";
                             Thread.Sleep(20);
 
-                            file.path = Tools.FormatPath(file.path);
+                            file.Path = Tools.FormatPath(file.Path);
 
-                            if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
+                            if (!File.Exists(file.Path + file.FileName) || Tools.FileSHA256(file.Path + file.FileName) != file.Sha256)
                             {
-                                Downloader(file.dlLink, file.path, file.fileName, file.sha256);
+                                Downloader(file.DlLink, file.Path, file.FileName, file.Sha256);
                                 needRestart = true;
                             }
                         }
@@ -146,15 +146,16 @@ namespace True_Mining_Desktop.Janelas
 
                     if (toCheck == "all" || toCheck == "ThirdPartyBinaries")
                     {
-                        foreach (FileDetails file in SoftwareParameters.ServerConfig.ThirdPartyBinaries.files)
+                        foreach (FileToDownload file in SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files)
                         {
                             FileName = "Checking Files";
                             Thread.Sleep(20);
 
-                            file.path = Tools.FormatPath(file.path);
-                            if (!File.Exists(file.path + file.fileName) || Tools.FileSHA256(file.path + file.fileName) != file.sha256)
+                            file.Path = Tools.FormatPath(file.Path);
+
+                            if (!File.Exists(file.Path + file.FileName) || Tools.FileSHA256(file.Path + file.FileName) != file.Sha256)
                             {
-                                Downloader(file.dlLink, file.path, file.fileName, file.sha256);
+                                Downloader(file.DlLink, file.Path, file.FileName, file.Sha256);
                             }
                         }
                     }

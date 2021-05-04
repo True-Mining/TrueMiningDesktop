@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -176,6 +177,7 @@ namespace True_Mining_Desktop.Core.XMRig
         public static void CreateConfigFile()
         {
             StringBuilder conf = new StringBuilder();
+            Server.MiningCoin miningCoin = SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase));
 
             conf.AppendLine("{");
             conf.AppendLine("   \"api\": {");
@@ -198,7 +200,7 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("       \"hw-aes\": null,");
             if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("       \"priority\": " + Settings.Device.cpu.Priority + ","); } else { conf.AppendLine("       \"priority\": 1,"); }
             conf.AppendLine("       \"memory-pool\": true,");
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("       \"yield\": " + (!Settings.Device.cpu.Yield).ToString().ToLowerInvariant() + ","); }
+            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("       \"yield\": " + (Settings.Device.cpu.Yield).ToString().ToLowerInvariant() + ","); }
             conf.AppendLine("       \"asm\": true,");
             if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("       \"max-threads-hint\": " + Settings.Device.cpu.MaxUsageHint + ","); }
             conf.AppendLine("       \"rx\": {");
@@ -230,74 +232,71 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("   \"donate-over-proxy\": 1,");
             conf.AppendLine("   \"log-file\": \"XMRig-log.txt\",");
             conf.AppendLine("   \"pools\": [");
-            conf.AppendLine("       {");
-            conf.AppendLine("           \"algo\": null,");
-            conf.AppendLine("           \"coin\": \"monero\",");
-            conf.AppendLine("           \"url\": \"" + SoftwareParameters.ServerConfig.Pools[0].host1 + ":" + SoftwareParameters.ServerConfig.Pools[0].stratumPort + "\",");
-            conf.AppendLine("           \"user\": \"" + SoftwareParameters.ServerConfig.Pools[0].wallet_TM + "." + Settings.User.Payment_Wallet + "/" + SoftwareParameters.ServerConfig.Pools[0].email + "\", ");
-            conf.AppendLine("           \"pass\": \"" + SoftwareParameters.ServerConfig.Pools[0].password + "\",");
-            conf.AppendLine("           \"rig-id\": null,");
-            conf.AppendLine("           \"nicehash\": false,");
-            conf.AppendLine("           \"keepalive\": false,");
-            conf.AppendLine("           \"enabled\": true,");
-            conf.AppendLine("           \"tls\": true,");
-            conf.AppendLine("           \"tls-fingerprint\": null,");
-            conf.AppendLine("           \"daemon\": false,");
-            conf.AppendLine("           \"socks5\": null,");
-            conf.AppendLine("           \"self-select\": null");
-            conf.AppendLine("       },");
-            conf.AppendLine("       {");
-            conf.AppendLine("           \"algo\": null,");
-            conf.AppendLine("           \"coin\": \"monero\",");
-            conf.AppendLine("           \"url\": \"" + SoftwareParameters.ServerConfig.Pools[0].host1 + ":" + SoftwareParameters.ServerConfig.Pools[0].stratumPortSSl + "\",");
-            conf.AppendLine("           \"user\": \"" + SoftwareParameters.ServerConfig.Pools[0].wallet_TM + "." + Settings.User.Payment_Wallet + "/" + SoftwareParameters.ServerConfig.Pools[0].email + "\", ");
-            conf.AppendLine("           \"pass\": \"" + SoftwareParameters.ServerConfig.Pools[0].password + "\",");
-            conf.AppendLine("           \"rig-id\": null,");
-            conf.AppendLine("           \"nicehash\": false,");
-            conf.AppendLine("           \"keepalive\": false,");
-            conf.AppendLine("           \"enabled\": true,");
-            conf.AppendLine("           \"tls\": false,");
-            conf.AppendLine("           \"tls-fingerprint\": null,");
-            conf.AppendLine("           \"daemon\": false,");
-            conf.AppendLine("           \"socks5\": null,");
-            conf.AppendLine("           \"self-select\": null");
-            conf.AppendLine("       },");
-            conf.AppendLine("       {");
-            conf.AppendLine("           \"algo\": null,");
-            conf.AppendLine("           \"coin\": \"monero\",");
-            conf.AppendLine("           \"url\": \"" + SoftwareParameters.ServerConfig.Pools[0].host2 + ":" + SoftwareParameters.ServerConfig.Pools[0].stratumPort + "\",");
-            conf.AppendLine("           \"user\": \"" + SoftwareParameters.ServerConfig.Pools[0].wallet_TM + "." + Settings.User.Payment_Wallet + "/" + SoftwareParameters.ServerConfig.Pools[0].email + "\", ");
-            conf.AppendLine("           \"pass\": \"" + SoftwareParameters.ServerConfig.Pools[0].password + "\",");
-            conf.AppendLine("           \"rig-id\": null,");
-            conf.AppendLine("           \"nicehash\": false,");
-            conf.AppendLine("           \"keepalive\": false,");
-            conf.AppendLine("           \"enabled\": true,");
-            conf.AppendLine("           \"tls\": true,");
-            conf.AppendLine("           \"tls-fingerprint\": null,");
-            conf.AppendLine("           \"daemon\": false,");
-            conf.AppendLine("           \"socks5\": null,");
-            conf.AppendLine("           \"self-select\": null");
-            conf.AppendLine("       },");
-            conf.AppendLine("       {");
-            conf.AppendLine("           \"algo\": null,");
-            conf.AppendLine("           \"coin\": \"monero\",");
-            conf.AppendLine("           \"url\": \"" + SoftwareParameters.ServerConfig.Pools[0].host2 + ":" + SoftwareParameters.ServerConfig.Pools[0].stratumPortSSl + "\",");
-            conf.AppendLine("           \"user\": \"" + SoftwareParameters.ServerConfig.Pools[0].wallet_TM + "." + Settings.User.Payment_Wallet + "/" + SoftwareParameters.ServerConfig.Pools[0].email + "\", ");
-            conf.AppendLine("           \"pass\": \"" + SoftwareParameters.ServerConfig.Pools[0].password + "\",");
-            conf.AppendLine("           \"rig-id\": null,");
-            conf.AppendLine("           \"nicehash\": false,");
-            conf.AppendLine("           \"keepalive\": false,");
-            conf.AppendLine("           \"enabled\": true,");
-            conf.AppendLine("           \"tls\": false,");
-            conf.AppendLine("           \"tls-fingerprint\": null,");
-            conf.AppendLine("           \"daemon\": false,");
-            conf.AppendLine("           \"socks5\": null,");
-            conf.AppendLine("           \"self-select\": null");
-            conf.AppendLine("       }");
+
+            List<string> addresses = miningCoin.Hosts;
+
+            List<Task<KeyValuePair<string, long>>> pingReturnTasks = new List<Task<KeyValuePair<string, long>>>();
+            foreach (var address in addresses)
+            {
+                pingReturnTasks.Add(new Task<KeyValuePair<string, long>>(() => Tools.ReturnPing(address)));
+            }
+            foreach (Task task in pingReturnTasks)
+            {
+                task.Start();
+            }
+
+            Task.WaitAll(pingReturnTasks.ToArray());
+
+            Dictionary<string, long> pingHosts = new Dictionary<string, long>();
+
+            foreach (var pingTask in pingReturnTasks)
+            {
+                pingHosts.TryAdd(pingTask.Result.Key, pingTask.Result.Value);
+            }
+
+            miningCoin.Hosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
+
+            foreach (string host in miningCoin.Hosts)
+            {
+                conf.AppendLine("       {");
+                conf.AppendLine("           \"algo\": null,");
+                conf.AppendLine("           \"coin\": \"monero\",");
+                conf.AppendLine("           \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
+                conf.AppendLine("           \"user\": \"" + miningCoin.WalletTm + "." + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
+                conf.AppendLine("           \"pass\": \"" + miningCoin.Password + "\",");
+                conf.AppendLine("           \"rig-id\": null,");
+                conf.AppendLine("           \"nicehash\": false,");
+                conf.AppendLine("           \"keepalive\": false,");
+                conf.AppendLine("           \"enabled\": true,");
+                conf.AppendLine("           \"tls\": true,");
+                conf.AppendLine("           \"tls-fingerprint\": null,");
+                conf.AppendLine("           \"daemon\": false,");
+                conf.AppendLine("           \"socks5\": null,");
+                conf.AppendLine("           \"self-select\": null");
+                conf.AppendLine("       },");
+
+                conf.AppendLine("       {");
+                conf.AppendLine("           \"algo\": null,");
+                conf.AppendLine("           \"coin\": \"monero\",");
+                conf.AppendLine("           \"url\": \"" + host + ":" + miningCoin.StratumPortSsl + "\",");
+                conf.AppendLine("           \"user\": \"" + miningCoin.WalletTm + "." + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
+                conf.AppendLine("           \"pass\": \"" + miningCoin.Password + "\",");
+                conf.AppendLine("           \"rig-id\": null,");
+                conf.AppendLine("           \"nicehash\": false,");
+                conf.AppendLine("           \"keepalive\": false,");
+                conf.AppendLine("           \"enabled\": true,");
+                conf.AppendLine("           \"tls\": false,");
+                conf.AppendLine("           \"tls-fingerprint\": null,");
+                conf.AppendLine("           \"daemon\": false,");
+                conf.AppendLine("           \"socks5\": null,");
+                conf.AppendLine("           \"self-select\": null");
+                conf.AppendLine("       },");
+            }
+
             conf.AppendLine("   ]");
             conf.AppendLine("}");
 
-            File.WriteAllText(@"Miners\xmrig\config.json", conf.ToString());
+            System.IO.File.WriteAllText(@"Miners\xmrig\config.json", conf.ToString());
         }
 
         private static int APIport { get; } = 20202;

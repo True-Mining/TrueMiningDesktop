@@ -1,9 +1,9 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -22,22 +22,31 @@ namespace True_Mining_Desktop.Core
             StringBuilder str = new StringBuilder();
 
             Ping p = new Ping();
+
             try
             {
                 PingReply pr = p.Send("8.8.8.8", 3000);
                 if (pr.Status == IPStatus.Success) { return true; }
             }
-            catch { }
+            catch
+            {
+                if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); }
 
+                PingReply pr = p.Send("8.8.8.8", 3000);
+                if (pr.Status == IPStatus.Success) { return true; }
+            }
+            return false;
+        }
+
+        public static KeyValuePair<string, long> ReturnPing(string address)
+        {
             try
             {
-                if (new WebClient().DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
-            }
-            catch { }
+                PingReply ping = new Ping().Send(address, 1000, Encoding.ASCII.GetBytes("ping by True Mining Desktop Client"));
 
-            if (HaveADM && !firewallRuleAdded)
-            { AddFirewallPingRule(); }
-            return false;
+                return new KeyValuePair<string, long>(address, (ping.Status == IPStatus.Success) ? ping.RoundtripTime : 2000);
+            }
+            catch { return new KeyValuePair<string, long>(address, 10000); }
         }
 
         public static string FileSHA256(string filePath)

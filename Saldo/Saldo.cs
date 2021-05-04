@@ -122,8 +122,8 @@ namespace True_Mining_Desktop.Server
                 while (!Tools.IsConnected()) { Thread.Sleep(5000); }
                 try
                 {
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", Server.SoftwareParameters.ServerConfig.Pools[0].wallet_TM, User.Settings.User.Payment_Wallet);
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", Server.SoftwareParameters.ServerConfig.Pools[0].wallet_TM);
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", Server.SoftwareParameters.ServerConfig.Pools[0].WalletTm, User.Settings.User.Payment_Wallet);
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", Server.SoftwareParameters.ServerConfig.Pools[0].WalletTm);
                     BitcoinPrice.FIAT_rates = JsonConvert.DeserializeObject<PoolAPI.Coins>(new WebClient().DownloadString("https://blockchain.info/ticker"));
 
                     Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient().DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")));
