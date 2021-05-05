@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -19,8 +20,6 @@ namespace True_Mining_Desktop.Core
     {
         public static bool IsConnected()
         {
-            StringBuilder str = new StringBuilder();
-
             Ping p = new Ping();
 
             try
@@ -28,13 +27,28 @@ namespace True_Mining_Desktop.Core
                 PingReply pr = p.Send("8.8.8.8", 3000);
                 if (pr.Status == IPStatus.Success) { return true; }
             }
-            catch
-            {
-                if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); }
+            catch { }
 
-                PingReply pr = p.Send("8.8.8.8", 3000);
-                if (pr.Status == IPStatus.Success) { return true; }
+            try
+            {
+                if (new WebClient().DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
             }
+            catch { }
+
+            try
+            {
+                if (new WebClient().DownloadString(new Uri("https://truemining.online/ping")) == "pong") { return true; }
+            }
+            catch { }
+
+            try
+            {
+                if (new WebClient().DownloadString(new Uri("https://www.utivirtual.com.br/Truemining/ping")) == "pong") { return true; }
+            }
+            catch { }
+
+            if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); }
+
             return false;
         }
 
@@ -318,6 +332,8 @@ namespace True_Mining_Desktop.Core
             catch { }
         }
 
+        public static bool AddedTrueMiningDestopToWinDefenderExclusions = false;
+
         public static void AddTrueMiningDestopToWinDefenderExclusions(bool forceAdmin = false)
         {
             try
@@ -338,6 +354,8 @@ namespace True_Mining_Desktop.Core
                         Verb = "runas"
                     };
                     Process.Start(startInfo).WaitForExit();
+
+                    AddedTrueMiningDestopToWinDefenderExclusions = true;
                 }
             }
             catch { }

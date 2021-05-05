@@ -263,7 +263,7 @@ namespace True_Mining_Desktop.Janelas
             StatusTitle = "Internet Connection";
 
             int internetErrorTryes = 0;
-            while (!Tools.IsConnected()) { internetErrorTryes++; if (internetErrorTryes <= 3) { StatusTitle = "Internet Error"; FileName = "Waiting for Internet Connection. Check your network connection."; } else { StatusTitle = "Internet Error. Waiting for Internet Connection"; FileName = "If you have internet, start True Mining Desktop as administrator at least once to try add Windows Firewall rules."; } Thread.Sleep(3000); }
+            while (!Tools.IsConnected()) { internetErrorTryes++; if (internetErrorTryes <= 3) { StatusTitle = "Internet Error"; FileName = "Waiting for Internet Connection. Check your network connection."; } else { StatusTitle = "Internet Error. Waiting for Internet Connection"; FileName = "Try open as ADM and add to Windows Firewall rules."; } Thread.Sleep(3000); }
         }
 
         private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
