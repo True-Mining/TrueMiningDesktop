@@ -9,9 +9,6 @@ namespace True_Mining_Desktop.Server
 {
     public partial class TrueMiningDesktopParameters
     {
-        [JsonProperty("Pools", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Pool> Pools { get; set; }
-
         [JsonProperty("MiningCoins", NullValueHandling = NullValueHandling.Ignore)]
         public List<MiningCoin> MiningCoins { get; set; }
 
@@ -47,36 +44,6 @@ namespace True_Mining_Desktop.Server
 
         [JsonProperty("stratumPortSSL", NullValueHandling = NullValueHandling.Ignore)]
         public Int16? StratumPortSsl { get; set; }
-
-        [JsonProperty("wallet_TM", NullValueHandling = NullValueHandling.Ignore)]
-        public string WalletTm { get; set; }
-
-        [JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
-        public string Email { get; set; }
-
-        [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
-        public string Password { get; set; }
-    }
-
-    public partial class Pool
-    {
-        [JsonProperty("mineableCoin", NullValueHandling = NullValueHandling.Ignore)]
-        public string MineableCoin { get; set; }
-
-        [JsonProperty("pool", NullValueHandling = NullValueHandling.Ignore)]
-        public string PoolPool { get; set; }
-
-        [JsonProperty("host1", NullValueHandling = NullValueHandling.Ignore)]
-        public string Host1 { get; set; }
-
-        [JsonProperty("host2", NullValueHandling = NullValueHandling.Ignore)]
-        public string Host2 { get; set; }
-
-        [JsonProperty("stratumPort", NullValueHandling = NullValueHandling.Ignore)]
-        public long? StratumPort { get; set; }
-
-        [JsonProperty("stratumPortSSl", NullValueHandling = NullValueHandling.Ignore)]
-        public long? StratumPortSSl { get; set; }
 
         [JsonProperty("wallet_TM", NullValueHandling = NullValueHandling.Ignore)]
         public string WalletTm { get; set; }
