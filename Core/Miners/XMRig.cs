@@ -98,6 +98,8 @@ namespace True_Mining_Desktop.Core.XMRig
 
         public static void Stop()
         {
+            startedSince = holdTime.AddTicks(-(holdTime.Ticks));
+
             try { XMRIGminer.Kill(); } catch { }
             Thread.Sleep(500);
         }
