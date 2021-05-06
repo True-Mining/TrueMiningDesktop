@@ -53,14 +53,14 @@
                         </WrapPanel>
                     </Button>
 
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_whatsapp_offtopic_Click">
+                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_whatsapp_Click">
                         <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
                             <materialDesign:PackIcon Kind="Whatsapp" Width="25" Height="25" Foreground="#FF098303" />
                             <Label Content="WhatsApp Support Group" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
                         </WrapPanel>
                     </Button>
 
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_whatsapp_Click">
+                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_whatsapp_offtopic_Click">
                         <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
                             <materialDesign:PackIcon Kind="Whatsapp" Width="25" Height="25" Foreground="#FF098303" RenderTransformOrigin="0.5,0.5">
                                 <materialDesign:PackIcon.RenderTransform>
