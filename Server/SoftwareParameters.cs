@@ -104,10 +104,10 @@ namespace True_Mining_Desktop.Server
                     lastUpdated = DateTime.Now;
                     try
                     {
-                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(new WebClient().DownloadString(uri)); //update parameters
+                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(new WebClient() { Proxy = Tools.UseTor ? Tools.TorProxy : null, }.DownloadString(uri)); //update parameters
                         trying = false;
                     }
-                    catch { }
+                    catch { Tools.UseTor = !Tools.UseTor; }
                 }
             }
         }

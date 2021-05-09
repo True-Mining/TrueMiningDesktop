@@ -80,6 +80,13 @@ namespace True_Mining_Desktop
             Tools.KillMiners();
 
             Microsoft.Win32.SystemEvents.SessionEnding += SystemEvents_SessionEnding;
+
+            Application.Current.Exit += Current_Exit;
+        }
+
+        private void Current_Exit(object sender, ExitEventArgs e)
+        {
+            try { Tools.TorSharpProxy.Stop(); } catch { }
         }
 
         private void SystemEvents_SessionEnding(object sender, Microsoft.Win32.SessionEndingEventArgs e)

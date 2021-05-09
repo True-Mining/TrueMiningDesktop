@@ -22,12 +22,23 @@ namespace True_Mining_Desktop.Janelas
         public CheckerPopup(string toCheck = "all")
         {
             InitializeComponent();
+            this.DataContext = this;
             this.Height = 0;
             this.BorderBrush.Opacity = 0;
             this.ShowInTaskbar = false;
+            Tools.PropertyChanged += Tools_PropertyChanged;
 
             TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/TrueMiningDesktop.json"), toCheck));
             TaskChecker.Start();
+        }
+
+        private void Tools_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                torIcon.Visibility = Tools.UseTor ? Visibility.Visible : Visibility.Collapsed;
+                torIcon.Opacity = Tools.TorSharpEnabled ? 1 : Tools.TorSharpProcessesRunning ? 0.7 : Tools.UseTor ? 0.4 : 0;
+            }));
         }
 
         private bool property_finish = false;
@@ -196,12 +207,15 @@ namespace True_Mining_Desktop.Janelas
             ShowOrNot();
         }
 
+        private int downloaderTryesCount = 0;
+        private int webClientTryesCount = 0;
+
         public void Downloader(string url, string path, string fileName, string sha256)
         {
             ProgressBar_IsIndeterminate = true;
             HostFilesAd_Visibility = Visibility.Visible;
 
-            int count = 1;
+            downloaderTryesCount = 0;
 
             CheckInternet();
 
@@ -211,21 +225,22 @@ namespace True_Mining_Desktop.Janelas
 
             while (!File.Exists(path + fileName) || Tools.FileSHA256(path + fileName) != sha256)
             {
+                downloaderTryesCount++;
+
                 ProgressDetails = "checking file";
 
-                if (count > 2) { if (!Tools.HaveADM) { Tools.RestartAsAdministrator(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
-                if (count > 3) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
-
-                count++;
+                if (downloaderTryesCount > 2 || webClientTryesCount > 5) { if (!Tools.HaveADM) { Tools.RestartAsAdministrator(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
+                if (downloaderTryesCount > 3 || webClientTryesCount > 7) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
 
                 ProgressDetails = "Checking network connection";
                 while (!Tools.IsConnected()) { ProgressDetails = "Waiting for internet connection..."; Thread.Sleep(2000); }
 
                 ProgressDetails = "Starting download";
 
-                WebClient webClient = new WebClient();
+                WebClient webClient = new WebClient() { Proxy = Tools.UseTor ? Tools.TorProxy : null, };
 
                 webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
+                webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
                 try
                 {
                     webClient.DownloadFileAsync(new Uri(url), path + fileName + ".dl");
@@ -254,6 +269,17 @@ namespace True_Mining_Desktop.Janelas
                 ProgressDetails = "checking file";
 
                 Thread.Sleep(500);
+            }
+        }
+
+        private void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            if (e.Cancelled || e.Error != null)
+            {
+                downloaderTryesCount--;
+                webClientTryesCount++;
+
+                Tools.UseTor = !Tools.UseTor;
             }
         }
 

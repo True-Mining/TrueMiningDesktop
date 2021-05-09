@@ -1,11 +1,15 @@
-﻿using Microsoft.Win32;
+﻿using Knapcode.TorSharp;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -61,6 +65,109 @@ namespace True_Mining_Desktop.Core
                 return new KeyValuePair<string, long>(address, (ping.Status == IPStatus.Success) ? ping.RoundtripTime : 2000);
             }
             catch { return new KeyValuePair<string, long>(address, 10000); }
+        }
+
+        private static TorSharpSettings TorSharpSettings = new TorSharpSettings
+        {
+            ZippedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"),
+            ExtractedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"),
+            PrivoxySettings = { Port = 8427 },
+            TorSettings =
+            {
+                SocksPort = 8428,
+                ControlPort = 8429,
+                ControlPassword = "TrueMining"
+            },
+        };
+
+        public static TorSharpProxy TorSharpProxy = new TorSharpProxy(TorSharpSettings);
+
+        private static bool useTor = false;
+        public static bool UseTor { get { return useTor; } set { useTor = value; NotifyPropertyChanged(); } }
+
+        public static bool TorSharpProcessesRunning
+        {
+            get
+            {
+                bool torProcessRunning = false;
+                bool privoxyProcessRunning = false;
+                foreach (var process in Process.GetProcessesByName("tor")) { try { if (process.MainModule.FileName.Contains(TorSharpSettings.ExtractedToolsDirectory, StringComparison.OrdinalIgnoreCase)) { torProcessRunning = true; break; } } catch { } }
+                foreach (var process in Process.GetProcessesByName("privoxy")) { try { if (process.MainModule.FileName.Contains(TorSharpSettings.ExtractedToolsDirectory, StringComparison.OrdinalIgnoreCase)) { privoxyProcessRunning = true; break; } } catch { } }
+
+                if (privoxyProcessRunning && torProcessRunning)
+                {
+                    return true;
+                }
+                else { return false; }
+            }
+            set { }
+        }
+
+        private static bool torSharpEnabled = false;
+        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; NotifyPropertyChanged(); } }
+
+        public static event PropertyChangedEventHandler PropertyChanged;
+
+        public static WebProxy TorProxy
+        {
+            get
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        TorSharpEnabled = false;
+
+                        if (!TorSharpProcessesRunning)
+                        {
+                            try { TorSharpProxy.Stop(); } catch { }
+                            foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
+                            foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
+                        }
+
+                        try
+                        {
+                            TorSharpProxy.GetControlClientAsync().Wait();
+                            TorSharpEnabled = true;
+
+                            i = 4;
+                        }
+                        catch
+                        {
+                            new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
+                            TorSharpProxy.ConfigureAndStartAsync().Wait();
+                            NotifyPropertyChanged();
+                            TorSharpProxy.GetNewIdentityAsync().Wait();
+                            TorSharpEnabled = true;
+
+                            i = 4;
+                        }
+                    }
+                    catch
+                    {
+                        TorSharpEnabled = false;
+
+                        try { TorSharpProxy.Stop(); } catch { }
+                        foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
+                        foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
+
+                        if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"), true); } catch { } };
+                        if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"), true); } catch { } };
+                    }
+                }
+
+                return new WebProxy()
+                {
+                    Address = new Uri("http://localhost:" + TorSharpSettings.PrivoxySettings.Port),
+                    BypassProxyOnLocal = true
+                };
+            }
+            set { }
+        }
+
+        private static void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        {
+            PropertyChanged(null, null);
         }
 
         public static string FileSHA256(string filePath)
