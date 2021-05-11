@@ -35,19 +35,19 @@ namespace True_Mining_Desktop.Core
 
             try
             {
-                if (new WebClient().DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
+                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://truemining.online/ping")) == "pong") { return true; }
             }
             catch { }
 
             try
             {
-                if (new WebClient().DownloadString(new Uri("https://truemining.online/ping")) == "pong") { return true; }
+                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
             }
             catch { }
 
             try
             {
-                if (new WebClient().DownloadString(new Uri("https://www.utivirtual.com.br/Truemining/ping")) == "pong") { return true; }
+                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://www.utivirtual.com.br/Truemining/ping")) == "pong") { return true; }
             }
             catch { }
 
@@ -83,7 +83,7 @@ namespace True_Mining_Desktop.Core
         public static TorSharpProxy TorSharpProxy = new TorSharpProxy(TorSharpSettings);
 
         private static bool useTor = false;
-        public static bool UseTor { get { return useTor; } set { useTor = value; NotifyPropertyChanged(); } }
+        public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.loadingSettings) { NotifyPropertyChanged(); } } }
 
         public static bool TorSharpProcessesRunning
         {
@@ -104,56 +104,71 @@ namespace True_Mining_Desktop.Core
         }
 
         private static bool torSharpEnabled = false;
-        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; NotifyPropertyChanged(); } }
+        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.loadingSettings) { NotifyPropertyChanged(); } } }
 
         public static event PropertyChangedEventHandler PropertyChanged;
 
+        private static bool generatingTorProxy = false;
         public static WebProxy TorProxy
         {
             get
             {
-                for (int i = 0; i < 3; i++)
+                bool waitWorkForReturn = false;
+
+                while(generatingTorProxy) { Thread.Sleep(500); if (!waitWorkForReturn) { waitWorkForReturn = true; } }
+
+                if (!waitWorkForReturn)
                 {
-                    try
+                    generatingTorProxy = true;
+
+                    for (int i = 0; i < 3; i++)
                     {
-                        TorSharpEnabled = false;
-
-                        if (!TorSharpProcessesRunning)
-                        {
-                            try { TorSharpProxy.Stop(); } catch { }
-                            foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
-                            foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
-                        }
-
                         try
                         {
-                            TorSharpProxy.GetControlClientAsync().Wait();
-                            TorSharpEnabled = true;
+                            TorSharpEnabled = false;
 
-                            i = 4;
+                            if (!TorSharpProcessesRunning)
+                            {
+                                try { TorSharpProxy.Stop(); } catch { }
+                                foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
+                                foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
+                            }
+
+                            try
+                            {
+                                TorSharpProxy.GetNewIdentityAsync().Wait();
+                                TorSharpEnabled = true;
+
+                                i = 4;
+                            }
+                            catch
+                            {
+                                new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
+                                TorSharpProxy.ConfigureAndStartAsync().Wait();
+                                if (!User.Settings.loadingSettings)
+                                {
+                                    NotifyPropertyChanged();
+                                }
+                                TorSharpProxy.GetNewIdentityAsync().Wait();
+                                TorSharpEnabled = true;
+
+                                i = 4;
+                            }
                         }
                         catch
                         {
-                            new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
-                            TorSharpProxy.ConfigureAndStartAsync().Wait();
-                            NotifyPropertyChanged();
-                            TorSharpProxy.GetNewIdentityAsync().Wait();
-                            TorSharpEnabled = true;
+                            TorSharpEnabled = false;
 
-                            i = 4;
+                            try { TorSharpProxy.Stop(); } catch { }
+                            foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
+                            foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
+
+                            if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"), true); } catch { } };
+                            if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"), true); } catch { } };
                         }
                     }
-                    catch
-                    {
-                        TorSharpEnabled = false;
 
-                        try { TorSharpProxy.Stop(); } catch { }
-                        foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
-                        foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
-
-                        if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"), true); } catch { } };
-                        if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"), true); } catch { } };
-                    }
+                    generatingTorProxy = false;
                 }
 
                 return new WebProxy()
@@ -165,7 +180,7 @@ namespace True_Mining_Desktop.Core
             set { }
         }
 
-        private static void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        public static void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged(null, null);
         }
@@ -308,23 +323,6 @@ namespace True_Mining_Desktop.Core
             return false;
         }
 
-        public static Collection<Version> InstalledDotNetVersions()
-        {
-            Collection<Version> versions = new Collection<Version>();
-            RegistryKey NDPKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP");
-            if (NDPKey != null)
-            {
-                string[] subkeys = NDPKey.GetSubKeyNames();
-                foreach (string subkey in subkeys)
-                {
-                    GetDotNetVersion(NDPKey.OpenSubKey(subkey), subkey, versions);
-                    GetDotNetVersion(NDPKey.OpenSubKey(subkey).OpenSubKey("Client"), subkey, versions);
-                    GetDotNetVersion(NDPKey.OpenSubKey(subkey).OpenSubKey("Full"), subkey, versions);
-                }
-            }
-            return versions;
-        }
-
         public static bool WalletAddressIsValid(string address = "null")
         {
             if (String.IsNullOrEmpty(address))
@@ -359,30 +357,6 @@ namespace True_Mining_Desktop.Core
             //}
 
             return true;
-        }
-
-        private static void GetDotNetVersion(RegistryKey parentKey, string subVersionName, Collection<Version> versions)
-        {
-            if (parentKey != null)
-            {
-                string installed = Convert.ToString(parentKey.GetValue("Install"));
-                if (installed == "1")
-                {
-                    string version = Convert.ToString(parentKey.GetValue("Version"));
-                    if (string.IsNullOrEmpty(version))
-                    {
-                        if (subVersionName.StartsWith("v"))
-                            version = subVersionName.Substring(1);
-                        else
-                            version = subVersionName;
-                    }
-
-                    Version ver = new Version(version);
-
-                    if (!versions.Contains(ver))
-                        versions.Add(ver);
-                }
-            }
         }
 
         public static void OpenLinkInBrowser(string link)

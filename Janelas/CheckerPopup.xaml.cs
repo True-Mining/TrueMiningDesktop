@@ -26,7 +26,10 @@ namespace True_Mining_Desktop.Janelas
             this.Height = 0;
             this.BorderBrush.Opacity = 0;
             this.ShowInTaskbar = false;
+
             Tools.PropertyChanged += Tools_PropertyChanged;
+
+            Tools.NotifyPropertyChanged();
 
             TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/TrueMiningDesktop.json"), toCheck));
             TaskChecker.Start();
@@ -36,8 +39,8 @@ namespace True_Mining_Desktop.Janelas
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                torIcon.Visibility = Tools.UseTor ? Visibility.Visible : Visibility.Collapsed;
-                torIcon.Opacity = Tools.TorSharpEnabled ? 1 : Tools.TorSharpProcessesRunning ? 0.7 : Tools.UseTor ? 0.4 : 0;
+                torIcon.Visibility = Tools.UseTor || User.Settings.User.UseTorSharpOnAll ? Visibility.Visible : Visibility.Collapsed;
+                torIcon.Opacity = Tools.TorSharpEnabled ? 1 : Tools.TorSharpProcessesRunning ? 0.7 : Tools.UseTor || User.Settings.User.UseTorSharpOnAll ? 0.4 : 0;
             }));
         }
 
@@ -237,7 +240,7 @@ namespace True_Mining_Desktop.Janelas
 
                 ProgressDetails = "Starting download";
 
-                WebClient webClient = new WebClient() { Proxy = Tools.UseTor ? Tools.TorProxy : null, };
+                WebClient webClient = new WebClient() { Proxy = Tools.UseTor || User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, };
 
                 webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
                 webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
@@ -279,7 +282,10 @@ namespace True_Mining_Desktop.Janelas
                 downloaderTryesCount--;
                 webClientTryesCount++;
 
-                Tools.UseTor = !Tools.UseTor;
+                if (webClientTryesCount > 1)
+                {
+                    Tools.UseTor = !Tools.UseTor;
+                }
             }
         }
 
@@ -337,6 +343,7 @@ namespace True_Mining_Desktop.Janelas
             Application.Current.MainWindow.StateChanged -= MainWindow_StateChanged;
             Application.Current.MainWindow.Activated -= MainWindow_Activated;
             this.StateChanged -= CheckerPopup_StateChanged;
+            Tools.PropertyChanged -= Tools_PropertyChanged;
 
             Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
         }

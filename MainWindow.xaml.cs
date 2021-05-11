@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace True_Mining_Desktop
         public MainWindow()
         {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            Tools.PropertyChanged += Tools_PropertyChanged;
 
             User.Settings.SettingsRecover();
 
@@ -77,11 +79,22 @@ namespace True_Mining_Desktop
             Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseMove += this.Move;
             Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseUp += this.Up;
 
+
+
             Tools.KillMiners();
 
             Microsoft.Win32.SystemEvents.SessionEnding += SystemEvents_SessionEnding;
 
             Application.Current.Exit += Current_Exit;
+        }
+
+        private void Tools_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            Dispatcher.BeginInvoke((Action)(() =>
+            {
+                torIcon.Visibility = User.Settings.User.UseTorSharpOnAll ? Visibility.Visible : Visibility.Collapsed;
+                torIcon.Opacity = Tools.TorSharpEnabled ? 1 : Tools.TorSharpProcessesRunning ? 0.7 : User.Settings.User.UseTorSharpOnAll ? 0.4 : 0;
+            }));
         }
 
         private void Current_Exit(object sender, ExitEventArgs e)
@@ -360,6 +373,16 @@ namespace True_Mining_Desktop
         private void Window_LostMouseCapture(object sender, MouseEventArgs e)
         {
             if (clicado) clicado = false;
+        }
+
+        private void torIcon_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show(new WebClient() { Proxy = new WebProxy()
+            {
+                Address = new Uri("http://localhost:8427"),
+                BypassProxyOnLocal = true
+            }
+        }.DownloadString(new Uri("https://api.ipify.org")));
         }
     }
 }

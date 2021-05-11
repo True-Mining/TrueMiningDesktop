@@ -13,7 +13,7 @@ namespace True_Mining_Desktop.User
         public static DeviceSettings Device = new DeviceSettings();
         public static UserPreferences User = new UserPreferences();
 
-        public static bool loadingSettings = true;
+        public static bool loadingSettings { get; set; } = true;
         public static bool settingsSavedFirstTime = true;
 
         public static System.Timers.Timer timerSaveSettings = new System.Timers.Timer(5000);
@@ -49,6 +49,7 @@ namespace True_Mining_Desktop.User
                 User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                 User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
                 User.UseAllInterfacesInsteadLocalhost = up.UseAllInterfacesInsteadLocalhost;
+                User.UseTorSharpOnAll = up.UseTorSharpOnAll;
                 User.ShowCLI = up.ShowCLI;
                 User.StartHide = up.StartHide;
                 User.ChangeTbIcon = up.ChangeTbIcon;
@@ -173,5 +174,9 @@ namespace True_Mining_Desktop.User
 
         private bool useAllInterfacesInsteadLocalhost = false;
         public bool UseAllInterfacesInsteadLocalhost { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
+        
+        private bool useTorSharpOnAll = false;
+        public bool UseTorSharpOnAll { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.loadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
+
     }
 }

@@ -128,12 +128,12 @@ namespace True_Mining_Desktop.Server
                 {
                     TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet);
                     TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm);
-                    BitcoinPrice.FIAT_rates = JsonConvert.DeserializeObject<PoolAPI.Coins>(new WebClient().DownloadString("https://blockchain.info/ticker"));
+                    BitcoinPrice.FIAT_rates = JsonConvert.DeserializeObject<PoolAPI.Coins>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString("https://blockchain.info/ticker"));
 
-                    Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient().DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")));
-                    Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient().DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.Payment_Coin + "-BTC")));
-                    XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)));
-                    XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/pool/sharecoef")));
+                    Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")));
+                    Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.Payment_Coin + "-BTC")));
+                    XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)));
+                    XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://api.nanopool.org/v1/xmr/pool/sharecoef")));
 
                     PoolAPI.XMR_nanopool.hashrateHistory_user.Clear();
 
