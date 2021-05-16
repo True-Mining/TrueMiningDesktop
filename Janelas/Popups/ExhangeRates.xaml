@@ -5,30 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:True_Mining_Desktop.Janelas.Popups" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Exchange Rates" Height="300" Width="765">
-    <Grid Width="750">
+        Height="275" Width="765" Topmost="True" ResizeMode="NoResize" WindowStyle="None" BorderThickness="1,1,1,1" BorderBrush="#FF2E2E2E" MouseDown="Down" MouseMove="Move" MouseUp="Up">
+    <Grid>
         <ProgressBar x:Name="loadingVisualElement"  Style="{StaticResource MaterialDesignCircularProgressBar}" VerticalAlignment="Center" HorizontalAlignment="Center" Height="150" Width="150" Foreground="#992196F3" Value="0" IsIndeterminate="True" Visibility="Visible" />
-        <WrapPanel x:Name="AllContent" Orientation="Horizontal">
+        <WrapPanel x:Name="AllContent" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
                 <WrapPanel Margin="0,15,0,0">
                     <materialDesign:PackIcon Width="40" Height="40" Kind="Coin" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                     <Label Content="Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding PointToCoinRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding PointToCoinRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding PointToBTCRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding PointToBTCRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding PointToUSDRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding PointToUSDRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
             </WrapPanel>
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
@@ -37,20 +37,20 @@
                     <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CoinToPointRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CoinToPointRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CoinToBTCRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CoinToBTCRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CoinToUSDRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CoinToUSDRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
             </WrapPanel>
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
@@ -59,22 +59,23 @@
                     <Label Content="Bitcoin" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding BTCToCoinRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding BTCToCoinRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding BTCToBTCRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding BTCToBTCRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="15" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding BTCToUSDRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="15" />
+                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding BTCToUSDRate}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
             </WrapPanel>
         </WrapPanel>
+        <materialDesign:PackIcon Kind="WindowClose" HorizontalAlignment="Right" Width="17" Height="17" Foreground="#FF7C0000" Background="#FFFFA1A1" Margin="3" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="CloseButton_click" />
     </Grid>
 </Window>

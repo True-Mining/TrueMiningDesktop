@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Input;
 
 namespace True_Mining_Desktop.Janelas.Popups
 {
@@ -65,5 +66,38 @@ namespace True_Mining_Desktop.Janelas.Popups
         public decimal BTCToCoinRate { get; set; } = 1;
         public decimal BTCToBTCRate { get; set; } = 1;
         public decimal BTCToUSDRate { get; set; } = 1;
+
+        private void CloseButton_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            this.Close();
+        }
+
+        public static bool clicado = false;
+        private Point lm = new Point();
+
+        public void Down(object sender, MouseButtonEventArgs e)
+        {
+            clicado = true;
+
+            this.lm.X = System.Windows.Forms.Control.MousePosition.X;
+            this.lm.Y = System.Windows.Forms.Control.MousePosition.Y;
+            this.lm.X = Convert.ToInt16(this.Left) - this.lm.X;
+            this.lm.Y = Convert.ToInt16(this.Top) - this.lm.Y;
+        }
+
+        public void Move(object sender, MouseEventArgs e)
+        {
+            if (clicado && e.LeftButton == MouseButtonState.Pressed)
+            {
+                this.Left = (System.Windows.Forms.Control.MousePosition.X + this.lm.X);
+                this.Top = (System.Windows.Forms.Control.MousePosition.Y + this.lm.Y);
+            }
+            else { clicado = false; }
+        }
+
+        public void Up(object sender, MouseButtonEventArgs e)
+        {
+            clicado = false;
+        }
     }
 }
