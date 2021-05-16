@@ -34,7 +34,7 @@ namespace True_Mining_Desktop.Janelas
         private string labelNextPayout;
         private string labelAccumulatedBalance;
         private List<string> dashboardWarnings = new List<string>();
-        public Visibility warningWrapVisibility = Visibility.Collapsed;
+        public Visibility warningWrapVisibility = Visibility.Visible;
 
         public string LabelNextPayout { get { return labelNextPayout; } set { labelNextPayout = value; xLabelNextPayout.Content = value; } }
         public string LabelAccumulatedBalance { get { return labelAccumulatedBalance; } set { labelAccumulatedBalance = value; xLabelAccumulatedBalance.Content = value; } }
@@ -72,7 +72,12 @@ namespace True_Mining_Desktop.Janelas
         {
             try
             {
-                new Calculator(saldo.HashesPerPoint, saldo.exchangeRatePontosToMiningCoin).ShowDialog();
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window.Title == "Calculator") { window.Close(); }
+                }
+
+                new Calculator(saldo.HashesPerPoint, saldo.exchangeRatePontosToMiningCoin) { Title = "Calculator" }.Show();
             }
             catch { }
         }
@@ -81,7 +86,12 @@ namespace True_Mining_Desktop.Janelas
         {
             try
             {
-                new ExchangeRates(saldo.exchangeRatePontosToMiningCoin).ShowDialog();
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window.Title == "Exchange Rates") { window.Close(); }
+                }
+
+                new ExchangeRates(saldo.exchangeRatePontosToMiningCoin) { Title = "Exchange Rates" }.Show();
             }
             catch { }
         }
@@ -132,7 +142,6 @@ namespace True_Mining_Desktop.Janelas
 
         private void PackIcon_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            // forçar atualização do saldo
             saldo.UpdateBalances();
         }
 

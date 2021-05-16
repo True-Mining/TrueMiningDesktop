@@ -7,8 +7,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              d:DesignHeight="485              " d:DesignWidth="650              " Background="White" Loaded="UserControl_Loaded">
-    <Grid Height="485" Width="650">
-        <WrapPanel x:Name="DashboardContent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Width="650">
+    <Grid x:Name="DashboardContent" Height="485" Width="650">
+        <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical" Width="650">
             <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
                 <materialDesign:PackIcon Width="30" Height="70" Kind="ViewDashboardOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" MouseDoubleClick="PackIcon_MouseDoubleClick" />
                 <Label Content="DashBoard" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" Padding="15,4,4,4" />
@@ -55,6 +55,6 @@
                 </WrapPanel>
             </Button>
         </WrapPanel>
-        <ProgressBar x:Name="loadingVisualElement"  Style="{StaticResource MaterialDesignCircularProgressBar}" VerticalAlignment="Top" HorizontalAlignment="Center" Height="200" Width="200" Margin="0,142,0,0" Foreground="#992196F3" Value="0" IsIndeterminate="True" Visibility="Hidden" />
+        <ProgressBar x:Name="loadingVisualElement"  Style="{StaticResource MaterialDesignCircularProgressBar}" VerticalAlignment="Center" HorizontalAlignment="Center" Height="250" Width="250" Foreground="#992196F3" Value="0" IsIndeterminate="True" Visibility="Collapsed" />
     </Grid>
 </UserControl>

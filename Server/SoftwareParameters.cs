@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using True_Mining_Desktop.Core;
 
@@ -104,7 +103,7 @@ namespace True_Mining_Desktop.Server
                     lastUpdated = DateTime.Now;
                     try
                     {
-                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(new WebClient() { Proxy = Tools.UseTor || User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(uri)); //update parameters
+                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString())); //update parameters
                         trying = false;
                     }
                     catch { Tools.UseTor = !Tools.UseTor; }

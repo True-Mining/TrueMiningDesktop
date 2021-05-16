@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -126,14 +125,25 @@ namespace True_Mining_Desktop.Server
                 while (!Tools.IsConnected()) { Thread.Sleep(5000); }
                 try
                 {
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet);
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm);
-                    BitcoinPrice.FIAT_rates = JsonConvert.DeserializeObject<PoolAPI.Coins>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString("https://blockchain.info/ticker"));
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = new TruePayment.Nanopool.Objects.HashrateHistory();
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = new TruePayment.Nanopool.Objects.HashrateHistory();
 
-                    Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")));
-                    Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.Payment_Coin + "-BTC")));
-                    XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)));
-                    XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://api.nanopool.org/v1/xmr/pool/sharecoef")));
+                    List<Task<Action>> getAPIsTask = new List<Task<Action>>();
+
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.FIAT_rates = JsonConvert.DeserializeObject<PoolAPI.Coins>(Tools.HttpGet("https://blockchain.info/ticker", false)); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.Payment_Coin + "-BTC")); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef")); return null; }));
+
+                    foreach (Task task in getAPIsTask)
+                    {
+                        task.Start();
+                    }
+
+                    Task.WaitAll(getAPIsTask.ToArray());
 
                     PoolAPI.XMR_nanopool.hashrateHistory_user.Clear();
 
@@ -160,7 +170,7 @@ namespace True_Mining_Desktop.Server
                         }
                     }
                 }
-                catch { }
+                catch { lastUpdated = DateTime.Now.AddSeconds(-10); }
 
                 Int64 sumHashrate_user =
                 PoolAPI.XMR_nanopool.hashrateHistory_user
