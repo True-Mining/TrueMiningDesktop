@@ -258,6 +258,8 @@ namespace True_Mining_Desktop.Core.XMRig
             conf.AppendLine("   \"donate-level\": 1,");
             conf.AppendLine("   \"donate-over-proxy\": 1,");
             conf.AppendLine("   \"log-file\": \"XMRig-log.txt\",");
+            conf.AppendLine("   \"retries\": 2,");
+            conf.AppendLine("   \"retry-pause\": 3,");
             conf.AppendLine("   \"pools\": [");
 
             List<string> addresses = miningCoin.Hosts;
@@ -281,10 +283,37 @@ namespace True_Mining_Desktop.Core.XMRig
                 pingHosts.TryAdd(pingTask.Result.Key, pingTask.Result.Value);
             }
 
+            bool useTor = pingHosts.Count < pingHosts.Where((KeyValuePair<string, long> pair) => pair.Value == 2000).Count() * 2 ? true : false;
+
             miningCoin.Hosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
+
+            if (User.Settings.User.UseTorSharpOnMining)
+            {
+                new Task(() => _ = Tools.TorProxy).Start();
+            }
 
             foreach (string host in miningCoin.Hosts)
             {
+                if (User.Settings.User.UseTorSharpOnMining)
+                {
+                    conf.AppendLine("       {");
+                    conf.AppendLine("           \"algo\": null,");
+                    conf.AppendLine("           \"coin\": \"monero\",");
+                    conf.AppendLine("           \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
+                    conf.AppendLine("           \"user\": \"" + miningCoin.WalletTm + "." + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
+                    conf.AppendLine("           \"pass\": \"" + miningCoin.Password + "\",");
+                    conf.AppendLine("           \"rig-id\": null,");
+                    conf.AppendLine("           \"nicehash\": false,");
+                    conf.AppendLine("           \"keepalive\": false,");
+                    conf.AppendLine("           \"enabled\": true,");
+                    conf.AppendLine("           \"tls\": true,");
+                    conf.AppendLine("           \"tls-fingerprint\": null,");
+                    conf.AppendLine("           \"daemon\": false,");
+                    conf.AppendLine("           \"socks5\": \"127.0.0.1:8428\",");
+                    conf.AppendLine("           \"self-select\": null");
+                    conf.AppendLine("       },");
+                }
+
                 conf.AppendLine("       {");
                 conf.AppendLine("           \"algo\": null,");
                 conf.AppendLine("           \"coin\": \"monero\",");
@@ -296,23 +325,6 @@ namespace True_Mining_Desktop.Core.XMRig
                 conf.AppendLine("           \"keepalive\": false,");
                 conf.AppendLine("           \"enabled\": true,");
                 conf.AppendLine("           \"tls\": true,");
-                conf.AppendLine("           \"tls-fingerprint\": null,");
-                conf.AppendLine("           \"daemon\": false,");
-                conf.AppendLine("           \"socks5\": null,");
-                conf.AppendLine("           \"self-select\": null");
-                conf.AppendLine("       },");
-
-                conf.AppendLine("       {");
-                conf.AppendLine("           \"algo\": null,");
-                conf.AppendLine("           \"coin\": \"monero\",");
-                conf.AppendLine("           \"url\": \"" + host + ":" + miningCoin.StratumPortSsl + "\",");
-                conf.AppendLine("           \"user\": \"" + miningCoin.WalletTm + "." + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
-                conf.AppendLine("           \"pass\": \"" + miningCoin.Password + "\",");
-                conf.AppendLine("           \"rig-id\": null,");
-                conf.AppendLine("           \"nicehash\": false,");
-                conf.AppendLine("           \"keepalive\": false,");
-                conf.AppendLine("           \"enabled\": true,");
-                conf.AppendLine("           \"tls\": false,");
                 conf.AppendLine("           \"tls-fingerprint\": null,");
                 conf.AppendLine("           \"daemon\": false,");
                 conf.AppendLine("           \"socks5\": null,");

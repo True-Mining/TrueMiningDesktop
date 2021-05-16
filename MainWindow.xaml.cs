@@ -92,8 +92,8 @@ namespace True_Mining_Desktop
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                torIcon.Visibility = User.Settings.User.UseTorSharpOnAll ? Visibility.Visible : Visibility.Collapsed;
-                torIcon.Opacity = Tools.TorSharpEnabled ? 1 : Tools.TorSharpProcessesRunning ? 0.7 : User.Settings.User.UseTorSharpOnAll ? 0.4 : 0;
+                torIcon.Visibility = User.Settings.User.UseTorSharpOnMining ? Visibility.Visible : Visibility.Collapsed;
+                torIcon.Opacity = Tools.TorSharpEnabled ? 1 : Tools.TorSharpProcessesRunning ? 0.7 : User.Settings.User.UseTorSharpOnMining ? 0.4 : 0;
             }));
         }
 
@@ -377,7 +377,6 @@ namespace True_Mining_Desktop
 
         private void torIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show(new WebClient() { Proxy = new WebProxy()
             MessageBox.Show("IP address: " + new WebClient()
             {
                 Proxy = new WebProxy()

@@ -2,7 +2,6 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -35,19 +34,19 @@ namespace True_Mining_Desktop.Core
 
             try
             {
-                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://truemining.online/ping")) == "pong") { return true; }
+                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnMining ? Tools.TorProxy : null, }.DownloadString(new Uri("https://truemining.online/ping")) == "pong") { return true; }
             }
             catch { }
 
             try
             {
-                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
+                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnMining ? Tools.TorProxy : null, }.DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
             }
             catch { }
 
             try
             {
-                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, }.DownloadString(new Uri("https://www.utivirtual.com.br/Truemining/ping")) == "pong") { return true; }
+                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnMining ? Tools.TorProxy : null, }.DownloadString(new Uri("https://www.utivirtual.com.br/Truemining/ping")) == "pong") { return true; }
             }
             catch { }
 
@@ -67,11 +66,58 @@ namespace True_Mining_Desktop.Core
             catch { return new KeyValuePair<string, long>(address, 10000); }
         }
 
+        public static WebHeaderCollection WebRequestHeaders()
+        {
+            WebHeaderCollection headers = new WebHeaderCollection();
+            //    headers[HttpRequestHeader.Accept] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+            //    headers[HttpRequestHeader.AcceptEncoding] = "gzip, deflate, br";
+            //     headers[HttpRequestHeader.AcceptLanguage] = "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3";
+            headers[HttpRequestHeader.CacheControl] = "max-age=0";
+            headers[HttpRequestHeader.KeepAlive] = "1";
+            headers[HttpRequestHeader.Allow] = "1";
+            // headers[HttpRequestHeader.Via] = "http://127.0.0.1:8427";
+            headers[HttpRequestHeader.ProxyAuthorization] = "Basic " + TorSharpSettings.TorControlPassword;
+            headers[HttpRequestHeader.Trailer] = "1";
+            headers[HttpRequestHeader.Upgrade] = "1";
+            headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0";
+
+            return headers;
+        }
+
+        public static string HttpGet(string uri, bool forceUseTor = false)
+        {
+            bool useTor = false;
+
+            for (int i = 0; i < 4; i++)
+            {
+                try
+                {
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+                    request.AutomaticDecompression = DecompressionMethods.All;
+                    request.Proxy = useTor | forceUseTor ? Tools.TorProxy : null;
+                    request.Headers = Tools.WebRequestHeaders();
+                    request.Credentials = System.Net.CredentialCache.DefaultCredentials;
+
+                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    using (Stream stream = response.GetResponseStream())
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        UseTor = false;
+                        return reader.ReadToEnd();
+                    }
+                }
+                catch { if (i > 1) useTor = true; UseTor = true; }
+            }
+
+            throw new Exception();
+        }
+
         private static TorSharpSettings TorSharpSettings = new TorSharpSettings
         {
             ZippedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"),
             ExtractedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"),
             PrivoxySettings = { Port = 8427 },
+            WaitForConnect = new TimeSpan(0),
             TorSettings =
             {
                 SocksPort = 8428,
@@ -109,13 +155,14 @@ namespace True_Mining_Desktop.Core
         public static event PropertyChangedEventHandler PropertyChanged;
 
         private static bool generatingTorProxy = false;
+
         public static WebProxy TorProxy
         {
             get
             {
                 bool waitWorkForReturn = false;
 
-                while(generatingTorProxy) { Thread.Sleep(500); if (!waitWorkForReturn) { waitWorkForReturn = true; } }
+                while (generatingTorProxy) { Thread.Sleep(100); if (!waitWorkForReturn) { waitWorkForReturn = true; } }
 
                 if (!waitWorkForReturn)
                 {
@@ -125,10 +172,9 @@ namespace True_Mining_Desktop.Core
                     {
                         try
                         {
-                            TorSharpEnabled = false;
-
                             if (!TorSharpProcessesRunning)
                             {
+                                TorSharpEnabled = false;
                                 try { TorSharpProxy.Stop(); } catch { }
                                 foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
                                 foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
@@ -136,13 +182,20 @@ namespace True_Mining_Desktop.Core
 
                             try
                             {
-                                TorSharpProxy.GetNewIdentityAsync().Wait();
-                                TorSharpEnabled = true;
+                                string ip = new WebClient() { Proxy = new WebProxy() { Address = new Uri("http://localhost:" + TorSharpSettings.PrivoxySettings.Port), BypassProxyOnLocal = true, UseDefaultCredentials = true } }.DownloadString("https://api.ipify.org/");
+                                IPAddress addressValidation;
+                                if (System.Net.IPAddress.TryParse(ip, out addressValidation))
+                                {
+                                    TorSharpEnabled = true;
 
-                                i = 4;
+                                    i = 4;
+                                }
+                                else { throw new Exception(); }
                             }
-                            catch
+                            catch (Exception e)
                             {
+                                TorSharpEnabled = false;
+
                                 new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
                                 TorSharpProxy.ConfigureAndStartAsync().Wait();
                                 if (!User.Settings.loadingSettings)
@@ -155,7 +208,7 @@ namespace True_Mining_Desktop.Core
                                 i = 4;
                             }
                         }
-                        catch
+                        catch (Exception e)
                         {
                             TorSharpEnabled = false;
 
@@ -174,7 +227,8 @@ namespace True_Mining_Desktop.Core
                 return new WebProxy()
                 {
                     Address = new Uri("http://localhost:" + TorSharpSettings.PrivoxySettings.Port),
-                    BypassProxyOnLocal = true
+                    BypassProxyOnLocal = true,
+                    UseDefaultCredentials = true
                 };
             }
             set { }

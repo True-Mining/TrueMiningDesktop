@@ -49,7 +49,7 @@ namespace True_Mining_Desktop.User
                 User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                 User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
                 User.UseAllInterfacesInsteadLocalhost = up.UseAllInterfacesInsteadLocalhost;
-                User.UseTorSharpOnAll = up.UseTorSharpOnAll;
+                User.UseTorSharpOnMining = up.UseTorSharpOnMining;
                 User.ShowCLI = up.ShowCLI;
                 User.StartHide = up.StartHide;
                 User.ChangeTbIcon = up.ChangeTbIcon;
@@ -174,9 +174,8 @@ namespace True_Mining_Desktop.User
 
         private bool useAllInterfacesInsteadLocalhost = false;
         public bool UseAllInterfacesInsteadLocalhost { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
-        
-        private bool useTorSharpOnAll = false;
-        public bool UseTorSharpOnAll { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.loadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
 
+        private bool useTorSharpOnAll = false;
+        public bool UseTorSharpOnMining { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.loadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
     }
 }

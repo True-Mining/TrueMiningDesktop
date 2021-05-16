@@ -39,8 +39,8 @@ namespace True_Mining_Desktop.Janelas
         {
             Dispatcher.BeginInvoke((Action)(() =>
             {
-                torIcon.Visibility = Tools.UseTor || User.Settings.User.UseTorSharpOnAll ? Visibility.Visible : Visibility.Collapsed;
-                torIcon.Opacity = Tools.TorSharpEnabled ? 1 : Tools.TorSharpProcessesRunning ? 0.7 : Tools.UseTor || User.Settings.User.UseTorSharpOnAll ? 0.4 : 0;
+                torIcon.Visibility = useTor | Tools.UseTor ? Visibility.Visible : Visibility.Collapsed;
+                torIcon.Opacity = Tools.TorSharpEnabled ? 1 : Tools.TorSharpProcessesRunning ? 0.7 : Tools.UseTor || User.Settings.User.UseTorSharpOnMining ? 0.4 : 0;
             }));
         }
 
@@ -213,6 +213,8 @@ namespace True_Mining_Desktop.Janelas
         private int downloaderTryesCount = 0;
         private int webClientTryesCount = 0;
 
+        private bool useTor = false;
+
         public void Downloader(string url, string path, string fileName, string sha256)
         {
             ProgressBar_IsIndeterminate = true;
@@ -225,6 +227,8 @@ namespace True_Mining_Desktop.Janelas
             FileName = fileName;
             StatusTitle = "Downloading Files";
             Thread.Sleep(20);
+
+            useTor = false;
 
             while (!File.Exists(path + fileName) || Tools.FileSHA256(path + fileName) != sha256)
             {
@@ -240,10 +244,11 @@ namespace True_Mining_Desktop.Janelas
 
                 ProgressDetails = "Starting download";
 
-                WebClient webClient = new WebClient() { Proxy = Tools.UseTor || User.Settings.User.UseTorSharpOnAll ? Tools.TorProxy : null, };
+                WebClient webClient = new WebClient() { Proxy = useTor ? Tools.TorProxy : null, };
 
                 webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
                 webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
+
                 try
                 {
                     webClient.DownloadFileAsync(new Uri(url), path + fileName + ".dl");
@@ -284,7 +289,9 @@ namespace True_Mining_Desktop.Janelas
 
                 if (webClientTryesCount > 1)
                 {
-                    Tools.UseTor = !Tools.UseTor;
+                    useTor = true;
+                    Tools.UseTor = true;
+                    Tools.NotifyPropertyChanged();
                 }
             }
         }
