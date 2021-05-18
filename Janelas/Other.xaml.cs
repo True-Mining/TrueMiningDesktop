@@ -46,7 +46,13 @@ namespace True_Mining_Desktop.Janelas
         private void Button_whatsapp_offtopic_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("You will be redirected to an offtopic interactive group. Be respectfull and don't scam your friends.");
-            Tools.OpenLinkInBrowser("https://chat.whatsapp.com/LEWSKLAMKwj2iwcT64AIXg");
+            Tools.OpenLinkInBrowser("https://chat.whatsapp.com/HlMg3voD3MkKXHvklNc2N9");
+        }
+
+        private void Button_telegram_offtopic_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("You will be redirected to an offtopic interactive group. Be respectfull and don't scam your friends.");
+            Tools.OpenLinkInBrowser("https://t.me/joinchat/RIJqDSeKxc81ODk5");
         }
     }
 }

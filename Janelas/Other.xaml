@@ -15,68 +15,75 @@
                 <Label Content="Other Stuff" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
             </WrapPanel>
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
-            <WrapPanel Orientation="Horizontal">
+            <WrapPanel Orientation="Horizontal" Margin="25,0,0,0">
                 <WrapPanel Width="300" HorizontalAlignment="Left">
-                    <Label Content="Useful Project Links:" Margin="25,0,0,0" FontSize="14" FontWeight="Bold" />
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_website_Click">
-                        <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                            <materialDesign:PackIcon Kind="Web" Width="25" Height="25" Foreground="#FF4D4D4D" />
-                            <Label Content="True Mining Website" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
-                        </WrapPanel>
-                    </Button>
 
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_github_Click">
-                        <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                            <materialDesign:PackIcon Kind="Github" Width="25" Height="25" Foreground="Black" />
-                            <Label Content="Github Organization" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
-                        </WrapPanel>
-                    </Button>
+                    <Label Content="Useful Project Links:" Margin="0" FontSize="14" FontWeight="Bold" />
 
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_YtTutorial_Click">
-                        <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                            <materialDesign:PackIcon Kind="Youtube" Width="25" Height="25" Foreground="#c4302b" RenderTransformOrigin="0.5,0.5" />
-                            <Label Content="YouTube Tutorial" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
-                        </WrapPanel>
-                    </Button>
+                    <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
+                        <Button Width="140" Margin="0,5,10,5" Padding="0" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_website_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="Web" Width="25" Height="25" Foreground="#FF4D4D4D" />
+                                <Label Content=" Website" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                        <Button Width="140" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_github_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="Github" Width="25" Height="25" Foreground="Black" />
+                                <Label Content="Github" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                    </WrapPanel>
 
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_telegramGroup_Click">
-                        <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                            <materialDesign:PackIcon Kind="Telegram" Width="25" Height="25" Foreground="#FF008DCF" />
-                            <Label Content="Telegram Support Group" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
-                        </WrapPanel>
-                    </Button>
+                    <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
+                        <Button Width="290" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_YtTutorial_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0">
+                                <materialDesign:PackIcon Kind="Youtube" Width="25" Height="25" Foreground="#c4302b" RenderTransformOrigin="0.5,0.5" />
+                                <Label Content="YouTube Tutorial - BitNoob" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                    </WrapPanel>
 
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_telegramLOGChannel_Click">
-                        <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                            <materialDesign:PackIcon Kind="Telegram" Width="25" Height="25" Foreground="#FF008DCF" />
-                            <Label Content="Telegram LOG Channel" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
-                        </WrapPanel>
-                    </Button>
+                    <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
+                        <Button Width="140" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_telegramGroup_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="Telegram" Width="25" Height="25" Foreground="#FF008DCF" />
+                                <Label Content="Support" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                        <Button Width="140" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_whatsapp_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="Whatsapp" Width="25" Height="25" Foreground="#FF098303" />
+                                <Label Content="Support" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                    </WrapPanel>
 
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_whatsapp_Click">
-                        <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                            <materialDesign:PackIcon Kind="Whatsapp" Width="25" Height="25" Foreground="#FF098303" />
-                            <Label Content="WhatsApp Support Group" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
-                        </WrapPanel>
-                    </Button>
+                    <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
+                        <Button Width="140" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_telegram_offtopic_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="Telegram" Width="25" Height="25" Foreground="#FF008DCF" RenderTransformOrigin="0.5,0.5" />
+                                <Label Content="OffTopic" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                        <Button Width="140" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_whatsapp_offtopic_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="Whatsapp" Width="25" Height="25" Foreground="#FF098303" RenderTransformOrigin="0.5,0.5" />
+                                <Label Content="OffTopic" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                    </WrapPanel>
 
-                    <Button Width="250" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" Margin="25,10,25,10" HorizontalAlignment="Left" Click="Button_whatsapp_offtopic_Click">
-                        <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                            <materialDesign:PackIcon Kind="Whatsapp" Width="25" Height="25" Foreground="#FF098303" RenderTransformOrigin="0.5,0.5">
-                                <materialDesign:PackIcon.RenderTransform>
-                                    <TransformGroup>
-                                        <ScaleTransform ScaleX="-1" ScaleY="-1" />
-                                        <SkewTransform />
-                                        <RotateTransform />
-                                        <TranslateTransform />
-                                    </TransformGroup>
-                                </materialDesign:PackIcon.RenderTransform>
-                            </materialDesign:PackIcon>
-                            <Label Content="WhatsApp OffTopic Group" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
-                        </WrapPanel>
-                    </Button>
+                    <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
+                        <Button Width="290" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_telegramLOGChannel_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="Telegram" Width="25" Height="25" Foreground="#FF008DCF" />
+                                <Label Content="Announcement / Transparency / LOG" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                    </WrapPanel>
                 </WrapPanel>
-                <Image Height="300" Width="325" Source="http://truemining.online/TrueMiningDesktop/TrueMiningFiles/Resources/other_image.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" />
+                <Image Height="300" Width="300" Source="http://truemining.online/TrueMiningDesktop/TrueMiningFiles/Resources/other_image.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" />
             </WrapPanel>
         </WrapPanel>
     </Grid>
