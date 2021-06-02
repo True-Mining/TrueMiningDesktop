@@ -50,7 +50,7 @@ namespace True_Mining_Desktop.Core
             }
             catch { }
 
-            if (HaveADM && !firewallRuleAdded) { AddFirewallPingRule(); }
+            if (HaveADM && !firewallRuleAdded) { try { AddFirewallRule("ping", Path.Combine(Environment.SystemDirectory, "ping.exe")); } catch { } }
 
             return false;
         }
@@ -94,7 +94,7 @@ namespace True_Mining_Desktop.Core
                 {
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
                     request.AutomaticDecompression = DecompressionMethods.All;
-                    request.Proxy = useTor | forceUseTor ? Tools.TorProxy : null;
+                    request.Proxy = useTor || forceUseTor ? Tools.TorProxy : null;
                     request.Headers = Tools.WebRequestHeaders();
                     request.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
@@ -276,20 +276,18 @@ namespace True_Mining_Desktop.Core
 
         private static bool firewallRuleAdded = false;
 
-        public static void AddFirewallPingRule()
+        public static void AddFirewallRule(string name, string filePatch, bool forceAdmin = false)
         {
+            StreamWriter wr = new StreamWriter(Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd"));
+            wr.Write("netsh advfirewall firewall del rule name=\"" + name + "\"\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=in action=allow\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=out action=allow");
+            wr.Close();
+
             Process addfwrule = new Process();
-            addfwrule.StartInfo.FileName = "netsh";
-            addfwrule.StartInfo.UseShellExecute = false;
+            addfwrule.StartInfo.FileName = Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd");
+            addfwrule.StartInfo.UseShellExecute = true;
             addfwrule.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             addfwrule.StartInfo.CreateNoWindow = true;
-            addfwrule.StartInfo.Arguments = "advfirewall firewall del rule name=\"ping\"";
-            addfwrule.Start();
-            addfwrule.WaitForExit();
-            addfwrule.StartInfo.Arguments = "advfirewall firewall add rule name=\"ping\" protocol=ICMPV4 dir=in action=allow";
-            addfwrule.Start();
-            addfwrule.WaitForExit();
-            addfwrule.StartInfo.Arguments = "advfirewall firewall add rule name=\"ping\" protocol=ICMPV4 dir=out action=allow";
+            if (forceAdmin) { addfwrule.StartInfo.Verb = "runas"; }
             addfwrule.Start();
             addfwrule.WaitForExit();
 

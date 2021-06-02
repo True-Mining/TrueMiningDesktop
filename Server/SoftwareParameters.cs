@@ -103,10 +103,13 @@ namespace True_Mining_Desktop.Server
                     lastUpdated = DateTime.Now;
                     try
                     {
-                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString())); //update parameters
+                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor)); //update parameters
                         trying = false;
                     }
-                    catch { Tools.UseTor = !Tools.UseTor; }
+                    catch
+                    {
+                        try { Tools.AddFirewallRule("True Mining Desktop", System.Reflection.Assembly.GetExecutingAssembly().Location, true); Tools.UseTor = !Tools.UseTor; } catch { }
+                    }
                 }
             }
         }
