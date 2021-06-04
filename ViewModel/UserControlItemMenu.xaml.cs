@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace True_Mining_Desktop.ViewModel
+namespace TrueMiningDesktop.ViewModel
 {
     /// <summary>
     /// Interação lógica para UserControlItemMenu.xam

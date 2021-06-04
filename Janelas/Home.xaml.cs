@@ -2,9 +2,9 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using True_Mining_Desktop.Core;
+using TrueMiningDesktop.Core;
 
-namespace True_Mining_Desktop.Janelas
+namespace TrueMiningDesktop.Janelas
 {
     /// <summary>
     /// Interação lógica para Home.xam

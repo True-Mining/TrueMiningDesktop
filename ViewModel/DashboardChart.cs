@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.ViewModel
+namespace TrueMiningDesktop.ViewModel
 {
     internal class DashboardChart
     {

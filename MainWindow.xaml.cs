@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using True_Mining_Desktop.Core;
-using True_Mining_Desktop.ViewModel;
+using TrueMiningDesktop.Core;
+using TrueMiningDesktop.ViewModel;
 using Application = System.Windows.Application;
 using ListView = System.Windows.Controls.ListView;
 using MessageBox = System.Windows.MessageBox;
 using MessageBoxOptions = System.Windows.MessageBoxOptions;
 using UserControl = System.Windows.Controls.UserControl;
 
-namespace True_Mining_Desktop
+namespace TrueMiningDesktop
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

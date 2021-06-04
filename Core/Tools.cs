@@ -15,9 +15,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.Core
+namespace TrueMiningDesktop.Core
 {
     public class Tools
     {
