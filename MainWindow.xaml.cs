@@ -42,12 +42,17 @@ namespace TrueMiningDesktop
 
             _ = new Device();
 
-            User.Settings.Device.cpu.AlgorithmsList.Add("RandomX");
-            User.Settings.Device.opencl.AlgorithmsList.Add("RandomX");
-            User.Settings.Device.cuda.AlgorithmsList.Add("RandomX");
+            User.Settings.Device.cpu.AlgorithmsList.Clear();  //temp fix
+            User.Settings.Device.opencl.AlgorithmsList.Clear();  //temp fix
+            User.Settings.Device.cuda.AlgorithmsList.Clear();  //temp fix
+            User.Settings.User.Payment_CoinsList.Clear();  //temp fix
 
-            User.Settings.User.Payment_CoinsList.Add("DOGE");
-            User.Settings.User.Payment_CoinsList.Add("RDCT");
+            if (!User.Settings.Device.cpu.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.cpu.AlgorithmsList.Add("RandomX"); }
+            if (!User.Settings.Device.opencl.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.opencl.AlgorithmsList.Add("RandomX"); }
+            if (!User.Settings.Device.cuda.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.cuda.AlgorithmsList.Add("RandomX"); }
+
+            if (!User.Settings.User.Payment_CoinsList.Contains("DOGE")) { User.Settings.User.Payment_CoinsList.Add("DOGE"); }
+            if (!User.Settings.User.Payment_CoinsList.Contains("RDCT")) { User.Settings.User.Payment_CoinsList.Add("RDCT"); }
 
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Home", Janelas.Pages.Home, PackIconKind.Home), this));
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Dashboard", Janelas.Pages.Dashboard, PackIconKind.ViewDashboard), this));
