@@ -11,7 +11,7 @@
         <WrapPanel x:Name="AllContent" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
                 <WrapPanel Margin="0,15,0,0">
-                    <materialDesign:PackIcon Width="40" Height="40" Kind="Coin" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
+                    <materialDesign:PackIcon Width="40" Height="40" Kind="Coins" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                     <Label Content="Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
@@ -33,7 +33,7 @@
             </WrapPanel>
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
                 <WrapPanel Margin="0,15,0,0">
-                    <materialDesign:PackIcon Width="40" Height="40" Kind="CoinOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
+                    <materialDesign:PackIcon Width="40" Height="40" Kind="CoinsOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                     <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">

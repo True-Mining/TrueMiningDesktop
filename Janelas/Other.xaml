@@ -47,7 +47,7 @@
                     <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
                         <Button Width="140" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_telegramGroup_Click">
                             <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                                <materialDesign:PackIcon Kind="Telegram" Width="25" Height="25" Foreground="#FF008DCF" />
+                                <Image Source="https://telegram.org/img/t_logo.png" Width="23" Height="23" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
                                 <Label Content="Support" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
                             </WrapPanel>
                         </Button>
@@ -62,7 +62,7 @@
                     <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
                         <Button Width="140" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_telegram_offtopic_Click">
                             <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                                <materialDesign:PackIcon Kind="Telegram" Width="25" Height="25" Foreground="#FF008DCF" RenderTransformOrigin="0.5,0.5" />
+                                <Image Source="https://telegram.org/img/t_logo.png" Width="23" Height="23" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
                                 <Label Content="OffTopic" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
                             </WrapPanel>
                         </Button>
@@ -77,7 +77,7 @@
                     <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
                         <Button Width="290" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_telegramLOGChannel_Click">
                             <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                                <materialDesign:PackIcon Kind="Telegram" Width="25" Height="25" Foreground="#FF008DCF" />
+                                <Image Source="https://telegram.org/img/t_logo.png" Width="23" Height="23" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
                                 <Label Content="Announcement / Transparency / LOG" FontWeight="Normal" FontFamily="Gadugi" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
                             </WrapPanel>
                         </Button>
