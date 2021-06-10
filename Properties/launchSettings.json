@@ -1,7 +1,10 @@
 {
   "profiles": {
     "True Mining Desktop": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "sqlDebugging": false,
+      "nativeDebugging": true,
+      "jsWebView2Debugging": false
     }
   }
 }

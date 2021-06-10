@@ -311,7 +311,7 @@ namespace TrueMiningDesktop.Core
         {
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = (True_Mining_Desktop.App.Current.MainWindow.Visibility == Visibility.Visible ? false : true), startMining = Miner.IsMining || Miner.IntentToMine });
+                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = (TrueMiningDesktop.App.Current.MainWindow.Visibility == Visibility.Visible ? false : true), startMining = Miner.IsMining || Miner.IntentToMine });
 
                 Process TrueMiningAsAdmin = new Process();
                 TrueMiningAsAdmin.StartInfo = new ProcessStartInfo()
