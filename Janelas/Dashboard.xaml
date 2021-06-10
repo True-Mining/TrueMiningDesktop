@@ -31,15 +31,15 @@
             </WrapPanel>
             <WrapPanel x:Name="xWarningWrapVisibility" Margin="35,5,20,5" Orientation="Horizontal" Visibility="{Binding WarningWrapVisibility}">
                 <Label Content="Warnings: " FontWeight="Normal" FontFamily="Gadugi" FontSize="13" Padding="0,0,0,0"></Label>
-                <Button Content="Click here to show your warnings" Click="show_warnings" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="187" Height="20" FontFamily="Gadugi" FontSize="12" />
+                <Button Content="Click here to show your warnings" Click="Show_warnings" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="187" Height="20" FontFamily="Gadugi" FontSize="12" />
             </WrapPanel>
         </WrapPanel>
         <oxy:PlotView Model="{Binding chart_model, Mode=OneWay}" Controller="{Binding chart_controller}" Height="155" Margin="20,5,20,120" Visibility="{Binding chart_visibility}" VerticalAlignment="Bottom" />
         <WrapPanel Orientation="Horizontal" Margin="20,0,25,100" HorizontalAlignment="Right" Visibility="{Binding chart_visibility}" VerticalAlignment="Bottom">
             <Label Content="Zoom" FontFamily="Gadugi" FontSize="12" />
-            <Button Content="12h" Click="changeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="10,0,0,0" FontFamily="Gadugi" FontSize="12"></Button>
-            <Button Content="1d" Click="changeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Gadugi" FontSize="12"></Button>
-            <Button Content="5d" Click="changeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Gadugi" FontSize="12"></Button>
+            <Button Content="12h" Click="ChangeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="10,0,0,0" FontFamily="Gadugi" FontSize="12"></Button>
+            <Button Content="1d" Click="ChangeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Gadugi" FontSize="12"></Button>
+            <Button Content="5d" Click="ChangeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Gadugi" FontSize="12"></Button>
         </WrapPanel>
         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,25">
             <Button Height="35" Width="170" Margin="20,0,20,0" Click="Button_Calculator_Popup" Background="#FF2196F3">

@@ -42,7 +42,7 @@ namespace TrueMiningDesktop.Janelas
                 if (TextBox_PaymentAddress.Text.StartsWith("D"))
                 { User.Settings.User.Payment_Coin = "DOGE"; }
 
-                if (!User.Settings.loadingSettings) { User.Settings.SettingsSaver(); }
+                if (!User.Settings.LoadingSettings) { User.Settings.SettingsSaver(); }
             }
 
             if (TextBox_PaymentAddress.Text.Length == 34 && Tools.WalletAddressIsValid(TextBox_PaymentAddress.Text))

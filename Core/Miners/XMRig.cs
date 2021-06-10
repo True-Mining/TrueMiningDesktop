@@ -16,10 +16,10 @@ namespace TrueMiningDesktop.Core.XMRig
 {
     public static class XMRig
     {
-        public static Process XMRIGminer = new Process();
-        private static ProcessStartInfo XMRigProcessStartInfo = new ProcessStartInfo(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe");
+        private static readonly Process XMRIGminer = new();
+        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe");
         private static bool inXMRIGexitEvent = false;
-        private static DateTime holdTime = DateTime.UtcNow;
+        private static readonly DateTime holdTime = DateTime.UtcNow;
         private static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
 
         public static void Start()
@@ -133,7 +133,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
                 decimal hashrate = -1;
 
-                if (String.Equals(backend, "CPU", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(backend, "CPU", StringComparison.OrdinalIgnoreCase))
                 {
                     hashrate = 0;
 
@@ -145,7 +145,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         }
                     }
                 }
-                else if (String.Equals(backend, "opencl", StringComparison.OrdinalIgnoreCase) || String.Equals(backend, "AMD", StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(backend, "opencl", StringComparison.OrdinalIgnoreCase) || string.Equals(backend, "AMD", StringComparison.OrdinalIgnoreCase))
                 {
                     hashrate = 0;
 
@@ -157,7 +157,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         }
                     }
                 }
-                else if (String.Equals(backend, "cuda", StringComparison.OrdinalIgnoreCase) || String.Equals(backend, "NVIDIA", StringComparison.OrdinalIgnoreCase))
+                else if (string.Equals(backend, "cuda", StringComparison.OrdinalIgnoreCase) || string.Equals(backend, "NVIDIA", StringComparison.OrdinalIgnoreCase))
                 {
                     hashrate = 0;
 
@@ -203,7 +203,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public static void CreateConfigFile()
         {
-            StringBuilder conf = new StringBuilder();
+            StringBuilder conf = new();
             Server.MiningCoin miningCoin = SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase));
 
             conf.AppendLine("{");
@@ -264,8 +264,8 @@ namespace TrueMiningDesktop.Core.XMRig
 
             List<string> addresses = miningCoin.Hosts;
 
-            List<Task<KeyValuePair<string, long>>> pingReturnTasks = new List<Task<KeyValuePair<string, long>>>();
-            foreach (var address in addresses)
+            List<Task<KeyValuePair<string, long>>> pingReturnTasks = new();
+            foreach (string address in addresses)
             {
                 pingReturnTasks.Add(new Task<KeyValuePair<string, long>>(() => Tools.ReturnPing(address)));
             }
@@ -276,14 +276,14 @@ namespace TrueMiningDesktop.Core.XMRig
 
             Task.WaitAll(pingReturnTasks.ToArray());
 
-            Dictionary<string, long> pingHosts = new Dictionary<string, long>();
+            Dictionary<string, long> pingHosts = new();
 
-            foreach (var pingTask in pingReturnTasks)
+            foreach (Task<KeyValuePair<string, long>> pingTask in pingReturnTasks)
             {
                 pingHosts.TryAdd(pingTask.Result.Key, pingTask.Result.Value);
             }
 
-            bool useTor = pingHosts.Count < pingHosts.Where((KeyValuePair<string, long> pair) => pair.Value == 2000).Count() * 2 ? true : false;
+            bool useTor = pingHosts.Count < pingHosts.Where((KeyValuePair<string, long> pair) => pair.Value == 2000).Count() * 2;
 
             miningCoin.Hosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
 

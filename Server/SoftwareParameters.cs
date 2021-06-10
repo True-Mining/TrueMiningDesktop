@@ -39,10 +39,10 @@ namespace TrueMiningDesktop.Server
         public List<string> Hosts { get; set; }
 
         [JsonProperty("stratumPort", NullValueHandling = NullValueHandling.Ignore)]
-        public Int16? StratumPort { get; set; }
+        public short? StratumPort { get; set; }
 
         [JsonProperty("stratumPortSSL", NullValueHandling = NullValueHandling.Ignore)]
-        public Int16? StratumPortSsl { get; set; }
+        public short? StratumPortSsl { get; set; }
 
         [JsonProperty("wallet_TM", NullValueHandling = NullValueHandling.Ignore)]
         public string WalletTm { get; set; }

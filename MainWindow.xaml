@@ -31,7 +31,7 @@
             </StackPanel>
         </Grid>
 
-        <Image x:Name="torIcon" ToolTip="TOR + Privoxy" Visibility="Collapsed" Source="https://gitweb.torproject.org/static/logo.jpg" Width="30" Margin="310,0,0,10" RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Bottom" HorizontalAlignment="Left" MouseDown="torIcon_MouseDown" />
+        <Image x:Name="torIcon" ToolTip="TOR + Privoxy" Visibility="Collapsed" Source="https://gitweb.torproject.org/static/logo.jpg" Width="30" Margin="310,0,0,10" RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Bottom" HorizontalAlignment="Left" MouseDown="TorIcon_MouseDown" />
 
         <WrapPanel x:Name="PanelTapeAll" Margin="0" Opacity="100" Visibility="Hidden" Background="#19000000"></WrapPanel>
 

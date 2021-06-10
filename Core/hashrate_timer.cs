@@ -5,8 +5,8 @@ namespace TrueMiningDesktop.Core
 {
     internal class Hashrate_timer
     {
-        private DeviceInfo DeviceInfo;
-        private System.Timers.Timer Timer = new System.Timers.Timer(5000);
+        private readonly DeviceInfo DeviceInfo;
+        private readonly System.Timers.Timer Timer = new(5000);
 
         public event EventHandler HashrateUpdated;
 
@@ -15,14 +15,14 @@ namespace TrueMiningDesktop.Core
 
         public Hashrate_timer(DeviceInfo _parent)
         {
-            this.DeviceInfo = _parent;
+            DeviceInfo = _parent;
             Timer.Stop();
             Timer.Elapsed += Timer_Elapsed;
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            this.Hashrate = Miner.GetHashrate(DeviceInfo.Alias, DeviceInfo.MiningAlgo);
+            Hashrate = Miner.GetHashrate(DeviceInfo.Alias, DeviceInfo.MiningAlgo);
         }
 
         protected virtual void OnNewHashrate()

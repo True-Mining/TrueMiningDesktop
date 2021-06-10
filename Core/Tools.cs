@@ -23,7 +23,7 @@ namespace TrueMiningDesktop.Core
     {
         public static bool IsConnected()
         {
-            Ping p = new Ping();
+            Ping p = new();
 
             try
             {
@@ -68,18 +68,20 @@ namespace TrueMiningDesktop.Core
 
         public static WebHeaderCollection WebRequestHeaders()
         {
-            WebHeaderCollection headers = new WebHeaderCollection();
-            //    headers[HttpRequestHeader.Accept] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-            //    headers[HttpRequestHeader.AcceptEncoding] = "gzip, deflate, br";
-            //     headers[HttpRequestHeader.AcceptLanguage] = "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3";
-            headers[HttpRequestHeader.CacheControl] = "max-age=0";
-            headers[HttpRequestHeader.KeepAlive] = "1";
-            headers[HttpRequestHeader.Allow] = "1";
-            // headers[HttpRequestHeader.Via] = "http://127.0.0.1:8427";
-            headers[HttpRequestHeader.ProxyAuthorization] = "Basic " + TorSharpSettings.TorControlPassword;
-            headers[HttpRequestHeader.Trailer] = "1";
-            headers[HttpRequestHeader.Upgrade] = "1";
-            headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0";
+            WebHeaderCollection headers = new()
+            {
+                //    headers[HttpRequestHeader.Accept] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+                //    headers[HttpRequestHeader.AcceptEncoding] = "gzip, deflate, br";
+                //     headers[HttpRequestHeader.AcceptLanguage] = "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3";
+                [HttpRequestHeader.CacheControl] = "max-age=0",
+                [HttpRequestHeader.KeepAlive] = "1",
+                [HttpRequestHeader.Allow] = "1",
+                // headers[HttpRequestHeader.Via] = "http://127.0.0.1:8427";
+                [HttpRequestHeader.ProxyAuthorization] = "Basic " + new TorSharpTorSettings().ControlPassword,
+                [HttpRequestHeader.Trailer] = "1",
+                [HttpRequestHeader.Upgrade] = "1",
+                [HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0"
+            };
 
             return headers;
         }
@@ -98,13 +100,11 @@ namespace TrueMiningDesktop.Core
                     request.Headers = Tools.WebRequestHeaders();
                     request.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                    using (Stream stream = response.GetResponseStream())
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        UseTor = false;
-                        return reader.ReadToEnd();
-                    }
+                    using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    using Stream stream = response.GetResponseStream();
+                    using StreamReader reader = new(stream);
+                    UseTor = false;
+                    return reader.ReadToEnd();
                 }
                 catch { if (i > 1) useTor = true; UseTor = true; }
             }
@@ -112,7 +112,7 @@ namespace TrueMiningDesktop.Core
             throw new Exception();
         }
 
-        private static TorSharpSettings TorSharpSettings = new TorSharpSettings
+        private static readonly TorSharpSettings TorSharpSettings = new()
         {
             ZippedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"),
             ExtractedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"),
@@ -126,10 +126,10 @@ namespace TrueMiningDesktop.Core
             },
         };
 
-        public static TorSharpProxy TorSharpProxy = new TorSharpProxy(TorSharpSettings);
+        public static readonly TorSharpProxy TorSharpProxy = new(TorSharpSettings);
 
         private static bool useTor = false;
-        public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.loadingSettings) { NotifyPropertyChanged(); } } }
+        public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
         public static bool TorSharpProcessesRunning
         {
@@ -137,8 +137,8 @@ namespace TrueMiningDesktop.Core
             {
                 bool torProcessRunning = false;
                 bool privoxyProcessRunning = false;
-                foreach (var process in Process.GetProcessesByName("tor")) { try { if (process.MainModule.FileName.Contains(TorSharpSettings.ExtractedToolsDirectory, StringComparison.OrdinalIgnoreCase)) { torProcessRunning = true; break; } } catch { } }
-                foreach (var process in Process.GetProcessesByName("privoxy")) { try { if (process.MainModule.FileName.Contains(TorSharpSettings.ExtractedToolsDirectory, StringComparison.OrdinalIgnoreCase)) { privoxyProcessRunning = true; break; } } catch { } }
+                foreach (Process process in Process.GetProcessesByName("tor")) { try { if (process.MainModule.FileName.Contains(TorSharpSettings.ExtractedToolsDirectory, StringComparison.OrdinalIgnoreCase)) { torProcessRunning = true; break; } } catch { } }
+                foreach (Process process in Process.GetProcessesByName("privoxy")) { try { if (process.MainModule.FileName.Contains(TorSharpSettings.ExtractedToolsDirectory, StringComparison.OrdinalIgnoreCase)) { privoxyProcessRunning = true; break; } } catch { } }
 
                 if (privoxyProcessRunning && torProcessRunning)
                 {
@@ -150,7 +150,7 @@ namespace TrueMiningDesktop.Core
         }
 
         private static bool torSharpEnabled = false;
-        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.loadingSettings) { NotifyPropertyChanged(); } } }
+        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
         public static event PropertyChangedEventHandler PropertyChanged;
 
@@ -176,15 +176,14 @@ namespace TrueMiningDesktop.Core
                             {
                                 TorSharpEnabled = false;
                                 try { TorSharpProxy.Stop(); } catch { }
-                                foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
-                                foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
+                                foreach (Process process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
+                                foreach (Process process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
                             }
 
                             try
                             {
                                 string ip = new WebClient() { Proxy = new WebProxy() { Address = new Uri("http://localhost:" + TorSharpSettings.PrivoxySettings.Port), BypassProxyOnLocal = true, UseDefaultCredentials = true } }.DownloadString("https://api.ipify.org/");
-                                IPAddress addressValidation;
-                                if (System.Net.IPAddress.TryParse(ip, out addressValidation))
+                                if (System.Net.IPAddress.TryParse(ip, out IPAddress addressValidation))
                                 {
                                     TorSharpEnabled = true;
 
@@ -192,13 +191,13 @@ namespace TrueMiningDesktop.Core
                                 }
                                 else { throw new Exception(); }
                             }
-                            catch (Exception e)
+                            catch
                             {
                                 TorSharpEnabled = false;
 
                                 new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
                                 TorSharpProxy.ConfigureAndStartAsync().Wait();
-                                if (!User.Settings.loadingSettings)
+                                if (!User.Settings.LoadingSettings)
                                 {
                                     NotifyPropertyChanged();
                                 }
@@ -208,13 +207,13 @@ namespace TrueMiningDesktop.Core
                                 i = 4;
                             }
                         }
-                        catch (Exception e)
+                        catch
                         {
                             TorSharpEnabled = false;
 
                             try { TorSharpProxy.Stop(); } catch { }
-                            foreach (var process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
-                            foreach (var process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
+                            foreach (Process process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
+                            foreach (Process process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
 
                             if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"), true); } catch { } };
                             if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"), true); } catch { } };
@@ -241,12 +240,10 @@ namespace TrueMiningDesktop.Core
 
         public static string FileSHA256(string filePath)
         {
-            using (var hashAlgorithm = System.Security.Cryptography.SHA256.Create())
+            using System.Security.Cryptography.SHA256 hashAlgorithm = System.Security.Cryptography.SHA256.Create();
+            using (FileStream stream = System.IO.File.OpenRead(filePath))
             {
-                using (var stream = System.IO.File.OpenRead(filePath))
-                {
-                    return BitConverter.ToString(hashAlgorithm.ComputeHash(stream)).Replace("-", "").ToUpper();
-                }
+                return BitConverter.ToString(hashAlgorithm.ComputeHash(stream)).Replace("-", "").ToUpper();
             }
         }
 
@@ -278,11 +275,11 @@ namespace TrueMiningDesktop.Core
 
         public static void AddFirewallRule(string name, string filePatch, bool forceAdmin = false)
         {
-            StreamWriter wr = new StreamWriter(Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd"));
+            StreamWriter wr = new(Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd"));
             wr.Write("netsh advfirewall firewall del rule name=\"" + name + "\"\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=in action=allow\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=out action=allow");
             wr.Close();
 
-            Process addfwrule = new Process();
+            Process addfwrule = new();
             addfwrule.StartInfo.FileName = Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd");
             addfwrule.StartInfo.UseShellExecute = true;
             addfwrule.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -311,14 +308,16 @@ namespace TrueMiningDesktop.Core
         {
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = (TrueMiningDesktop.App.Current.MainWindow.Visibility == Visibility.Visible ? false : true), startMining = Miner.IsMining || Miner.IntentToMine });
+                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = Application.Current.MainWindow.Visibility != Visibility.Visible, startMining = Miner.IsMining || Miner.IntentToMine });
 
-                Process TrueMiningAsAdmin = new Process();
-                TrueMiningAsAdmin.StartInfo = new ProcessStartInfo()
+                Process TrueMiningAsAdmin = new()
                 {
-                    FileName = Process.GetCurrentProcess().MainModule.FileName,
-                    UseShellExecute = true,
-                    Verb = "runas"
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = Process.GetCurrentProcess().MainModule.FileName,
+                        UseShellExecute = true,
+                        Verb = "runas"
+                    }
                 };
                 try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
 
@@ -377,7 +376,7 @@ namespace TrueMiningDesktop.Core
 
         public static bool WalletAddressIsValid(string address = "null")
         {
-            if (String.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
             {
                 return false;
             }
@@ -428,13 +427,13 @@ namespace TrueMiningDesktop.Core
         {
             while (User.Settings.User.AvoidWindowsSuspend)
             {
-                SetThreadExecutionState(ES_SYSTEM_REQUIRED);
+                _ = SetThreadExecutionState(ES_SYSTEM_REQUIRED);
                 Thread.Sleep(50000);
             }
         }
 
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        public static extern uint SetThreadExecutionState(uint esFlags);
+        private static extern uint SetThreadExecutionState(uint esFlags);
 
         public const uint ES_CONTINUOUS = 0x80000000;
         public const uint ES_SYSTEM_REQUIRED = 0x00000001;
@@ -473,11 +472,11 @@ namespace TrueMiningDesktop.Core
             {
                 if (Tools.HaveADM || forceAdmin)
                 {
-                    var command = @"Add-MpPreference -ExclusionPath " + '"' + System.AppDomain.CurrentDomain.BaseDirectory + '"' + " -Force";
-                    var commandBytes = System.Text.Encoding.Unicode.GetBytes(command);
-                    var commandBase64 = Convert.ToBase64String(commandBytes);
+                    string command = @"Add-MpPreference -ExclusionPath " + '"' + System.AppDomain.CurrentDomain.BaseDirectory + '"' + " -Force";
+                    byte[] commandBytes = System.Text.Encoding.Unicode.GetBytes(command);
+                    string commandBase64 = Convert.ToBase64String(commandBytes);
 
-                    var startInfo = new ProcessStartInfo()
+                    ProcessStartInfo startInfo = new()
                     {
                         FileName = "powershell.exe",
                         Arguments = $"-NoProfile -ExecutionPolicy unrestricted -EncodedCommand {commandBase64}",
@@ -502,11 +501,15 @@ namespace TrueMiningDesktop.Core
 
         public static void KillProcess(string processName)
         {
-            Process mataminers = new Process();
-            mataminers.StartInfo = new ProcessStartInfo("taskkill", "/F /IM " + processName);
-            mataminers.StartInfo.UseShellExecute = false;
-            mataminers.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            mataminers.StartInfo.CreateNoWindow = true;
+            Process mataminers = new()
+            {
+                StartInfo = new ProcessStartInfo("taskkill", "/F /IM " + processName)
+                {
+                    UseShellExecute = false,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true
+                }
+            };
             mataminers.Start();
             mataminers.WaitForExit();
         }
@@ -515,10 +518,10 @@ namespace TrueMiningDesktop.Core
 
         public static CheckerPopup CheckerPopup;
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern bool ShowWindow(IntPtr windowIdentifier, int nCmdShow);
     }
 }

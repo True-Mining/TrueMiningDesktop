@@ -7,7 +7,7 @@ namespace TrueMiningDesktop.Janelas
 {
     public class DeviceInfo : OverviewDeviceSimplified
     {
-        public OverviewDeviceSimplified OverviewDeviceSimplified = new OverviewDeviceSimplified();
+        public OverviewDeviceSimplified OverviewDeviceSimplified = new();
 
         public event EventHandler PropertieChangedDevInfo;
 
@@ -22,7 +22,7 @@ namespace TrueMiningDesktop.Janelas
             IsSelected = isSelected;
             IconKind = iconKind;
 
-            Janelas.Pages.Home.listDevicesOverview.Children.Add(this.OverviewDeviceSimplified);
+            Janelas.Pages.Home.listDevicesOverview.Children.Add(OverviewDeviceSimplified);
 
             OverviewDeviceSimplified.PropertieChanged += new EventHandler(OVchanged);
 
@@ -49,6 +49,7 @@ namespace TrueMiningDesktop.Janelas
 
         public void what()
         {
+            // bixo sei lá, só sei que deixa desse jeito pra funcionar
         }
 
         public string Alias { get; private set; }

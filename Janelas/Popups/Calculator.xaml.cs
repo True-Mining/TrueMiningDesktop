@@ -10,19 +10,19 @@ namespace TrueMiningDesktop.Janelas.Popups
     /// </summary>
     public partial class Calculator : Window
     {
-        private decimal HashesPerPoint;
-        private decimal ExchangeRatePontosToMiningCoin;
+        private readonly decimal HashesPerPoint;
+        private readonly decimal ExchangeRatePontosToMiningCoin;
 
-        private System.Timers.Timer timerUpdate = new System.Timers.Timer(2000);
+        private readonly System.Timers.Timer timerUpdate = new(2000);
 
         public Calculator(decimal hashesPerPoint, decimal exchangeRatePontosToMiningCoin)
         {
             InitializeComponent();
 
-            this.Closing += Calculator_Closing;
+            Closing += Calculator_Closing;
 
-            this.HashesPerPoint = (decimal)hashesPerPoint;
-            this.ExchangeRatePontosToMiningCoin = (decimal)exchangeRatePontosToMiningCoin;
+            HashesPerPoint = (decimal)hashesPerPoint;
+            ExchangeRatePontosToMiningCoin = (decimal)exchangeRatePontosToMiningCoin;
 
             timerUpdate.Elapsed += TimerUpdate_Elapsed;
             timerUpdate.AutoReset = false;
@@ -142,28 +142,28 @@ namespace TrueMiningDesktop.Janelas.Popups
 
         private void CloseButton_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        public static bool clicado = false;
-        private Point lm = new Point();
+        private static bool clicado;
+        private Point lm;
 
         public void Down(object sender, MouseButtonEventArgs e)
         {
             clicado = true;
 
-            this.lm.X = System.Windows.Forms.Control.MousePosition.X;
-            this.lm.Y = System.Windows.Forms.Control.MousePosition.Y;
-            this.lm.X = Convert.ToInt16(this.Left) - this.lm.X;
-            this.lm.Y = Convert.ToInt16(this.Top) - this.lm.Y;
+            lm.X = System.Windows.Forms.Control.MousePosition.X;
+            lm.Y = System.Windows.Forms.Control.MousePosition.Y;
+            lm.X = Convert.ToInt16(Left) - lm.X;
+            lm.Y = Convert.ToInt16(Top) - lm.Y;
         }
 
         public void Move(object sender, MouseEventArgs e)
         {
             if (clicado && e.LeftButton == MouseButtonState.Pressed)
             {
-                this.Left = (System.Windows.Forms.Control.MousePosition.X + this.lm.X);
-                this.Top = (System.Windows.Forms.Control.MousePosition.Y + this.lm.Y);
+                Left = (System.Windows.Forms.Control.MousePosition.X + lm.X);
+                Top = (System.Windows.Forms.Control.MousePosition.Y + lm.Y);
             }
             else { clicado = false; }
         }

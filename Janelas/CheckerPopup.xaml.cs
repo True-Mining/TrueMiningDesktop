@@ -17,15 +17,15 @@ namespace TrueMiningDesktop.Janelas
     public partial class CheckerPopup : Window
     {
         public bool Tape = false;
-        private Task TaskChecker = new Task(() => { });
+        private readonly Task TaskChecker = new(() => { });
 
         public CheckerPopup(string toCheck = "all")
         {
             InitializeComponent();
-            this.DataContext = this;
-            this.Height = 0;
-            this.BorderBrush.Opacity = 0;
-            this.ShowInTaskbar = false;
+            DataContext = this;
+            Height = 0;
+            BorderBrush.Opacity = 0;
+            ShowInTaskbar = false;
 
             Tools.PropertyChanged += Tools_PropertyChanged;
 
@@ -68,7 +68,7 @@ namespace TrueMiningDesktop.Janelas
         {
             Tape = true;
 
-            this.StateChanged += CheckerPopup_StateChanged;
+            StateChanged += CheckerPopup_StateChanged;
 
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
@@ -99,12 +99,12 @@ namespace TrueMiningDesktop.Janelas
                 {
                     FileName = "Removing old files";
                     string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
-                    foreach (var arq in arquivosOdl)
+                    foreach (string arq in arquivosOdl)
                     {
                         if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
                     }
                     string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
-                    foreach (var arq in arquivosDl)
+                    foreach (string arq in arquivosDl)
                     {
                         if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
                     }
@@ -143,11 +143,13 @@ namespace TrueMiningDesktop.Janelas
 
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                System.Diagnostics.Process TrueMiningAsAdmin = new System.Diagnostics.Process();
-                                TrueMiningAsAdmin.StartInfo = new System.Diagnostics.ProcessStartInfo()
+                                System.Diagnostics.Process TrueMiningAsAdmin = new()
                                 {
-                                    FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName,
-                                    UseShellExecute = false,
+                                    StartInfo = new System.Diagnostics.ProcessStartInfo()
+                                    {
+                                        FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName,
+                                        UseShellExecute = false,
+                                    }
                                 };
                                 if (Tools.HaveADM) { TrueMiningAsAdmin.StartInfo.Verb = "runas"; }
 
@@ -182,17 +184,17 @@ namespace TrueMiningDesktop.Janelas
             FileName = "Complete";
             Thread.Sleep(100);
 
-            Dispatcher.BeginInvoke((Action)(() => { this.Close(); }));
+            Dispatcher.BeginInvoke((Action)(() => { Close(); }));
         }
 
         private void CheckerPopup_StateChanged(object sender, EventArgs e)
         {
-            Application.Current.MainWindow.WindowState = this.WindowState;
+            Application.Current.MainWindow.WindowState = WindowState;
         }
 
         private void MainWindow_Activated(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() => { this.Focus(); }));
+            Dispatcher.BeginInvoke((Action)(() => { Focus(); }));
         }
 
         private void MainWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -244,7 +246,7 @@ namespace TrueMiningDesktop.Janelas
 
                 ProgressDetails = "Starting download";
 
-                WebClient webClient = new WebClient() { Proxy = useTor ? Tools.TorProxy : null, };
+                WebClient webClient = new() { Proxy = useTor ? Tools.TorProxy : null, };
 
                 webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
                 webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
@@ -257,7 +259,7 @@ namespace TrueMiningDesktop.Janelas
 
                     ProgressDetails = "Moving file";
 
-                    if (String.Compare(Tools.FileSHA256(path + fileName + ".dl"), sha256, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (string.Compare(Tools.FileSHA256(path + fileName + ".dl"), sha256, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         if (Tools.IsFileLocked(new FileInfo(path + fileName)))
                         {
@@ -319,27 +321,27 @@ namespace TrueMiningDesktop.Janelas
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    this.Height = 100;
+                    Height = 100;
                     BorderBrush.Opacity = 100;
 
-                    this.ShowInTaskbar = true;
+                    ShowInTaskbar = true;
 
-                    this.Activate();
-                    this.Focus();
+                    Activate();
+                    Focus();
                 });
             }
             else
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    this.Height = 0;
+                    Height = 0;
                     BorderBrush.Opacity = 0;
 
-                    this.ShowInTaskbar = false;
+                    ShowInTaskbar = false;
                 });
             }
 
-            this.WindowState = Application.Current.MainWindow.WindowState;
+            WindowState = Application.Current.MainWindow.WindowState;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -349,7 +351,7 @@ namespace TrueMiningDesktop.Janelas
             Application.Current.MainWindow.IsVisibleChanged -= MainWindow_IsVisibleChanged;
             Application.Current.MainWindow.StateChanged -= MainWindow_StateChanged;
             Application.Current.MainWindow.Activated -= MainWindow_Activated;
-            this.StateChanged -= CheckerPopup_StateChanged;
+            StateChanged -= CheckerPopup_StateChanged;
             Tools.PropertyChanged -= Tools_PropertyChanged;
 
             Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));
