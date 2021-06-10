@@ -33,32 +33,88 @@ namespace True_Mining_Desktop.User
             timerSaveSettings.Stop();
             File.WriteAllText("configsDevices.txt", JsonConvert.SerializeObject(Device, Formatting.Indented));
             File.WriteAllText("configsUser.txt", JsonConvert.SerializeObject(User, Formatting.Indented));
+
+            var tempPath = Path.GetTempFileName();
+            var backup = "configsDevices.txt" + ".backup";
+
+            if (File.Exists(backup)) { File.Delete(backup); }
+
+            var data = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(Device, Formatting.Indented));
+
+            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+                tempFile.Write(data, 0, data.Length);
+
+            File.Replace(tempPath, "configsDevices.txt", backup);
+
+            tempPath = Path.GetTempFileName();
+            backup = "configsUser.txt" + ".backup";
+
+            if (File.Exists(backup)) { File.Delete(backup); }
+
+            data = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(User, Formatting.Indented));
+
+            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+                tempFile.Write(data, 0, data.Length);
+
+            File.Replace(tempPath, "configsUser.txt", backup);
         }
 
         public static void SettingsRecover()
         {
-            if (File.Exists("configsDevices.txt"))
+            try
             {
-                Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"));
-            }
+                if (File.Exists("configsDevices.txt"))
+                {
+                    Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"));
+                }
 
-            if (File.Exists("configsUser.txt"))
+                if (File.Exists("configsUser.txt"))
+                {
+                    UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt"));
+                    User.AutostartMining = up.AutostartMining;
+                    User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
+                    User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
+                    User.UseAllInterfacesInsteadLocalhost = up.UseAllInterfacesInsteadLocalhost;
+                    User.UseTorSharpOnMining = up.UseTorSharpOnMining;
+                    User.ShowCLI = up.ShowCLI;
+                    User.StartHide = up.StartHide;
+                    User.ChangeTbIcon = up.ChangeTbIcon;
+                    User.Payment_Coin = up.Payment_Coin;
+                    User.Payment_Wallet = up.Payment_Wallet;
+                    User.LICENSE_read = up.LICENSE_read;
+                }
+
+                loadingSettings = false;
+            }
+            catch
             {
-                UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt"));
-                User.AutostartMining = up.AutostartMining;
-                User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
-                User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
-                User.UseAllInterfacesInsteadLocalhost = up.UseAllInterfacesInsteadLocalhost;
-                User.UseTorSharpOnMining = up.UseTorSharpOnMining;
-                User.ShowCLI = up.ShowCLI;
-                User.StartHide = up.StartHide;
-                User.ChangeTbIcon = up.ChangeTbIcon;
-                User.Payment_Coin = up.Payment_Coin;
-                User.Payment_Wallet = up.Payment_Wallet;
-                User.LICENSE_read = up.LICENSE_read;
-            }
+                try
+                {
+                    if (File.Exists("configsDevices.txt.backup"))
+                    {
+                        Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt.backup"));
+                    }
 
-            loadingSettings = false;
+                    if (File.Exists("configsUser.txt.backup"))
+                    {
+                        UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt.backup"));
+                        User.AutostartMining = up.AutostartMining;
+                        User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
+                        User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
+                        User.UseAllInterfacesInsteadLocalhost = up.UseAllInterfacesInsteadLocalhost;
+                        User.UseTorSharpOnMining = up.UseTorSharpOnMining;
+                        User.ShowCLI = up.ShowCLI;
+                        User.StartHide = up.StartHide;
+                        User.ChangeTbIcon = up.ChangeTbIcon;
+                        User.Payment_Coin = up.Payment_Coin;
+                        User.Payment_Wallet = up.Payment_Wallet;
+                        User.LICENSE_read = up.LICENSE_read;
+                    }
+
+                    loadingSettings = false;
+                }
+                catch { }
+            }
         }
     }
 
