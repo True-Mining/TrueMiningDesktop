@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
-using True_Mining_Desktop.Core;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Core;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.ViewModel
+namespace TrueMiningDesktop.ViewModel
 {
     /// <summary>
     /// Interação lógica para OverviewDeviceSimplified.xam

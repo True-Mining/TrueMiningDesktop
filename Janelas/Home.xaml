@@ -4,7 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Class="True_Mining_Desktop.Janelas.Home"
+    x:Class="TrueMiningDesktop.Janelas.Home"
              mc:Ignorable="d"
              d:DesignHeight="485              " d:DesignWidth="650              " Background="White">
     <Grid>
