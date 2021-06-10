@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -286,27 +285,31 @@ namespace True_Mining_Desktop
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Miner.IsMining)
+            try
             {
-                if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                if (Miner.IsMining)
                 {
-                    Miner.StopMiner();
+                    if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                    {
+                        Miner.StopMiner();
+                    }
+                    else { e.Cancel = true; return; }
                 }
-                else { e.Cancel = true; return; }
+
+                if (Tools.CheckerPopup.Tape)
+                {
+                    if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                    { e.Cancel = true; return; }
+                }
+
+                Core.Miner.EmergencyExit = true;
+                User.Settings.SettingsSaver(true);
+                Application.Current.Shutdown();
+
+                Tools.CheckerPopup.Close();
+                nIcon.Visible = false;
             }
-
-            if (Tools.CheckerPopup.Tape)
-            {
-                if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
-                { e.Cancel = true; return; }
-            }
-
-            Core.Miner.EmergencyExit = true;
-            User.Settings.SettingsSaver(true);
-            Application.Current.Shutdown();
-
-            Tools.CheckerPopup.Close();
-            nIcon.Visible = false;
+            catch { }
         }
 
         public static bool clicado = false;
