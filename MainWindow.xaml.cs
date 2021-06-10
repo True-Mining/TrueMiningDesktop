@@ -375,14 +375,7 @@ namespace True_Mining_Desktop
 
         private void torIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("IP address: " + new WebClient()
-            {
-                Proxy = new WebProxy()
-                {
-                    Address = new Uri("http://localhost:8427"),
-                    BypassProxyOnLocal = true
-                }
-            }.DownloadString(new Uri("https://api.ipify.org")));
+            MessageBox.Show("IP address: " + Tools.HttpGet("https://api.ipify.org", true));
         }
     }
 }
