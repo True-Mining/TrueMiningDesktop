@@ -34,19 +34,19 @@ namespace TrueMiningDesktop.Core
 
             try
             {
-                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnMining ? Tools.TorProxy : null, }.DownloadString(new Uri("https://truemining.online/ping")) == "pong") { return true; }
+                if (HttpGet("https://truemining.online/ping") == "pong") { return true; }
             }
             catch { }
 
             try
             {
-                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnMining ? Tools.TorProxy : null, }.DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
+                if (HttpGet("http://truemining.online/ping") == "pong") { return true; }
             }
             catch { }
 
             try
             {
-                if (new WebClient() { Proxy = User.Settings.User.UseTorSharpOnMining ? Tools.TorProxy : null, }.DownloadString(new Uri("https://www.utivirtual.com.br/Truemining/ping")) == "pong") { return true; }
+                if (HttpGet("https://www.utivirtual.com.br/Truemining/ping") == "pong") { return true; }
             }
             catch { }
 

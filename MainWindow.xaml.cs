@@ -316,7 +316,7 @@ namespace TrueMiningDesktop
             catch { }
         }
 
-        private static bool clicado;
+        public static bool clicado;
         private Point lm;
 
         public void Down(object sender, MouseButtonEventArgs e)

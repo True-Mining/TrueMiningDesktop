@@ -8,9 +8,7 @@ namespace TrueMiningDesktop.Core
     public static class Miner
     {
         private static readonly DateTime holdTime = DateTime.UtcNow;
-#pragma warning disable IDE0052 // Remover membros particulares não lidos
-        private static DateTime startedSince = holdTime.AddTicks(-holdTime.Ticks);
-#pragma warning restore IDE0052 // Remover membros particulares não lidos
+        public static DateTime startedSince = holdTime.AddTicks(-holdTime.Ticks);
 
         public static void StartMiner()
         {
@@ -25,7 +23,7 @@ namespace TrueMiningDesktop.Core
 
             if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (string.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
             {
-                Tools.CheckerPopup = new Janelas.CheckerPopup("all");
+                Tools.CheckerPopup = new CheckerPopup("all");
                 Tools.CheckerPopup.ShowDialog();
 
                 if (!EmergencyExit)
@@ -133,7 +131,7 @@ namespace TrueMiningDesktop.Core
                 }
                 else
                 {
-                    startedSince = holdTime.AddTicks(-(holdTime.Ticks));
+                    startedSince = holdTime.AddTicks(-holdTime.Ticks);
 
                     Device.cpu.IsMining = false;
                     Device.opencl.IsMining = false;
