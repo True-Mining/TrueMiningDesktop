@@ -76,7 +76,7 @@ namespace True_Mining_Desktop.Core
             headers[HttpRequestHeader.KeepAlive] = "1";
             headers[HttpRequestHeader.Allow] = "1";
             // headers[HttpRequestHeader.Via] = "http://127.0.0.1:8427";
-            headers[HttpRequestHeader.ProxyAuthorization] = "Basic " + TorSharpSettings.TorControlPassword;
+            headers[HttpRequestHeader.ProxyAuthorization] = "Basic " + new TorSharpTorSettings().ControlPassword;
             headers[HttpRequestHeader.Trailer] = "1";
             headers[HttpRequestHeader.Upgrade] = "1";
             headers[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0";
