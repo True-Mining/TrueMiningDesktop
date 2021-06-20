@@ -3,6 +3,7 @@
 [![Total Downloads](https://img.shields.io/github/downloads/True-Mining/TrueMiningDesktop/total.svg)](https://github.com/True-Mining/TrueMiningDesktop/releases/latest/download/TrueMiningDesktop.zip)
 [![Last Version](https://img.shields.io/github/release/True-Mining/TrueMiningDesktop/all.svg)](https://github.com/True-Mining/TrueMiningDesktop/releases)
 [![Last Release Date](https://img.shields.io/github/release-date/True-Mining/TrueMiningDesktop.svg)](https://github.com/True-Mining/TrueMiningDesktop/releases/latest)
+[![Website](https://img.shields.io/website?up_message=online&url=https%3A%2F%2Ftruemining.online)](https://truemining.online)
 [![GitHub Stars](https://img.shields.io/github/stars/True-Mining/TrueMiningDesktop.svg)](https://github.com/True-Mining/TrueMiningDesktop/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/True-Mining/TrueMiningDesktop.svg)](https://github.com/True-Mining/TrueMiningDesktop/network)
 
