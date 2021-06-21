@@ -193,10 +193,10 @@ namespace TrueMiningDesktop.Janelas
                         {
                             Downloader(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")");
                         }
+                    }
 
                         HostFilesAd_Visibility = Visibility.Collapsed;
                         trying = false;
-                    }
                 }
                 catch { }
             }
@@ -343,6 +343,8 @@ namespace TrueMiningDesktop.Janelas
                 }
                 catch { }
             }
+
+            if (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
 
             return false;
         }
