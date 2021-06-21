@@ -22,6 +22,9 @@ namespace True_Mining_Desktop.Server
 
         [JsonProperty("ThirdPartyBinaries", NullValueHandling = NullValueHandling.Ignore)]
         public ThirdPartyBinaries ThirdPartyBinaries { get; set; }
+
+        [JsonProperty("MarkAsOldFiles", NullValueHandling = NullValueHandling.Ignore)]
+        public MarkAsOldFiles MarkAsOldFiles { get; set; }
     }
 
     public partial class MiningCoin
@@ -55,6 +58,12 @@ namespace True_Mining_Desktop.Server
     }
 
     public partial class ThirdPartyBinaries
+    {
+        [JsonProperty("files", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FileToDownload> Files { get; set; }
+    }
+
+    public partial class MarkAsOldFiles
     {
         [JsonProperty("files", NullValueHandling = NullValueHandling.Ignore)]
         public List<FileToDownload> Files { get; set; }

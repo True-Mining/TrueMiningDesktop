@@ -131,13 +131,22 @@ namespace True_Mining_Desktop.Janelas
                         }
                     }
 
+                    foreach (FileToDownload file in SoftwareParameters.ServerConfig.MarkAsOldFiles.Files)
+                    {
+                        try
+                        {
+                            file.Path = Tools.FormatPath(file.Path);
+
+                            if (File.Exists(file.Path + file.FileName))
                             {
-                                System.Diagnostics.Process TrueMiningAsAdmin = new System.Diagnostics.Process();
-                                TrueMiningAsAdmin.StartInfo = new System.Diagnostics.ProcessStartInfo()
-                                {
-                                    FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName,
-                                    UseShellExecute = false,
+                                FileName = "Marking old files";
+
+                                File.Move(file.Path + file.FileName, file.Path + file.FileName + ".old", true);
+                            }
                         }
+                        catch { }
+                    }
+
                     if (needRestart)
                     {
                         HostFilesAd_Visibility = Visibility.Collapsed;
