@@ -19,7 +19,7 @@ namespace True_Mining_Desktop.Server
         {
             Task.Run(() =>
             {
-                Server.SoftwareParameters.Update(new Uri("https://truemining.online/TrueMiningDesktop.json"));
+                Server.SoftwareParameters.Update(new Uri("https://truemining.online/TrueMiningDesktopDotnet5.json"));
 
                 while (User.Settings.loadingSettings) { Thread.Sleep(500); }
 

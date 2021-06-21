@@ -32,7 +32,7 @@ namespace True_Mining_Desktop.Janelas
 
             Tools.NotifyPropertyChanged();
 
-            TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/TrueMiningDesktop.json"), toCheck));
+            TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/TrueMiningDesktopDotnet5.json"), toCheck));
             TaskChecker.Start();
         }
 
