@@ -31,7 +31,8 @@
 	<PublishReadyToRun>true</PublishReadyToRun>
 	<Configuration>Release</Configuration>
 	<Platform>Any CPU</Platform>
-	<RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <ItemGroup>
