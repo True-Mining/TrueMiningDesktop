@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace TrueMiningDesktop.Janelas.Popups
+namespace True_Mining_Desktop.Janelas.Popups
 {
     /// <summary>
     /// Lógica interna para Calculator.xaml
@@ -21,7 +21,7 @@ namespace TrueMiningDesktop.Janelas.Popups
 
                     if (Janelas.Pages.Dashboard.loadingVisualElement.Visibility == Visibility.Visible)
                     {
-                        Close();
+                        this.Close();
 
                         MessageBox.Show("Wait for Dashboard load first"); return;
                     }
@@ -29,18 +29,18 @@ namespace TrueMiningDesktop.Janelas.Popups
                     {
                         CoinName = User.Settings.User.Payment_Coin;
 
-                        BTCToCoinRate = decimal.Round(BTCToBTCRate / (PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2);
+                        BTCToCoinRate = Decimal.Round(BTCToBTCRate / (PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2);
                         BTCToBTCRate = 1;
-                        BTCToUSDRate = decimal.Round(PoolAPI.BitcoinPrice.FIAT_rates.USD.Last, 2);
+                        BTCToUSDRate = Decimal.Round(PoolAPI.BitcoinPrice.FIAT_rates.USD.Last, 2);
 
-                        PointToCoinRate = decimal.Round(exchangeRatePontosToMiningCoin, 5);
-                        PointToBTCRate = decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate, 8);
-                        PointToUSDRate = decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate * BTCToUSDRate, 5);
+                        PointToCoinRate = Decimal.Round(exchangeRatePontosToMiningCoin, 5);
+                        PointToBTCRate = Decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate, 8);
+                        PointToUSDRate = Decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate * BTCToUSDRate, 5);
 
                         CoinToCoinRate = 1;
-                        CoinToPointRate = decimal.Round(CoinToCoinRate / PointToCoinRate, 5);
-                        CoinToBTCRate = decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate, 8);
-                        CoinToUSDRate = decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate * BTCToUSDRate, 5);
+                        CoinToPointRate = Decimal.Round(CoinToCoinRate / PointToCoinRate, 5);
+                        CoinToBTCRate = Decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate, 8);
+                        CoinToUSDRate = Decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate * BTCToUSDRate, 5);
 
                         loadingVisualElement.Visibility = Visibility.Hidden;
                         AllContent.Visibility = Visibility.Visible;
@@ -69,28 +69,28 @@ namespace TrueMiningDesktop.Janelas.Popups
 
         private void CloseButton_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Close();
+            this.Close();
         }
 
-        private static bool clicado;
-        private Point lm;
+        public static bool clicado = false;
+        private Point lm = new Point();
 
         public void Down(object sender, MouseButtonEventArgs e)
         {
             clicado = true;
 
-            lm.X = System.Windows.Forms.Control.MousePosition.X;
-            lm.Y = System.Windows.Forms.Control.MousePosition.Y;
-            lm.X = Convert.ToInt16(Left) - lm.X;
-            lm.Y = Convert.ToInt16(Top) - lm.Y;
+            this.lm.X = System.Windows.Forms.Control.MousePosition.X;
+            this.lm.Y = System.Windows.Forms.Control.MousePosition.Y;
+            this.lm.X = Convert.ToInt16(this.Left) - this.lm.X;
+            this.lm.Y = Convert.ToInt16(this.Top) - this.lm.Y;
         }
 
         public void Move(object sender, MouseEventArgs e)
         {
             if (clicado && e.LeftButton == MouseButtonState.Pressed)
             {
-                Left = (System.Windows.Forms.Control.MousePosition.X + lm.X);
-                Top = (System.Windows.Forms.Control.MousePosition.Y + lm.Y);
+                this.Left = (System.Windows.Forms.Control.MousePosition.X + this.lm.X);
+                this.Top = (System.Windows.Forms.Control.MousePosition.Y + this.lm.Y);
             }
             else { clicado = false; }
         }

@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Threading;
 
-namespace TrueMiningDesktop.Core.NextStart
+namespace True_Mining_Desktop.Core.NextStart
 {
     internal class Instructions
     {

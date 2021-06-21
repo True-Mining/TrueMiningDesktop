@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace TrueMiningDesktop.Janelas.SubMenuSettings
+namespace True_Mining_Desktop.Janelas.SubMenuSettings
 {
     /// <summary>
     /// Interação lógica para SettingsOPENCL.xam

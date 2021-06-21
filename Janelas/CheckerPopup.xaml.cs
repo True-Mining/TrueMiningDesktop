@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using TrueMiningDesktop.Core;
-using TrueMiningDesktop.Server;
+using True_Mining_Desktop.Core;
+using True_Mining_Desktop.Server;
 
-namespace TrueMiningDesktop.Janelas
+namespace True_Mining_Desktop.Janelas
 {
     /// <summary>
     /// Lógica interna para UpdateWindow.xaml
@@ -18,15 +18,15 @@ namespace TrueMiningDesktop.Janelas
     public partial class CheckerPopup : Window
     {
         public bool Tape = false;
-        private readonly Task TaskChecker = new(() => { });
+        private Task TaskChecker = new Task(() => { });
 
         public CheckerPopup(string toCheck = "all")
         {
             InitializeComponent();
-            DataContext = this;
-            Height = 0;
-            BorderBrush.Opacity = 0;
-            ShowInTaskbar = false;
+            this.DataContext = this;
+            this.Height = 0;
+            this.BorderBrush.Opacity = 0;
+            this.ShowInTaskbar = false;
 
             Tools.PropertyChanged += Tools_PropertyChanged;
 
@@ -69,7 +69,7 @@ namespace TrueMiningDesktop.Janelas
         {
             Tape = true;
 
-            StateChanged += CheckerPopup_StateChanged;
+            this.StateChanged += CheckerPopup_StateChanged;
 
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
@@ -229,17 +229,17 @@ namespace TrueMiningDesktop.Janelas
             FileName = "Complete";
             Thread.Sleep(100);
 
-            Dispatcher.BeginInvoke((Action)(() => { Close(); }));
+            Dispatcher.BeginInvoke((Action)(() => { this.Close(); }));
         }
 
         private void CheckerPopup_StateChanged(object sender, EventArgs e)
         {
-            Application.Current.MainWindow.WindowState = WindowState;
+            Application.Current.MainWindow.WindowState = this.WindowState;
         }
 
         private void MainWindow_Activated(object sender, EventArgs e)
         {
-            Dispatcher.BeginInvoke((Action)(() => { Focus(); }));
+            Dispatcher.BeginInvoke((Action)(() => { this.Focus(); }));
         }
 
         private void MainWindow_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -290,7 +290,7 @@ namespace TrueMiningDesktop.Janelas
 
                 ProgressDetails = "Progress: starting download";
 
-                WebClient webClient = new() { Proxy = useTor ? Tools.TorProxy : null, };
+                WebClient webClient = new WebClient() { Proxy = useTor ? Tools.TorProxy : null, };
 
                 webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
                 webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
@@ -387,27 +387,27 @@ namespace TrueMiningDesktop.Janelas
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    Height = 100;
+                    this.Height = 100;
                     BorderBrush.Opacity = 100;
 
-                    ShowInTaskbar = true;
+                    this.ShowInTaskbar = true;
 
-                    Activate();
-                    Focus();
+                    this.Activate();
+                    this.Focus();
                 });
             }
             else
             {
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    Height = 0;
+                    this.Height = 0;
                     BorderBrush.Opacity = 0;
 
-                    ShowInTaskbar = false;
+                    this.ShowInTaskbar = false;
                 });
             }
 
-            WindowState = Application.Current.MainWindow.WindowState;
+            this.WindowState = Application.Current.MainWindow.WindowState;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -417,7 +417,7 @@ namespace TrueMiningDesktop.Janelas
             Application.Current.MainWindow.IsVisibleChanged -= MainWindow_IsVisibleChanged;
             Application.Current.MainWindow.StateChanged -= MainWindow_StateChanged;
             Application.Current.MainWindow.Activated -= MainWindow_Activated;
-            StateChanged -= CheckerPopup_StateChanged;
+            this.StateChanged -= CheckerPopup_StateChanged;
             Tools.PropertyChanged -= Tools_PropertyChanged;
 
             Application.Current.Dispatcher.Invoke(new Action(() => MainWindow.DispararEvento()));

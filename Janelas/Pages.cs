@@ -1,4 +1,4 @@
-﻿namespace TrueMiningDesktop.Janelas
+﻿namespace True_Mining_Desktop.Janelas
 {
     public static class Pages
     {

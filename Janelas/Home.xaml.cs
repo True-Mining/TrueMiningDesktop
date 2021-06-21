@@ -2,9 +2,9 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using TrueMiningDesktop.Core;
+using True_Mining_Desktop.Core;
 
-namespace TrueMiningDesktop.Janelas
+namespace True_Mining_Desktop.Janelas
 {
     /// <summary>
     /// Interação lógica para Home.xam
@@ -42,7 +42,7 @@ namespace TrueMiningDesktop.Janelas
                 if (TextBox_PaymentAddress.Text.StartsWith("D"))
                 { User.Settings.User.Payment_Coin = "DOGE"; }
 
-                if (!User.Settings.LoadingSettings) { User.Settings.SettingsSaver(); }
+                if (!User.Settings.loadingSettings) { User.Settings.SettingsSaver(); }
             }
 
             if (TextBox_PaymentAddress.Text.Length == 34 && Tools.WalletAddressIsValid(TextBox_PaymentAddress.Text))

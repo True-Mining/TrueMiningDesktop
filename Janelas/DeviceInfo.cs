@@ -1,13 +1,13 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System;
-using TrueMiningDesktop.Core;
-using TrueMiningDesktop.ViewModel;
+using True_Mining_Desktop.Core;
+using True_Mining_Desktop.ViewModel;
 
-namespace TrueMiningDesktop.Janelas
+namespace True_Mining_Desktop.Janelas
 {
     public class DeviceInfo : OverviewDeviceSimplified
     {
-        public OverviewDeviceSimplified OverviewDeviceSimplified = new();
+        public OverviewDeviceSimplified OverviewDeviceSimplified = new OverviewDeviceSimplified();
 
         public event EventHandler PropertieChangedDevInfo;
 
@@ -22,7 +22,7 @@ namespace TrueMiningDesktop.Janelas
             IsSelected = isSelected;
             IconKind = iconKind;
 
-            Janelas.Pages.Home.listDevicesOverview.Children.Add(OverviewDeviceSimplified);
+            Janelas.Pages.Home.listDevicesOverview.Children.Add(this.OverviewDeviceSimplified);
 
             OverviewDeviceSimplified.PropertieChanged += new EventHandler(OVchanged);
 
@@ -49,7 +49,6 @@ namespace TrueMiningDesktop.Janelas
 
         public void what()
         {
-            // bixo sei lá, só sei que deixa desse jeito pra funcionar
         }
 
         public string Alias { get; private set; }

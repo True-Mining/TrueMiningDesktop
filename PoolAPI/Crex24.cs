@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueMiningDesktop.PoolAPI
+namespace True_Mining_Desktop.PoolAPI
 {
     public class BuyLevel
     {

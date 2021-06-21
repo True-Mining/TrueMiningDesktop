@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace TrueMiningDesktop
+namespace True_Mining_Desktop
 {
     /// <summary>
     /// Interaction logic for App.xaml

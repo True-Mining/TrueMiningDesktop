@@ -2,28 +2,29 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using TrueMiningDesktop.Core;
-using TrueMiningDesktop.ViewModel;
+using True_Mining_Desktop.Core;
+using True_Mining_Desktop.ViewModel;
 using Application = System.Windows.Application;
 using ListView = System.Windows.Controls.ListView;
 using MessageBox = System.Windows.MessageBox;
 using MessageBoxOptions = System.Windows.MessageBoxOptions;
 using UserControl = System.Windows.Controls.UserControl;
 
-namespace TrueMiningDesktop
+namespace True_Mining_Desktop
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static System.Windows.Forms.NotifyIcon nIcon = new();
+        public static System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
 
         public static event EventHandler TapeAllRequest;
 
@@ -38,54 +39,45 @@ namespace TrueMiningDesktop
 
             TapeAllRequest += CheckerPopup_TapeAllRequest;
 
-            Device.cpu.what();
+            Device.cpu.what(); new Device();
 
-            _ = new Device();
+            User.Settings.Device.cpu.AlgorithmsList.Add("RandomX");
+            User.Settings.Device.opencl.AlgorithmsList.Add("RandomX");
+            User.Settings.Device.cuda.AlgorithmsList.Add("RandomX");
 
-            User.Settings.Device.cpu.AlgorithmsList.Clear();  //temp fix
-            User.Settings.Device.opencl.AlgorithmsList.Clear();  //temp fix
-            User.Settings.Device.cuda.AlgorithmsList.Clear();  //temp fix
-            User.Settings.User.Payment_CoinsList.Clear();  //temp fix
-
-            if (!User.Settings.Device.cpu.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.cpu.AlgorithmsList.Add("RandomX"); }
-            if (!User.Settings.Device.opencl.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.opencl.AlgorithmsList.Add("RandomX"); }
-            if (!User.Settings.Device.cuda.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.cuda.AlgorithmsList.Add("RandomX"); }
-
-            if (!User.Settings.User.Payment_CoinsList.Contains("DOGE")) { User.Settings.User.Payment_CoinsList.Add("DOGE"); }
-            if (!User.Settings.User.Payment_CoinsList.Contains("RDCT")) { User.Settings.User.Payment_CoinsList.Add("RDCT"); }
+            User.Settings.User.Payment_CoinsList.Add("DOGE");
+            User.Settings.User.Payment_CoinsList.Add("RDCT");
 
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Home", Janelas.Pages.Home, PackIconKind.Home), this));
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Dashboard", Janelas.Pages.Dashboard, PackIconKind.ViewDashboard), this));
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Settings", Janelas.Pages.Settings, PackIconKind.Settings), this));
 
-            List<SubItem> menuConfigHardware = new()
-            {
-                new SubItem("CPU", Janelas.Pages.SettingsCPU),
-                new SubItem("AMD GPU", Janelas.Pages.SettingsOPENCL),
-                new SubItem("NVIDIA GPU", Janelas.Pages.SettingsCUDA)
-            };
+            var menuConfigHardware = new List<SubItem>();
+            menuConfigHardware.Add(new SubItem("CPU", Janelas.Pages.SettingsCPU));
+            menuConfigHardware.Add(new SubItem("AMD GPU", Janelas.Pages.SettingsOPENCL));
+            menuConfigHardware.Add(new SubItem("NVIDIA GPU", Janelas.Pages.SettingsCUDA));
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Hardware Config", menuConfigHardware, PackIconKind.Gpu), this));
 
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Other Stuff", new Janelas.Other(), PackIconKind.PlusBoxMultiple), this));
 
-            Janelas.Pages.Home.TitleWrapPanel.MouseDown += Down;
-            Janelas.Pages.Home.TitleWrapPanel.MouseMove += Move;
-            Janelas.Pages.Home.TitleWrapPanel.MouseUp += Up;
-            Janelas.Pages.Dashboard.TitleWrapPanel.MouseDown += Down;
-            Janelas.Pages.Dashboard.TitleWrapPanel.MouseMove += Move;
-            Janelas.Pages.Dashboard.TitleWrapPanel.MouseUp += Up;
-            Janelas.Pages.Settings.TitleWrapPanel.MouseDown += Down;
-            Janelas.Pages.Settings.TitleWrapPanel.MouseMove += Move;
-            Janelas.Pages.Settings.TitleWrapPanel.MouseUp += Up;
-            Janelas.Pages.SettingsCPU.TitleWrapPanel.MouseDown += Down;
-            Janelas.Pages.SettingsCPU.TitleWrapPanel.MouseMove += Move;
-            Janelas.Pages.SettingsCPU.TitleWrapPanel.MouseUp += Up;
-            Janelas.Pages.SettingsOPENCL.TitleWrapPanel.MouseDown += Down;
-            Janelas.Pages.SettingsOPENCL.TitleWrapPanel.MouseMove += Move;
-            Janelas.Pages.SettingsOPENCL.TitleWrapPanel.MouseUp += Up;
-            Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseDown += Down;
-            Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseMove += Move;
-            Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseUp += Up;
+            Janelas.Pages.Home.TitleWrapPanel.MouseDown += this.Down;
+            Janelas.Pages.Home.TitleWrapPanel.MouseMove += this.Move;
+            Janelas.Pages.Home.TitleWrapPanel.MouseUp += this.Up;
+            Janelas.Pages.Dashboard.TitleWrapPanel.MouseDown += this.Down;
+            Janelas.Pages.Dashboard.TitleWrapPanel.MouseMove += this.Move;
+            Janelas.Pages.Dashboard.TitleWrapPanel.MouseUp += this.Up;
+            Janelas.Pages.Settings.TitleWrapPanel.MouseDown += this.Down;
+            Janelas.Pages.Settings.TitleWrapPanel.MouseMove += this.Move;
+            Janelas.Pages.Settings.TitleWrapPanel.MouseUp += this.Up;
+            Janelas.Pages.SettingsCPU.TitleWrapPanel.MouseDown += this.Down;
+            Janelas.Pages.SettingsCPU.TitleWrapPanel.MouseMove += this.Move;
+            Janelas.Pages.SettingsCPU.TitleWrapPanel.MouseUp += this.Up;
+            Janelas.Pages.SettingsOPENCL.TitleWrapPanel.MouseDown += this.Down;
+            Janelas.Pages.SettingsOPENCL.TitleWrapPanel.MouseMove += this.Move;
+            Janelas.Pages.SettingsOPENCL.TitleWrapPanel.MouseUp += this.Up;
+            Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseDown += this.Down;
+            Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseMove += this.Move;
+            Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseUp += this.Up;
 
             Tools.KillMiners();
 
@@ -122,7 +114,7 @@ namespace TrueMiningDesktop
 
         private void CheckerPopup_TapeAllRequest(object sender, EventArgs e)
         {
-            if (Tools.CheckerPopup.Tape) { PanelTapeAll.Visibility = Visibility.Visible; } else { PanelTapeAll.Visibility = Visibility.Hidden; }
+            if (Tools.CheckerPopup.Tape) { this.PanelTapeAll.Visibility = Visibility.Visible; } else { this.PanelTapeAll.Visibility = Visibility.Hidden; }
         }
 
         internal void SwitchScreen(UserControl userControl)
@@ -143,7 +135,7 @@ namespace TrueMiningDesktop
                 SwitchScreen(((UserControlItemMenu)((ListView)sender).SelectedItem).Screen);
             }
 
-            bool expandItem = !((UserControlItemMenu)((ListView)sender).SelectedItem).ExpanderMenu.IsExpanded || ((UserControlItemMenu)((ListView)sender).SelectedItem) != ((UserControlItemMenu)((ListView)MenuMenu).SelectedItem);
+            bool expandItem = ((UserControlItemMenu)((ListView)sender).SelectedItem).ExpanderMenu.IsExpanded && ((UserControlItemMenu)((ListView)sender).SelectedItem) == ((UserControlItemMenu)((ListView)MenuMenu).SelectedItem) ? false : true;
 
             for (int item = ((ListView)sender).Items.Count - 1; 0 <= item; item--)
             {
@@ -181,21 +173,21 @@ namespace TrueMiningDesktop
                 {
                     User.Settings.User.LICENSE_read = true;
                 }
-                else { Close(); }
+                else { this.Close(); }
             }
 
             try
             {
-                CanvasSoftwareVersion.Text = "v" + Tools.GetAssemblyVersion();
-                CanvasSoftwareVersion.TextDecorations = null;
+                this.CanvasSoftwareVersion.Text = "v" + Tools.GetAssemblyVersion();
+                this.CanvasSoftwareVersion.TextDecorations = null;
             }
             catch { }
 
-            TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
+            this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
 
             Tools.TryChangeTaskbarIconAsSettingsOrder();
             nIcon.Visible = true;
-            nIcon.MouseDown += Notifier_MouseDown;
+            nIcon.MouseDown += notifier_MouseDown;
 
             Core.NextStart.Actions.Load();
 
@@ -207,9 +199,9 @@ namespace TrueMiningDesktop
                 }
                 else
                 {
-                    ShowInTaskbar = true;
-                    Activate();
-                    Focus();
+                    this.ShowInTaskbar = true;
+                    this.Activate();
+                    this.Focus();
                 }
             }
             else
@@ -220,9 +212,9 @@ namespace TrueMiningDesktop
                 }
                 else
                 {
-                    ShowInTaskbar = true;
-                    Activate();
-                    Focus();
+                    this.ShowInTaskbar = true;
+                    this.Activate();
+                    this.Focus();
                 }
             }
 
@@ -243,7 +235,7 @@ namespace TrueMiningDesktop
             {
                 if (Core.NextStart.Actions.loadedNextStartInstructions.startMining)
                 {
-                    if (!string.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
+                    if (!String.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
                     {
                         if (!Miner.IsMining) { Miner.StartMiner(); }
                     }
@@ -253,7 +245,7 @@ namespace TrueMiningDesktop
             {
                 if (User.Settings.User.AutostartMining)
                 {
-                    if (!string.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
+                    if (!String.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
                     {
                         if (!Miner.IsMining) { Miner.StartMiner(); }
                     }
@@ -261,11 +253,11 @@ namespace TrueMiningDesktop
             }
         }
 
-        private void Notifier_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void notifier_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                ContextMenu menu = (ContextMenu)FindResource("NotifierContextMenu");
+                ContextMenu menu = (ContextMenu)this.FindResource("NotifierContextMenu");
                 menu.IsOpen = true;
                 menu.StaysOpen = true;
 
@@ -275,71 +267,67 @@ namespace TrueMiningDesktop
 
         private void Menu_Show(object sender, RoutedEventArgs e)
         {
-            WindowState = WindowState.Normal;
-            ShowInTaskbar = true;
-            Show();
-            Activate();
-            Focus();
+            this.WindowState = WindowState.Normal;
+            this.ShowInTaskbar = true;
+            this.Show();
+            this.Activate();
+            this.Focus();
         }
 
         private void Menu_Hide(object sender, RoutedEventArgs e)
         {
-            Hide();
+            this.Hide();
         }
 
         private void Menu_Close(object sender, RoutedEventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            try
+            if (Miner.IsMining)
             {
-                if (Miner.IsMining)
+                if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
                 {
-                    if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
-                    {
-                        Miner.StopMiner();
-                    }
-                    else { e.Cancel = true; return; }
+                    Miner.StopMiner();
                 }
-
-                if (Tools.CheckerPopup.Tape)
-                {
-                    if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
-                    { e.Cancel = true; return; }
-                }
-
-                Core.Miner.EmergencyExit = true;
-                User.Settings.SettingsSaver(true);
-                Application.Current.Shutdown();
-
-                Tools.CheckerPopup.Close();
-                nIcon.Visible = false;
+                else { e.Cancel = true; return; }
             }
-            catch { }
+
+            if (Tools.CheckerPopup.Tape)
+            {
+                if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                { e.Cancel = true; return; }
+            }
+
+            Core.Miner.EmergencyExit = true;
+            User.Settings.SettingsSaver(true);
+            Application.Current.Shutdown();
+
+            Tools.CheckerPopup.Close();
+            nIcon.Visible = false;
         }
 
-        public static bool clicado;
-        private Point lm;
+        public static bool clicado = false;
+        private Point lm = new Point();
 
         public void Down(object sender, MouseButtonEventArgs e)
         {
             clicado = true;
 
-            lm.X = System.Windows.Forms.Control.MousePosition.X;
-            lm.Y = System.Windows.Forms.Control.MousePosition.Y;
-            lm.X = Convert.ToInt16(Left) - lm.X;
-            lm.Y = Convert.ToInt16(Top) - lm.Y;
+            this.lm.X = System.Windows.Forms.Control.MousePosition.X;
+            this.lm.Y = System.Windows.Forms.Control.MousePosition.Y;
+            this.lm.X = Convert.ToInt16(this.Left) - this.lm.X;
+            this.lm.Y = Convert.ToInt16(this.Top) - this.lm.Y;
         }
 
         public void Move(object sender, MouseEventArgs e)
         {
             if (clicado && e.LeftButton == MouseButtonState.Pressed)
             {
-                Left = (System.Windows.Forms.Control.MousePosition.X + lm.X);
-                Top = (System.Windows.Forms.Control.MousePosition.Y + lm.Y);
+                this.Left = (System.Windows.Forms.Control.MousePosition.X + this.lm.X);
+                this.Top = (System.Windows.Forms.Control.MousePosition.Y + this.lm.Y);
             }
             else { clicado = false; }
         }
@@ -351,18 +339,18 @@ namespace TrueMiningDesktop
 
         private void PackIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Close();
+            this.Close();
         }
 
         private void PackIcon_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-            Hide();
+            this.Hide();
             nIcon.ShowBalloonTip(4000, "Hiding", "True Mining was hidden in the notification bar", System.Windows.Forms.ToolTipIcon.Info);
         }
 
         private void PackIcon_MouseDown_2(object sender, MouseButtonEventArgs e)
         {
-            WindowState = WindowState.Minimized;
+            this.WindowState = WindowState.Minimized;
         }
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -385,9 +373,16 @@ namespace TrueMiningDesktop
             if (clicado) clicado = false;
         }
 
-        private void TorIcon_MouseDown(object sender, MouseButtonEventArgs e)
+        private void torIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("IP address: " + Tools.HttpGet("https://api.ipify.org", true));
+            MessageBox.Show("IP address: " + new WebClient()
+            {
+                Proxy = new WebProxy()
+                {
+                    Address = new Uri("http://localhost:8427"),
+                    BypassProxyOnLocal = true
+                }
+            }.DownloadString(new Uri("https://api.ipify.org")));
         }
     }
 }

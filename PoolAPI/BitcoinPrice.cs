@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace TrueMiningDesktop.PoolAPI
+namespace True_Mining_Desktop.PoolAPI
 {
     public class FIAT
     {

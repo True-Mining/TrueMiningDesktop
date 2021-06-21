@@ -1,12 +1,12 @@
 ﻿using System;
-using TrueMiningDesktop.Janelas;
+using True_Mining_Desktop.Janelas;
 
-namespace TrueMiningDesktop.Core
+namespace True_Mining_Desktop.Core
 {
     internal class Hashrate_timer
     {
-        private readonly DeviceInfo DeviceInfo;
-        private readonly System.Timers.Timer Timer = new(5000);
+        private DeviceInfo DeviceInfo;
+        private System.Timers.Timer Timer = new System.Timers.Timer(5000);
 
         public event EventHandler HashrateUpdated;
 
@@ -15,14 +15,14 @@ namespace TrueMiningDesktop.Core
 
         public Hashrate_timer(DeviceInfo _parent)
         {
-            DeviceInfo = _parent;
+            this.DeviceInfo = _parent;
             Timer.Stop();
             Timer.Elapsed += Timer_Elapsed;
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Hashrate = Miner.GetHashrate(DeviceInfo.Alias, DeviceInfo.MiningAlgo);
+            this.Hashrate = Miner.GetHashrate(DeviceInfo.Alias, DeviceInfo.MiningAlgo);
         }
 
         protected virtual void OnNewHashrate()

@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using TrueMiningDesktop.Core;
+using True_Mining_Desktop.Core;
 
-namespace TrueMiningDesktop.Janelas
+namespace True_Mining_Desktop.Janelas
 {
     public partial class Other : UserControl
     {

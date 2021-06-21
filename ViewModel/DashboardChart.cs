@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using TrueMiningDesktop.Janelas;
+using True_Mining_Desktop.Janelas;
 
-namespace TrueMiningDesktop.ViewModel
+namespace True_Mining_Desktop.ViewModel
 {
     internal class DashboardChart
     {
-        public static void UpdateAxes(Dictionary<int, long> dados, int zoomInterval)
+        public static void UpdateAxes(Dictionary<int, Int64> dados, int zoomInterval)
         {
             PlotModel plotModel = new PlotModel()
             {
@@ -34,9 +34,9 @@ namespace TrueMiningDesktop.ViewModel
             {
                 zoomInterval = (int)new TimeSpan((int)Math.Floor(TimeSpan.FromSeconds(zoomInterval).TotalHours) - 1, DateTime.UtcNow.Minute, DateTime.UtcNow.Second).TotalSeconds;
 
-                dataToShow = dados.Where((KeyValuePair<int, long> value) =>
+                dataToShow = dados.Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, long> value) => new KeyValuePair<int, int>(value.Key, (int)(value.Value / 840)))
+                .Select((KeyValuePair<int, Int64> value) => new KeyValuePair<int, int>(value.Key, (int)(value.Value / 840)))
                 .OrderBy((KeyValuePair<int, int> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
@@ -67,9 +67,9 @@ namespace TrueMiningDesktop.ViewModel
             {
                 zoomInterval = (int)new TimeSpan((int)Math.Floor(TimeSpan.FromSeconds(zoomInterval).TotalDays) - 1, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second).TotalSeconds;
 
-                dataToShow = dados.Where((KeyValuePair<int, long> value) =>
+                dataToShow = dados.Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, long> value) => new KeyValuePair<int, int>(value.Key, (int)value.Value / 840))
+                .Select((KeyValuePair<int, Int64> value) => new KeyValuePair<int, int>(value.Key, (int)value.Value / 840))
                 .OrderBy((KeyValuePair<int, int> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
@@ -104,7 +104,7 @@ namespace TrueMiningDesktop.ViewModel
 
             plotModel.Axes.Clear();
 
-            CategoryAxis categoryAxis = new CategoryAxis()
+            var categoryAxis = new CategoryAxis()
             {
                 Position = AxisPosition.Bottom,
                 AxisTickToLabelDistance = 0,
@@ -127,7 +127,7 @@ namespace TrueMiningDesktop.ViewModel
 
             /////////////////////////////////
 
-            Pages.Dashboard.ColumnChartSerie = new OxyPlot.Series.ColumnSeries()
+            Pages.Dashboard.columnChartSerie = new OxyPlot.Series.ColumnSeries()
             {
                 TrackerFormatString = "{2} points",
                 Selectable = false,
@@ -136,11 +136,11 @@ namespace TrueMiningDesktop.ViewModel
 
             foreach (KeyValuePair<string, int> keyValuePair in dataToShow_formated)
             {
-                Pages.Dashboard.ColumnChartSerie.Items.Add(new ColumnItem(keyValuePair.Value, listaLegendaX.IndexOf(keyValuePair.Key)));
+                Pages.Dashboard.columnChartSerie.Items.Add(new ColumnItem(keyValuePair.Value, listaLegendaX.IndexOf(keyValuePair.Key)));
             }
-            if (Pages.Dashboard.ColumnChartSerie.Items.Count == 0) Pages.Dashboard.ColumnChartSerie.Items.Add(new ColumnItem(0));
+            if (Pages.Dashboard.columnChartSerie.Items.Count == 0) Pages.Dashboard.columnChartSerie.Items.Add(new ColumnItem(0));
 
-            plotModel.Series.Add(Pages.Dashboard.ColumnChartSerie);
+            plotModel.Series.Add(Pages.Dashboard.columnChartSerie);
 
             ////////////////////////////////
             int chart_max_value = dataToShow_formated.Count > 0 ? (int)Math.Ceiling(d: (decimal)dataToShow_formated.Max((KeyValuePair<string, int> value) => value.Value)) : 10;
@@ -165,19 +165,19 @@ namespace TrueMiningDesktop.ViewModel
 
                 LabelFormatter = (index =>
                 {
-                    int ratio = (int)Math.Round(10 / 10.0, 0);
-                    int label = (int)index;
+                    var ratio = (int)Math.Round(10 / 10.0, 0);
+                    var label = (int)index;
                     return (ratio <= 1 || label % ratio == 1) ? label.ToString("D") : string.Empty;
                 })
             });
 
-            Pages.Dashboard.Chart_controller = new PlotController();
-            Pages.Dashboard.Chart_controller.UnbindAll();
-            Pages.Dashboard.Chart_controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
+            Pages.Dashboard.chart_controller = new PlotController();
+            Pages.Dashboard.chart_controller.UnbindAll();
+            Pages.Dashboard.chart_controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
 
-            Pages.Dashboard.Chart_model = plotModel;
+            Pages.Dashboard.chart_model = plotModel;
 
-            Pages.Dashboard.Chart_visibility = Visibility.Visible;
+            Pages.Dashboard.chart_visibility = Visibility.Visible;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="TrueMiningDesktop.Janelas.SubMenuSettings.SettingsOPENCL"
+﻿<UserControl x:Class="True_Mining_Desktop.Janelas.SubMenuSettings.SettingsOPENCL"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
