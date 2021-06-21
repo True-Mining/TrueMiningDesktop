@@ -4,7 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Class="True_Mining_Desktop.MainWindow"
+    x:Class="TrueMiningDesktop.MainWindow"
     mc:Ignorable="d"
     Title="True Mining Desktop" Height="500" Width="950" FontSize="10" WindowStartupLocation="CenterScreen" HorizontalContentAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeMode="CanMinimize" ScrollViewer.VerticalScrollBarVisibility="Disabled" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" BorderThickness="1,1,1,1" BorderBrush="#FF3E3E3E" StateChanged="Window_StateChanged" IsVisibleChanged="Window_IsVisibleChanged" LostMouseCapture="Window_LostMouseCapture" SnapsToDevicePixels="True" ShowInTaskbar="False"
     RenderOptions.BitmapScalingMode="HighQuality">
@@ -31,7 +31,7 @@
             </StackPanel>
         </Grid>
 
-        <Image x:Name="torIcon" ToolTip="TOR + Privoxy" Visibility="Collapsed" Source="https://gitweb.torproject.org/static/logo.jpg" Width="30" Margin="310,0,0,10" RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Bottom" HorizontalAlignment="Left" MouseDown="torIcon_MouseDown" />
+        <Image x:Name="torIcon" ToolTip="TOR + Privoxy" Visibility="Collapsed" Source="https://gitweb.torproject.org/static/logo.jpg" Width="30" Margin="310,0,0,10" RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Bottom" HorizontalAlignment="Left" MouseDown="TorIcon_MouseDown" />
 
         <WrapPanel x:Name="PanelTapeAll" Margin="0" Opacity="100" Visibility="Hidden" Background="#19000000"></WrapPanel>
 

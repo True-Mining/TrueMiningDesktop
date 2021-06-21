@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.Core
+namespace TrueMiningDesktop.Core
 {
     public static class Miner
     {
-        private static DateTime holdTime = DateTime.UtcNow;
-        public static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
+        private static readonly DateTime holdTime = DateTime.UtcNow;
+        public static DateTime startedSince = holdTime.AddTicks(-holdTime.Ticks);
 
         public static void StartMiner()
         {
@@ -21,9 +21,9 @@ namespace True_Mining_Desktop.Core
                 return;
             }
 
-            if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (String.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || String.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || String.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
+            if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (string.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
             {
-                Tools.CheckerPopup = new Janelas.CheckerPopup("all");
+                Tools.CheckerPopup = new CheckerPopup("all");
                 Tools.CheckerPopup.ShowDialog();
 
                 if (!EmergencyExit)
@@ -50,7 +50,7 @@ namespace True_Mining_Desktop.Core
         {
             bool showCLI = User.Settings.User.ShowCLI;
 
-            if (String.Equals(miner, "XMRig", StringComparison.OrdinalIgnoreCase) || String.Equals(miner, "all", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(miner, "XMRig", StringComparison.OrdinalIgnoreCase) || string.Equals(miner, "all", StringComparison.OrdinalIgnoreCase))
             {
                 IntPtr windowIdentifier = Tools.FindWindow(null, "True Mining running XMRig");
                 if (showCLI)
@@ -72,7 +72,7 @@ namespace True_Mining_Desktop.Core
             {
                 if (Device.DevicesList.Find(x => x.Alias.Equals(alias, StringComparison.OrdinalIgnoreCase)).IsSelected)
                 {
-                    if (String.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
                     {
                         return XMRig.XMRig.GetHasrate(alias);
                     }
@@ -85,10 +85,10 @@ namespace True_Mining_Desktop.Core
             return -1;
         }
 
-        public static bool EmergencyExit = false;
+        public static bool EmergencyExit;
 
-        private static bool isMining = false;
-        public static bool intentToMine = false;
+        private static bool isMining;
+        private static bool intentToMine;
 
         public static bool IsMining
         {
@@ -131,7 +131,7 @@ namespace True_Mining_Desktop.Core
                 }
                 else
                 {
-                    startedSince = holdTime.AddTicks(-(holdTime.Ticks));
+                    startedSince = holdTime.AddTicks(-holdTime.Ticks);
 
                     Device.cpu.IsMining = false;
                     Device.opencl.IsMining = false;

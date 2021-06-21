@@ -1,9 +1,9 @@
-﻿<Window x:Class="True_Mining_Desktop.Janelas.Popups.ExchangeRates"
+﻿<Window x:Class="TrueMiningDesktop.Janelas.Popups.ExchangeRates"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:True_Mining_Desktop.Janelas.Popups" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:TrueMiningDesktop.Janelas.Popups" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Height="275" Width="765" Topmost="True" ResizeMode="NoResize" WindowStyle="None" BorderThickness="1,1,1,1" BorderBrush="#FF2E2E2E" MouseDown="Down" MouseMove="Move" MouseUp="Up">
     <Grid>
@@ -11,7 +11,7 @@
         <WrapPanel x:Name="AllContent" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
                 <WrapPanel Margin="0,15,0,0">
-                    <materialDesign:PackIcon Width="40" Height="40" Kind="Coin" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
+                    <materialDesign:PackIcon Width="40" Height="40" Kind="Coins" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                     <Label Content="Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
@@ -33,7 +33,7 @@
             </WrapPanel>
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
                 <WrapPanel Margin="0,15,0,0">
-                    <materialDesign:PackIcon Width="40" Height="40" Kind="CoinOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
+                    <materialDesign:PackIcon Width="40" Height="40" Kind="CoinsOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
                     <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
