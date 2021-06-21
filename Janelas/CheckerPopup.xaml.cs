@@ -54,10 +54,10 @@ namespace True_Mining_Desktop.Janelas
         private Visibility hostFilesAd_Visibility = Visibility.Collapsed;
 
         public bool Finish { get { return property_finish; } set { property_finish = value; ProgressDetails = null; } }
-        public string StatusTitle { get { return property_statusTitle; } set { property_statusTitle = value; Dispatcher.BeginInvoke((Action)(() => { statusTitle.Content = value; ProgressDetails = null; })); } }
-        public string FileName { get { return property_fileName; } set { property_fileName = value; ProgressDetails = null; Dispatcher.BeginInvoke((Action)(() => { fileName.Content = new TextBlock() { Text = value, TextWrapping = TextWrapping.WrapWithOverflow }; })); } }
-        public int ProgressBar_Value { get { return property_progressBar_Value; } set { property_progressBar_Value = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.Value = value; })); } }
-        public bool ProgressBar_IsIndeterminate { get { return property_progressBar_IsIndeterminate; } set { property_progressBar_IsIndeterminate = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.IsIndeterminate = value; })); } }
+        public string StatusTitle { get { return property_statusTitle; } set { property_statusTitle = value; Dispatcher.BeginInvoke((Action)(() => { statusTitle.Content = value; })); } }
+        public string FileName { get { return property_fileName; } set { property_fileName = value; Dispatcher.BeginInvoke((Action)(() => { fileName.Content = new TextBlock() { Text = value, TextWrapping = TextWrapping.WrapWithOverflow }; })); } }
+        public int ProgressBar_Value { get { return property_progressBar_Value; } set { if (property_progressBar_Value != value) { property_progressBar_Value = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.Value = value; })); } } }
+        public bool ProgressBar_IsIndeterminate { get { return property_progressBar_IsIndeterminate; } set { if (property_progressBar_IsIndeterminate != value) { property_progressBar_IsIndeterminate = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.IsIndeterminate = value; })); } } }
         public string ProgressDetails { get { return progressDetails_Content; } set { progressDetails_Content = value; Dispatcher.BeginInvoke((Action)(() => { progressDetails.Content = value; })); } }
         public Visibility HostFilesAd_Visibility { get { return hostFilesAd_Visibility; } set { hostFilesAd_Visibility = value; Dispatcher.BeginInvoke((Action)(() => { HostFilesAd.Visibility = value; })); } }
 
@@ -201,25 +201,30 @@ namespace True_Mining_Desktop.Janelas
                 catch { }
             }
 
-            FileName = "Removing old files";
-            string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
-            foreach (var arq in arquivosOdl)
+            Task removeOldFiles = new Task(() =>
             {
-                try
+                FileName = "Removing old files";
+                string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
+                foreach (var arq in arquivosOdl)
                 {
-                    if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                    try
+                    {
+                        if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                    }
+                    catch { };
                 }
-                catch { };
-            }
-            string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
-            foreach (var arq in arquivosDl)
-            {
-                try
+                string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
+                foreach (var arq in arquivosDl)
                 {
-                    if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                    try
+                    {
+                        if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                    }
+                    catch { };
                 }
-                catch { };
-            }
+            });
+            removeOldFiles.Start();
+            removeOldFiles.Wait(10000);
 
             FileName = "Complete";
             Thread.Sleep(100);
@@ -260,6 +265,7 @@ namespace True_Mining_Desktop.Janelas
         public bool Downloader(FileToDownload file, string progress = null)
         {
             ProgressBar_IsIndeterminate = true;
+            ProgressBar_Value = 0;
             HostFilesAd_Visibility = Visibility.Visible;
 
             if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
@@ -282,7 +288,7 @@ namespace True_Mining_Desktop.Janelas
 
                 while (!Tools.IsConnected()) { ProgressDetails = "Waiting for internet connection..."; Thread.Sleep(2000); }
 
-                ProgressDetails = "Starting download";
+                ProgressDetails = "Progress: starting download";
 
                 WebClient webClient = new WebClient() { Proxy = useTor ? Tools.TorProxy : null, };
 
@@ -365,10 +371,14 @@ namespace True_Mining_Desktop.Janelas
 
         private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            ProgressBar_Value = e.ProgressPercentage > 0 ? e.ProgressPercentage : 1;
-            ProgressBar_IsIndeterminate = true;
+            if (e.TotalBytesToReceive / 1024d > 100) // menos de 100kb não altera o progress para exibir o progresso
+            {
+                ProgressBar_Value = e.ProgressPercentage > 0 ? e.ProgressPercentage : 1;
 
-            ProgressDetails = "Progress: " + (e.BytesReceived / 1024d / 1024d).ToString("0.00 MB") + " / " + (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00 MB") + " (" + e.ProgressPercentage + "%)";
+                ProgressBar_IsIndeterminate = true;
+
+                ProgressDetails = "Progress: " + (e.BytesReceived / 1024d / 1024d).ToString("0.00 MB") + " / " + (e.TotalBytesToReceive / 1024d / 1024d).ToString("0.00 MB") + " (" + e.ProgressPercentage + "%)";
+            }
         }
 
         private void ShowOrNot()
