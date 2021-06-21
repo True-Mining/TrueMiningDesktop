@@ -5,10 +5,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using True_Mining_Desktop.Janelas.Popups;
-using True_Mining_Desktop.Server;
+using TrueMiningDesktop.Janelas.Popups;
+using TrueMiningDesktop.Server;
 
-namespace True_Mining_Desktop.Janelas
+namespace TrueMiningDesktop.Janelas
 {
     /// <summary>
     /// Interação lógica para Dashboard.xam
@@ -23,17 +23,14 @@ namespace True_Mining_Desktop.Janelas
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private string labelNextPayout;
         private string labelAccumulatedBalance;
-        private List<string> dashboardWarnings = new List<string>();
+        private List<string> dashboardWarnings = new();
         public Visibility warningWrapVisibility = Visibility.Visible;
 
         public string LabelNextPayout { get { return labelNextPayout; } set { labelNextPayout = value; xLabelNextPayout.Content = value; } }
@@ -41,9 +38,9 @@ namespace True_Mining_Desktop.Janelas
         public List<string> DashboardWarnings { get { return dashboardWarnings; } set { dashboardWarnings = value; NotifyPropertyChanged(); } }
         public Visibility WarningWrapVisibility { get { return warningWrapVisibility; } set { warningWrapVisibility = value; NotifyPropertyChanged(); } }
 
-        public string WalletAddress { get { return User.Settings.User.Payment_Wallet; } set { } }
+        public static string WalletAddress { get { return User.Settings.User.Payment_Wallet; } set { } }
 
-        private bool firstTimeLoad = false;
+        private bool firstTimeLoad;
 
         private Saldo saldo;
 
@@ -52,10 +49,10 @@ namespace True_Mining_Desktop.Janelas
         private PlotController chart_controller_value;
         private Visibility chart_visibility_value = Visibility.Hidden;
 
-        public PlotModel chart_model { get { return chart_model_value; } set { chart_model_value = value; NotifyPropertyChanged(); } }
-        public OxyPlot.Series.ColumnSeries columnChartSerie { get { return columnChartSerie_value; } set { columnChartSerie_value = value; NotifyPropertyChanged(); } }
-        public PlotController chart_controller { get { return chart_controller_value; } set { chart_controller_value = value; NotifyPropertyChanged(); } }
-        public Visibility chart_visibility { get { return chart_visibility_value; } set { chart_visibility_value = value; NotifyPropertyChanged(); } }
+        public PlotModel Chart_model { get { return chart_model_value; } set { chart_model_value = value; NotifyPropertyChanged(); } }
+        public OxyPlot.Series.ColumnSeries ColumnChartSerie { get { return columnChartSerie_value; } set { columnChartSerie_value = value; NotifyPropertyChanged(); } }
+        public PlotController Chart_controller { get { return chart_controller_value; } set { chart_controller_value = value; NotifyPropertyChanged(); } }
+        public Visibility Chart_visibility { get { return chart_visibility_value; } set { chart_visibility_value = value; NotifyPropertyChanged(); } }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -96,7 +93,7 @@ namespace True_Mining_Desktop.Janelas
             catch { }
         }
 
-        public void changeChartZoom(object sender, RoutedEventArgs e)
+        public void ChangeChartZoom(object sender, RoutedEventArgs e)
         {
             string content = null;
             if (sender != null)
@@ -112,19 +109,19 @@ namespace True_Mining_Desktop.Janelas
             {
                 case "12h":
                     {
-                        chart_zoom_interval = new TimeSpan(0, 12, 0, 0);
+                        Chart_zoom_interval = new TimeSpan(0, 12, 0, 0);
                     }
                     break;
 
                 case "1d":
                     {
-                        chart_zoom_interval = new TimeSpan(1, 0, 0, 0);
+                        Chart_zoom_interval = new TimeSpan(1, 0, 0, 0);
                     }
                     break;
 
                 case "5d":
                     {
-                        chart_zoom_interval = new TimeSpan(5, 0, 0, 0);
+                        Chart_zoom_interval = new TimeSpan(5, 0, 0, 0);
                     }
                     break;
 
@@ -135,17 +132,17 @@ namespace True_Mining_Desktop.Janelas
                     break;
             }
 
-            ViewModel.DashboardChart.UpdateAxes(PoolAPI.XMR_nanopool.hashrateHistory_user, (int)Pages.Dashboard.chart_zoom_interval.TotalSeconds);
+            ViewModel.DashboardChart.UpdateAxes(PoolAPI.XMR_nanopool.hashrateHistory_user, (int)Pages.Dashboard.Chart_zoom_interval.TotalSeconds);
         }
 
-        public TimeSpan chart_zoom_interval { get; set; } = new TimeSpan(0, 24, 0, 0);
+        public TimeSpan Chart_zoom_interval { get; set; } = new TimeSpan(0, 24, 0, 0);
 
         private void PackIcon_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             saldo.UpdateBalances();
         }
 
-        private void show_warnings(object sender, RoutedEventArgs e)
+        private void Show_warnings(object sender, RoutedEventArgs e)
         {
             foreach (string warning in DashboardWarnings)
             {

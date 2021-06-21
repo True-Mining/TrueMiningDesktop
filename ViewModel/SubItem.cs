@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace True_Mining_Desktop.ViewModel
+namespace TrueMiningDesktop.ViewModel
 {
     public class SubItem
     {
