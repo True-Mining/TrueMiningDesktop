@@ -105,7 +105,7 @@ namespace TrueMiningDesktop.Janelas
 
                     if (!(File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates)) && (toCheck == "all" || toCheck == "TrueMining"))
                     {
-                        List<FileToDownload> DlList = new List<FileToDownload>();
+                        List<FileToDownload> DlList = new();
 
                         foreach (FileToDownload file in SoftwareParameters.ServerConfig.TrueMiningFiles.Files)
                         {
@@ -159,7 +159,7 @@ namespace TrueMiningDesktop.Janelas
 
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            System.Diagnostics.Process TrueMiningAsAdmin = new System.Diagnostics.Process();
+                            System.Diagnostics.Process TrueMiningAsAdmin = new();
                             TrueMiningAsAdmin.StartInfo = new System.Diagnostics.ProcessStartInfo()
                             {
                                 FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName,
@@ -175,7 +175,7 @@ namespace TrueMiningDesktop.Janelas
 
                     if (toCheck == "all" || toCheck == "ThirdPartyBinaries")
                     {
-                        List<FileToDownload> DlList = new List<FileToDownload>();
+                        List<FileToDownload> DlList = new();
 
                         foreach (FileToDownload file in SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files)
                         {
@@ -201,7 +201,7 @@ namespace TrueMiningDesktop.Janelas
                 catch { }
             }
 
-            Task removeOldFiles = new Task(() =>
+            Task removeOldFiles = new(() =>
             {
                 FileName = "Removing old files";
                 string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);

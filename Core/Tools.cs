@@ -8,7 +8,6 @@ using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -233,7 +232,7 @@ namespace TrueMiningDesktop.Core
             set { }
         }
 
-        public static void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        public static void NotifyPropertyChanged()
         {
             PropertyChanged(null, null);
         }
@@ -241,10 +240,8 @@ namespace TrueMiningDesktop.Core
         public static string FileSHA256(string filePath)
         {
             using System.Security.Cryptography.SHA256 hashAlgorithm = System.Security.Cryptography.SHA256.Create();
-            using (FileStream stream = System.IO.File.OpenRead(filePath))
-            {
-                return BitConverter.ToString(hashAlgorithm.ComputeHash(stream)).Replace("-", "").ToUpper();
-            }
+            using FileStream stream = System.IO.File.OpenRead(filePath);
+            return BitConverter.ToString(hashAlgorithm.ComputeHash(stream)).Replace("-", "").ToUpper();
         }
 
         public static string FormatPath(string path)
@@ -361,10 +358,8 @@ namespace TrueMiningDesktop.Core
             if (!file.Exists) { return false; }
             try
             {
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
+                using FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+                stream.Close();
             }
             catch (IOException)
             {
@@ -446,7 +441,7 @@ namespace TrueMiningDesktop.Core
             {
                 if (User.Settings.User.AutostartSoftwareWithWindows)
                 {
-                    Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+                    RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
                     if ((string)Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true).GetValue("True Mining") != '"' + System.AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + '"')
                     {
                         key.SetValue("True Mining", '"' + System.AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + '"');
@@ -456,7 +451,7 @@ namespace TrueMiningDesktop.Core
                 {
                     if (Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true).GetValue("True Mining") != null)
                     {
-                        Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+                        RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
                         key.DeleteValue("True Mining");
                     }
                 }
@@ -464,7 +459,7 @@ namespace TrueMiningDesktop.Core
             catch { }
         }
 
-        public static bool AddedTrueMiningDestopToWinDefenderExclusions = false;
+        public static bool AddedTrueMiningDestopToWinDefenderExclusions;
 
         public static void AddTrueMiningDestopToWinDefenderExclusions(bool forceAdmin = false)
         {
@@ -486,8 +481,6 @@ namespace TrueMiningDesktop.Core
                         Verb = "runas"
                     };
                     Process.Start(startInfo).WaitForExit();
-
-                    AddedTrueMiningDestopToWinDefenderExclusions = true;
                 }
             }
             catch { }
