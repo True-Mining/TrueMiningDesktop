@@ -193,10 +193,10 @@ namespace True_Mining_Desktop.Janelas
                         {
                             Downloader(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")");
                         }
-
-                        HostFilesAd_Visibility = Visibility.Collapsed;
-                        trying = false;
                     }
+
+                    HostFilesAd_Visibility = Visibility.Collapsed;
+                    trying = false;
                 }
                 catch { }
             }
@@ -339,10 +339,12 @@ namespace True_Mining_Desktop.Janelas
                         catch { File.Move(file.Path + file.FileName, file.Path + file.FileName + ".old", true); File.Move(file.Path + file.FileName + ".dl", file.Path + file.FileName, true); }
                     }
 
-                    if (String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
+                    if (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
                 }
                 catch { }
             }
+
+            if (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
 
             return false;
         }
