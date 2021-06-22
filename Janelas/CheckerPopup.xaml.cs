@@ -193,10 +193,15 @@ namespace TrueMiningDesktop.Janelas
                         {
                             Downloader(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")");
                         }
+
+                        foreach (FileToDownload file in DlList)
+                        {
+                            while (!ApplyDownloadedFile(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")")) { Thread.Sleep(300); };
+                        }
                     }
 
-                        HostFilesAd_Visibility = Visibility.Collapsed;
-                        trying = false;
+                    HostFilesAd_Visibility = Visibility.Collapsed;
+                    trying = false;
                 }
                 catch { }
             }
@@ -213,14 +218,20 @@ namespace TrueMiningDesktop.Janelas
                     }
                     catch { };
                 }
+
                 string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
-                foreach (var arq in arquivosDl)
+                foreach (string arq in arquivosDl)
                 {
-                    try
+                    string arqSha256 = Tools.FileSHA256(arq);
+
+                    if (!SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)) && !SoftwareParameters.ServerConfig.TrueMiningFiles.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)))
                     {
-                        if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                        try
+                        {
+                            if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                        }
+                        catch { };
                     }
-                    catch { };
                 }
             });
             removeOldFiles.Start();
