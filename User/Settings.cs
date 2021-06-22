@@ -162,24 +162,17 @@ namespace True_Mining_Desktop.User
         public bool Cache { get; set; } = true;
     }
 
-        public class AMDSettings
-        {
-            private bool miningSelected = false;
-            public bool MiningSelected { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
-            public bool Autoconfig { get; set; } = true;
-            public string Algorithm { get; set; } = "RandomX";
-            public List<string> AlgorithmsList { get; set; } = new List<string>();
-            public bool Cache { get; set; } = true;
-        }
+    public class UserPreferences
+    {
+        private string payment_Wallet = null;
 
-        public class UserPreferences
+        public string Payment_Wallet
         {
-            private string payment_Wallet = null;
-
-            public string Payment_Wallet
+            get { return payment_Wallet; }
+            set
             {
-                get { return payment_Wallet; }
-                set
+                payment_Wallet = value;
+                if (payment_Wallet != null)
                 {
                     payment_Wallet.Replace(" ", "");
 
@@ -191,8 +184,9 @@ namespace True_Mining_Desktop.User
                     if (!Settings.loadingSettings) { Settings.SettingsSaver(); }
                 }
             }
+        }
 
-            public bool LICENSE_read = false;
+        public bool LICENSE_read = false;
 
         private String payment_Coin;
 
@@ -204,16 +198,10 @@ namespace True_Mining_Desktop.User
             }
             set
             {
-                get
-                {
-                    return payment_Coin;
-                }
-                set
-                {
-                    payment_Coin = value;
-                    Janelas.Pages.Home.ComboBox_PaymentCoin.SelectedIndex = PaymentCoinComboBox_SelectedIndex;
-                }
+                payment_Coin = value;
+                Janelas.Pages.Home.ComboBox_PaymentCoin.SelectedIndex = PaymentCoinComboBox_SelectedIndex;
             }
+        }
 
         public List<string> Payment_CoinsList { get; set; } = new List<string>();
         private bool showCLI = false;
@@ -225,23 +213,27 @@ namespace True_Mining_Desktop.User
         private bool startHide = false;
         public bool StartHide { get { return startHide; } set { startHide = value; if (!Settings.loadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
 
-            private bool changeTbIcon = false;
-            public bool ChangeTbIcon { get { return changeTbIcon; } set { changeTbIcon = value; Tools.TryChangeTaskbarIconAsSettingsOrder(); } }
+        private bool changeTbIcon = false;
+        public bool ChangeTbIcon { get { return changeTbIcon; } set { changeTbIcon = value; Tools.TryChangeTaskbarIconAsSettingsOrder(); } }
 
-            private bool avoidWindowsSuspend = true;
-            public bool AvoidWindowsSuspend { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; Task.Run(() => Core.Tools.KeepSystemAwake()); } }
+        private bool avoidWindowsSuspend = true;
+        public bool AvoidWindowsSuspend { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; Task.Run(() => Core.Tools.KeepSystemAwake()); } }
 
-            public int PaymentCoinComboBox_SelectedIndex
+        public int PaymentCoinComboBox_SelectedIndex
+        {
+            get
             {
-                get
+                for (int i = 0; Payment_CoinsList.Count > i; i++)
                 {
                     if (String.Equals(Payment_CoinsList[i], payment_Coin, StringComparison.OrdinalIgnoreCase)) { return i; }
                 }
-                set { }
+                return 0;
             }
+            set { }
+        }
 
-            private bool useAllInterfacesInsteadLocalhost = false;
-            public bool UseAllInterfacesInsteadLocalhost { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
+        private bool useAllInterfacesInsteadLocalhost = false;
+        public bool UseAllInterfacesInsteadLocalhost { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
 
         private bool useTorSharpOnAll = false;
         public bool UseTorSharpOnMining { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.loadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
