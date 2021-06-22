@@ -193,6 +193,11 @@ namespace True_Mining_Desktop.Janelas
                         {
                             Downloader(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")");
                         }
+
+                        foreach (FileToDownload file in DlList)
+                        {
+                            while (!ApplyDownloadedFile(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")")) { Thread.Sleep(300); };
+                        }
                     }
 
                     HostFilesAd_Visibility = Visibility.Collapsed;
@@ -213,14 +218,20 @@ namespace True_Mining_Desktop.Janelas
                     }
                     catch { };
                 }
+
                 string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
-                foreach (var arq in arquivosDl)
+                foreach (string arq in arquivosDl)
                 {
-                    try
+                    string arqSha256 = Tools.FileSHA256(arq);
+
+                    if (!SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)) && !SoftwareParameters.ServerConfig.TrueMiningFiles.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)))
                     {
-                        if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                        try
+                        {
+                            if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                        }
+                        catch { };
                     }
-                    catch { };
                 }
             });
             removeOldFiles.Start();
@@ -271,6 +282,7 @@ namespace True_Mining_Desktop.Janelas
             if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
 
             downloaderTryesCount = 0;
+            webClientTryesCount = 0;
 
             CheckInternet();
 
@@ -356,13 +368,14 @@ namespace True_Mining_Desktop.Janelas
                 downloaderTryesCount--;
                 webClientTryesCount++;
 
-                if (webClientTryesCount > 1)
+                if (webClientTryesCount > 2)
                 {
                     useTor = true;
                     Tools.UseTor = true;
                     Tools.NotifyPropertyChanged();
                 }
             }
+            else { webClientTryesCount = 0; }
         }
 
         private void CheckInternet()
