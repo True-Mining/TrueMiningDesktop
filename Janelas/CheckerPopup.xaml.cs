@@ -282,6 +282,7 @@ namespace TrueMiningDesktop.Janelas
             if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
 
             downloaderTryesCount = 0;
+            webClientTryesCount = 0;
 
             CheckInternet();
 
@@ -367,13 +368,14 @@ namespace TrueMiningDesktop.Janelas
                 downloaderTryesCount--;
                 webClientTryesCount++;
 
-                if (webClientTryesCount > 1)
+                if (webClientTryesCount > 2)
                 {
                     useTor = true;
                     Tools.UseTor = true;
                     Tools.NotifyPropertyChanged();
                 }
             }
+            else { webClientTryesCount = 0; }
         }
 
         private void CheckInternet()
