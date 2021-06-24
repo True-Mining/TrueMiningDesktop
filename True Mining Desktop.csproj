@@ -8,7 +8,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
     <AssemblyVersion>4.8</AssemblyVersion>
-    <FileVersion>4.8</FileVersion>
+    <FileVersion>4.8-beta.1</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <StartupObject>TrueMiningDesktop.App</StartupObject>
     <AssemblyName>True Mining Desktop</AssemblyName>
@@ -40,6 +40,7 @@
     <None Include="LICENSE.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="logo.png">
       <Pack>True</Pack>
@@ -68,6 +69,9 @@
 
   <ItemGroup>
     <None Update="Resources\icone.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\iconeTaskbar2.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
