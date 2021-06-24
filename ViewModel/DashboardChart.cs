@@ -13,7 +13,7 @@ namespace TrueMiningDesktop.ViewModel
     {
         public static void UpdateAxes(Dictionary<int, long> dados, int zoomInterval)
         {
-            PlotModel plotModel = new PlotModel()
+            PlotModel plotModel = new()
             {
                 Title = "Mined Points History",
                 TitleColor = OxyColor.FromRgb(64, 64, 64),
@@ -22,11 +22,11 @@ namespace TrueMiningDesktop.ViewModel
                 PlotAreaBorderThickness = new OxyThickness(0, 0, 0, 0),
             };
 
-            Dictionary<int, int> dataToShow = new Dictionary<int, int>();
+            Dictionary<int, int> dataToShow = new();
 
-            Dictionary<string, int> dataToShow_formated = new Dictionary<string, int>();
+            Dictionary<string, int> dataToShow_formated = new();
 
-            List<string> listaLegendaX = new List<string>();
+            List<string> listaLegendaX = new();
 
             int botonAxisAngle = 0;
 
@@ -104,7 +104,7 @@ namespace TrueMiningDesktop.ViewModel
 
             plotModel.Axes.Clear();
 
-            CategoryAxis categoryAxis = new CategoryAxis()
+            CategoryAxis categoryAxis = new()
             {
                 Position = AxisPosition.Bottom,
                 AxisTickToLabelDistance = 0,
@@ -127,7 +127,7 @@ namespace TrueMiningDesktop.ViewModel
 
             /////////////////////////////////
 
-            Pages.Dashboard.columnChartSerie = new OxyPlot.Series.ColumnSeries()
+            Pages.Dashboard.ColumnChartSeries = new OxyPlot.Series.ColumnSeries()
             {
                 TrackerFormatString = "{2} points",
                 Selectable = false,
@@ -136,11 +136,11 @@ namespace TrueMiningDesktop.ViewModel
 
             foreach (KeyValuePair<string, int> keyValuePair in dataToShow_formated)
             {
-                Pages.Dashboard.columnChartSerie.Items.Add(new ColumnItem(keyValuePair.Value, listaLegendaX.IndexOf(keyValuePair.Key)));
+                Pages.Dashboard.ColumnChartSeries.Items.Add(new ColumnItem(keyValuePair.Value, listaLegendaX.IndexOf(keyValuePair.Key)));
             }
-            if (Pages.Dashboard.columnChartSerie.Items.Count == 0) Pages.Dashboard.columnChartSerie.Items.Add(new ColumnItem(0));
+            if (Pages.Dashboard.ColumnChartSeries.Items.Count == 0) Pages.Dashboard.ColumnChartSeries.Items.Add(new ColumnItem(0));
 
-            plotModel.Series.Add(Pages.Dashboard.columnChartSerie);
+            plotModel.Series.Add(Pages.Dashboard.ColumnChartSeries);
 
             ////////////////////////////////
             int chart_max_value = dataToShow_formated.Count > 0 ? (int)Math.Ceiling(d: (decimal)dataToShow_formated.Max((KeyValuePair<string, int> value) => value.Value)) : 10;
@@ -171,13 +171,13 @@ namespace TrueMiningDesktop.ViewModel
                 })
             });
 
-            Pages.Dashboard.chart_controller = new PlotController();
-            Pages.Dashboard.chart_controller.UnbindAll();
-            Pages.Dashboard.chart_controller.BindMouseEnter(PlotCommands.HoverSnapTrack);
+            Pages.Dashboard.ChartControler = new PlotController();
+            Pages.Dashboard.ChartControler.UnbindAll();
+            Pages.Dashboard.ChartControler.BindMouseEnter(PlotCommands.HoverSnapTrack);
 
-            Pages.Dashboard.chart_model = plotModel;
+            Pages.Dashboard.ChartModel = plotModel;
 
-            Pages.Dashboard.chart_visibility = Visibility.Visible;
+            Pages.Dashboard.ChartVisibility = Visibility.Visible;
         }
     }
 }

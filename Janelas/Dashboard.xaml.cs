@@ -33,7 +33,7 @@ namespace TrueMiningDesktop.Janelas
 
         private string labelNextPayout;
         private string labelAccumulatedBalance;
-        private List<string> dashboardWarnings = new List<string>();
+        private List<string> dashboardWarnings = new();
         public Visibility warningWrapVisibility = Visibility.Visible;
 
         public string LabelNextPayout { get { return labelNextPayout; } set { labelNextPayout = value; xLabelNextPayout.Content = value; } }
@@ -41,21 +41,21 @@ namespace TrueMiningDesktop.Janelas
         public List<string> DashboardWarnings { get { return dashboardWarnings; } set { dashboardWarnings = value; NotifyPropertyChanged(); } }
         public Visibility WarningWrapVisibility { get { return warningWrapVisibility; } set { warningWrapVisibility = value; NotifyPropertyChanged(); } }
 
-        public string WalletAddress { get { return User.Settings.User.Payment_Wallet; } set { } }
+        public static string WalletAddress { get { return User.Settings.User.Payment_Wallet; } set { } }
 
         private bool firstTimeLoad = false;
 
         private Saldo saldo;
 
-        private PlotModel chart_model_value;
-        private OxyPlot.Series.ColumnSeries columnChartSerie_value;
-        private PlotController chart_controller_value;
-        private Visibility chart_visibility_value = Visibility.Hidden;
+        private PlotModel chartModel;
+        private OxyPlot.Series.ColumnSeries columnChartSeries;
+        private PlotController chartControler;
+        private Visibility chartVisibility = Visibility.Hidden;
 
-        public PlotModel chart_model { get { return chart_model_value; } set { chart_model_value = value; NotifyPropertyChanged(); } }
-        public OxyPlot.Series.ColumnSeries columnChartSerie { get { return columnChartSerie_value; } set { columnChartSerie_value = value; NotifyPropertyChanged(); } }
-        public PlotController chart_controller { get { return chart_controller_value; } set { chart_controller_value = value; NotifyPropertyChanged(); } }
-        public Visibility chart_visibility { get { return chart_visibility_value; } set { chart_visibility_value = value; NotifyPropertyChanged(); } }
+        public PlotModel ChartModel { get { return chartModel; } set { chartModel = value; NotifyPropertyChanged(); } }
+        public OxyPlot.Series.ColumnSeries ColumnChartSeries { get { return columnChartSeries; } set { columnChartSeries = value; NotifyPropertyChanged(); } }
+        public PlotController ChartControler { get { return chartControler; } set { chartControler = value; NotifyPropertyChanged(); } }
+        public Visibility ChartVisibility { get { return chartVisibility; } set { chartVisibility = value; NotifyPropertyChanged(); } }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -96,7 +96,7 @@ namespace TrueMiningDesktop.Janelas
             catch { }
         }
 
-        public void changeChartZoom(object sender, RoutedEventArgs e)
+        public void ChangeChartZoom(object sender, RoutedEventArgs e)
         {
             string content = null;
             if (sender != null)
@@ -145,7 +145,7 @@ namespace TrueMiningDesktop.Janelas
             saldo.UpdateBalances();
         }
 
-        private void show_warnings(object sender, RoutedEventArgs e)
+        private void ShowWarnings(object sender, RoutedEventArgs e)
         {
             foreach (string warning in DashboardWarnings)
             {

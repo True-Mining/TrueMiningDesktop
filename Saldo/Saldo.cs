@@ -13,7 +13,7 @@ namespace TrueMiningDesktop.Server
 {
     public class Saldo
     {
-        private System.Timers.Timer timerUpdateDashboard = new System.Timers.Timer(1000);
+        private readonly System.Timers.Timer timerUpdateDashboard = new(1000);
 
         public Saldo()
         {
@@ -23,15 +23,15 @@ namespace TrueMiningDesktop.Server
 
                 while (User.Settings.LoadingSettings) { Thread.Sleep(500); }
 
-                timerUpdateDashboard.Elapsed += timerUpdateDashboard_Elapsed;
+                timerUpdateDashboard.Elapsed += TimerUpdateDashboard_Elapsed;
 
                 timerUpdateDashboard.Start();
 
-                timerUpdateDashboard_Elapsed(null, null);
+                TimerUpdateDashboard_Elapsed(null, null);
             });
         }
 
-        private void timerUpdateDashboard_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void TimerUpdateDashboard_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace TrueMiningDesktop.Server
 
         private static DateTime lastUpdated = DateTime.Now.AddMinutes(-10);
 
-        private static int secondsPerAveragehashrateReportInterval = 60 * 10;
+        private static readonly int secondsPerAveragehashrateReportInterval = 60 * 10;
         public decimal pointsMultiplier = secondsPerAveragehashrateReportInterval * 16;
         public int hashesToCompare = 1000;
 
@@ -113,7 +113,7 @@ namespace TrueMiningDesktop.Server
                 isUpdatingBalances = true;
 
                 lastPayment = DateTime.UtcNow.AddHours(-DateTime.UtcNow.Hour).AddMinutes(-DateTime.UtcNow.Minute).AddSeconds(-DateTime.UtcNow.Second).AddMilliseconds(-DateTime.UtcNow.Millisecond);
-                TimeSpan sinceLastPayment = new TimeSpan(DateTime.UtcNow.Ticks - lastPayment.Ticks);
+                TimeSpan sinceLastPayment = new(DateTime.UtcNow.Ticks - lastPayment.Ticks);
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     if (isUpdatingBalances)
@@ -125,10 +125,10 @@ namespace TrueMiningDesktop.Server
                 while (!Tools.IsConnected()) { Thread.Sleep(5000); }
                 try
                 {
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = new TruePayment.Nanopool.Objects.HashrateHistory();
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = new TruePayment.Nanopool.Objects.HashrateHistory();
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = new();
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = new();
 
-                    List<Task<Action>> getAPIsTask = new List<Task<Action>>();
+                    List<Task<Action>> getAPIsTask = new();
 
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
@@ -258,7 +258,7 @@ namespace TrueMiningDesktop.Server
 
                 try
                 {
-                    Pages.Dashboard.changeChartZoom(null, null);
+                    Pages.Dashboard.ChangeChartZoom(null, null);
                 }
                 catch { }
 
