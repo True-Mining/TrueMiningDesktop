@@ -26,7 +26,7 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            MainWindow.clicado = false;
+            MainWindow.Clicado = false;
         }
     }
 }

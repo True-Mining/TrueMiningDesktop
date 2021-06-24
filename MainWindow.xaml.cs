@@ -23,7 +23,7 @@ namespace TrueMiningDesktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static System.Windows.Forms.NotifyIcon nIcon = new();
+        public static System.Windows.Forms.NotifyIcon NotifyIcon = new();
 
         public static event EventHandler TapeAllRequest;
 
@@ -136,7 +136,7 @@ namespace TrueMiningDesktop
 
         private void Menu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            clicado = false;
+            Clicado = false;
 
             if (((UserControlItemMenu)((ListView)sender).SelectedItem).ListViewMenu.Items.Count <= 0)
             {
@@ -194,8 +194,8 @@ namespace TrueMiningDesktop
             TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
 
             Tools.TryChangeTaskbarIconAsSettingsOrder();
-            nIcon.Visible = true;
-            nIcon.MouseDown += Notifier_MouseDown;
+            NotifyIcon.Visible = true;
+            NotifyIcon.MouseDown += Notifier_MouseDown;
 
             Core.NextStart.Actions.Load();
 
@@ -316,17 +316,17 @@ namespace TrueMiningDesktop
                 Application.Current.Shutdown();
 
                 Tools.CheckerPopup.Close();
-                nIcon.Visible = false;
+                NotifyIcon.Visible = false;
             }
             catch { }
         }
 
-        public static bool clicado;
+        public static bool Clicado;
         private Point lm;
 
         public void Down(object sender, MouseButtonEventArgs e)
         {
-            clicado = true;
+            Clicado = true;
 
             lm.X = System.Windows.Forms.Control.MousePosition.X;
             lm.Y = System.Windows.Forms.Control.MousePosition.Y;
@@ -336,17 +336,17 @@ namespace TrueMiningDesktop
 
         public void Move(object sender, MouseEventArgs e)
         {
-            if (clicado && e.LeftButton == MouseButtonState.Pressed)
+            if (Clicado && e.LeftButton == MouseButtonState.Pressed)
             {
                 Left = (System.Windows.Forms.Control.MousePosition.X + lm.X);
                 Top = (System.Windows.Forms.Control.MousePosition.Y + lm.Y);
             }
-            else { clicado = false; }
+            else { Clicado = false; }
         }
 
         public void Up(object sender, MouseButtonEventArgs e)
         {
-            clicado = false;
+            Clicado = false;
         }
 
         private void PackIcon_MouseDown(object sender, MouseButtonEventArgs e)
@@ -357,7 +357,7 @@ namespace TrueMiningDesktop
         private void PackIcon_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
             Hide();
-            nIcon.ShowBalloonTip(4000, "Hiding", "True Mining was hidden in the notification bar", System.Windows.Forms.ToolTipIcon.Info);
+            NotifyIcon.ShowBalloonTip(4000, "Hiding", "True Mining was hidden in the notification bar", System.Windows.Forms.ToolTipIcon.Info);
         }
 
         private void PackIcon_MouseDown_2(object sender, MouseButtonEventArgs e)
@@ -372,17 +372,17 @@ namespace TrueMiningDesktop
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            if (clicado) clicado = false;
+            if (Clicado) Clicado = false;
         }
 
         private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (clicado) clicado = false;
+            if (Clicado) Clicado = false;
         }
 
         private void Window_LostMouseCapture(object sender, MouseEventArgs e)
         {
-            if (clicado) clicado = false;
+            if (Clicado) Clicado = false;
         }
 
         private void TorIcon_MouseDown(object sender, MouseButtonEventArgs e)

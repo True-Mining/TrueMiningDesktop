@@ -23,9 +23,12 @@ namespace TrueMiningDesktop.Janelas
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
 
         private string labelNextPayout;
@@ -40,19 +43,19 @@ namespace TrueMiningDesktop.Janelas
 
         public static string WalletAddress { get { return User.Settings.User.Payment_Wallet; } set { } }
 
-        private bool firstTimeLoad;
+        private bool firstTimeLoad = false;
 
         private Saldo saldo;
 
-        private PlotModel chart_model_value;
-        private OxyPlot.Series.ColumnSeries columnChartSerie_value;
-        private PlotController chart_controller_value;
-        private Visibility chart_visibility_value = Visibility.Hidden;
+        private PlotModel chartModel;
+        private OxyPlot.Series.ColumnSeries columnChartSeries;
+        private PlotController chartControler;
+        private Visibility chartVisibility = Visibility.Hidden;
 
-        public PlotModel Chart_model { get { return chart_model_value; } set { chart_model_value = value; NotifyPropertyChanged(); } }
-        public OxyPlot.Series.ColumnSeries ColumnChartSerie { get { return columnChartSerie_value; } set { columnChartSerie_value = value; NotifyPropertyChanged(); } }
-        public PlotController Chart_controller { get { return chart_controller_value; } set { chart_controller_value = value; NotifyPropertyChanged(); } }
-        public Visibility Chart_visibility { get { return chart_visibility_value; } set { chart_visibility_value = value; NotifyPropertyChanged(); } }
+        public PlotModel ChartModel { get { return chartModel; } set { chartModel = value; NotifyPropertyChanged(); } }
+        public OxyPlot.Series.ColumnSeries ColumnChartSeries { get { return columnChartSeries; } set { columnChartSeries = value; NotifyPropertyChanged(); } }
+        public PlotController ChartControler { get { return chartControler; } set { chartControler = value; NotifyPropertyChanged(); } }
+        public Visibility ChartVisibility { get { return chartVisibility; } set { chartVisibility = value; NotifyPropertyChanged(); } }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -109,19 +112,19 @@ namespace TrueMiningDesktop.Janelas
             {
                 case "12h":
                     {
-                        Chart_zoom_interval = new TimeSpan(0, 12, 0, 0);
+                        chart_zoom_interval = new TimeSpan(0, 12, 0, 0);
                     }
                     break;
 
                 case "1d":
                     {
-                        Chart_zoom_interval = new TimeSpan(1, 0, 0, 0);
+                        chart_zoom_interval = new TimeSpan(1, 0, 0, 0);
                     }
                     break;
 
                 case "5d":
                     {
-                        Chart_zoom_interval = new TimeSpan(5, 0, 0, 0);
+                        chart_zoom_interval = new TimeSpan(5, 0, 0, 0);
                     }
                     break;
 
@@ -132,17 +135,17 @@ namespace TrueMiningDesktop.Janelas
                     break;
             }
 
-            ViewModel.DashboardChart.UpdateAxes(PoolAPI.XMR_nanopool.hashrateHistory_user, (int)Pages.Dashboard.Chart_zoom_interval.TotalSeconds);
+            ViewModel.DashboardChart.UpdateAxes(PoolAPI.XMR_nanopool.hashrateHistory_user, (int)Pages.Dashboard.chart_zoom_interval.TotalSeconds);
         }
 
-        public TimeSpan Chart_zoom_interval { get; set; } = new TimeSpan(0, 24, 0, 0);
+        public TimeSpan chart_zoom_interval { get; set; } = new TimeSpan(0, 24, 0, 0);
 
         private void PackIcon_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             saldo.UpdateBalances();
         }
 
-        private void Show_warnings(object sender, RoutedEventArgs e)
+        private void ShowWarnings(object sender, RoutedEventArgs e)
         {
             foreach (string warning in DashboardWarnings)
             {
