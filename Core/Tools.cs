@@ -293,11 +293,11 @@ namespace True_Mining_Desktop.Core
         {
             if (User.Settings.User.ChangeTbIcon)
             {
-                try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/iconeTaskbar2.ico"); } catch { try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { } }
+                try { MainWindow.NotifyIcon.Icon = new System.Drawing.Icon("Resources/iconeTaskbar2.ico"); } catch { try { MainWindow.NotifyIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { } }
             }
             else
             {
-                try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); }
+                try { MainWindow.NotifyIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); }
                 catch { }
             }
         }
@@ -331,7 +331,7 @@ namespace True_Mining_Desktop.Core
                         {
                             if (process.Id != thisProcess.Id && process.Responding)
                             {
-                                MainWindow.nIcon.Visible = false;
+                                MainWindow.NotifyIcon.Visible = false;
                                 thisProcess.Kill();
                             }
                         }

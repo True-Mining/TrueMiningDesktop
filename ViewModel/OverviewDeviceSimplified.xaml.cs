@@ -41,7 +41,7 @@ namespace True_Mining_Desktop.ViewModel
                 {
                     if (Miner.IsMining)
                     {
-                        if (Miner.startedSince > DateTime.UtcNow.AddMinutes(-1))
+                        if (Miner.StartedSince > DateTime.UtcNow.AddMinutes(-1))
                         {
                             ovHashrate.FontSize = 17;
                             ovHashrate.Content = "starting";

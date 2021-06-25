@@ -7,8 +7,8 @@ namespace True_Mining_Desktop.Core
 {
     public static class Miner
     {
-        private static DateTime holdTime = DateTime.UtcNow;
-        public static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
+        private static readonly DateTime holdTime = DateTime.UtcNow;
+        public static DateTime StartedSince = holdTime.AddTicks(-holdTime.Ticks);
 
         public static void StartMiner()
         {
@@ -106,7 +106,7 @@ namespace True_Mining_Desktop.Core
 
                 if (isMining)
                 {
-                    startedSince = DateTime.UtcNow;
+                    StartedSince = DateTime.UtcNow;
 
                     Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = false;
 
@@ -131,7 +131,7 @@ namespace True_Mining_Desktop.Core
                 }
                 else
                 {
-                    startedSince = holdTime.AddTicks(-(holdTime.Ticks));
+                    StartedSince = holdTime.AddTicks(-holdTime.Ticks);
 
                     Device.cpu.IsMining = false;
                     Device.opencl.IsMining = false;

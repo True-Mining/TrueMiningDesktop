@@ -24,7 +24,7 @@ namespace True_Mining_Desktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon();
+        public static System.Windows.Forms.NotifyIcon NotifyIcon = new System.Windows.Forms.NotifyIcon();
 
         public static event EventHandler TapeAllRequest;
 
@@ -128,7 +128,7 @@ namespace True_Mining_Desktop
 
         private void Menu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            clicado = false;
+            Clicado = false;
 
             if (((UserControlItemMenu)((ListView)sender).SelectedItem).ListViewMenu.Items.Count <= 0)
             {
@@ -186,8 +186,8 @@ namespace True_Mining_Desktop
             this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo();
 
             Tools.TryChangeTaskbarIconAsSettingsOrder();
-            nIcon.Visible = true;
-            nIcon.MouseDown += notifier_MouseDown;
+            NotifyIcon.Visible = true;
+            NotifyIcon.MouseDown += Notifier_MouseDown;
 
             Core.NextStart.Actions.Load();
 
@@ -286,35 +286,39 @@ namespace True_Mining_Desktop
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (Miner.IsMining)
+            try
             {
-                if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                if (Miner.IsMining)
                 {
-                    Miner.StopMiner();
+                    if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                    {
+                        Miner.StopMiner();
+                    }
+                    else { e.Cancel = true; return; }
                 }
-                else { e.Cancel = true; return; }
+
+                if (Tools.CheckerPopup.Tape)
+                {
+                    if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                    { e.Cancel = true; return; }
+                }
+
+                Core.Miner.EmergencyExit = true;
+                User.Settings.SettingsSaver(true);
+                Application.Current.Shutdown();
+
+                Tools.CheckerPopup.Close();
+                NotifyIcon.Visible = false;
             }
-
-            if (Tools.CheckerPopup.Tape)
-            {
-                if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
-                { e.Cancel = true; return; }
-            }
-
-            Core.Miner.EmergencyExit = true;
-            User.Settings.SettingsSaver(true);
-            Application.Current.Shutdown();
-
-            Tools.CheckerPopup.Close();
-            nIcon.Visible = false;
+            catch { }
         }
 
-        public static bool clicado = false;
-        private Point lm = new Point();
+        public static bool Clicado;
+        private Point lm;
 
         public void Down(object sender, MouseButtonEventArgs e)
         {
-            clicado = true;
+            Clicado = true;
 
             this.lm.X = System.Windows.Forms.Control.MousePosition.X;
             this.lm.Y = System.Windows.Forms.Control.MousePosition.Y;
@@ -324,17 +328,17 @@ namespace True_Mining_Desktop
 
         public void Move(object sender, MouseEventArgs e)
         {
-            if (clicado && e.LeftButton == MouseButtonState.Pressed)
+            if (Clicado && e.LeftButton == MouseButtonState.Pressed)
             {
                 this.Left = (System.Windows.Forms.Control.MousePosition.X + this.lm.X);
                 this.Top = (System.Windows.Forms.Control.MousePosition.Y + this.lm.Y);
             }
-            else { clicado = false; }
+            else { Clicado = false; }
         }
 
         public void Up(object sender, MouseButtonEventArgs e)
         {
-            clicado = false;
+            Clicado = false;
         }
 
         private void PackIcon_MouseDown(object sender, MouseButtonEventArgs e)
@@ -344,8 +348,8 @@ namespace True_Mining_Desktop
 
         private void PackIcon_MouseDown_1(object sender, MouseButtonEventArgs e)
         {
-            this.Hide();
-            nIcon.ShowBalloonTip(4000, "Hiding", "True Mining was hidden in the notification bar", System.Windows.Forms.ToolTipIcon.Info);
+            Hide();
+            NotifyIcon.ShowBalloonTip(4000, "Hiding", "True Mining was hidden in the notification bar", System.Windows.Forms.ToolTipIcon.Info);
         }
 
         private void PackIcon_MouseDown_2(object sender, MouseButtonEventArgs e)
@@ -360,17 +364,17 @@ namespace True_Mining_Desktop
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            if (clicado) clicado = false;
+            if (Clicado) Clicado = false;
         }
 
         private void Window_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (clicado) clicado = false;
+            if (Clicado) Clicado = false;
         }
 
         private void Window_LostMouseCapture(object sender, MouseEventArgs e)
         {
-            if (clicado) clicado = false;
+            if (Clicado) Clicado = false;
         }
 
         private void torIcon_MouseDown(object sender, MouseButtonEventArgs e)
