@@ -21,7 +21,7 @@ namespace True_Mining_Desktop.Server
             {
                 Server.SoftwareParameters.Update(new Uri("https://truemining.online/TrueMiningDesktopDotnet5.json"));
 
-                while (User.Settings.loadingSettings) { Thread.Sleep(500); }
+                while (User.Settings.LoadingSettings) { Thread.Sleep(500); }
 
                 timerUpdateDashboard.Elapsed += timerUpdateDashboard_Elapsed;
 

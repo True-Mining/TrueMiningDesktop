@@ -253,7 +253,7 @@ namespace True_Mining_Desktop
             }
         }
 
-        private void notifier_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void Notifier_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {

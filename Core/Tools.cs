@@ -128,7 +128,7 @@ namespace True_Mining_Desktop.Core
         public static TorSharpProxy TorSharpProxy = new TorSharpProxy(TorSharpSettings);
 
         private static bool useTor = false;
-        public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.loadingSettings) { NotifyPropertyChanged(); } } }
+        public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
         public static bool TorSharpProcessesRunning
         {
@@ -149,7 +149,7 @@ namespace True_Mining_Desktop.Core
         }
 
         private static bool torSharpEnabled = false;
-        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.loadingSettings) { NotifyPropertyChanged(); } } }
+        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
         public static event PropertyChangedEventHandler PropertyChanged;
 
@@ -197,7 +197,7 @@ namespace True_Mining_Desktop.Core
 
                                 new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
                                 TorSharpProxy.ConfigureAndStartAsync().Wait();
-                                if (!User.Settings.loadingSettings)
+                                if (!User.Settings.LoadingSettings)
                                 {
                                     NotifyPropertyChanged();
                                 }

@@ -13,7 +13,7 @@ namespace True_Mining_Desktop.User
         public static DeviceSettings Device = new DeviceSettings();
         public static UserPreferences User = new UserPreferences();
 
-        public static bool loadingSettings { get; set; } = true;
+        public static bool LoadingSettings { get; set; } = true;
         public static bool settingsSavedFirstTime = true;
 
         public static System.Timers.Timer timerSaveSettings = new System.Timers.Timer(5000);
@@ -88,7 +88,7 @@ namespace True_Mining_Desktop.User
                     User.LICENSE_read = up.LICENSE_read;
                 }
 
-                loadingSettings = false;
+                LoadingSettings = false;
             }
             catch
             {
@@ -115,7 +115,7 @@ namespace True_Mining_Desktop.User
                         User.LICENSE_read = up.LICENSE_read;
                     }
 
-                    loadingSettings = false;
+                    LoadingSettings = false;
                 }
                 catch { }
             }
