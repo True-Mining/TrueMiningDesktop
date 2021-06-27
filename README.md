@@ -10,17 +10,30 @@
 
 >True Mining Desktop is a software integrated with the True Mining and True Payment Platform.
 
-#### True Mining Desktop comes to facilitate the mining of the end user, providing an easy-to-use graphical interface so that the user can mine Dogecoin, RDCT and other currencies that will soon be implemented.
+True Mining Desktop comes to facilitate the mining of the end user, providing an easy-to-use graphical interface so that the user can mine Dogecoin, RDCT and other currencies that will soon be implemented.
 
+#### Screenshot:
 ![](https://raw.githubusercontent.com/True-Mining/TrueMiningDesktop/master/True%20Mining%20Desktop%20-%20Screenshot.png)
 
+
 #### Features:
-- Select which types of devices will be used for mining;
+- Selection of device types;
 - Automatic configuration;
-- Automatically downloads third party binaries to mine;
-- Dashboard: displays the user's accumulated balance and the estimated time for payment;
-- Allows software to avoid Windows self-suspend;
-- Allows automatic initialization together with user login;
-- Allows you to start in a hidden way;
-- Displays / hides mining console;
-- Automatic updates.
+- Easy graphical interface;
+- Can mine on almost any 64-bit windows computer;
+- Allows you to mine even while using it for something else without disturbing your activities;
+- Automatic download of miners;
+- Dashboard: displays the user's accumulated balance and estimated time for payment;
+- Allows the software to avoid Windows auto-suspend;
+- Allows automatic startup along with user login;
+- Configuration to start with windows;
+- Setting to start mining when opening the miner;
+- Setting to start hidden;
+- show/hide mining console;
+- Custom configuration for device mining;
+- Setting to start Tor + Privoxy in mining to avoid firewalls;
+- Automatic software updates;
+- Human support in our groups;
+
+&nbsp;
+[![Download Here](https://img.shields.io/github/downloads/true-mining/trueminingdesktop/total?label=%20%20%20download%20now&logo=windows&style=for-the-badge)](https://github.com/True-Mining/TrueMiningDesktop/releases/latest/download/TrueMiningDesktop.zip)
