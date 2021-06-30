@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -109,6 +110,21 @@ namespace True_Mining_Desktop.Core
             }
 
             throw new Exception();
+        }
+
+        public static async Task HttpGetFile(string dlLink, string path, bool tor = false)
+        {
+            using (HttpClient client = new HttpClient(new HttpClientHandler() { Proxy = tor ? Tools.TorProxy : null, UseProxy = tor }))
+            {
+                using (HttpResponseMessage response = await client.GetAsync(dlLink, HttpCompletionOption.ResponseHeadersRead))
+                using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync())
+                {
+                    using (Stream streamToWriteTo = File.Open(path, FileMode.Create))
+                    {
+                        await streamToReadFrom.CopyToAsync(streamToWriteTo);
+                    }
+                }
+            }
         }
 
         private static TorSharpSettings TorSharpSettings = new TorSharpSettings
@@ -302,26 +318,26 @@ namespace True_Mining_Desktop.Core
             }
         }
 
-        public static void RestartAsAdministrator()
+        public static void RestartApp(bool asAdministrator = true)
         {
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = (True_Mining_Desktop.App.Current.MainWindow.Visibility == Visibility.Visible ? false : true), startMining = Miner.IsMining || Miner.IntentToMine });
+                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = App.Current.MainWindow.Visibility == Visibility.Visible ? false : true, startMining = Miner.IsMining || Miner.IntentToMine });
 
-                Process TrueMiningAsAdmin = new Process();
-                TrueMiningAsAdmin.StartInfo = new ProcessStartInfo()
+                Process TrueMiningNewProcess = new Process();
+                TrueMiningNewProcess.StartInfo = new ProcessStartInfo()
                 {
                     FileName = Process.GetCurrentProcess().MainModule.FileName,
                     UseShellExecute = true,
-                    Verb = "runas"
                 };
-                try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
+                if (asAdministrator) { TrueMiningNewProcess.StartInfo.Verb = "runas"; }
+                try { TrueMiningNewProcess.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
 
                 Process thisProcess = Process.GetCurrentProcess();
 
                 new Task(() =>
                 {
-                    while (!TrueMiningAsAdmin.HasExited)
+                    while (!TrueMiningNewProcess.HasExited)
                     {
                         Thread.Sleep(100);
 
