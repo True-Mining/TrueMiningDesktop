@@ -64,7 +64,7 @@ namespace TrueMiningDesktop.Janelas
 
         private void RestartAsAdministrator_Click(object sender, RoutedEventArgs e)
         {
-            Tools.RestartAsAdministrator();
+            Tools.RestartApp(true);
         }
 
         private void UninstallWarsawDiebold_Click(object sender, RoutedEventArgs e)

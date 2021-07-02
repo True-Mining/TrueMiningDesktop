@@ -67,7 +67,7 @@ namespace TrueMiningDesktop.Core.XMRig
                 {
                     if (!Tools.HaveADM)
                     {
-                        Tools.RestartAsAdministrator();
+                        Tools.RestartApp(true);
                     }
                     else
                     {
