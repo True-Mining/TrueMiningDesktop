@@ -29,7 +29,7 @@ True Mining Desktop comes to facilitate the mining of the end user, providing an
 - Configuration to start with windows;
 - Setting to start mining when opening the miner;
 - Setting to start hidden;
-- show/hide mining console;
+- Show/hide mining console;
 - Custom configuration for device mining;
 - Setting to start Tor + Privoxy in mining to avoid firewalls;
 - Automatic software updates;
