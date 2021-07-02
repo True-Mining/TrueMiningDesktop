@@ -208,23 +208,11 @@ namespace TrueMiningDesktop.Janelas
 
             Task removeOldFiles = new(() =>
             {
-                FileName = "Removing old files";
-                string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
-                foreach (var arq in arquivosOdl)
+                try
                 {
-                    try
-                    {
-                        if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
-                    }
-                    catch { };
-                }
-
-                string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
-                foreach (string arq in arquivosDl)
-                {
-                    string arqSha256 = Tools.FileSHA256(arq);
-
-                    if (!SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)) && !SoftwareParameters.ServerConfig.TrueMiningFiles.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)))
+                    FileName = "Removing old files";
+                    string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
+                    foreach (var arq in arquivosOdl)
                     {
                         try
                         {
@@ -232,7 +220,23 @@ namespace TrueMiningDesktop.Janelas
                         }
                         catch { };
                     }
+
+                    string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
+                    foreach (string arq in arquivosDl)
+                    {
+                        string arqSha256 = Tools.FileSHA256(arq);
+
+                        if (!SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)) && !SoftwareParameters.ServerConfig.TrueMiningFiles.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            try
+                            {
+                                if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                            }
+                            catch { };
+                        }
+                    }
                 }
+                catch { };
             });
             removeOldFiles.Start();
             removeOldFiles.Wait(4000);
@@ -275,49 +279,69 @@ namespace TrueMiningDesktop.Janelas
 
         public bool Downloader(FileToDownload file, string progress = null)
         {
-            ProgressBar_IsIndeterminate = true;
-            ProgressBar_Value = 0;
-            HostFilesAd_Visibility = Visibility.Visible;
-
-            if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
-
-            downloaderTryesCount = 0;
-            webClientTryesCount = 0;
-
-            CheckInternet();
-
-            FileName = file.FileName;
-            StatusTitle = "Downloading Files " + progress;
-
-            useTor = false;
-
-            while (!File.Exists(file.Path + file.FileName + ".dl") || Tools.FileSHA256(file.Path + file.FileName + ".dl") != file.Sha256)
+            try
             {
-                downloaderTryesCount++;
+                ProgressBar_IsIndeterminate = true;
+                ProgressBar_Value = 0;
+                HostFilesAd_Visibility = Visibility.Visible;
 
-                if (downloaderTryesCount > 2 || webClientTryesCount > 5) { if (!Tools.HaveADM) { Tools.RestartAsAdministrator(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
-                if (downloaderTryesCount > 3 || webClientTryesCount > 7) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
+                if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
 
-                while (!Tools.IsConnected()) { ProgressDetails = "Waiting for internet connection..."; Thread.Sleep(2000); }
+                downloaderTryesCount = 0;
+                webClientTryesCount = 0;
 
-                ProgressDetails = "Progress: starting download";
+                CheckInternet();
 
-                WebClient webClient = new() { Proxy = useTor ? Tools.TorProxy : null, };
+                FileName = file.FileName;
+                StatusTitle = "Downloading Files " + progress;
 
-                webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
-                webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
+                useTor = false;
 
-                try
+                while (!File.Exists(file.Path + file.FileName + ".dl") || Tools.FileSHA256(file.Path + file.FileName + ".dl") != file.Sha256)
                 {
+                    downloaderTryesCount++;
+
+                    if (downloaderTryesCount > 2 || webClientTryesCount > 5) { if (!Tools.HaveADM) { Tools.RestartApp(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
+                    if (downloaderTryesCount > 3 || webClientTryesCount > 7) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
+
+                    while (!Tools.IsConnected()) { ProgressDetails = "Waiting for internet connection..."; Thread.Sleep(2000); }
+
+                    ProgressDetails = "Progress: starting download";
+
+                    WebClient webClient = new WebClient() { Proxy = useTor ? Tools.TorProxy : null };
+                    webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
+                    webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
                     webClient.DownloadFileAsync(new Uri(file.DlLink), file.Path + file.FileName + ".dl");
 
-                    while (webClient.IsBusy) { Thread.Sleep(10); }
+                    long currentDownloadOLastTotalBytesReceived = currentDownloadBytesReceived;
+                    DateTime currentDownloadLastProgressUpdated = DateTime.UtcNow.AddSeconds(useTor ? 25 : 5);
 
-                    if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
+                    while (webClient.IsBusy)
+                    {
+                        if (Equals(currentDownloadBytesReceived, currentDownloadOLastTotalBytesReceived))
+                        {
+                            if (DateTime.UtcNow > currentDownloadLastProgressUpdated.AddSeconds(5))
+                            {
+                                ProgressDetails = "Progress: restarting...";
+                                FileName = FileName + " => fail. restarting app...";
+                                StatusTitle = "Fail > Restarting Application";
+                                Thread.Sleep(4000);
+
+                                webClient.CancelAsync();
+                                Tools.RestartApp(false);
+                            }
+                        }
+                        else
+                        {
+                            currentDownloadLastProgressUpdated = DateTime.UtcNow;
+                            currentDownloadOLastTotalBytesReceived = currentDownloadBytesReceived;
+                        }
+                        Thread.Sleep(200);
+                    }
                 }
-                catch { }
+                if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
             }
-
+            catch { }
             return false;
         }
 
@@ -333,8 +357,8 @@ namespace TrueMiningDesktop.Janelas
             {
                 TryCount++;
 
-                if (TryCount > 2) { if (!Tools.HaveADM) { Tools.RestartAsAdministrator(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
-                if (TryCount > 3) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
+                if (TryCount > 3) { if (!Tools.HaveADM) { Tools.RestartApp(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
+                if (TryCount > 4) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
 
                 try
                 {
@@ -351,7 +375,7 @@ namespace TrueMiningDesktop.Janelas
                         catch { File.Move(file.Path + file.FileName, file.Path + file.FileName + ".old", true); File.Move(file.Path + file.FileName + ".dl", file.Path + file.FileName, true); }
                     }
 
-                    if (String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
+                    if (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
                 }
                 catch { }
             }
@@ -365,6 +389,7 @@ namespace TrueMiningDesktop.Janelas
         {
             if (e.Cancelled || e.Error != null)
             {
+                ProgressDetails = "fail / error";
                 downloaderTryesCount--;
                 webClientTryesCount++;
 
@@ -384,8 +409,12 @@ namespace TrueMiningDesktop.Janelas
             while (!Tools.IsConnected()) { internetErrorTryes++; if (internetErrorTryes <= 3) { StatusTitle = "Internet Error"; FileName = "Waiting for Internet Connection. Check your network connection."; } else { StatusTitle = "Internet Error. Waiting for Internet Connection"; FileName = "Try open as ADM and add to Windows Firewall rules."; } Thread.Sleep(3000); }
         }
 
+        private long currentDownloadBytesReceived = 0;
+
         private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
+            currentDownloadBytesReceived = e.BytesReceived;
+
             if (e.TotalBytesToReceive / 1024d > 100) // menos de 100kb não altera o progress para exibir o progresso
             {
                 ProgressBar_Value = e.ProgressPercentage > 0 ? e.ProgressPercentage : 1;

@@ -301,28 +301,26 @@ namespace TrueMiningDesktop.Core
             }
         }
 
-        public static void RestartAsAdministrator()
+        public static void RestartApp(bool asAdministrator = true)
         {
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = Application.Current.MainWindow.Visibility != Visibility.Visible, startMining = Miner.IsMining || Miner.IntentToMine });
+                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = App.Current.MainWindow.Visibility == Visibility.Visible ? false : true, startMining = Miner.IsMining || Miner.IntentToMine });
 
-                Process TrueMiningAsAdmin = new()
+                Process TrueMiningNewProcess = new Process();
+                TrueMiningNewProcess.StartInfo = new ProcessStartInfo()
                 {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = Process.GetCurrentProcess().MainModule.FileName,
-                        UseShellExecute = true,
-                        Verb = "runas"
-                    }
+                    FileName = Process.GetCurrentProcess().MainModule.FileName,
+                    UseShellExecute = true,
                 };
-                try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
+                if (asAdministrator) { TrueMiningNewProcess.StartInfo.Verb = "runas"; }
+                try { TrueMiningNewProcess.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
 
                 Process thisProcess = Process.GetCurrentProcess();
 
                 new Task(() =>
                 {
-                    while (!TrueMiningAsAdmin.HasExited)
+                    while (!TrueMiningNewProcess.HasExited)
                     {
                         Thread.Sleep(100);
 
