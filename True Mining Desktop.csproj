@@ -3,14 +3,14 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>True_Mining_Desktop</RootNamespace>
+    <RootNamespace>TrueMiningDesktop</RootNamespace>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
     <AssemblyVersion>4.7</AssemblyVersion>
     <FileVersion>4.7</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <StartupObject>True_Mining_Desktop.App</StartupObject>
+    <StartupObject>TrueMiningDesktop.App</StartupObject>
     <AssemblyName>True Mining Desktop</AssemblyName>
     <Company>True Mining</Company>
     <Authors>Matheus Bach</Authors>

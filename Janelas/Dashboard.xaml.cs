@@ -5,10 +5,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using True_Mining_Desktop.Janelas.Popups;
-using True_Mining_Desktop.Server;
+using TrueMiningDesktop.Janelas.Popups;
+using TrueMiningDesktop.Server;
 
-namespace True_Mining_Desktop.Janelas
+namespace TrueMiningDesktop.Janelas
 {
     /// <summary>
     /// Interação lógica para Dashboard.xam

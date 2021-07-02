@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using True_Mining_Desktop.Core;
+using TrueMiningDesktop.Core;
 
-namespace True_Mining_Desktop.Server
+namespace TrueMiningDesktop.Server
 {
     public partial class TrueMiningDesktopParameters
     {

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 
-namespace True_Mining_Desktop.Janelas.Popups
+namespace TrueMiningDesktop.Janelas.Popups
 {
     /// <summary>
     /// Lógica interna para Calculator.xaml

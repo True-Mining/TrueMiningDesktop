@@ -5,11 +5,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using True_Mining_Desktop.Core;
-using True_Mining_Desktop.Janelas;
-using True_Mining_Desktop.PoolAPI;
+using TrueMiningDesktop.Core;
+using TrueMiningDesktop.Janelas;
+using TrueMiningDesktop.PoolAPI;
 
-namespace True_Mining_Desktop.Server
+namespace TrueMiningDesktop.Server
 {
     public class Saldo
     {

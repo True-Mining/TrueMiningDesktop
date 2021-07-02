@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using True_Mining_Desktop.Core;
+using TrueMiningDesktop.Core;
 using TruePayment.Nanopool.Objects;
 
 namespace TruePayment.Nanopool

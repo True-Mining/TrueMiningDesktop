@@ -1,8 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.Core
+namespace TrueMiningDesktop.Core
 {
     public class Device
     {

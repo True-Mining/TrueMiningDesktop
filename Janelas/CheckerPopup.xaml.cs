@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using True_Mining_Desktop.Core;
-using True_Mining_Desktop.Server;
+using TrueMiningDesktop.Core;
+using TrueMiningDesktop.Server;
 
-namespace True_Mining_Desktop.Janelas
+namespace TrueMiningDesktop.Janelas
 {
     /// <summary>
     /// Lógica interna para UpdateWindow.xaml
