@@ -54,7 +54,7 @@ namespace TrueMiningDesktop.Janelas
 
         public PlotModel ChartModel { get { return chartModel; } set { chartModel = value; NotifyPropertyChanged(); } }
         public OxyPlot.Series.ColumnSeries ColumnChartSeries { get { return columnChartSeries; } set { columnChartSeries = value; NotifyPropertyChanged(); } }
-        public PlotController ChartControler { get { return chartControler; } set { chartControler = value; NotifyPropertyChanged(); } }
+        public PlotController ChartController { get { return chartControler; } set { chartControler = value; NotifyPropertyChanged(); } }
         public Visibility ChartVisibility { get { return chartVisibility; } set { chartVisibility = value; NotifyPropertyChanged(); } }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

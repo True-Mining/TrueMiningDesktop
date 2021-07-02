@@ -171,9 +171,9 @@ namespace TrueMiningDesktop.ViewModel
                 })
             });
 
-            Pages.Dashboard.ChartControler = new PlotController();
-            Pages.Dashboard.ChartControler.UnbindAll();
-            Pages.Dashboard.ChartControler.BindMouseEnter(PlotCommands.HoverSnapTrack);
+            Pages.Dashboard.ChartController = new PlotController();
+            Pages.Dashboard.ChartController.UnbindAll();
+            Pages.Dashboard.ChartController.BindMouseEnter(PlotCommands.HoverSnapTrack);
 
             Pages.Dashboard.ChartModel = plotModel;
 
