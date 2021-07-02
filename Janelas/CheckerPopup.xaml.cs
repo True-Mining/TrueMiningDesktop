@@ -308,47 +308,40 @@ namespace True_Mining_Desktop.Janelas
 
                     ProgressDetails = "Progress: starting download";
 
-                    MessageBox.Show("a");
                     WebClient webClient = new WebClient() { Proxy = useTor ? Tools.TorProxy : null };
                     webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
                     webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
                     webClient.DownloadFileAsync(new Uri(file.DlLink), file.Path + file.FileName + ".dl");
-                    bool dlRunning = true;
 
-                    MessageBox.Show("a");
                     long currentDownloadOLastTotalBytesReceived = currentDownloadBytesReceived;
                     DateTime currentDownloadLastProgressUpdated = DateTime.UtcNow.AddSeconds(useTor ? 25 : 5);
 
-                    while (dlRunning && webClient.IsBusy)
+                    while (webClient.IsBusy)
                     {
                         if (Equals(currentDownloadBytesReceived, currentDownloadOLastTotalBytesReceived))
                         {
                             if (DateTime.UtcNow > currentDownloadLastProgressUpdated.AddSeconds(5))
                             {
-                                dlRunning = false;
+                                ProgressDetails = "Progress: restarting...";
+                                FileName = FileName + " => fail. restarting app...";
+                                StatusTitle = "Fail > Restarting Application";
+                                Thread.Sleep(4000);
+
                                 webClient.CancelAsync();
                                 Tools.RestartApp(false);
-                                //webClient.CancelAsync();
-                                // File.Move(file.Path + file.FileName + ".dl", file.Path + file.FileName + new Random().Next(0, 999999) + new Random().Next(0, 999999) + ".old", true);
-
-                                MessageBox.Show("canceled");
                             }
                         }
                         else
                         {
-                            MessageBox.Show("c");
                             currentDownloadLastProgressUpdated = DateTime.UtcNow;
                             currentDownloadOLastTotalBytesReceived = currentDownloadBytesReceived;
                         }
-
-                        MessageBox.Show("ciclo");
-                        Thread.Sleep(2000);
+                        Thread.Sleep(200);
                     }
                 }
-                MessageBox.Show("no busy");
                 if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
             }
-            catch (Exception e) { MessageBox.Show(e.Message); }
+            catch { }
             return false;
         }
 
