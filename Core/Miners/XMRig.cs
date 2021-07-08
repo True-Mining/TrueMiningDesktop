@@ -16,8 +16,8 @@ namespace TrueMiningDesktop.Core.XMRig
 {
     public static class XMRig
     {
-        private static readonly Process XMRIGminer = new();
-        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe");
+        private static readonly Process XMRIGminer = new Process();
+        private static readonly ProcessStartInfo XMRigProcessStartInfo = new ProcessStartInfo(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe");
         private static bool inXMRIGexitEvent = false;
         private static readonly DateTime holdTime = DateTime.UtcNow;
         private static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
@@ -203,7 +203,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public static void CreateConfigFile()
         {
-            StringBuilder conf = new();
+            StringBuilder conf = new StringBuilder();
             Server.MiningCoin miningCoin = SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase));
 
             conf.AppendLine("{");
@@ -264,7 +264,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
             List<string> addresses = miningCoin.Hosts;
 
-            List<Task<KeyValuePair<string, long>>> pingReturnTasks = new();
+            List<Task<KeyValuePair<string, long>>> pingReturnTasks = new List<Task<KeyValuePair<string, long>>>();
             foreach (string address in addresses)
             {
                 pingReturnTasks.Add(new Task<KeyValuePair<string, long>>(() => Tools.ReturnPing(address)));
@@ -276,7 +276,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
             Task.WaitAll(pingReturnTasks.ToArray());
 
-            Dictionary<string, long> pingHosts = new();
+            Dictionary<string, long> pingHosts = new Dictionary<string, long>();
 
             foreach (Task<KeyValuePair<string, long>> pingTask in pingReturnTasks)
             {

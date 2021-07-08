@@ -13,7 +13,7 @@ namespace TrueMiningDesktop.Server
 {
     public class Saldo
     {
-        private readonly System.Timers.Timer timerUpdateDashboard = new(1000);
+        private readonly System.Timers.Timer timerUpdateDashboard = new System.Timers.Timer(1000);
 
         public Saldo()
         {
@@ -113,7 +113,7 @@ namespace TrueMiningDesktop.Server
                 isUpdatingBalances = true;
 
                 lastPayment = DateTime.UtcNow.AddHours(-DateTime.UtcNow.Hour).AddMinutes(-DateTime.UtcNow.Minute).AddSeconds(-DateTime.UtcNow.Second).AddMilliseconds(-DateTime.UtcNow.Millisecond);
-                TimeSpan sinceLastPayment = new(DateTime.UtcNow.Ticks - lastPayment.Ticks);
+                TimeSpan sinceLastPayment = new TimeSpan(DateTime.UtcNow.Ticks - lastPayment.Ticks);
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     if (isUpdatingBalances)
@@ -125,10 +125,10 @@ namespace TrueMiningDesktop.Server
                 while (!Tools.IsConnected()) { Thread.Sleep(5000); }
                 try
                 {
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = new();
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = new();
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = new TruePayment.Nanopool.Objects.HashrateHistory();
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = new TruePayment.Nanopool.Objects.HashrateHistory();
 
-                    List<Task<Action>> getAPIsTask = new();
+                    List<Task<Action>> getAPIsTask = new List<Task<Action>>();
 
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));

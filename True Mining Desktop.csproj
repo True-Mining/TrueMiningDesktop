@@ -1,14 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-	<TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>TrueMiningDesktop</RootNamespace>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
-    <AssemblyVersion>4.8.4</AssemblyVersion>
-    <FileVersion>4.8-beta.4</FileVersion>
+    <AssemblyVersion>4.7</AssemblyVersion>
+    <FileVersion>4.7 - net5.0 migration</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <StartupObject>TrueMiningDesktop.App</StartupObject>
     <AssemblyName>True Mining Desktop</AssemblyName>
@@ -20,38 +20,30 @@
     <PackageIcon>logo.png</PackageIcon>
     <Description>True Mining Desktop Mining Software</Description>
     <RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
-    <Version>4.8.4</Version>
+    <Version>4.7</Version>
     <PackageProjectUrl>https://truemining.online</PackageProjectUrl>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <PackageId>TrueMiningDesktop</PackageId>
-    <PackageIconUrl />
-	<PlatformTarget>anycpu</PlatformTarget>
-	<DebugType>embedded</DebugType>
-	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	<PublishReadyToRun>true</PublishReadyToRun>
-	<Configuration>Release</Configuration>
-	<Platform>Any CPU</Platform>
-	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	<SelfContained>true</SelfContained>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="icone.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="LICENSE.md">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="logo.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Knapcode.TorSharp" Version="2.8.0" />
-    <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+    <PackageReference Include="Knapcode.TorSharp" Version="2.6.0" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="3.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.0.0" />
   </ItemGroup>
@@ -69,9 +61,6 @@
 
   <ItemGroup>
     <None Update="Resources\icone.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\iconeTaskbar2.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

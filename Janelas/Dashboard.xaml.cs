@@ -33,7 +33,7 @@ namespace TrueMiningDesktop.Janelas
 
         private string labelNextPayout;
         private string labelAccumulatedBalance;
-        private List<string> dashboardWarnings = new();
+        private List<string> dashboardWarnings = new List<string>();
         public Visibility warningWrapVisibility = Visibility.Visible;
 
         public string LabelNextPayout { get { return labelNextPayout; } set { labelNextPayout = value; xLabelNextPayout.Content = value; } }

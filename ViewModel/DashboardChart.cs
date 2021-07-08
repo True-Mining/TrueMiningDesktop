@@ -13,7 +13,7 @@ namespace TrueMiningDesktop.ViewModel
     {
         public static void UpdateAxes(Dictionary<int, long> dados, int zoomInterval)
         {
-            PlotModel plotModel = new()
+            PlotModel plotModel = new PlotModel()
             {
                 Title = "Mined Points History",
                 TitleColor = OxyColor.FromRgb(64, 64, 64),
@@ -22,11 +22,11 @@ namespace TrueMiningDesktop.ViewModel
                 PlotAreaBorderThickness = new OxyThickness(0, 0, 0, 0),
             };
 
-            Dictionary<int, int> dataToShow = new();
+            Dictionary<int, int> dataToShow = new Dictionary<int, int>();
 
-            Dictionary<string, int> dataToShow_formated = new();
+            Dictionary<string, int> dataToShow_formated = new Dictionary<string, int>();
 
-            List<string> listaLegendaX = new();
+            List<string> listaLegendaX = new List<string>();
 
             int botonAxisAngle = 0;
 
@@ -104,7 +104,7 @@ namespace TrueMiningDesktop.ViewModel
 
             plotModel.Axes.Clear();
 
-            CategoryAxis categoryAxis = new()
+            CategoryAxis categoryAxis = new CategoryAxis()
             {
                 Position = AxisPosition.Bottom,
                 AxisTickToLabelDistance = 0,

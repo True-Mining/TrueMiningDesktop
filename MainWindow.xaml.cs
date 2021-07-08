@@ -23,7 +23,7 @@ namespace TrueMiningDesktop
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static System.Windows.Forms.NotifyIcon NotifyIcon = new();
+        public static System.Windows.Forms.NotifyIcon NotifyIcon = new System.Windows.Forms.NotifyIcon();
 
         public static event EventHandler TapeAllRequest;
 
@@ -58,7 +58,7 @@ namespace TrueMiningDesktop
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Dashboard", Janelas.Pages.Dashboard, PackIconKind.ViewDashboard), this));
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Settings", Janelas.Pages.Settings, PackIconKind.Settings), this));
 
-            List<SubItem> menuConfigHardware = new()
+            List<SubItem> menuConfigHardware = new List<SubItem>()
             {
                 new SubItem("CPU", Janelas.Pages.SettingsCPU),
                 new SubItem("AMD GPU", Janelas.Pages.SettingsOPENCL),

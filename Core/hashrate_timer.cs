@@ -6,7 +6,7 @@ namespace TrueMiningDesktop.Core
     internal class Hashrate_timer
     {
         private readonly DeviceInfo DeviceInfo;
-        private readonly System.Timers.Timer Timer = new(5000);
+        private readonly System.Timers.Timer Timer = new System.Timers.Timer(5000);
 
         public event EventHandler HashrateUpdated;
 

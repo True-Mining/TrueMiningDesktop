@@ -10,12 +10,12 @@ namespace TrueMiningDesktop.User
 {
     public static class Settings
     {
-        public static DeviceSettings Device = new();
-        public static UserPreferences User = new();
+        public static DeviceSettings Device = new DeviceSettings();
+        public static UserPreferences User = new UserPreferences();
 
         public static bool LoadingSettings { get; set; } = true;
 
-        private static readonly Timer timerSaveSettings = new(5000);
+        private static readonly Timer timerSaveSettings = new Timer(5000);
 
         public static void SettingsSaver(bool now = false)
         {
@@ -123,9 +123,9 @@ namespace TrueMiningDesktop.User
 
     public class DeviceSettings
     {
-        public CPUSettings cpu = new();
-        public NVIDIASettings cuda = new();
-        public AMDSettings opencl = new();
+        public CPUSettings cpu = new CPUSettings();
+        public NVIDIASettings cuda = new NVIDIASettings();
+        public AMDSettings opencl = new AMDSettings();
     }
 
     public class CPUSettings
@@ -134,7 +134,7 @@ namespace TrueMiningDesktop.User
         public bool MiningSelected { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
-        public List<string> AlgorithmsList { get; set; } = new();
+        public List<string> AlgorithmsList { get; set; } = new List<string>();
         public int Priority { get; set; } = 1;
         public int MaxUsageHint { get; set; } = 100;
         public int Threads { get; set; } = 0;

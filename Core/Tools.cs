@@ -22,7 +22,7 @@ namespace TrueMiningDesktop.Core
     {
         public static bool IsConnected()
         {
-            Ping p = new();
+            Ping p = new Ping();
 
             try
             {
@@ -67,7 +67,7 @@ namespace TrueMiningDesktop.Core
 
         public static WebHeaderCollection WebRequestHeaders()
         {
-            WebHeaderCollection headers = new()
+            WebHeaderCollection headers = new WebHeaderCollection()
             {
                 //    headers[HttpRequestHeader.Accept] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
                 //    headers[HttpRequestHeader.AcceptEncoding] = "gzip, deflate, br";
@@ -101,7 +101,7 @@ namespace TrueMiningDesktop.Core
 
                     using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                     using Stream stream = response.GetResponseStream();
-                    using StreamReader reader = new(stream);
+                    using StreamReader reader = new StreamReader(stream);
                     UseTor = false;
                     return reader.ReadToEnd();
                 }
@@ -111,7 +111,7 @@ namespace TrueMiningDesktop.Core
             throw new Exception();
         }
 
-        private static readonly TorSharpSettings TorSharpSettings = new()
+        private static readonly TorSharpSettings TorSharpSettings = new TorSharpSettings()
         {
             ZippedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"),
             ExtractedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"),
@@ -125,7 +125,7 @@ namespace TrueMiningDesktop.Core
             },
         };
 
-        public static readonly TorSharpProxy TorSharpProxy = new(TorSharpSettings);
+        public static readonly TorSharpProxy TorSharpProxy = new TorSharpProxy(TorSharpSettings);
 
         private static bool useTor = false;
         public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
@@ -272,11 +272,11 @@ namespace TrueMiningDesktop.Core
 
         public static void AddFirewallRule(string name, string filePatch, bool forceAdmin = false)
         {
-            StreamWriter wr = new(Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd"));
+            StreamWriter wr = new StreamWriter(Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd"));
             wr.Write("netsh advfirewall firewall del rule name=\"" + name + "\"\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=in action=allow\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=out action=allow");
             wr.Close();
 
-            Process addfwrule = new();
+            Process addfwrule = new Process();
             addfwrule.StartInfo.FileName = Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd");
             addfwrule.StartInfo.UseShellExecute = true;
             addfwrule.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -469,7 +469,7 @@ namespace TrueMiningDesktop.Core
                     byte[] commandBytes = System.Text.Encoding.Unicode.GetBytes(command);
                     string commandBase64 = Convert.ToBase64String(commandBytes);
 
-                    ProcessStartInfo startInfo = new()
+                    ProcessStartInfo startInfo = new ProcessStartInfo()
                     {
                         FileName = "powershell.exe",
                         Arguments = $"-NoProfile -ExecutionPolicy unrestricted -EncodedCommand {commandBase64}",
@@ -492,7 +492,7 @@ namespace TrueMiningDesktop.Core
 
         public static void KillProcess(string processName)
         {
-            Process mataminers = new()
+            Process mataminers = new Process()
             {
                 StartInfo = new ProcessStartInfo("taskkill", "/F /IM " + processName)
                 {

@@ -7,7 +7,7 @@ namespace TrueMiningDesktop.Janelas
 {
     public class DeviceInfo : OverviewDeviceSimplified
     {
-        public OverviewDeviceSimplified OverviewDeviceSimplified = new();
+        public OverviewDeviceSimplified OverviewDeviceSimplified = new OverviewDeviceSimplified();
 
         public event EventHandler PropertieChangedDevInfo;
 

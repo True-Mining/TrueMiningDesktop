@@ -13,7 +13,7 @@ namespace TrueMiningDesktop.Janelas.Popups
         private readonly decimal HashesPerPoint;
         private readonly decimal ExchangeRatePontosToMiningCoin;
 
-        private readonly System.Timers.Timer timerUpdate = new(2000);
+        private readonly System.Timers.Timer timerUpdate = new System.Timers.Timer(2000);
 
         public Calculator(decimal hashesPerPoint, decimal exchangeRatePontosToMiningCoin)
         {

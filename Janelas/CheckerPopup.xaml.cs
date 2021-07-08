@@ -18,7 +18,7 @@ namespace TrueMiningDesktop.Janelas
     public partial class CheckerPopup : Window
     {
         public bool Tape = false;
-        private readonly Task TaskChecker = new(() => { });
+        private readonly Task TaskChecker = new Task(() => { });
 
         public CheckerPopup(string toCheck = "all")
         {
@@ -105,7 +105,7 @@ namespace TrueMiningDesktop.Janelas
 
                     if (!(File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates)) && (toCheck == "all" || toCheck == "TrueMining"))
                     {
-                        List<FileToDownload> DlList = new();
+                        List<FileToDownload> DlList = new List<FileToDownload>();
 
                         foreach (FileToDownload file in SoftwareParameters.ServerConfig.TrueMiningFiles.Files)
                         {
@@ -159,7 +159,7 @@ namespace TrueMiningDesktop.Janelas
 
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            System.Diagnostics.Process TrueMiningAsAdmin = new();
+                            System.Diagnostics.Process TrueMiningAsAdmin = new System.Diagnostics.Process();
                             TrueMiningAsAdmin.StartInfo = new System.Diagnostics.ProcessStartInfo()
                             {
                                 FileName = System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName,
@@ -175,7 +175,7 @@ namespace TrueMiningDesktop.Janelas
 
                     if (toCheck == "all" || toCheck == "ThirdPartyBinaries")
                     {
-                        List<FileToDownload> DlList = new();
+                        List<FileToDownload> DlList = new List<FileToDownload>();
 
                         foreach (FileToDownload file in SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files)
                         {
@@ -206,7 +206,7 @@ namespace TrueMiningDesktop.Janelas
                 catch { }
             }
 
-            Task removeOldFiles = new(() =>
+            Task removeOldFiles = new Task(() =>
             {
                 try
                 {
