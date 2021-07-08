@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using TrueMiningDesktop.Core;
 
 namespace TrueMiningDesktop.Server
@@ -109,16 +110,21 @@ namespace TrueMiningDesktop.Server
 
                 while (trying)
                 {
-                    lastUpdated = DateTime.Now;
-                    try
+                    Task updateParameters = new Task(() =>
                     {
-                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor)); //update parameters
-                        trying = false;
-                    }
-                    catch
-                    {
-                        try { Tools.AddFirewallRule("True Mining Desktop", System.Reflection.Assembly.GetExecutingAssembly().Location, true); Tools.UseTor = !Tools.UseTor; } catch { }
-                    }
+                        lastUpdated = DateTime.Now;
+                        try
+                        {
+                            SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor)); //update parameters
+                            trying = false;
+                        }
+                        catch
+                        {
+                            try { Tools.AddFirewallRule("True Mining Desktop", System.Reflection.Assembly.GetExecutingAssembly().Location, true); Tools.UseTor = !Tools.UseTor; } catch { }
+                        }
+                    });
+                    updateParameters.Start();
+                    updateParameters.Wait(7000);
                 }
             }
         }

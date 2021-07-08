@@ -285,7 +285,7 @@ namespace TrueMiningDesktop.Janelas
                 ProgressBar_Value = 0;
                 HostFilesAd_Visibility = Visibility.Visible;
 
-                if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
+                if ((File.Exists(file.Path + file.FileName + ".dl") && Tools.FileSHA256(file.Path + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Path + file.FileName) && Tools.FileSHA256(file.Path + file.FileName) == file.Sha256)) { return true; }
 
                 downloaderTryesCount = 0;
                 webClientTryesCount = 0;
@@ -309,6 +309,8 @@ namespace TrueMiningDesktop.Janelas
                     ProgressDetails = "Progress: starting download";
 
                     WebClient webClient = new WebClient() { Proxy = useTor ? Tools.TorProxy : null };
+                    webClient.DownloadProgressChanged -= WebClient_DownloadProgressChanged;
+                    webClient.DownloadFileCompleted -= WebClient_DownloadFileCompleted;
                     webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
                     webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
                     webClient.DownloadFileAsync(new Uri(file.DlLink), file.Path + file.FileName + ".dl");
@@ -320,7 +322,7 @@ namespace TrueMiningDesktop.Janelas
                     {
                         if (Equals(currentDownloadBytesReceived, currentDownloadOLastTotalBytesReceived))
                         {
-                            if (DateTime.UtcNow > currentDownloadLastProgressUpdated.AddSeconds(5))
+                            if (DateTime.UtcNow > currentDownloadLastProgressUpdated.AddSeconds(10))
                             {
                                 ProgressDetails = "Progress: restarting...";
                                 FileName = FileName + " => fail. restarting app...";
@@ -336,10 +338,11 @@ namespace TrueMiningDesktop.Janelas
                             currentDownloadLastProgressUpdated = DateTime.UtcNow;
                             currentDownloadOLastTotalBytesReceived = currentDownloadBytesReceived;
                         }
-                        Thread.Sleep(200);
+                        Thread.Sleep(150);
                     }
+                //    webClient.Dispose();
                 }
-                if ((File.Exists(file.Path + file.FileName + ".dl") && String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) || (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)) { return true; }
+                if ((File.Exists(file.Path + file.FileName + ".dl") && Tools.FileSHA256(file.Path + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Path + file.FileName) && Tools.FileSHA256(file.Path + file.FileName) == file.Sha256)) { return true; } else { return false; }
             }
             catch { }
             return false;
@@ -392,6 +395,7 @@ namespace TrueMiningDesktop.Janelas
                 ProgressDetails = "fail / error";
                 downloaderTryesCount--;
                 webClientTryesCount++;
+                currentDownloadBytesReceived = 0;
 
                 if (webClientTryesCount > 2)
                 {
@@ -415,7 +419,7 @@ namespace TrueMiningDesktop.Janelas
         {
             currentDownloadBytesReceived = e.BytesReceived;
 
-            if (e.TotalBytesToReceive / 1024d > 100) // menos de 100kb não altera o progress para exibir o progresso
+            if (e.TotalBytesToReceive / 1024d > 50) // menos de 100kb não altera o progress para exibir o progresso
             {
                 ProgressBar_Value = e.ProgressPercentage > 0 ? e.ProgressPercentage : 1;
 
