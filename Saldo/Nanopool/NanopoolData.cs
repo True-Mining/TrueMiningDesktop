@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using TrueMiningDesktop.Core;
-using TruePayment.Nanopool.Objects;
+using TrueMiningDesktop.Nanopool.Objects;
 
-namespace TruePayment.Nanopool
+namespace TrueMiningDesktop.Nanopool
 {
     internal class NanopoolData
     {

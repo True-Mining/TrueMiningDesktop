@@ -1,4 +1,4 @@
-﻿namespace TruePayment.Nanopool.Objects
+﻿namespace TrueMiningDesktop.Nanopool.Objects
 {
     public class AccountBalance
     {

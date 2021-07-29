@@ -3,7 +3,7 @@ using System.Net;
 using System.Text.Json;
 using TrueMiningDesktop.Coinpaprika.Objects;
 
-namespace TruePayment.Coinpaprika
+namespace TrueMiningDesktop.Coinpaprika
 {
     internal class CoinpaprikaData
     {

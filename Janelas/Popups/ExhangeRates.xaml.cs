@@ -30,18 +30,18 @@ namespace TrueMiningDesktop.Janelas.Popups
                     {
                         CoinName = User.Settings.User.Payment_Coin;
 
-                        BTCToCoinRate = Decimal.Round(BTCToBTCRate / TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close / 2);
+                        BTCToCoinRate = Decimal.Round(BTCToBTCRate / TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close / 2);
                         BTCToBTCRate = 1;
                         BTCToUSDRate = Decimal.Round(PoolAPI.BitcoinPrice.BTCUSD, 2);
 
                         PointToCoinRate = Decimal.Round(exchangeRatePontosToMiningCoin, 5);
-                        PointToBTCRate = Decimal.Round(BTCToBTCRate / TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close * exchangeRatePontosToMiningCoin / BTCToBTCRate, 8);
-                        PointToUSDRate = Decimal.Round(BTCToBTCRate / TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close * exchangeRatePontosToMiningCoin / BTCToBTCRate * BTCToUSDRate, 5);
+                        PointToBTCRate = Decimal.Round(BTCToBTCRate / TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close * exchangeRatePontosToMiningCoin / BTCToBTCRate, 8);
+                        PointToUSDRate = Decimal.Round(BTCToBTCRate / TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close * exchangeRatePontosToMiningCoin / BTCToBTCRate * BTCToUSDRate, 5);
 
                         CoinToCoinRate = 1;
                         CoinToPointRate = Decimal.Round(CoinToCoinRate / PointToCoinRate, 5);
-                        CoinToBTCRate = Decimal.Round(BTCToBTCRate / TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close / BTCToBTCRate, 8);
-                        CoinToUSDRate = Decimal.Round(BTCToBTCRate / TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close / BTCToBTCRate * BTCToUSDRate, 5);
+                        CoinToBTCRate = Decimal.Round(BTCToBTCRate / TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close / BTCToBTCRate, 8);
+                        CoinToUSDRate = Decimal.Round(BTCToBTCRate / TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close / BTCToBTCRate * BTCToUSDRate, 5);
 
                         loadingVisualElement.Visibility = Visibility.Hidden;
                         AllContent.Visibility = Visibility.Visible;
