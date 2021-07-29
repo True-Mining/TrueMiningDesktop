@@ -125,7 +125,7 @@ namespace True_Mining_Desktop.Janelas
                     break;
             }
 
-            ViewModel.DashboardChart.UpdateAxes(PoolAPI.XMR_nanopool.hashrateHistory_user, (int)Pages.Dashboard.chart_zoom_interval.TotalSeconds);
+            ViewModel.DashboardChart.UpdateAxes(APIs.XMR_nanopool.hashrateHistory_user, (int)Pages.Dashboard.chart_zoom_interval.TotalSeconds);
         }
 
         public TimeSpan chart_zoom_interval { get; set; } = new TimeSpan(0, 24, 0, 0);

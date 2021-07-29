@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using True_Mining_Desktop.Core;
 using True_Mining_Desktop.Janelas;
-using True_Mining_Desktop.PoolAPI;
+using True_Mining_Desktop.APIs;
+using TruePayment.Coinpaprika.Objects;
 
 namespace True_Mining_Desktop.Server
 {
@@ -111,6 +112,8 @@ namespace True_Mining_Desktop.Server
 
                 lastPayment = DateTime.UtcNow.AddHours(-DateTime.UtcNow.Hour).AddMinutes(-DateTime.UtcNow.Minute).AddSeconds(-DateTime.UtcNow.Second).AddMilliseconds(-DateTime.UtcNow.Millisecond);
                 TimeSpan sinceLastPayment = new TimeSpan(DateTime.UtcNow.Ticks - lastPayment.Ticks);
+                DateTime oneWeekAgo = DateTime.UtcNow.AddDays(-7);
+
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
                     if (isUpdatingBalances)
@@ -124,42 +127,45 @@ namespace True_Mining_Desktop.Server
                 {
                     TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", Server.SoftwareParameters.ServerConfig.Pools[0].wallet_TM, User.Settings.User.Payment_Wallet);
                     TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", Server.SoftwareParameters.ServerConfig.Pools[0].wallet_TM);
-                    BitcoinPrice.FIAT_rates = JsonConvert.DeserializeObject<PoolAPI.Coins>(new WebClient().DownloadString("https://blockchain.info/ticker"));
+                    BitcoinPrice.FIAT_rates = JsonConvert.DeserializeObject<APIs.Coins>(new WebClient().DownloadString("https://blockchain.info/ticker"));
+                    MessageBox.Show("https://api.coinpaprika.com/v1/coins/xmr-monero/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc");
+                    TruePayment.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(new WebClient().DownloadString(new Uri("https://api.coinpaprika.com/v1/coins/xmr-monero/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")));
+                    
+                    MessageBox.Show("2");
+                    TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(new WebClient().DownloadString(new Uri("https://api.coinpaprika.com/v1/coins/" + (String.Equals(User.Settings.User.Payment_Coin, "doge", StringComparison.OrdinalIgnoreCase) ? "doge-dogecoin" : "rdct-rdctoken") + "/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")));
+                    MessageBox.Show("2");
+                    XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<APIs.approximated_earnings>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)));
+                    XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<APIs.share_coefficient>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/pool/sharecoef")));
 
-                    Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient().DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")));
-                    Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(new WebClient().DownloadString(new Uri("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.Payment_Coin + "-BTC")));
-                    XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)));
-                    XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/pool/sharecoef")));
-
-                    PoolAPI.XMR_nanopool.hashrateHistory_user.Clear();
+                    APIs.XMR_nanopool.hashrateHistory_user.Clear();
 
                     foreach (TruePayment.Nanopool.Objects.Datum datum in hashrateHystory_user_raw.data)
                     {
-                        if (!PoolAPI.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
+                        if (!APIs.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
                         {
                             try
                             {
-                                PoolAPI.XMR_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
+                                APIs.XMR_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
                             }
                             catch { }
                         }
                     }
                     foreach (TruePayment.Nanopool.Objects.Datum datum in hashrateHystory_tm_raw.data)
                     {
-                        if (!PoolAPI.XMR_nanopool.hashrateHistory_tm.ContainsKey(datum.date))
+                        if (!APIs.XMR_nanopool.hashrateHistory_tm.ContainsKey(datum.date))
                         {
                             try
                             {
-                                PoolAPI.XMR_nanopool.hashrateHistory_tm.Add(datum.date, datum.hashrate);
+                                APIs.XMR_nanopool.hashrateHistory_tm.Add(datum.date, datum.hashrate);
                             }
                             catch { }
                         }
                     }
                 }
-                catch { }
+                catch (Exception e ){ MessageBox.Show(e.Message); }
 
                 Int64 sumHashrate_user =
-                PoolAPI.XMR_nanopool.hashrateHistory_user
+                APIs.XMR_nanopool.hashrateHistory_user
                 .Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -169,7 +175,7 @@ namespace True_Mining_Desktop.Server
                 }));
 
                 Int64 sumHashrate_tm =
-                PoolAPI.XMR_nanopool.hashrateHistory_tm
+                APIs.XMR_nanopool.hashrateHistory_tm
                 .Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -179,42 +185,9 @@ namespace True_Mining_Desktop.Server
                 }));
                 decimal totalXMRmineradoTrueMining = ((decimal)XMR_nanopool.approximated_earnings.data.day.coins * 0.99m) /*desconto da fee da pool que não está sendo inserida no cálculo*/ / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm;
 
-                decimal XMRpraVirarBTC = (decimal)totalXMRmineradoTrueMining;
-
-                decimal XMRfinalPrice = 0;
-
-                for (int i = 0; XMRpraVirarBTC > 0; i++)
-                {
-                    int I = i;
-                    if (Crex24.XMRBTC_Orderbook.buyLevels[I].volume > XMRpraVirarBTC)
-                    {
-                        XMRpraVirarBTC -= Crex24.XMRBTC_Orderbook.buyLevels[I].volume;
-                        XMRfinalPrice = Crex24.XMRBTC_Orderbook.buyLevels[I].price;
-                    }
-                    else
-                    {
-                        XMRpraVirarBTC -= Crex24.XMRBTC_Orderbook.buyLevels[I].volume;
-                    }
-                }
-
-                decimal BTCpraVirarCOIN = (decimal)totalXMRmineradoTrueMining * XMRfinalPrice;
-
-                decimal COINfinalPrice = 0;
-
-                for (int i = 0; BTCpraVirarCOIN > 0; i++)
-                {
-                    int I = i;
-                    if (Crex24.MiningCoinBTC_Orderbook.sellLevels[I].volume > BTCpraVirarCOIN / Crex24.MiningCoinBTC_Orderbook.sellLevels[I].price)
-                    {
-                        BTCpraVirarCOIN -= Crex24.MiningCoinBTC_Orderbook.sellLevels[I].volume;
-                        COINfinalPrice = Crex24.MiningCoinBTC_Orderbook.sellLevels[I].price;
-                    }
-                    else
-                    {
-                        BTCpraVirarCOIN -= Crex24.MiningCoinBTC_Orderbook.sellLevels[I].price * Crex24.MiningCoinBTC_Orderbook.sellLevels[I].volume;
-                    }
-                }
-
+                decimal XMRfinalPrice = (TruePayment.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv.Last().close * 2 + TruePayment.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv.Last().low) / 3;
+                decimal COINfinalPrice = (TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close * 2 + TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().high) / 3;
+                
                 HashesPerPoint = XMR_nanopool.sharecoef.data * pointsMultiplier;
                 AccumulatedBalance_Points = (decimal)sumHashrate_user / HashesPerPoint;
 

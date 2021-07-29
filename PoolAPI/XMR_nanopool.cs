@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace True_Mining_Desktop.PoolAPI
+namespace True_Mining_Desktop.APIs
 {
     public class Minute
     {

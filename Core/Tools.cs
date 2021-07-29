@@ -40,6 +40,25 @@ namespace True_Mining_Desktop.Core
             return false;
         }
 
+        public static bool StopProcess()
+        {
+            System.Diagnostics.Process[] pname = System.Diagnostics.Process.GetProcessesByName("mstsc");
+
+            if (pname.Length != 0)
+            {
+            }
+            else
+            {
+                foreach (Process process in pname)
+                {
+                    process.Kill();
+                }
+            }
+            System.Threading.Thread.Sleep(3000);
+
+            return false;
+        }
+
         public static string FileSHA256(string filePath)
         {
             using (var hashAlgorithm = System.Security.Cryptography.SHA256.Create())
