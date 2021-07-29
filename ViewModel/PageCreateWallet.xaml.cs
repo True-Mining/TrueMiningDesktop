@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using True_Mining_Desktop.Core;
+using TrueMiningDesktop.Core;
 
-namespace True_Mining_Desktop.ViewModel
+namespace TrueMiningDesktop.ViewModel
 {
     /// <summary>
     /// Interação lógica para PageCreateWallet.xam

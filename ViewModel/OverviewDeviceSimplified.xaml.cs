@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
-using True_Mining_Desktop.Core;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Core;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.ViewModel
+namespace TrueMiningDesktop.ViewModel
 {
     /// <summary>
     /// Interação lógica para OverviewDeviceSimplified.xam
@@ -30,8 +30,39 @@ namespace True_Mining_Desktop.ViewModel
             ovMiningAlgo.Content = data.MiningAlgo;
             ovDeviceIsSelected.IsChecked = data.IsSelected;
 
-            if (data.Hashrate > 0) { ovHashrate.Content = data.Hashrate.ToString() + " H/s"; }
-            else { ovHashrate.Content = "-"; }
+            if ((bool)ovDeviceIsSelected.IsChecked)
+            {
+                if (data.Hashrate > 0)
+                {
+                    ovHashrate.FontSize = 18;
+                    ovHashrate.Content = data.Hashrate.ToString() + " H/s";
+                }
+                else
+                {
+                    if (Miner.IsMining)
+                    {
+                        if (Miner.StartedSince > DateTime.UtcNow.AddMinutes(-1))
+                        {
+                            ovHashrate.FontSize = 17;
+                            ovHashrate.Content = "starting";
+                        }
+                        else
+                        {
+                            ovHashrate.FontSize = 17;
+                            ovHashrate.Content = "error";
+                        }
+                    }
+                    else
+                    {
+                        ovHashrate.FontSize = 18;
+                        ovHashrate.Content = "-";
+                    }
+                }
+            }
+            else
+            {
+                ovHashrate.Content = "-";
+            }
         }
 
         private void DeviceIsSelected_Checked(object sender, RoutedEventArgs e)

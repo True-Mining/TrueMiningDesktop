@@ -2,38 +2,37 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using True_Mining_Desktop.Core;
-using True_Mining_Desktop.Janelas;
-using True_Mining_Desktop.APIs;
-using TruePayment.Coinpaprika.Objects;
+using TrueMiningDesktop.Coinpaprika.Objects;
+using TrueMiningDesktop.Core;
+using TrueMiningDesktop.Janelas;
+using TrueMiningDesktop.PoolAPI;
 
-namespace True_Mining_Desktop.Server
+namespace TrueMiningDesktop.Server
 {
     public class Saldo
     {
-        private System.Timers.Timer timerUpdateDashboard = new System.Timers.Timer(1000);
+        private readonly System.Timers.Timer timerUpdateDashboard = new(1000);
 
         public Saldo()
         {
             Task.Run(() =>
             {
-                Server.SoftwareParameters.Update(new Uri("https://truemining.online/TrueMiningDesktop.json"));
+                Server.SoftwareParameters.Update(new Uri("https://truemining.online/TrueMiningDesktopDotnet5.json"));
 
-                while (User.Settings.loadingSettings) { Thread.Sleep(500); }
+                while (User.Settings.LoadingSettings) { Thread.Sleep(500); }
 
-                timerUpdateDashboard.Elapsed += timerUpdateDashboard_Elapsed;
+                timerUpdateDashboard.Elapsed += TimerUpdateDashboard_Elapsed;
 
                 timerUpdateDashboard.Start();
 
-                timerUpdateDashboard_Elapsed(null, null);
+                TimerUpdateDashboard_Elapsed(null, null);
             });
         }
 
-        private void timerUpdateDashboard_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void TimerUpdateDashboard_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             try
             {
@@ -60,11 +59,15 @@ namespace True_Mining_Desktop.Server
                         Pages.Dashboard.DashboardContent.IsEnabled = true;
                     }
 
-                    if (lastUpdated.Ticks < DateTime.Now.Ticks || Janelas.Pages.Home.walletIsChanged && Pages.Dashboard.IsLoaded)
+                    if (lastUpdated.Ticks < DateTime.Now.Ticks || Janelas.Pages.Home.WalletWasChanged && Pages.Dashboard.IsLoaded)
                     {
-                        Janelas.Pages.Home.walletIsChanged = false;
+                        Janelas.Pages.Home.WalletWasChanged = false;
                         lastUpdated = DateTime.Now.AddMinutes(10);
-                        UpdateBalances();
+                        try
+                        {
+                            UpdateBalances();
+                        }
+                        catch { lastUpdated = DateTime.Now.AddSeconds(-5); }
                     }
 
                     Pages.Dashboard.LabelNextPayout = ((int)23 - (int)DateTime.UtcNow.Hour) + " hours, " + ((int)59 - (int)DateTime.UtcNow.Minute) + " minutes";
@@ -98,7 +101,7 @@ namespace True_Mining_Desktop.Server
 
         private static DateTime lastUpdated = DateTime.Now.AddMinutes(-10);
 
-        private static int secondsPerAveragehashrateReportInterval = 60 * 10;
+        private static readonly int secondsPerAveragehashrateReportInterval = 60 * 10;
         public decimal pointsMultiplier = secondsPerAveragehashrateReportInterval * 16;
         public int hashesToCompare = 1000;
 
@@ -125,47 +128,58 @@ namespace True_Mining_Desktop.Server
                 while (!Tools.IsConnected()) { Thread.Sleep(5000); }
                 try
                 {
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", Server.SoftwareParameters.ServerConfig.Pools[0].wallet_TM, User.Settings.User.Payment_Wallet);
-                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", Server.SoftwareParameters.ServerConfig.Pools[0].wallet_TM);
-                    BitcoinPrice.FIAT_rates = JsonConvert.DeserializeObject<APIs.Coins>(new WebClient().DownloadString("https://blockchain.info/ticker"));
-                    MessageBox.Show("https://api.coinpaprika.com/v1/coins/xmr-monero/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc");
-                    TruePayment.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(new WebClient().DownloadString(new Uri("https://api.coinpaprika.com/v1/coins/xmr-monero/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")));
-                    
-                    MessageBox.Show("2");
-                    TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(new WebClient().DownloadString(new Uri("https://api.coinpaprika.com/v1/coins/" + (String.Equals(User.Settings.User.Payment_Coin, "doge", StringComparison.OrdinalIgnoreCase) ? "doge-dogecoin" : "rdct-rdctoken") + "/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")));
-                    MessageBox.Show("2");
-                    XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<APIs.approximated_earnings>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)));
-                    XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<APIs.share_coefficient>(new WebClient().DownloadString(new Uri("https://api.nanopool.org/v1/xmr/pool/sharecoef")));
+                    List<Task<Action>> getPoolAPITask = new();
 
-                    APIs.XMR_nanopool.hashrateHistory_user.Clear();
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = new();
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = new();
+
+                    getPoolAPITask.Add(new Task<Action>(() => { hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => { hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => {BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"))).BTCUSD.ask), 2); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => {TruePayment.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(Tools.HttpGet("https://api.coinpaprika.com/v1/coins/xmr-monero/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")); return null; }));
+                    MessageBox.Show("https://api.coinpaprika.com/v1/coins/xmr-monero/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc");
+                    getPoolAPITask.Add(new Task<Action>(() => {TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(Tools.HttpGet("https://api.coinpaprika.com/v1/coins/" + (String.Equals(User.Settings.User.Payment_Coin, "doge", StringComparison.OrdinalIgnoreCase) ? "doge-dogecoin" : "rdct-rdctoken") + "/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => {XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => {XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef")); return null; }));
+
+
+                    foreach (Task task in getPoolAPITask)
+                    {
+                        task.Start();
+                    }
+
+                    Task.WaitAll(getPoolAPITask.ToArray());
+
+                    PoolAPI.XMR_nanopool.hashrateHistory_user.Clear();
+                    PoolAPI.XMR_nanopool.hashrateHistory_tm.Clear();
 
                     foreach (TruePayment.Nanopool.Objects.Datum datum in hashrateHystory_user_raw.data)
                     {
-                        if (!APIs.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
+                        if (!PoolAPI.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
                         {
                             try
                             {
-                                APIs.XMR_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
+                                PoolAPI.XMR_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
                             }
                             catch { }
                         }
                     }
                     foreach (TruePayment.Nanopool.Objects.Datum datum in hashrateHystory_tm_raw.data)
                     {
-                        if (!APIs.XMR_nanopool.hashrateHistory_tm.ContainsKey(datum.date))
+                        if (!PoolAPI.XMR_nanopool.hashrateHistory_tm.ContainsKey(datum.date))
                         {
                             try
                             {
-                                APIs.XMR_nanopool.hashrateHistory_tm.Add(datum.date, datum.hashrate);
+                                PoolAPI.XMR_nanopool.hashrateHistory_tm.Add(datum.date, datum.hashrate);
                             }
                             catch { }
                         }
                     }
                 }
-                catch (Exception e ){ MessageBox.Show(e.Message); }
+                catch { lastUpdated = DateTime.Now.AddSeconds(-10); }
 
                 Int64 sumHashrate_user =
-                APIs.XMR_nanopool.hashrateHistory_user
+                PoolAPI.XMR_nanopool.hashrateHistory_user
                 .Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -175,7 +189,7 @@ namespace True_Mining_Desktop.Server
                 }));
 
                 Int64 sumHashrate_tm =
-                APIs.XMR_nanopool.hashrateHistory_tm
+                PoolAPI.XMR_nanopool.hashrateHistory_tm
                 .Where((KeyValuePair<int, Int64> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -217,7 +231,7 @@ namespace True_Mining_Desktop.Server
 
                 try
                 {
-                    Pages.Dashboard.changeChartZoom(null, null);
+                    Pages.Dashboard.ChangeChartZoom(null, null);
                 }
                 catch { }
 

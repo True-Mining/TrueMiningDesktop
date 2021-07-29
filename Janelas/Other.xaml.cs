@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using True_Mining_Desktop.Core;
+using TrueMiningDesktop.Core;
 
-namespace True_Mining_Desktop.Janelas
+namespace TrueMiningDesktop.Janelas
 {
     public partial class Other : UserControl
     {
@@ -19,6 +19,11 @@ namespace True_Mining_Desktop.Janelas
         private void Button_github_Click(object sender, RoutedEventArgs e)
         {
             Tools.OpenLinkInBrowser("https://github.com/True-Mining");
+        }
+
+        private void Button_YtTutorial_Click(object sender, RoutedEventArgs e)
+        {
+            Tools.OpenLinkInBrowser("https://www.youtube.com/watch?v=3VbH1y4o7Ak");
         }
 
         private void Button_telegramGroup_Click(object sender, RoutedEventArgs e)
@@ -41,7 +46,13 @@ namespace True_Mining_Desktop.Janelas
         private void Button_whatsapp_offtopic_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("You will be redirected to an offtopic interactive group. Be respectfull and don't scam your friends.");
-            Tools.OpenLinkInBrowser("https://chat.whatsapp.com/LEWSKLAMKwj2iwcT64AIXg");
+            Tools.OpenLinkInBrowser("https://chat.whatsapp.com/HlMg3voD3MkKXHvklNc2N9");
+        }
+
+        private void Button_telegram_offtopic_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("You will be redirected to an offtopic interactive group. Be respectfull and don't scam your friends.");
+            Tools.OpenLinkInBrowser("https://t.me/joinchat/RIJqDSeKxc81ODk5");
         }
     }
 }

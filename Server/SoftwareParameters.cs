@@ -1,55 +1,102 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
-using True_Mining_Desktop.Core;
+using System.Threading.Tasks;
+using TrueMiningDesktop.Core;
 
-namespace True_Mining_Desktop.Server
+namespace TrueMiningDesktop.Server
 {
-    public class Pool
+    public partial class TrueMiningDesktopParameters
     {
-        public string mineableCoin { get; set; }
-        public string pool { get; set; } = "nanopool";
-        public string host1 { get; set; }
-        public string host2 { get; set; }
-        public string stratumPort { get; set; }
-        public string stratumPortSSl { get; set; }
-        public string wallet_TM { get; set; }
-        public string email { get; set; }
-        public string password { get; set; } = "x";
+        [JsonProperty("MiningCoins", NullValueHandling = NullValueHandling.Ignore)]
+        public List<MiningCoin> MiningCoins { get; set; }
+
+        [JsonProperty("hosts", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Hosts { get; set; }
+
+        [JsonProperty("DynamicFee", NullValueHandling = NullValueHandling.Ignore)]
+        public decimal DynamicFee { get; set; }
+
+        [JsonProperty("TrueMiningFiles", NullValueHandling = NullValueHandling.Ignore)]
+        public TrueMiningFiles TrueMiningFiles { get; set; }
+
+        [JsonProperty("ThirdPartyBinaries", NullValueHandling = NullValueHandling.Ignore)]
+        public ThirdPartyBinaries ThirdPartyBinaries { get; set; }
+
+        [JsonProperty("MarkAsOldFiles", NullValueHandling = NullValueHandling.Ignore)]
+        public MarkAsOldFiles MarkAsOldFiles { get; set; }
     }
 
-    public class TrueMiningFiles
+    public partial class MiningCoin
     {
-        public string changelogLink;
-        public List<FileDetails> files;
+        [JsonProperty("coin", NullValueHandling = NullValueHandling.Ignore)]
+        public string Coin { get; set; }
+
+        [JsonProperty("coinName", NullValueHandling = NullValueHandling.Ignore)]
+        public string CoinName { get; set; }
+
+        [JsonProperty("poolName", NullValueHandling = NullValueHandling.Ignore)]
+        public string PoolName { get; set; }
+
+        [JsonProperty("hosts", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> Hosts { get; set; }
+
+        [JsonProperty("stratumPort", NullValueHandling = NullValueHandling.Ignore)]
+        public short? StratumPort { get; set; }
+
+        [JsonProperty("stratumPortSSL", NullValueHandling = NullValueHandling.Ignore)]
+        public short? StratumPortSsl { get; set; }
+
+        [JsonProperty("wallet_TM", NullValueHandling = NullValueHandling.Ignore)]
+        public string WalletTm { get; set; }
+
+        [JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
+        public string Email { get; set; }
+
+        [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
+        public string Password { get; set; }
     }
 
-    public class FileDetails
+    public partial class ThirdPartyBinaries
     {
-        public string dlLink;
-        public string path;
-        public string fileName;
-        public string sha256;
+        [JsonProperty("files", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FileToDownload> Files { get; set; }
     }
 
-    public class ThirdPartyBinaries
+    public partial class MarkAsOldFiles
     {
-        public List<FileDetails> files;
+        [JsonProperty("files", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FileToDownload> Files { get; set; }
     }
 
-    public class Kind
+    public partial class FileToDownload
     {
-        public List<Pool> Pools;
-        public int DynamicFee = 2;
-        public TrueMiningFiles TrueMiningFiles;
-        public ThirdPartyBinaries ThirdPartyBinaries;
+        [JsonProperty("dlLink", NullValueHandling = NullValueHandling.Ignore)]
+        public string DlLink { get; set; }
+
+        [JsonProperty("path")]
+        public string Path { get; set; }
+
+        [JsonProperty("fileName", NullValueHandling = NullValueHandling.Ignore)]
+        public string FileName { get; set; }
+
+        [JsonProperty("sha256", NullValueHandling = NullValueHandling.Ignore)]
+        public string Sha256 { get; set; }
+    }
+
+    public partial class TrueMiningFiles
+    {
+        [JsonProperty("changelogLink", NullValueHandling = NullValueHandling.Ignore)]
+        public Uri ChangelogLink { get; set; }
+
+        [JsonProperty("files", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FileToDownload> Files { get; set; }
     }
 
     public class SoftwareParameters
     {
-        public static Kind ServerConfig;
+        public static TrueMiningDesktopParameters ServerConfig;
 
         private static DateTime lastUpdated = DateTime.Now.AddHours(-1).AddMinutes(-1);
 
@@ -63,13 +110,21 @@ namespace True_Mining_Desktop.Server
 
                 while (trying)
                 {
-                    lastUpdated = DateTime.Now;
-                    try
+                    Task updateParameters = new Task(() =>
                     {
-                        SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<Kind>(new WebClient().DownloadString(uri)); //update parameters
-                        trying = false;
-                    }
-                    catch { }
+                        lastUpdated = DateTime.Now;
+                        try
+                        {
+                            SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor)); //update parameters
+                            trying = false;
+                        }
+                        catch
+                        {
+                            try { Tools.AddFirewallRule("True Mining Desktop", System.Reflection.Assembly.GetExecutingAssembly().Location, true); Tools.UseTor = !Tools.UseTor; } catch { }
+                        }
+                    });
+                    updateParameters.Start();
+                    updateParameters.Wait(7000);
                 }
             }
         }

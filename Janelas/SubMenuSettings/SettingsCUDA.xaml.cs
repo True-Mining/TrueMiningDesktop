@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace True_Mining_Desktop.Janelas.SubMenuSettings
+namespace TrueMiningDesktop.Janelas.SubMenuSettings
 {
     /// <summary>
     /// Interação lógica para SettingsCUDA.xam

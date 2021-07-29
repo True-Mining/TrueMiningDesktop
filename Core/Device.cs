@@ -1,8 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.Core
+namespace TrueMiningDesktop.Core
 {
     public class Device
     {
@@ -16,6 +16,8 @@ namespace True_Mining_Desktop.Core
             cuda.PropertieChanged += new EventHandler(cudaChanged);
             opencl.PropertieChanged += new EventHandler(openclChanged);
         }
+
+        public static System.Collections.Generic.List<DeviceInfo> DevicesList = new System.Collections.Generic.List<DeviceInfo>() { cpu, opencl, cuda };
 
         private void openclChanged(object sender, EventArgs e)
         {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
-using TruePayment.Coinpaprika.Objects;
+using TrueMiningDesktop.Coinpaprika.Objects;
 
 namespace TruePayment.Coinpaprika
 {

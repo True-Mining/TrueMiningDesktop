@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.Core
+namespace TrueMiningDesktop.Core
 {
     public static class Miner
     {
+        private static readonly DateTime holdTime = DateTime.UtcNow;
+        public static DateTime StartedSince = holdTime.AddTicks(-holdTime.Ticks);
+
         public static void StartMiner()
         {
             IntentToMine = true;
@@ -18,9 +21,9 @@ namespace True_Mining_Desktop.Core
                 return;
             }
 
-            if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (String.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || String.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || String.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
+            if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (string.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
             {
-                Tools.CheckerPopup = new Janelas.CheckerPopup("all");
+                Tools.CheckerPopup = new CheckerPopup("all");
                 Tools.CheckerPopup.ShowDialog();
 
                 if (!EmergencyExit)
@@ -36,7 +39,7 @@ namespace True_Mining_Desktop.Core
 
         public static void StopMiner()
         {
-            if ((User.Settings.Device.cpu.MiningSelected | User.Settings.Device.opencl.MiningSelected | User.Settings.Device.cuda.MiningSelected) && (String.Equals(User.Settings.Device.cpu.Algorithm, "RandomX", StringComparison.OrdinalIgnoreCase) | String.Equals(User.Settings.Device.opencl.Algorithm, "RandomX", StringComparison.OrdinalIgnoreCase) | String.Equals(User.Settings.Device.cuda.Algorithm, "RandomX", StringComparison.OrdinalIgnoreCase)))
+            if (IsMining)
             {
                 IsMining = false;
                 XMRig.XMRig.Stop();
@@ -47,7 +50,7 @@ namespace True_Mining_Desktop.Core
         {
             bool showCLI = User.Settings.User.ShowCLI;
 
-            if (String.Equals(miner, "XMRig", StringComparison.OrdinalIgnoreCase) || String.Equals(miner, "all", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(miner, "XMRig", StringComparison.OrdinalIgnoreCase) || string.Equals(miner, "all", StringComparison.OrdinalIgnoreCase))
             {
                 IntPtr windowIdentifier = Tools.FindWindow(null, "True Mining running XMRig");
                 if (showCLI)
@@ -65,21 +68,27 @@ namespace True_Mining_Desktop.Core
 
         public static decimal GetHashrate(string alias, string algo)
         {
-            if (Core.Device.cpu.IsSelected)
+            try
             {
-                if (String.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
+                if (Device.DevicesList.Find(x => x.Alias.Equals(alias, StringComparison.OrdinalIgnoreCase)).IsSelected)
                 {
-                    return XMRig.XMRig.GetHasrate(alias);
+                    if (string.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return XMRig.XMRig.GetHasrate(alias);
+                    }
                 }
             }
-
+            catch
+            {
+                return -1;
+            }
             return -1;
         }
 
-        public static bool EmergencyExit = false;
+        public static bool EmergencyExit;
 
-        private static bool isMining = false;
-        public static bool intentToMine = false;
+        private static bool isMining;
+        private static bool intentToMine;
 
         public static bool IsMining
         {
@@ -97,6 +106,8 @@ namespace True_Mining_Desktop.Core
 
                 if (isMining)
                 {
+                    StartedSince = DateTime.UtcNow;
+
                     Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = false;
 
                     Pages.Home.StartStopButton_text.Content = "Stop Mining";
@@ -120,6 +131,8 @@ namespace True_Mining_Desktop.Core
                 }
                 else
                 {
+                    StartedSince = holdTime.AddTicks(-holdTime.Ticks);
+
                     Device.cpu.IsMining = false;
                     Device.opencl.IsMining = false;
                     Device.cuda.IsMining = false;

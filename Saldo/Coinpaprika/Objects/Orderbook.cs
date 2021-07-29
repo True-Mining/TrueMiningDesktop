@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TruePayment.Coinpaprika.Objects
+namespace TrueMiningDesktop.Coinpaprika.Objects
 {
     public class OHLCV
     {

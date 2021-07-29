@@ -1,27 +1,29 @@
-﻿using Microsoft.Win32;
+using Knapcode.TorSharp;
+using Microsoft.Win32;
 using System;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using True_Mining_Desktop.Janelas;
+using TrueMiningDesktop.Janelas;
 
-namespace True_Mining_Desktop.Core
+namespace TrueMiningDesktop.Core
 {
     public class Tools
     {
         public static bool IsConnected()
         {
-            StringBuilder str = new StringBuilder();
+            Ping p = new();
 
-            Ping p = new Ping();
             try
             {
                 PingReply pr = p.Send("8.8.8.8", 3000);
@@ -31,43 +33,215 @@ namespace True_Mining_Desktop.Core
 
             try
             {
-                if (new WebClient().DownloadString(new Uri("http://truemining.online/ping")) == "pong") { return true; }
+                if (HttpGet("https://truemining.online/ping") == "pong") { return true; }
             }
             catch { }
 
-            if (HaveADM && !firewallRuleAdded)
-            { AddFirewallPingRule(); }
+            try
+            {
+                if (HttpGet("http://truemining.online/ping") == "pong") { return true; }
+            }
+            catch { }
+
+            try
+            {
+                if (HttpGet("https://www.utivirtual.com.br/Truemining/ping") == "pong") { return true; }
+            }
+            catch { }
+
+            if (HaveADM && !firewallRuleAdded) { try { AddFirewallRule("ping", Path.Combine(Environment.SystemDirectory, "ping.exe")); } catch { } }
+
             return false;
         }
 
-        public static bool StopProcess()
+        public static KeyValuePair<string, long> ReturnPing(string address)
         {
-            System.Diagnostics.Process[] pname = System.Diagnostics.Process.GetProcessesByName("mstsc");
+            try
+            {
+                PingReply ping = new Ping().Send(address, 1000, Encoding.ASCII.GetBytes("ping by True Mining Desktop Client"));
 
-            if (pname.Length != 0)
-            {
+                return new KeyValuePair<string, long>(address, (ping.Status == IPStatus.Success) ? ping.RoundtripTime : 2000);
             }
-            else
+            catch { return new KeyValuePair<string, long>(address, 10000); }
+        }
+
+        public static WebHeaderCollection WebRequestHeaders()
+        {
+            WebHeaderCollection headers = new()
             {
-                foreach (Process process in pname)
+                //    headers[HttpRequestHeader.Accept] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+                //    headers[HttpRequestHeader.AcceptEncoding] = "gzip, deflate, br";
+                //     headers[HttpRequestHeader.AcceptLanguage] = "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3";
+                [HttpRequestHeader.CacheControl] = "max-age=0",
+                [HttpRequestHeader.KeepAlive] = "1",
+                [HttpRequestHeader.Allow] = "1",
+                // headers[HttpRequestHeader.Via] = "http://127.0.0.1:8427";
+                [HttpRequestHeader.ProxyAuthorization] = "Basic " + new TorSharpTorSettings().ControlPassword,
+                [HttpRequestHeader.Trailer] = "1",
+                [HttpRequestHeader.Upgrade] = "1",
+                [HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0"
+            };
+
+            return headers;
+        }
+
+        public static string HttpGet(string uri, bool forceUseTor = false)
+        {
+            bool useTor = false;
+
+            for (int i = 0; i < 4; i++)
+            {
+                try
                 {
-                    process.Kill();
-                }
-            }
-            System.Threading.Thread.Sleep(3000);
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+                    request.AutomaticDecompression = DecompressionMethods.All;
+                    request.Proxy = useTor || forceUseTor ? Tools.TorProxy : null;
+                    request.Headers = Tools.WebRequestHeaders();
+                    request.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
-            return false;
+                    using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                    using Stream stream = response.GetResponseStream();
+                    using StreamReader reader = new(stream);
+                    UseTor = false;
+                    return reader.ReadToEnd();
+                }
+                catch { if (i > 1) useTor = true; UseTor = true; }
+            }
+
+            throw new Exception();
+        }
+
+        private static readonly TorSharpSettings TorSharpSettings = new()
+        {
+            ZippedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"),
+            ExtractedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"),
+            PrivoxySettings = { Port = 8427 },
+            WaitForConnect = new TimeSpan(0),
+            TorSettings =
+            {
+                SocksPort = 8428,
+                ControlPort = 8429,
+                ControlPassword = "TrueMining"
+            },
+        };
+
+        public static readonly TorSharpProxy TorSharpProxy = new(TorSharpSettings);
+
+        private static bool useTor = false;
+        public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
+
+        public static bool TorSharpProcessesRunning
+        {
+            get
+            {
+                bool torProcessRunning = false;
+                bool privoxyProcessRunning = false;
+                foreach (Process process in Process.GetProcessesByName("tor")) { try { if (process.MainModule.FileName.Contains(TorSharpSettings.ExtractedToolsDirectory, StringComparison.OrdinalIgnoreCase)) { torProcessRunning = true; break; } } catch { } }
+                foreach (Process process in Process.GetProcessesByName("privoxy")) { try { if (process.MainModule.FileName.Contains(TorSharpSettings.ExtractedToolsDirectory, StringComparison.OrdinalIgnoreCase)) { privoxyProcessRunning = true; break; } } catch { } }
+
+                if (privoxyProcessRunning && torProcessRunning)
+                {
+                    return true;
+                }
+                else { return false; }
+            }
+            set { }
+        }
+
+        private static bool torSharpEnabled = false;
+        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
+
+        public static event PropertyChangedEventHandler PropertyChanged;
+
+        private static bool generatingTorProxy = false;
+
+        public static WebProxy TorProxy
+        {
+            get
+            {
+                bool waitWorkForReturn = false;
+
+                while (generatingTorProxy) { Thread.Sleep(100); if (!waitWorkForReturn) { waitWorkForReturn = true; } }
+
+                if (!waitWorkForReturn)
+                {
+                    generatingTorProxy = true;
+
+                    for (int i = 0; i < 3; i++)
+                    {
+                        try
+                        {
+                            if (!TorSharpProcessesRunning)
+                            {
+                                TorSharpEnabled = false;
+                                try { TorSharpProxy.Stop(); } catch { }
+                                foreach (Process process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
+                                foreach (Process process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
+                            }
+
+                            try
+                            {
+                                string ip = new WebClient() { Proxy = new WebProxy() { Address = new Uri("http://localhost:" + TorSharpSettings.PrivoxySettings.Port), BypassProxyOnLocal = true, UseDefaultCredentials = true } }.DownloadString("https://api.ipify.org/");
+                                if (System.Net.IPAddress.TryParse(ip, out IPAddress addressValidation))
+                                {
+                                    TorSharpEnabled = true;
+
+                                    i = 4;
+                                }
+                                else { throw new Exception(); }
+                            }
+                            catch
+                            {
+                                TorSharpEnabled = false;
+
+                                new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
+                                TorSharpProxy.ConfigureAndStartAsync().Wait();
+                                if (!User.Settings.LoadingSettings)
+                                {
+                                    NotifyPropertyChanged();
+                                }
+                                TorSharpProxy.GetNewIdentityAsync().Wait();
+                                TorSharpEnabled = true;
+
+                                i = 4;
+                            }
+                        }
+                        catch
+                        {
+                            TorSharpEnabled = false;
+
+                            try { TorSharpProxy.Stop(); } catch { }
+                            foreach (Process process in Process.GetProcessesByName("tor")) { try { process.Kill(); } catch { } }
+                            foreach (Process process in Process.GetProcessesByName("privoxy")) { try { process.Kill(); } catch { } }
+
+                            if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"), true); } catch { } };
+                            if (Directory.Exists(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"))) { try { Directory.Delete(Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ExtractedTools"), true); } catch { } };
+                        }
+                    }
+
+                    generatingTorProxy = false;
+                }
+
+                return new WebProxy()
+                {
+                    Address = new Uri("http://localhost:" + TorSharpSettings.PrivoxySettings.Port),
+                    BypassProxyOnLocal = true,
+                    UseDefaultCredentials = true
+                };
+            }
+            set { }
+        }
+
+        public static void NotifyPropertyChanged()
+        {
+            PropertyChanged(null, null);
         }
 
         public static string FileSHA256(string filePath)
         {
-            using (var hashAlgorithm = System.Security.Cryptography.SHA256.Create())
-            {
-                using (var stream = System.IO.File.OpenRead(filePath))
-                {
-                    return BitConverter.ToString(hashAlgorithm.ComputeHash(stream)).Replace("-", "").ToUpper();
-                }
-            }
+            using System.Security.Cryptography.SHA256 hashAlgorithm = System.Security.Cryptography.SHA256.Create();
+            using FileStream stream = System.IO.File.OpenRead(filePath);
+            return BitConverter.ToString(hashAlgorithm.ComputeHash(stream)).Replace("-", "").ToUpper();
         }
 
         public static string FormatPath(string path)
@@ -96,20 +270,18 @@ namespace True_Mining_Desktop.Core
 
         private static bool firewallRuleAdded = false;
 
-        public static void AddFirewallPingRule()
+        public static void AddFirewallRule(string name, string filePatch, bool forceAdmin = false)
         {
-            Process addfwrule = new Process();
-            addfwrule.StartInfo.FileName = "netsh";
-            addfwrule.StartInfo.UseShellExecute = false;
+            StreamWriter wr = new(Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd"));
+            wr.Write("netsh advfirewall firewall del rule name=\"" + name + "\"\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=in action=allow\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=out action=allow");
+            wr.Close();
+
+            Process addfwrule = new();
+            addfwrule.StartInfo.FileName = Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd");
+            addfwrule.StartInfo.UseShellExecute = true;
             addfwrule.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             addfwrule.StartInfo.CreateNoWindow = true;
-            addfwrule.StartInfo.Arguments = "advfirewall firewall del rule name=\"ping\"";
-            addfwrule.Start();
-            addfwrule.WaitForExit();
-            addfwrule.StartInfo.Arguments = "advfirewall firewall add rule name=\"ping\" protocol=ICMPV4 dir=in action=allow";
-            addfwrule.Start();
-            addfwrule.WaitForExit();
-            addfwrule.StartInfo.Arguments = "advfirewall firewall add rule name=\"ping\" protocol=ICMPV4 dir=out action=allow";
+            if (forceAdmin) { addfwrule.StartInfo.Verb = "runas"; }
             addfwrule.Start();
             addfwrule.WaitForExit();
 
@@ -120,35 +292,35 @@ namespace True_Mining_Desktop.Core
         {
             if (User.Settings.User.ChangeTbIcon)
             {
-                try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/iconeTaskbar2.ico"); } catch { try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { } }
+                try { MainWindow.NotifyIcon.Icon = new System.Drawing.Icon("Resources/iconeTaskbar2.ico"); } catch { try { MainWindow.NotifyIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); } catch { } }
             }
             else
             {
-                try { MainWindow.nIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); }
+                try { MainWindow.NotifyIcon.Icon = new System.Drawing.Icon("Resources/icone.ico"); }
                 catch { }
             }
         }
 
-        public static void RestartAsAdministrator()
+        public static void RestartApp(bool asAdministrator = true)
         {
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = (True_Mining_Desktop.App.Current.MainWindow.Visibility == Visibility.Visible ? false : true), startMining = Miner.IsMining || Miner.IntentToMine });
+                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = App.Current.MainWindow.Visibility == Visibility.Visible ? false : true, startMining = Miner.IsMining || Miner.IntentToMine });
 
-                Process TrueMiningAsAdmin = new Process();
-                TrueMiningAsAdmin.StartInfo = new ProcessStartInfo()
+                Process TrueMiningNewProcess = new Process();
+                TrueMiningNewProcess.StartInfo = new ProcessStartInfo()
                 {
                     FileName = Process.GetCurrentProcess().MainModule.FileName,
                     UseShellExecute = true,
-                    Verb = "runas"
                 };
-                try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
+                if (asAdministrator) { TrueMiningNewProcess.StartInfo.Verb = "runas"; }
+                try { TrueMiningNewProcess.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
 
                 Process thisProcess = Process.GetCurrentProcess();
 
                 new Task(() =>
                 {
-                    while (!TrueMiningAsAdmin.HasExited)
+                    while (!TrueMiningNewProcess.HasExited)
                     {
                         Thread.Sleep(100);
 
@@ -158,7 +330,7 @@ namespace True_Mining_Desktop.Core
                         {
                             if (process.Id != thisProcess.Id && process.Responding)
                             {
-                                MainWindow.nIcon.Visible = false;
+                                MainWindow.NotifyIcon.Visible = false;
                                 thisProcess.Kill();
                             }
                         }
@@ -184,10 +356,8 @@ namespace True_Mining_Desktop.Core
             if (!file.Exists) { return false; }
             try
             {
-                using (FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                {
-                    stream.Close();
-                }
+                using FileStream stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+                stream.Close();
             }
             catch (IOException)
             {
@@ -197,26 +367,9 @@ namespace True_Mining_Desktop.Core
             return false;
         }
 
-        public static Collection<Version> InstalledDotNetVersions()
-        {
-            Collection<Version> versions = new Collection<Version>();
-            RegistryKey NDPKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\NET Framework Setup\NDP");
-            if (NDPKey != null)
-            {
-                string[] subkeys = NDPKey.GetSubKeyNames();
-                foreach (string subkey in subkeys)
-                {
-                    GetDotNetVersion(NDPKey.OpenSubKey(subkey), subkey, versions);
-                    GetDotNetVersion(NDPKey.OpenSubKey(subkey).OpenSubKey("Client"), subkey, versions);
-                    GetDotNetVersion(NDPKey.OpenSubKey(subkey).OpenSubKey("Full"), subkey, versions);
-                }
-            }
-            return versions;
-        }
-
         public static bool WalletAddressIsValid(string address = "null")
         {
-            if (String.IsNullOrEmpty(address))
+            if (string.IsNullOrEmpty(address))
             {
                 return false;
             }
@@ -250,30 +403,6 @@ namespace True_Mining_Desktop.Core
             return true;
         }
 
-        private static void GetDotNetVersion(RegistryKey parentKey, string subVersionName, Collection<Version> versions)
-        {
-            if (parentKey != null)
-            {
-                string installed = Convert.ToString(parentKey.GetValue("Install"));
-                if (installed == "1")
-                {
-                    string version = Convert.ToString(parentKey.GetValue("Version"));
-                    if (string.IsNullOrEmpty(version))
-                    {
-                        if (subVersionName.StartsWith("v"))
-                            version = subVersionName.Substring(1);
-                        else
-                            version = subVersionName;
-                    }
-
-                    Version ver = new Version(version);
-
-                    if (!versions.Contains(ver))
-                        versions.Add(ver);
-                }
-            }
-        }
-
         public static void OpenLinkInBrowser(string link)
         {
             try
@@ -291,13 +420,13 @@ namespace True_Mining_Desktop.Core
         {
             while (User.Settings.User.AvoidWindowsSuspend)
             {
-                SetThreadExecutionState(ES_SYSTEM_REQUIRED);
+                _ = SetThreadExecutionState(ES_SYSTEM_REQUIRED);
                 Thread.Sleep(50000);
             }
         }
 
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        public static extern uint SetThreadExecutionState(uint esFlags);
+        private static extern uint SetThreadExecutionState(uint esFlags);
 
         public const uint ES_CONTINUOUS = 0x80000000;
         public const uint ES_SYSTEM_REQUIRED = 0x00000001;
@@ -310,7 +439,7 @@ namespace True_Mining_Desktop.Core
             {
                 if (User.Settings.User.AutostartSoftwareWithWindows)
                 {
-                    Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+                    RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
                     if ((string)Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true).GetValue("True Mining") != '"' + System.AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + '"')
                     {
                         key.SetValue("True Mining", '"' + System.AppDomain.CurrentDomain.BaseDirectory + System.Diagnostics.Process.GetCurrentProcess().ProcessName + ".exe" + '"');
@@ -320,7 +449,7 @@ namespace True_Mining_Desktop.Core
                 {
                     if (Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true).GetValue("True Mining") != null)
                     {
-                        Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+                        RegistryKey key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
                         key.DeleteValue("True Mining");
                     }
                 }
@@ -328,17 +457,19 @@ namespace True_Mining_Desktop.Core
             catch { }
         }
 
+        public static bool AddedTrueMiningDestopToWinDefenderExclusions;
+
         public static void AddTrueMiningDestopToWinDefenderExclusions(bool forceAdmin = false)
         {
             try
             {
                 if (Tools.HaveADM || forceAdmin)
                 {
-                    var command = @"Add-MpPreference -ExclusionPath " + '"' + System.AppDomain.CurrentDomain.BaseDirectory + '"' + " -Force";
-                    var commandBytes = System.Text.Encoding.Unicode.GetBytes(command);
-                    var commandBase64 = Convert.ToBase64String(commandBytes);
+                    string command = @"Add-MpPreference -ExclusionPath " + '"' + System.AppDomain.CurrentDomain.BaseDirectory + '"' + " -Force";
+                    byte[] commandBytes = System.Text.Encoding.Unicode.GetBytes(command);
+                    string commandBase64 = Convert.ToBase64String(commandBytes);
 
-                    var startInfo = new ProcessStartInfo()
+                    ProcessStartInfo startInfo = new()
                     {
                         FileName = "powershell.exe",
                         Arguments = $"-NoProfile -ExecutionPolicy unrestricted -EncodedCommand {commandBase64}",
@@ -361,11 +492,15 @@ namespace True_Mining_Desktop.Core
 
         public static void KillProcess(string processName)
         {
-            Process mataminers = new Process();
-            mataminers.StartInfo = new ProcessStartInfo("taskkill", "/F /IM " + processName);
-            mataminers.StartInfo.UseShellExecute = false;
-            mataminers.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            mataminers.StartInfo.CreateNoWindow = true;
+            Process mataminers = new()
+            {
+                StartInfo = new ProcessStartInfo("taskkill", "/F /IM " + processName)
+                {
+                    UseShellExecute = false,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    CreateNoWindow = true
+                }
+            };
             mataminers.Start();
             mataminers.WaitForExit();
         }
@@ -374,10 +509,10 @@ namespace True_Mining_Desktop.Core
 
         public static CheckerPopup CheckerPopup;
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern bool ShowWindow(IntPtr windowIdentifier, int nCmdShow);
     }
 }

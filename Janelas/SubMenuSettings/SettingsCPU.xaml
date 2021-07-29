@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="True_Mining_Desktop.Janelas.SubMenuSettings.SettingsCPU"
+﻿<UserControl x:Class="TrueMiningDesktop.Janelas.SubMenuSettings.SettingsCPU"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -29,7 +29,7 @@
                     </WrapPanel>
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <Label Content="Maximum CPU usage config hint" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
-                        <Slider Width="276" Maximum="100" TickPlacement="None" Value="{Binding MaxUsageHint}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" VerticalAlignment="Center" Margin="10,0,0,0" ValueChanged="Slider_ValueChanged" />
+                        <Slider Width="300" Maximum="100" TickPlacement="None" Value="{Binding MaxUsageHint}" AutoToolTipPlacement="None" Margin="5,0,5,0" IsSnapToTickEnabled="True" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" />
                     </WrapPanel>
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <Label Content="CPU Threads" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />

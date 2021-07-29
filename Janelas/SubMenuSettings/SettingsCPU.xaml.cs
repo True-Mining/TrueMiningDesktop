@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace True_Mining_Desktop.Janelas.SubMenuSettings
+namespace TrueMiningDesktop.Janelas.SubMenuSettings
 {
     /// <summary>
     /// Interação lógica para SettingsCPU.xam
@@ -26,7 +26,7 @@ namespace True_Mining_Desktop.Janelas.SubMenuSettings
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            MainWindow.clicado = false;
+            MainWindow.Clicado = false;
         }
     }
 }

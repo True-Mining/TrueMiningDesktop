@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace True_Mining_Desktop.Janelas
+namespace TrueMiningDesktop.Janelas
 {
     /// <summary>
     /// Interação lógica para Settings.xam

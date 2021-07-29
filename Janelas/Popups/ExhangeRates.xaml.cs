@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
-namespace True_Mining_Desktop.Janelas.Popups
+namespace TrueMiningDesktop.Janelas.Popups
 {
     /// <summary>
     /// Lógica interna para Calculator.xaml
@@ -21,7 +22,7 @@ namespace True_Mining_Desktop.Janelas.Popups
 
                     if (Janelas.Pages.Dashboard.loadingVisualElement.Visibility == Visibility.Visible)
                     {
-                        this.Close();
+                        Close();
 
                         MessageBox.Show("Wait for Dashboard load first"); return;
                     }
@@ -31,7 +32,7 @@ namespace True_Mining_Desktop.Janelas.Popups
 
                         BTCToCoinRate = Decimal.Round(BTCToBTCRate / TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close / 2);
                         BTCToBTCRate = 1;
-                        BTCToUSDRate = Decimal.Round(APIs.BitcoinPrice.FIAT_rates.USD.Last, 2);
+                        BTCToUSDRate = Decimal.Round(PoolAPI.BitcoinPrice.BTCUSD, 2);
 
                         PointToCoinRate = Decimal.Round(exchangeRatePontosToMiningCoin, 5);
                         PointToBTCRate = Decimal.Round(BTCToBTCRate / TruePayment.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close * exchangeRatePontosToMiningCoin / BTCToBTCRate, 8);
@@ -66,5 +67,38 @@ namespace True_Mining_Desktop.Janelas.Popups
         public decimal BTCToCoinRate { get; set; } = 1;
         public decimal BTCToBTCRate { get; set; } = 1;
         public decimal BTCToUSDRate { get; set; } = 1;
+
+        private void CloseButton_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Close();
+        }
+
+        private static bool clicado;
+        private Point lm;
+
+        public void Down(object sender, MouseButtonEventArgs e)
+        {
+            clicado = true;
+
+            lm.X = System.Windows.Forms.Control.MousePosition.X;
+            lm.Y = System.Windows.Forms.Control.MousePosition.Y;
+            lm.X = Convert.ToInt16(Left) - lm.X;
+            lm.Y = Convert.ToInt16(Top) - lm.Y;
+        }
+
+        public void Move(object sender, MouseEventArgs e)
+        {
+            if (clicado && e.LeftButton == MouseButtonState.Pressed)
+            {
+                Left = (System.Windows.Forms.Control.MousePosition.X + lm.X);
+                Top = (System.Windows.Forms.Control.MousePosition.Y + lm.Y);
+            }
+            else { clicado = false; }
+        }
+
+        public void Up(object sender, MouseButtonEventArgs e)
+        {
+            clicado = false;
+        }
     }
 }
