@@ -31,7 +31,7 @@ namespace TrueMiningDesktop.Janelas.Popups
 
                         BTCToCoinRate = decimal.Round(BTCToBTCRate / (PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2);
                         BTCToBTCRate = 1;
-                        BTCToUSDRate = decimal.Round(PoolAPI.BitcoinPrice.FIAT_rates.USD.Last, 2);
+                        BTCToUSDRate = decimal.Round(PoolAPI.BitcoinPrice.BTCUSD, 2);
 
                         PointToCoinRate = decimal.Round(exchangeRatePontosToMiningCoin, 5);
                         PointToBTCRate = decimal.Round((PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate, 8);

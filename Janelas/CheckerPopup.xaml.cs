@@ -340,7 +340,7 @@ namespace TrueMiningDesktop.Janelas
                         }
                         Thread.Sleep(150);
                     }
-                //    webClient.Dispose();
+                    //    webClient.Dispose();
                 }
                 if ((File.Exists(file.Path + file.FileName + ".dl") && Tools.FileSHA256(file.Path + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Path + file.FileName) && Tools.FileSHA256(file.Path + file.FileName) == file.Sha256)) { return true; } else { return false; }
             }

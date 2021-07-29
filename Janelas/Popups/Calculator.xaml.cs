@@ -57,7 +57,7 @@ namespace TrueMiningDesktop.Janelas.Popups
                 CPU_hashrate = Math.Round(CPU_hashrate_decimal, 2).ToString() + " H/s";
                 CPUestimated_day_Coins = CPU_hashrate_decimal * (decimal)TimeSpan.FromDays(1).TotalSeconds / HashesPerPoint * ExchangeRatePontosToMiningCoin;
                 CPUestimated_day_Sats = CPUestimated_day_Coins * (decimal)PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
-                CPUestimated_day_USD = CPUestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.FIAT_rates.USD.Last;
+                CPUestimated_day_USD = CPUestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.BTCUSD;
                 CPUestimated_day_Coins_string = Math.Round(CPUestimated_day_Coins, 4).ToString();
                 CPUestimated_day_Sats_string = ((decimal)Math.Round(CPUestimated_day_Sats, 8)).ToString();
                 CPUestimated_day_USD_string = Math.Round(CPUestimated_day_USD, 2).ToString();
@@ -67,7 +67,7 @@ namespace TrueMiningDesktop.Janelas.Popups
                 OPENCL_hashrate = Math.Round(OPENCL_hashrate_decimal, 2).ToString() + " H/s";
                 OPENCLestimated_day_Coins = OPENCL_hashrate_decimal * (decimal)TimeSpan.FromDays(1).TotalSeconds / HashesPerPoint * ExchangeRatePontosToMiningCoin;
                 OPENCLestimated_day_Sats = OPENCLestimated_day_Coins * (decimal)PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
-                OPENCLestimated_day_USD = OPENCLestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.FIAT_rates.USD.Last;
+                OPENCLestimated_day_USD = OPENCLestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.BTCUSD;
                 OPENCLestimated_day_Coins_string = Math.Round(OPENCLestimated_day_Coins, 4).ToString();
                 OPENCLestimated_day_Sats_string = ((decimal)Math.Round(OPENCLestimated_day_Sats, 8)).ToString();
                 OPENCLestimated_day_USD_string = Math.Round(OPENCLestimated_day_USD, 2).ToString();
@@ -77,7 +77,7 @@ namespace TrueMiningDesktop.Janelas.Popups
                 CUDA_hashrate = Math.Round(CUDA_hashrate_decimal, 2).ToString() + " H/s";
                 CUDAestimated_day_Coins = CUDA_hashrate_decimal * (decimal)TimeSpan.FromDays(1).TotalSeconds / HashesPerPoint * ExchangeRatePontosToMiningCoin;
                 CUDAestimated_day_Sats = CUDAestimated_day_Coins * (decimal)PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
-                CUDAestimated_day_USD = CUDAestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.FIAT_rates.USD.Last;
+                CUDAestimated_day_USD = CUDAestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.BTCUSD;
                 CUDAestimated_day_Coins_string = Math.Round(CUDAestimated_day_Coins, 4).ToString();
                 CUDAestimated_day_Sats_string = ((decimal)Math.Round(CUDAestimated_day_Sats, 8)).ToString();
                 CUDAestimated_day_USD_string = Math.Round(CUDAestimated_day_USD, 2).ToString();
