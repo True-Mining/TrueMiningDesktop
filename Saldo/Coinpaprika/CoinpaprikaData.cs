@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
-using System.Text.Json;
 using TrueMiningDesktop.Coinpaprika.Objects;
 
 namespace TrueMiningDesktop.Coinpaprika

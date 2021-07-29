@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace TrueMiningDesktop.Coinpaprika.Objects
 {
@@ -14,6 +13,4 @@ namespace TrueMiningDesktop.Coinpaprika.Objects
         public decimal volume { get; set; }
         public decimal market_cap { get; set; }
     }
-
-
 }

@@ -135,12 +135,11 @@ namespace TrueMiningDesktop.Server
 
                     getPoolAPITask.Add(new Task<Action>(() => { hashrateHystory_user_raw = TrueMiningDesktop.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet); return null; }));
                     getPoolAPITask.Add(new Task<Action>(() => { hashrateHystory_tm_raw = TrueMiningDesktop.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
-                    getPoolAPITask.Add(new Task<Action>(() => {BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"))).BTCUSD.ask), 2); return null; }));
-                    getPoolAPITask.Add(new Task<Action>(() => {TrueMiningDesktop.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(Tools.HttpGet("https://api.coinpaprika.com/v1/coins/xmr-monero/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")); return null; }));
-                    getPoolAPITask.Add(new Task<Action>(() => {TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(Tools.HttpGet("https://api.coinpaprika.com/v1/coins/" + (String.Equals(User.Settings.User.Payment_Coin, "doge", StringComparison.OrdinalIgnoreCase) ? "doge-dogecoin" : "rdct-rdctoken") + "/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")); return null; }));
-                    getPoolAPITask.Add(new Task<Action>(() => {XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)); return null; }));
-                    getPoolAPITask.Add(new Task<Action>(() => {XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef")); return null; }));
-
+                    getPoolAPITask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"))).BTCUSD.ask), 2); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => { TrueMiningDesktop.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(Tools.HttpGet("https://api.coinpaprika.com/v1/coins/xmr-monero/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => { TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv = JsonConvert.DeserializeObject<List<OHLCV>>(Tools.HttpGet("https://api.coinpaprika.com/v1/coins/" + (String.Equals(User.Settings.User.Payment_Coin, "doge", StringComparison.OrdinalIgnoreCase) ? "doge-dogecoin" : "rdct-rdctoken") + "/ohlcv/historical?start=" + ((DateTimeOffset)oneWeekAgo).ToUnixTimeSeconds() + "&end=" + ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() + "&quote=btc")); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)); return null; }));
+                    getPoolAPITask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef")); return null; }));
 
                     foreach (Task task in getPoolAPITask)
                     {
@@ -200,7 +199,7 @@ namespace TrueMiningDesktop.Server
 
                 decimal XMRfinalPrice = (TrueMiningDesktop.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv.Last().close * 2 + TrueMiningDesktop.Coinpaprika.CoinpaprikaData.XMR_BTC_ohlcv.Last().low) / 3;
                 decimal COINfinalPrice = (TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().close * 2 + TrueMiningDesktop.Coinpaprika.CoinpaprikaData.COIN_BTC_ohlcv.Last().high) / 3;
-                
+
                 HashesPerPoint = XMR_nanopool.sharecoef.data * pointsMultiplier;
                 AccumulatedBalance_Points = (decimal)sumHashrate_user / HashesPerPoint;
 
