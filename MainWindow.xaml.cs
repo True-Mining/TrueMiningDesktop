@@ -92,6 +92,9 @@ namespace TrueMiningDesktop
             Microsoft.Win32.SystemEvents.SessionEnding += SystemEvents_SessionEnding;
 
             Application.Current.Exit += Current_Exit;
+
+            Tools.timerSystemAwake.Elapsed += Tools.AwakeSystem;
+            Tools.timerSystemAwake.Start();
         }
 
         private void Tools_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

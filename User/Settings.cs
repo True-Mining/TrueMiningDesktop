@@ -216,7 +216,7 @@ namespace TrueMiningDesktop.User
         public bool ChangeTbIcon { get { return changeTbIcon; } set { changeTbIcon = value; Tools.TryChangeTaskbarIconAsSettingsOrder(); } }
 
         private bool avoidWindowsSuspend = true;
-        public bool AvoidWindowsSuspend { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; Task.Run(() => Core.Tools.KeepSystemAwake()); } }
+        public bool AvoidWindowsSuspend { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; } }
 
         public int PaymentCoinComboBox_SelectedIndex
         {

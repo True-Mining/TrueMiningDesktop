@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using TrueMiningDesktop.Janelas;
 
 namespace TrueMiningDesktop.Core
@@ -303,7 +304,7 @@ namespace TrueMiningDesktop.Core
 
         public static void RestartApp(bool asAdministrator = true)
         {
-            Application.Current.Dispatcher.Invoke((Action)delegate
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
             {
                 Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = App.Current.MainWindow.Visibility == Visibility.Visible ? false : true, startMining = Miner.IsMining || Miner.IntentToMine });
 
@@ -314,7 +315,7 @@ namespace TrueMiningDesktop.Core
                     UseShellExecute = true,
                 };
                 if (asAdministrator) { TrueMiningNewProcess.StartInfo.Verb = "runas"; }
-                try { TrueMiningNewProcess.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
+                try { TrueMiningNewProcess.Start(); Miner.StopMiner(); } catch (Exception e) { System.Windows.MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
 
                 Process thisProcess = Process.GetCurrentProcess();
 
@@ -411,21 +412,26 @@ namespace TrueMiningDesktop.Core
             }
             catch
             {
-                Clipboard.SetText(link);
-                MessageBox.Show("Acess >>" + link + "<< in your browser. This is in your clipboard now.");
+                System.Windows.Clipboard.SetText(link);
+                System.Windows.MessageBox.Show("Acess >>" + link + "<< in your browser. This is in your clipboard now.");
             }
         }
 
-        public static void KeepSystemAwake()
+        public static System.Timers.Timer timerSystemAwake = new(50000);
+
+        public static void AwakeSystem(object sender, System.Timers.ElapsedEventArgs e)
         {
-            while (User.Settings.User.AvoidWindowsSuspend)
+            if (User.Settings.User.AvoidWindowsSuspend)
             {
-                _ = SetThreadExecutionState(ES_SYSTEM_REQUIRED);
-                Thread.Sleep(50000);
+                SetThreadExecutionState(ES_SYSTEM_REQUIRED);
+                SystemIdleTimerReset();
             }
         }
 
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        [DllImport("CoreDll.dll")]
+        public static extern void SystemIdleTimerReset();
+
+        [DllImport("kernel32.dll")]
         private static extern uint SetThreadExecutionState(uint esFlags);
 
         public const uint ES_CONTINUOUS = 0x80000000;
