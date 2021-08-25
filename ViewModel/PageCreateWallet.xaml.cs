@@ -52,6 +52,12 @@ namespace TrueMiningDesktop.ViewModel
                     }
                     break;
 
+                case "DOGE_okex":
+                    {
+                        Tools.OpenLinkInBrowser("https://www.okex.com/join/9619437");
+                    }
+                    break;
+
                 case "DOGE_dogechain":
                     {
                         Tools.OpenLinkInBrowser("https://my.dogechain.info");

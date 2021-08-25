@@ -5,12 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:TrueMiningDesktop.ViewModel"
       mc:Ignorable="d"
-      d:DesignHeight="275" d:DesignWidth="675"
+      d:DesignHeight="325" d:DesignWidth="675"
       RenderOptions.BitmapScalingMode="HighQuality"
       Title="Wallet Sugestions"
-      Height="275" Width="675">
+      Height="325" Width="675">
 
-    <Grid Background="#FFEEEEEE">
+    <Grid Background="#FFEEEEEE" Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="101*" />
             <ColumnDefinition Width="124*" />
@@ -44,22 +44,28 @@
                             <Label Content="Core Wallet (fullnode)" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
                         </WrapPanel>
                     </Button>
-                    <Button x:Name="DOGE_binance" Height="30" Width="252" Background="#FFA0A0A0" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
-                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="https://bin.bnbstatic.com/static/images/common/favicon.ico" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
-                            <Label Content="Binance exchange wallet" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
-                        </WrapPanel>
-                    </Button>
                     <Button x:Name="DOGE_dogechain" Height="30" Width="252" Background="#FFA0A0A0" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="https://my.dogechain.info/img/favicon.png" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
+                            <Image Source="https://icons.iconarchive.com/icons/cjdowner/cryptocurrency/32/Dogecoin-icon.png" Width="20" Height="20" TextBlock.Foreground="White" VerticalAlignment="Top" Grid.IsSharedSizeScope="True" />
                             <Label Content="Dogechain WebWallet" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
+                        </WrapPanel>
+                    </Button>
+                    <Button x:Name="DOGE_okex" Height="30" Width="252" Background="#FFA0A0A0" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
+                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="https://static.okex.com/cdn/assets/imgs/MjAxODg/D91A7323087D31A588E0D2A379DD7747.png" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
+                            <Label Content="OkEx Exchange" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
                         </WrapPanel>
                     </Button>
                     <Button x:Name="DOGE_crex24" Height="30" Width="252" Background="#FFA0A0A0" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="https://crex24.com/assets/favicon/favicon-32x32.png" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
-                            <Label Content="Crex24 exchange wallet" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
+                            <Label Content="Crex24 Exchange" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
+                        </WrapPanel>
+                    </Button>
+                    <Button x:Name="DOGE_binance" Height="30" Width="252" Background="#FFA0A0A0" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
+                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="https://bin.bnbstatic.com/static/images/common/favicon.ico" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="White" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
+                            <Label Content="Binance Exchange" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="White" IsEnabled="True" VerticalContentAlignment="Center" />
                         </WrapPanel>
                     </Button>
                 </WrapPanel>
