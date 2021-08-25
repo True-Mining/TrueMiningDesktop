@@ -308,7 +308,7 @@ namespace TrueMiningDesktop.Janelas
 
                     ProgressDetails = "Progress: starting download";
 
-                    WebClient webClient = new WebClient() { Proxy = useTor ? Tools.TorProxy : null };
+                    WebClient webClient = new() { Proxy = useTor ? Tools.TorProxy : null };
                     webClient.DownloadProgressChanged -= WebClient_DownloadProgressChanged;
                     webClient.DownloadFileCompleted -= WebClient_DownloadFileCompleted;
                     webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
@@ -325,7 +325,7 @@ namespace TrueMiningDesktop.Janelas
                             if (DateTime.UtcNow > currentDownloadLastProgressUpdated.AddSeconds(10))
                             {
                                 ProgressDetails = "Progress: restarting...";
-                                FileName = FileName + " => fail. restarting app...";
+                                FileName += " => fail. restarting app...";
                                 StatusTitle = "Fail > Restarting Application";
                                 Thread.Sleep(4000);
 

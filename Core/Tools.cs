@@ -14,7 +14,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using TrueMiningDesktop.Janelas;
 
 namespace TrueMiningDesktop.Core
@@ -306,13 +305,15 @@ namespace TrueMiningDesktop.Core
         {
             System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                Core.NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = App.Current.MainWindow.Visibility == Visibility.Visible ? false : true, startMining = Miner.IsMining || Miner.IntentToMine });
+                NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = System.Windows.Application.Current.MainWindow.Visibility != Visibility.Visible, startMining = Miner.IsMining || Miner.IntentToMine });
 
-                Process TrueMiningNewProcess = new Process();
-                TrueMiningNewProcess.StartInfo = new ProcessStartInfo()
+                Process TrueMiningNewProcess = new()
                 {
-                    FileName = Process.GetCurrentProcess().MainModule.FileName,
-                    UseShellExecute = true,
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = Process.GetCurrentProcess().MainModule.FileName,
+                        UseShellExecute = true,
+                    }
                 };
                 if (asAdministrator) { TrueMiningNewProcess.StartInfo.Verb = "runas"; }
                 try { TrueMiningNewProcess.Start(); Miner.StopMiner(); } catch (Exception e) { System.Windows.MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
@@ -417,19 +418,18 @@ namespace TrueMiningDesktop.Core
             }
         }
 
-        public static System.Timers.Timer timerSystemAwake = new(50000);
+        public static System.Timers.Timer timerSystemAwake = new(30000);
 
         public static void AwakeSystem(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (User.Settings.User.AvoidWindowsSuspend)
+            if (User.Settings.User.AvoidWindowsSuspend && (Miner.IsMining || Miner.IntentToMine))
             {
+                SetThreadExecutionState(ES_CONTINUOUS);
+                SetThreadExecutionState(ES_AWAYMODE_REQUIRED);
                 SetThreadExecutionState(ES_SYSTEM_REQUIRED);
-                SystemIdleTimerReset();
+                SetThreadExecutionState(ES_SYSTEM_REQUIRED);
             }
         }
-
-        [DllImport("CoreDll.dll")]
-        public static extern void SystemIdleTimerReset();
 
         [DllImport("kernel32.dll")]
         private static extern uint SetThreadExecutionState(uint esFlags);
