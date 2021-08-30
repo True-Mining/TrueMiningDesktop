@@ -27,7 +27,7 @@
                 <Label Content="Enabled" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
                 <ToggleButton x:Name="ovDeviceIsSelected"
                     Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                    ToolTip="Enable mining on this device" materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="ForestGreen" materialDesign:ToggleButtonAssist.SwitchTrackOffBackground="Gray" Height="60" Padding="0,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Margin="0,7,0,0" Checked="DeviceIsSelected_Checked" Unchecked="DeviceIsSelected_Unchecked" FontFamily="Gadugi" />
+                    ToolTip="Enable / disable mining on this device" materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="ForestGreen" materialDesign:ToggleButtonAssist.SwitchTrackOffBackground="Gray" Height="60" Padding="0,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Margin="0,7,0,0" Checked="DeviceIsSelected_Checked" Unchecked="DeviceIsSelected_Unchecked" FontFamily="Gadugi" />
             </Grid>
         </WrapPanel>
     </Grid>
