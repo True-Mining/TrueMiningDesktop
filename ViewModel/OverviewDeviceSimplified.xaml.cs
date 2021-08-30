@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using TrueMiningDesktop.Core;
@@ -73,6 +74,8 @@ namespace TrueMiningDesktop.ViewModel
 
             if (Miner.IsMining)
             {
+                while(Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
+
                 Miner.StopMiner();
                 Miner.StartMiner();
             }
@@ -86,6 +89,8 @@ namespace TrueMiningDesktop.ViewModel
 
             if (Miner.IsMining)
             {
+                while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
+
                 Miner.StopMiner();
                 Miner.StartMiner();
             }
