@@ -76,13 +76,13 @@ namespace TrueMiningDesktop.ViewModel
             {
                 new System.Threading.Tasks.Task(() =>
                 {
-                  while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
+                    while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
 
-                Miner.StopMiner();
-   
+                    Miner.StopMiner();
+
                     Miner.StartMiner();
                 })
-                    .Start();
+                .Start();
             }
         }
 
@@ -92,19 +92,18 @@ namespace TrueMiningDesktop.ViewModel
 
             ovIcon.Foreground = Brushes.Gray;
 
-                new System.Threading.Tasks.Task(() =>
+            new System.Threading.Tasks.Task(() =>
+            {
+                if (Miner.IsMining)
                 {
-                    if (Miner.IsMining)
-                    {
-                        while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
+                    while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
 
-                        Miner.StopMiner();
-                 
-                        Miner.StartMiner();
-                    }
-                })
-                    .Start();
-        
+                    Miner.StopMiner();
+
+                    Miner.StartMiner();
+                }
+            })
+            .Start();
         }
     }
 }

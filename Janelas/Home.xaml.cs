@@ -21,14 +21,14 @@ namespace TrueMiningDesktop.Janelas
 
         public void StartStopMining_Click(object sender, RoutedEventArgs e)
         {
-                if (Miner.IsMining && !Miner.StoppingMining)
-                {
-                    Miner.StopMiner();
-                }
-                else if (!Miner.IsMining && !Miner.IntentToMine && !Miner.StoppingMining)
-                {
-                    Miner.StartMiner();
-                }
+            if (Miner.IsMining && !Miner.StoppingMining)
+            {
+                Miner.StopMiner();
+            }
+            else if (!Miner.IsMining && !Miner.IntentToMine && !Miner.StoppingMining)
+            {
+                Miner.StartMiner();
+            }
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)

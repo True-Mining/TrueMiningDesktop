@@ -10,13 +10,14 @@ namespace TrueMiningDesktop.Core
         private static readonly DateTime holdTime = DateTime.UtcNow;
         public static DateTime StartedSince = holdTime.AddTicks(-holdTime.Ticks);
 
-        public static void StartMiner()
+        public static void StartMiner(bool force = false)
         {
-           // if (!IsMining && !IntentToMine)
+            if (!IsMining && !IntentToMine || force)
             {
                 IntentToMine = true;
 
-                while (StoppingMining) { System.Threading.Thread.Sleep(100);  }
+                while (StoppingMining && !force) { System.Threading.Thread.Sleep(100); }
+                IntentToMine = true;
 
                 if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
                 {
@@ -27,23 +28,23 @@ namespace TrueMiningDesktop.Core
 
                 if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (string.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
                 {
-
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
+                        IntentToMine = true;
                         Tools.CheckerPopup = new CheckerPopup("all");
-                    Tools.CheckerPopup.ShowDialog();
-
+                        Tools.CheckerPopup.ShowDialog();
                     });
-                    if (!EmergencyExit)
+                    if (!EmergencyExit || force)
                     {
                         new System.Threading.Tasks.Task(() =>
                         {
                             try
                             {
+                                IsMining = true;
+
                                 XMRig.XMRig.CreateConfigFile();
                                 XMRig.XMRig.Start();
 
-                                IsMining = true;
                                 intentToMine = false;
                             }
                             catch (Exception e) { MessageBox.Show(e.Message); intentToMine = false; }
@@ -63,25 +64,30 @@ namespace TrueMiningDesktop.Core
             }
         }
 
-        public static void StopMiner()
+        public static void StopMiner(bool force = false)
         {
             StoppingMining = true;
 
-            while (IntentToMine) { System.Threading.Thread.Sleep(100); }
+            System.Threading.Thread.Sleep(200);
+
+            while (IntentToMine && !force) { System.Threading.Thread.Sleep(100); }
 
             if (IsMining)
             {
+
                 intentToMine = false;
+                isMining = false;
 
-                new System.Threading.Tasks.Task(() =>
-                {
-                    try { XMRig.XMRig.Stop(); } catch { }
-
-                    isMining = false;
-                    StoppingMining = false;
-                })
-                .Start();
+                StoppingMining = true;
             }
+
+            new System.Threading.Tasks.Task(() =>
+            {
+                try { XMRig.XMRig.Stop(); } catch { }
+
+                StoppingMining = false;
+            })
+            .Start();
         }
 
         public static void ShowHideCLI(string miner = "all")
