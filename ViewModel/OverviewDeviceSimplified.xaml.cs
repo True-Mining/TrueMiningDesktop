@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using TrueMiningDesktop.Core;
@@ -73,8 +74,15 @@ namespace TrueMiningDesktop.ViewModel
 
             if (Miner.IsMining)
             {
-                Miner.StopMiner();
-                Miner.StartMiner();
+                new System.Threading.Tasks.Task(() =>
+                {
+                    while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
+
+                    Miner.StopMiner();
+
+                    Miner.StartMiner();
+                })
+                .Start();
             }
         }
 
@@ -84,11 +92,18 @@ namespace TrueMiningDesktop.ViewModel
 
             ovIcon.Foreground = Brushes.Gray;
 
-            if (Miner.IsMining)
+            new System.Threading.Tasks.Task(() =>
             {
-                Miner.StopMiner();
-                Miner.StartMiner();
-            }
+                if (Miner.IsMining)
+                {
+                    while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
+
+                    Miner.StopMiner();
+
+                    Miner.StartMiner();
+                }
+            })
+            .Start();
         }
     }
 }

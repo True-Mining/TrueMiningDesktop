@@ -316,7 +316,8 @@ namespace TrueMiningDesktop.Core
                     }
                 };
                 if (asAdministrator) { TrueMiningNewProcess.StartInfo.Verb = "runas"; }
-                try { TrueMiningNewProcess.Start(); Miner.StopMiner(); } catch (Exception e) { System.Windows.MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
+
+                try { TrueMiningNewProcess.Start(); Miner.StopMiner(true); } catch (Exception e) { System.Windows.MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
 
                 Process thisProcess = Process.GetCurrentProcess();
 

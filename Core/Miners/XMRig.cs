@@ -51,7 +51,7 @@ namespace TrueMiningDesktop.Core.XMRig
                     try
                     {
                         DateTime initializingTask = DateTime.UtcNow;
-                        while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && Miner.IsMining && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(1); }
+                        while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && (Miner.IsMining || Miner.IntentToMine) && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(10); }
                         Miner.ShowHideCLI();
                     }
                     catch { }
@@ -61,7 +61,8 @@ namespace TrueMiningDesktop.Core.XMRig
             }
             catch (Exception e)
             {
-                Miner.StopMiner();
+                Miner.StopMiner(true);
+                Miner.IntentToMine = true;
 
                 try
                 {
@@ -77,15 +78,19 @@ namespace TrueMiningDesktop.Core.XMRig
                         }
                         else
                         {
-                            Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
-                            Thread.Sleep(3000);
-                            Miner.StartMiner();
+                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
+
+                                Thread.Sleep(3000);
+                                Miner.StartMiner(true);
+                            });
                         }
                     }
                 }
                 catch (Exception ee)
                 {
-                    Miner.StopMiner();
+                    Miner.StopMiner(true);
                     MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
                 }
             }
@@ -98,10 +103,30 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public static void Stop()
         {
-            startedSince = holdTime.AddTicks(-(holdTime.Ticks));
+            try
+            {
+                Task tryCloseFancy = new(() =>
+                {
+                    try
+                    {
+                        XMRIGminer.CloseMainWindow();
+                        XMRIGminer.WaitForExit();
+                    }
+                    catch
+                    {
+                        XMRIGminer.Kill();
+                        XMRIGminer.WaitForExit();
+                    }
+                });
+                tryCloseFancy.Start();
+                tryCloseFancy.Wait(4000);
 
-            try { XMRIGminer.Kill(); } catch { }
-            Thread.Sleep(500);
+                XMRIGminer.Kill();
+                XMRIGminer.WaitForExit();
+            }
+            catch { }
+
+            Thread.Sleep(50);
         }
 
         public static void ChangeCompiler()
@@ -182,7 +207,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
         private static void XMRIGminer_Exited(object sender, EventArgs e)
         {
-            if (Miner.IsMining)
+            if (Miner.IsMining && !Miner.StoppingMining)
             {
                 if (!inXMRIGexitEvent)
                 {
@@ -191,7 +216,7 @@ namespace TrueMiningDesktop.Core.XMRig
                     if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
                     else { ChangeCompiler(); }
 
-                    if (Miner.IsMining)
+                    if (Miner.IsMining && !Miner.StoppingMining)
                     {
                         Start();
                     }
