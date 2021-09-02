@@ -99,8 +99,20 @@ namespace TrueMiningDesktop.Core
                 IntPtr windowIdentifier = Tools.FindWindow(null, "True Mining running XMRig");
                 if (showCLI)
                 {
-                    XMRig.XMRig.Show();
-                    Tools.ShowWindow(windowIdentifier, 1);
+                    if (Application.Current.MainWindow.IsVisible)
+                    {
+                        XMRig.XMRig.Show();
+                        Tools.ShowWindow(windowIdentifier, 1);
+                        Application.Current.Dispatcher.Invoke((Action)delegate
+                        {
+                            Application.Current.MainWindow.Focus();
+                        });
+                    }
+                    else
+                    {
+                        XMRig.XMRig.Show();
+                        Tools.ShowWindow(windowIdentifier, 2);
+                    }
                 }
                 else
                 {

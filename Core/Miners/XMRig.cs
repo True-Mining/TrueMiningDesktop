@@ -50,9 +50,14 @@ namespace TrueMiningDesktop.Core.XMRig
                 {
                     try
                     {
-                        DateTime initializingTask = DateTime.UtcNow;
-                        while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && (Miner.IsMining || Miner.IntentToMine) && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(10); }
-                        Miner.ShowHideCLI();
+                        Application.Current.Dispatcher.Invoke((Action)delegate
+                        {
+                            DateTime initializingTask = DateTime.UtcNow;
+                            while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
+                            Thread.Sleep(1000);
+                            Miner.ShowHideCLI();
+                            Miner.ShowHideCLI();
+                        });
                     }
                     catch { }
                 }).Start();
@@ -195,7 +200,7 @@ namespace TrueMiningDesktop.Core.XMRig
                     }
                 }
 
-                if (hashrate >= 0) { return hashrate; }
+                if (hashrate >= 0 && Miner.IsMining) { return hashrate; }
             }
             catch
             {
