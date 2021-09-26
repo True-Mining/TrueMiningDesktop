@@ -10,18 +10,18 @@
     RenderOptions.BitmapScalingMode="HighQuality">
 
     <Window.Background>
-        <SolidColorBrush Color="White" />
+        <SolidColorBrush Color="#F7F8FC" />
     </Window.Background>
     <Window.Icon>
         <BitmapImage UriSource="/icone.ico" RenderOptions.BitmapScalingMode="HighQuality" RenderOptions.EdgeMode="Aliased" />
     </Window.Icon>
-    <Grid Background="White" HorizontalAlignment="Center" Width="950">
-        <Grid x:Name="AllWindow" Background="White" Width="950" PreviewMouseDown="Down" MouseMove="Move" MouseUp="Up">
-            <StackPanel Width="300" HorizontalAlignment="Left" Background="#FF8086FF" MouseUp="Up" MouseMove="Move" MouseDown="Down">
+    <Grid Background="#F7F8FC" HorizontalAlignment="Center" Width="950">
+        <Grid x:Name="AllWindow" Background="#F7F8FC" Width="950" PreviewMouseDown="Down" MouseMove="Move" MouseUp="Up">
+            <StackPanel Width="300" HorizontalAlignment="Left" Background="#5C7AEA" MouseUp="Up" MouseMove="Move" MouseDown="Down">
                 <Canvas Height="80" Background="Transparent">
                     <Image Canvas.Left="17" Canvas.Top="12"  Source="/icone.ico" Width="56" VerticalAlignment="Center" Stretch="Uniform" />
-                    <Label Content="True Mining" FontSize="34" Canvas.Left="80" Canvas.Top="15" ClipToBounds="True" FontFamily="Gadugi" FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="0,0,0,0" Foreground="{DynamicResource MaterialDesignSnackbarBackground}" />
-                    <TextBlock x:Name="CanvasSoftwareVersion" Canvas.Right="45" Canvas.Top="52" TextAlignment="Right" Text="" FontSize="11.5" FontWeight="Bold" Foreground="#FF404040" FontStyle="Normal" Padding="0,0,0,0" Margin="0,0,0,0" />
+                    <Label Content="True Mining" FontSize="34" Canvas.Left="80" Canvas.Top="21.5" VerticalAlignment="Center" ClipToBounds="True" FontFamily="Roboto" FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="0,0,0,0" Foreground="{DynamicResource MaterialDesignSnackbarBackground}" />
+                    <TextBlock x:Name="CanvasSoftwareVersion" Canvas.Right="48" Canvas.Top="51.5" TextAlignment="Right" Text="" FontSize="11.5" FontWeight="Bold" Foreground="#FF404040" FontStyle="Normal" Padding="0,0,0,0" Margin="0,0,0,0" />
                 </Canvas>
                 <ScrollViewer HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto" Grid.Row="1" Height="410" Padding="0,0,0,0" ScrollChanged="ScrollViewer_ScrollChanged">
                     <ListView x:Name="MenuMenu" Margin="0,0,0,0" SelectionChanged="Menu_SelectionChanged" ScrollViewer.VerticalScrollBarVisibility="Disabled" MouseLeftButtonDown="Menu_PreviewMouseLeftButtonDown" Padding="0,0,0,0" Width="300" Height="410" />
@@ -37,9 +37,9 @@
 
         <Grid x:Name="ImutableElements" VerticalAlignment="Top" HorizontalAlignment="Right">
             <WrapPanel x:Name="TitleMenu" Margin="0,3,4,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="96" Height="25" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" MouseDown="WrapPanel_MouseDown">
-                <materialDesign:PackIcon Kind="Hide" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF404040" Background="#FFB3CBFF" Margin="0,0,3,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_1" />
-                <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF3E3E3E" Background="#FFACACAC" Margin="0,0,3,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_2" />
-                <materialDesign:PackIcon Kind="WindowClose" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF7C0000" Background="#FFFFA1A1" Margin="0,0,0,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown" />
+                <materialDesign:PackIcon Kind="Hide" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF404040" Background="#F7F8FC" Margin="0,0,3,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_1" ToolTip="Hide to toolbar"/>
+                <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF3E3E3E" Background="#F7F8FC" Margin="0,0,3,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_2" ToolTip="Minimize to taskbar"/>
+                <materialDesign:PackIcon Kind="WindowClose" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF7C0000" Background="#F7F8FC" Margin="0,0,0,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown" ToolTip="Close True Mining Desktop"/>
             </WrapPanel>
         </Grid>
     </Grid>

@@ -12,22 +12,22 @@
                 <materialDesign:PackIcon x:Name="ovIcon" Height="45" Width="45"  Foreground="Gray" Margin="0,0,10,0" />
             </Grid>
             <Grid VerticalAlignment="Center" Height="70">
-                <Label Content="Device" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
-                <Label x:Name="ovDeviceName" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="18" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="150" VerticalContentAlignment="Center" Padding="4,6,4,0" />
+                <Label Content="Device" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Roboto" />
+                <Label x:Name="ovDeviceName" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="18" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="150" VerticalContentAlignment="Center" Padding="4,6,4,0" />
             </Grid>
             <Grid VerticalAlignment="Center">
-                <Label Content="Mining Algorithm" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
-                <Label x:Name="ovMiningAlgo" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="18" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="130" VerticalContentAlignment="Center" HorizontalAlignment="Center" Padding="4,6,4,0" />
+                <Label Content="Mining Algorithm" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Roboto" />
+                <Label x:Name="ovMiningAlgo" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="18" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="130" VerticalContentAlignment="Center" HorizontalAlignment="Center" Padding="4,6,4,0" />
             </Grid>
             <Grid VerticalAlignment="Center">
-                <Label Content="Hashrate" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
-                <Label x:Name="ovHashrate" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="18" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="160" VerticalContentAlignment="Center" HorizontalAlignment="Left" Padding="4,6,4,0" Margin="0,0,0,0" />
+                <Label Content="Hashrate" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Roboto" />
+                <Label x:Name="ovHashrate" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="18" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="160" VerticalContentAlignment="Center" HorizontalAlignment="Left" Padding="4,6,4,0" Margin="0,0,0,0" />
             </Grid>
             <Grid VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,0,0">
-                <Label Content="Enabled" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Gadugi" />
+                <Label Content="Enabled" Height="25" Foreground="DarkOrange" FontSize="11.5" VerticalAlignment="Center" Margin="0,0,0,25" FontWeight="Bold" FontFamily="Roboto" />
                 <ToggleButton x:Name="ovDeviceIsSelected"
                     Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                    ToolTip="Enable / disable mining on this device" materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="ForestGreen" materialDesign:ToggleButtonAssist.SwitchTrackOffBackground="Gray" Height="60" Padding="0,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Margin="0,7,0,0" Checked="DeviceIsSelected_Checked" Unchecked="DeviceIsSelected_Unchecked" FontFamily="Gadugi" />
+                    ToolTip="Enable / disable mining on this device" materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="ForestGreen" materialDesign:ToggleButtonAssist.SwitchTrackOffBackground="Gray" Height="60" Padding="0,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Margin="0,7,0,0" Checked="DeviceIsSelected_Checked" Unchecked="DeviceIsSelected_Unchecked" FontFamily="Roboto" />
             </Grid>
         </WrapPanel>
     </Grid>

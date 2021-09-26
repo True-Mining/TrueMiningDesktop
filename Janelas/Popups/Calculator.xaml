@@ -12,87 +12,87 @@
             <WrapPanel x:Name="CPUpannel"  Orientation="Vertical" Width="250" Height="300">
                 <WrapPanel Margin="0,15,0,0">
                     <materialDesign:PackIcon Width="40" Height="40" Kind="Cpu64Bit" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                    <Label Content="x64 CPU" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="x64 CPU" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="Hashrate: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CPU_hashrate}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="Hashrate: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CPU_hashrate}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="Algorithm: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CPU_algorithm}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="Algorithm: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CPU_algorithm}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
-                <Label Content="Day estimated earnings:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" Margin="30,0,0,0" />
+                <Label Content="Day estimated earnings:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" Margin="30,0,0,0" />
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CPUestimated_day_Coins_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CPUestimated_day_Coins_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CPUestimated_day_Sats_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CPUestimated_day_Sats_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CPUestimated_day_USD_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CPUestimated_day_USD_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
             </WrapPanel>
 
             <WrapPanel x:Name="OPENCLpannel"  Orientation="Vertical" Width="250" Height="300">
                 <WrapPanel Margin="0,15,0,0">
                     <materialDesign:PackIcon Width="40" Height="40" Kind="Gpu" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                    <Label Content="GPU AMD" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="GPU AMD" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="Hashrate: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding OPENCL_hashrate}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="Hashrate: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding OPENCL_hashrate}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="Algorithm: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding OPENCL_algorithm}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="Algorithm: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding OPENCL_algorithm}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
-                <Label Content="Day estimated earnings:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" Margin="30,0,0,0" />
+                <Label Content="Day estimated earnings:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" Margin="30,0,0,0" />
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding OPENCLestimated_day_Coins_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding OPENCLestimated_day_Coins_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding OPENCLestimated_day_Sats_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding OPENCLestimated_day_Sats_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding OPENCLestimated_day_USD_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding OPENCLestimated_day_USD_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
             </WrapPanel>
 
             <WrapPanel x:Name="CUDApannel"  Orientation="Vertical" Width="250" Height="300">
                 <WrapPanel Margin="0,15,0,0">
                     <materialDesign:PackIcon Width="40" Height="40" Kind="Gpu" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                    <Label Content="GPU NVIDIA" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="GPU NVIDIA" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="Hashrate: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CUDA_hashrate}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="Hashrate: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CUDA_hashrate}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
-                    <Label Content="Algorithm: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CUDA_algorithm}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="Algorithm: " VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CUDA_algorithm}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
-                <Label Content="Day estimated earnings:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" Margin="30,0,0,0" />
+                <Label Content="Day estimated earnings:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" Margin="30,0,0,0" />
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CUDAestimated_day_Coins_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CUDAestimated_day_Coins_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CUDAestimated_day_Sats_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CUDAestimated_day_Sats_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CUDAestimated_day_USD_string}" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CUDAestimated_day_USD_string}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
             </WrapPanel>
         </WrapPanel>

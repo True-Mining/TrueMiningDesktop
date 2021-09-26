@@ -211,8 +211,8 @@ namespace TrueMiningDesktop.Core
                             Pages.Home.StartStopButton_text.Content = "Start Mining";
                             Pages.Home.StartStopButton_icon.Kind = MaterialDesignThemes.Wpf.PackIconKind.PlayOutline;
 
-                            Pages.Home.StartStopButton.Background = Brushes.DodgerBlue;
-                            Pages.Home.StartStopButton.BorderBrush = Brushes.DodgerBlue;
+                            Pages.Home.StartStopButton.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#5C7AEA");
+                            Pages.Home.StartStopButton.BorderBrush = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#5C7AEA");
 
                             if (Device.cpu.IsSelected)
                             {

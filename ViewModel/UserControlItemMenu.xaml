@@ -7,17 +7,17 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" MouseLeftButtonDown="UserControl_MouseLeftButtonDown">
     <Grid Width="270" Margin="0,-5,0,-5">
-        <materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="25" Height="25" Margin="10,11,10,10" Foreground="Black" />
-        <Expander x:Name="ExpanderMenu" Header="{Binding Path=Header}" Width="245" HorizontalAlignment="Left" Background="{x:Null}" Foreground="Black" Margin="35,0,0,0" VerticalContentAlignment="Center" IsExpanded="{Binding Path=Expanded}">
-            <ListView x:Name="ListViewMenu" ItemsSource="{Binding Path=SubItems}" Foreground="Black" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="ListViewMenu_SelectionChanged" materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True">
+        <materialDesign:PackIcon Kind="{Binding Path=Icon}" Width="25" Height="25" Margin="10,12,10,10" Foreground="Black" VerticalContentAlignment="Top" VerticalAlignment="Top"/>
+        <Expander x:Name="ExpanderMenu" Header="{Binding Path=Header}" Width="245" HorizontalAlignment="Left" Background="{x:Null}" Foreground="Black" FontFamily="Roboto" Margin="35,0,0,0" VerticalContentAlignment="Center" IsExpanded="{Binding Path=Expanded}">
+            <ListView x:Name="ListViewMenu" ItemsSource="{Binding Path=SubItems}" Foreground="Black" FontFamily="Roboto" FontSize="16" ScrollViewer.HorizontalScrollBarVisibility="Disabled" SelectionChanged="ListViewMenu_SelectionChanged" materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=Name}" Padding="20 3" />
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Path=Name}" FontFamily="Roboto" FontSize="14" Padding="10 3" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </Expander>
-        <ListBoxItem x:Name="ListViewItemMenu" Content="{Binding Path=Header}" Padding="0,0,0,0" FontSize="15" Foreground="Black" Margin="30,0,0,0" VerticalAlignment="Stretch" VerticalContentAlignment="Center" />
-        <WrapPanel Background="#01FFFFFF" Height="50" VerticalAlignment="Top" />
+        <ListBoxItem x:Name="ListViewItemMenu" Content="{Binding Path=Header}" Padding="0,0,0,0" FontSize="16" FontFamily="Roboto" Foreground="Black" Margin="30,0,0,0" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+        <WrapPanel Background="#01FFFFFF" Height="50" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

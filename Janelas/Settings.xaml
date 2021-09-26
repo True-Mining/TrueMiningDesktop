@@ -5,23 +5,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignHeight="485              " d:DesignWidth="650              " Background="White">
+             d:DesignHeight="485              " d:DesignWidth="650              " Background="#F7F8FC">
     <Grid>
         <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
             <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
                 <materialDesign:PackIcon Width="30" Height="70" Kind="Pickaxe" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                <Label Content="Settings" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
+                <Label Content="Settings" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
             </WrapPanel>
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
             <WrapPanel VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
-                <CheckBox x:Name="ShowMiningConsole_CheckBox" IsChecked="{Binding ShowCLI}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Show Mining Console" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
-                <CheckBox IsChecked="{Binding AutostartSoftwareWithWindows}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Autostart with Windows" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
-                <CheckBox IsChecked="{Binding AutostartMining}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Autostart mining when the True Mining is opened" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
-                <CheckBox IsChecked="{Binding StartHide}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Start True Mining minimized/hide" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
-                <CheckBox IsChecked="{Binding ChangeTbIcon}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Change Taskbar Icon" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
-                <CheckBox IsChecked="{Binding AvoidWindowsSuspend}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Prevent windows suspend and enter in idle state while mining" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
-                <CheckBox IsChecked="{Binding UseAllInterfacesInsteadLocalhost}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Use 0.0.0.0 instead localhost on Miners API (may need firewall addrule on some updates)" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
-                <CheckBox IsChecked="{Binding UseTorSharpOnMining}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Use TOR + Privoxy on mining connections (to try bypass firewall)" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                <CheckBox x:Name="ShowMiningConsole_CheckBox" IsChecked="{Binding ShowCLI}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Show Mining Console" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                <CheckBox IsChecked="{Binding AutostartSoftwareWithWindows}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Autostart with Windows" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                <CheckBox IsChecked="{Binding AutostartMining}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Autostart mining when the True Mining is opened" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                <CheckBox IsChecked="{Binding StartHide}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Start True Mining minimized/hide" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                <CheckBox IsChecked="{Binding ChangeTbIcon}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Change Taskbar Icon" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                <CheckBox IsChecked="{Binding AvoidWindowsSuspend}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Prevent windows suspend and enter in idle state while mining" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                <CheckBox IsChecked="{Binding UseAllInterfacesInsteadLocalhost}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Use 0.0.0.0 instead localhost on Miners API (may need firewall addrule on some updates)" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                <CheckBox IsChecked="{Binding UseTorSharpOnMining}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Use TOR + Privoxy on mining connections (to try bypass firewall)" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
             </WrapPanel>
         </WrapPanel>
     </Grid>

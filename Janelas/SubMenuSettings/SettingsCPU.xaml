@@ -5,35 +5,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignHeight="485              " d:DesignWidth="650              " Background="White">
+             d:DesignHeight="485              " d:DesignWidth="650              " Background="#F7F8FC">
     <Grid>
         <WrapPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Vertical">
             <WrapPanel x:Name="TitleWrapPanel" VerticalAlignment="Top" Width="650" Height="70">
                 <materialDesign:PackIcon Width="30" Height="70" Kind="Settings" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                <Label Content="CPU Settings" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
+                <Label Content="CPU Settings" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" Height="70" Width="595" VerticalContentAlignment="Center" Padding="15,4,4,4" />
             </WrapPanel>
-            <Label x:Name="LockWarning" Content="Stop Mining to change configs" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Gadugi" FontWeight="Bold" FontSize="12" Foreground="#FFD86F17" IsEnabled="True" Height="20" Width="595" VerticalContentAlignment="Center" Padding="0,0,0,0" Margin="0,-20,0,0" Visibility="Hidden" />
+            <Label x:Name="LockWarning" Content="Stop Mining to change configs" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" FontSize="12" Foreground="#FFD86F17" IsEnabled="True" Height="20" Width="595" VerticalContentAlignment="Center" Padding="0,0,0,0" Margin="0,-20,0,0" Visibility="Hidden" />
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
             <WrapPanel x:Name="AllContent" VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
-                <CheckBox IsChecked="{Binding Autoconfig}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Configure automatically" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                <CheckBox IsChecked="{Binding Autoconfig}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Configure automatically" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
                 <WrapPanel x:Name="WrapPanel_ManualConfig" VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="Collapsed">
-                        <Label Content="Mining Algorithm" FontFamily="Gadugi" FontWeight="Normal" Margin="0,0,0,0" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
-                        <ComboBox ItemsSource="{Binding AlgorithmsList}" SelectedIndex="0" VerticalAlignment="Top" Width="120" FontFamily="Gadugi" FontWeight="Normal" Margin="5,0,0,0" FontSize="13" SnapsToDevicePixels="True" Foreground="Black" BorderBrush="#4C000000" />
+                        <Label Content="Mining Algorithm" FontFamily="Roboto" FontWeight="Normal" Margin="0,0,0,0" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <ComboBox ItemsSource="{Binding AlgorithmsList}" SelectedIndex="0" VerticalAlignment="Top" Width="120" FontFamily="Roboto" FontWeight="Normal" Margin="5,0,0,0" FontSize="13" SnapsToDevicePixels="True" Foreground="Black" BorderBrush="#4C000000" />
                     </WrapPanel>
-                    <CheckBox IsChecked="{Binding Yield}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Prefer system response/stability over maximum hashrate" VerticalContentAlignment="Center" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
+                    <CheckBox IsChecked="{Binding Yield}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Prefer system response/stability over maximum hashrate" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="Low process priority" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <Label Content="Low process priority" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                         <Slider Width="222" Maximum="2" TickPlacement="Both" Value="{Binding Priority}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" Margin="5,0,5,0" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" />
-                        <Label Content="Normal process priority" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <Label Content="Normal process priority" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                     </WrapPanel>
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="Maximum CPU usage config hint" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <Label Content="Maximum CPU usage config hint" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                         <Slider Width="300" Maximum="100" TickPlacement="None" Value="{Binding MaxUsageHint}" AutoToolTipPlacement="None" Margin="5,0,5,0" IsSnapToTickEnabled="True" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" />
                     </WrapPanel>
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="CPU Threads" FontFamily="Gadugi" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
-                        <ComboBox SelectedIndex="{Binding Threads}" Width="90" FontFamily="Gadugi" FontWeight="Normal" FontSize="13" SnapsToDevicePixels="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="6,6,0,6" Margin="10,0,0,0">
+                        <Label Content="CPU Threads" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                        <ComboBox SelectedIndex="{Binding Threads}" Width="90" FontFamily="Roboto" FontWeight="Normal" FontSize="13" SnapsToDevicePixels="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="6,6,0,6" Margin="10,0,0,0">
                             <ComboBoxItem IsSelected="True">auto-config</ComboBoxItem>
                             <ComboBoxItem>1</ComboBoxItem>
                             <ComboBoxItem>2</ComboBoxItem>
