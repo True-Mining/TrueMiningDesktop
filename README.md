@@ -12,6 +12,8 @@
 
 True Mining Desktop comes to facilitate the mining of the end user, providing an easy-to-use graphical interface so that the user can mine Dogecoin, RDCT and other currencies that will soon be implemented.
 
+Website: https://truemining.online
+
 #### Screenshot:
 ![](https://raw.githubusercontent.com/True-Mining/TrueMiningDesktop/master/True%20Mining%20Desktop%20-%20Screenshot.webp)
 
