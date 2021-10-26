@@ -17,7 +17,7 @@ namespace TrueMiningDesktop.Core.XMRig
     public static class XMRig
     {
         private static readonly Process XMRIGminer = new();
-        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe");
+        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc-zerofee.exe");
         private static bool inXMRIGexitEvent = false;
         private static readonly DateTime holdTime = DateTime.UtcNow;
         private static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
@@ -137,9 +137,17 @@ namespace TrueMiningDesktop.Core.XMRig
         public static void ChangeCompiler()
         {
             if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe")
-            { XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe"; }
+            {
+                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc-zerofee.exe";
+            }
+            else if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc-zerofee.exe")
+            {
+                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe";
+            }
             else
-            { XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe"; }
+            { 
+                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe";
+            }
         }
 
         public static void Show()
@@ -285,8 +293,8 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("       \"loader\": null,");
             if (!Settings.Device.cuda.Autoconfig) { conf.AppendLine("       \"nvml\": " + Settings.Device.cuda.NVML.ToString().ToLowerInvariant()); }
             conf.AppendLine("   },");
-            conf.AppendLine("   \"donate-level\": 1,");
-            conf.AppendLine("   \"donate-over-proxy\": 1,");
+            conf.AppendLine("   \"donate-level\": 0,");
+            conf.AppendLine("   \"donate-over-proxy\": 0,");
             conf.AppendLine("   \"log-file\": \"XMRig-log.txt\",");
             conf.AppendLine("   \"retries\": 2,");
             conf.AppendLine("   \"retry-pause\": 3,");

@@ -486,6 +486,8 @@ namespace TrueMiningDesktop.Core
                         Verb = "runas"
                     };
                     Process.Start(startInfo).WaitForExit();
+
+                    AddedTrueMiningDestopToWinDefenderExclusions = true;
                 }
             }
             catch { }
