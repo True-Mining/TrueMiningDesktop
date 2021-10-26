@@ -31,15 +31,15 @@
             </WrapPanel>
             <WrapPanel x:Name="xWarningWrapVisibility" Margin="35,5,20,5" Orientation="Horizontal" Visibility="{Binding WarningWrapVisibility}">
                 <Label Content="Warnings: " FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0,0,0,0"></Label>
-                <Button Content="Click here to show your warnings" Click="ShowWarnings" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="187" Height="20" FontFamily="Roboto" FontSize="12" />
+                <Button Content="Click here to show your warnings" Click="ShowWarnings" Background="#F7F8FC" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="187" Height="20" FontFamily="Roboto" FontSize="12" />
             </WrapPanel>
         </WrapPanel>
-        <oxy:PlotView Model="{Binding ChartModel, Mode=OneWay}" Controller="{Binding ChartController}" Height="155" Margin="20,5,20,120" Visibility="{Binding ChartVisibility}" VerticalAlignment="Bottom" />
+        <oxy:PlotView Model="{Binding ChartModel, Mode=OneWay}" Controller="{Binding ChartController}" Height="155" Margin="20,5,20,120" Visibility="{Binding ChartVisibility}" VerticalAlignment="Bottom" Background="#F7F8FC"/>
         <WrapPanel Orientation="Horizontal" Margin="20,0,25,100" HorizontalAlignment="Right" Visibility="{Binding ChartVisibility}" VerticalAlignment="Bottom">
             <Label Content="Zoom" FontFamily="Roboto" FontSize="12" />
-            <Button Content="12h" Click="ChangeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="10,0,0,0" FontFamily="Roboto" FontSize="12"></Button>
-            <Button Content="1d" Click="ChangeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Roboto" FontSize="12"></Button>
-            <Button Content="5d" Click="ChangeChartZoom" Background="#FFE8E8E8" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Roboto" FontSize="12"></Button>
+            <Button Content="12h" Click="ChangeChartZoom" Background="#F7F8FC" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="10,0,0,0" FontFamily="Roboto" FontSize="12"></Button>
+            <Button Content="1d" Click="ChangeChartZoom" Background="#F7F8FC" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Roboto" FontSize="12"></Button>
+            <Button Content="5d" Click="ChangeChartZoom" Background="#F7F8FC" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="5,0,0,0" FontFamily="Roboto" FontSize="12"></Button>
         </WrapPanel>
         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,25">
             <Button Height="35" Width="170" Margin="20,0,20,0" Click="Button_Calculator_Popup" Background="#5C7AEA">
