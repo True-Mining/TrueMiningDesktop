@@ -57,13 +57,16 @@ namespace TrueMiningDesktop.Janelas
         public string MiningAlgo { get; set; }
 
         private decimal hashrate = -1;
-        public decimal Hashrate { get { return hashrate; } set { hashrate = value; Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); })); } }
+        public decimal Hashrate
+        { get { return hashrate; } set { hashrate = value; Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); })); } }
 
         private bool isSelected = true;
-        public bool IsSelected { get { return isSelected; } set { isSelected = value; OnChanged(null); } }
+        public bool IsSelected
+        { get { return isSelected; } set { isSelected = value; OnChanged(null); } }
 
         private bool isMining = true;
-        public bool IsMining { get { return isMining; } set { isMining = value; if (isMining) { hashrate_timer.Start(); } else { hashrate_timer.Stop(); } } }
+        public bool IsMining
+        { get { return isMining; } set { isMining = value; if (isMining) { hashrate_timer.Start(); } else { hashrate_timer.Stop(); } } }
         public PackIconKind IconKind { get; set; }
     }
 }

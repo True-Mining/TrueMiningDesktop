@@ -11,7 +11,8 @@ namespace TrueMiningDesktop.Core
         public event EventHandler HashrateUpdated;
 
         private decimal hashrate;
-        public decimal Hashrate { get { return hashrate; } set { hashrate = value; OnNewHashrate(); } }
+        public decimal Hashrate
+        { get { return hashrate; } set { hashrate = value; OnNewHashrate(); } }
 
         public Hashrate_timer(DeviceInfo _parent)
         {

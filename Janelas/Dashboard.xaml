@@ -34,7 +34,7 @@
                 <Button Content="Click here to show your warnings" Click="ShowWarnings" Background="#F7F8FC" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="187" Height="20" FontFamily="Roboto" FontSize="12" />
             </WrapPanel>
         </WrapPanel>
-        <oxy:PlotView Model="{Binding ChartModel, Mode=OneWay}" Controller="{Binding ChartController}" Height="155" Margin="20,5,20,120" Visibility="{Binding ChartVisibility}" VerticalAlignment="Bottom" Background="#F7F8FC"/>
+        <oxy:PlotView Model="{Binding ChartModel, Mode=OneWay}" Controller="{Binding ChartController}" Height="155" Margin="20,5,20,120" Visibility="{Binding ChartVisibility}" VerticalAlignment="Bottom" Background="#F7F8FC" />
         <WrapPanel Orientation="Horizontal" Margin="20,0,25,100" HorizontalAlignment="Right" Visibility="{Binding ChartVisibility}" VerticalAlignment="Bottom">
             <Label Content="Zoom" FontFamily="Roboto" FontSize="12" />
             <Button Content="12h" Click="ChangeChartZoom" Background="#F7F8FC" BorderBrush="#FF959595" Foreground="#FF404040" Padding="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="35" Height="20" Margin="10,0,0,0" FontFamily="Roboto" FontSize="12"></Button>
@@ -44,14 +44,14 @@
         <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,25">
             <Button Height="35" Width="170" Margin="20,0,20,0" Click="Button_Calculator_Popup" Background="#5C7AEA">
                 <WrapPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Width="25" Height="25" Kind="CalculatorVariant" HorizontalAlignment="Stretch" TextBlock.Foreground="#F7F8FC" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True"/>
-                    <Label Content="Calculator" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#F7F8FC" IsEnabled="True" VerticalContentAlignment="Center"/>
+                    <materialDesign:PackIcon Width="25" Height="25" Kind="CalculatorVariant" HorizontalAlignment="Stretch" TextBlock.Foreground="#F7F8FC" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" />
+                    <Label Content="Calculator" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#F7F8FC" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
             </Button>
             <Button Height="35" Width="170" Margin="20,0,20,0" Click="Button_ExchangeRates_Popup" Background="#5C7AEA">
                 <WrapPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Width="25" Height="25" Kind="ChartFinance" HorizontalAlignment="Stretch" TextBlock.Foreground="#F7F8FC" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True"/>
-                    <Label Content="Exchange Rates" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#F7F8FC" IsEnabled="True" VerticalContentAlignment="Center"/>
+                    <materialDesign:PackIcon Width="25" Height="25" Kind="ChartFinance" HorizontalAlignment="Stretch" TextBlock.Foreground="#F7F8FC" VerticalAlignment="Center" Padding="0,0,0,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" />
+                    <Label Content="Exchange Rates" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#F7F8FC" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
             </Button>
         </WrapPanel>

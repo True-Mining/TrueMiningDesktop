@@ -9,7 +9,5 @@
         public static SubMenuSettings.SettingsCPU SettingsCPU = new SubMenuSettings.SettingsCPU();
         public static SubMenuSettings.SettingsOPENCL SettingsOPENCL = new SubMenuSettings.SettingsOPENCL();
         public static SubMenuSettings.SettingsCUDA SettingsCUDA = new SubMenuSettings.SettingsCUDA();
-
-        //      public static Other Other = new Other();
     }
 }

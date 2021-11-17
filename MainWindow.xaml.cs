@@ -45,14 +45,13 @@ namespace TrueMiningDesktop
             User.Settings.Device.cpu.AlgorithmsList.Clear();  //temp fix
             User.Settings.Device.opencl.AlgorithmsList.Clear();  //temp fix
             User.Settings.Device.cuda.AlgorithmsList.Clear();  //temp fix
-            User.Settings.User.Payment_CoinsList.Clear();  //temp fix
 
             if (!User.Settings.Device.cpu.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.cpu.AlgorithmsList.Add("RandomX"); }
             if (!User.Settings.Device.opencl.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.opencl.AlgorithmsList.Add("RandomX"); }
             if (!User.Settings.Device.cuda.AlgorithmsList.Contains("RandomX")) { User.Settings.Device.cuda.AlgorithmsList.Add("RandomX"); }
 
             if (!User.Settings.User.Payment_CoinsList.Contains("DOGE")) { User.Settings.User.Payment_CoinsList.Add("DOGE"); }
-            if (!User.Settings.User.Payment_CoinsList.Contains("RDCT")) { User.Settings.User.Payment_CoinsList.Add("RDCT"); }
+            if (!User.Settings.User.Payment_CoinsList.Contains("BTC")) { User.Settings.User.Payment_CoinsList.Add("BTC"); }
 
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Home", Janelas.Pages.Home, PackIconKind.Home), this));
             MenuMenu.Items.Add(new UserControlItemMenu(new ItemMenu("Dashboard", Janelas.Pages.Dashboard, PackIconKind.ViewDashboard), this));
@@ -237,6 +236,26 @@ namespace TrueMiningDesktop
 
             Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");
             Tools.CheckerPopup.ShowDialog();
+
+            try
+            {
+                List<string> list = new List<string>();
+
+                foreach (Server.PaymentCoin paymentCoin in Server.SoftwareParameters.ServerConfig.PaymentCoins)
+                {
+                    if (!list.Contains(paymentCoin.CoinTicker + " - " + paymentCoin.CoinName))
+                    {
+                        list.Add(paymentCoin.CoinTicker + " - " + paymentCoin.CoinName);
+                    }
+                }
+                User.Settings.User.Payment_CoinsList = list;
+
+                Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    Janelas.Pages.Home.DataContext = User.Settings.User;
+                }));
+            }
+            catch { }
 
             Tools.TryChangeTaskbarIconAsSettingsOrder();
 

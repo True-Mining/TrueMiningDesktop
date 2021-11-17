@@ -37,9 +37,9 @@
 
         <Grid x:Name="ImutableElements" VerticalAlignment="Top" HorizontalAlignment="Right">
             <WrapPanel x:Name="TitleMenu" Margin="0,3,4,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="96" Height="25" ScrollViewer.VerticalScrollBarVisibility="Hidden" ScrollViewer.HorizontalScrollBarVisibility="Hidden" MouseDown="WrapPanel_MouseDown">
-                <materialDesign:PackIcon Kind="Hide" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF404040" Background="#F7F8FC" Margin="0,0,3,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_1" ToolTip="Hide to toolbar"/>
-                <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF3E3E3E" Background="#F7F8FC" Margin="0,0,3,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_2" ToolTip="Minimize to taskbar"/>
-                <materialDesign:PackIcon Kind="WindowClose" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF7C0000" Background="#F7F8FC" Margin="0,0,0,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown" ToolTip="Close True Mining Desktop"/>
+                <materialDesign:PackIcon Kind="Hide" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF404040" Background="#F7F8FC" Margin="0,0,3,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_1" ToolTip="Hide to toolbar" />
+                <materialDesign:PackIcon Kind="WindowMinimize" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF3E3E3E" Background="#F7F8FC" Margin="0,0,3,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown_2" ToolTip="Minimize to taskbar" />
+                <materialDesign:PackIcon Kind="WindowClose" HorizontalAlignment="Right" Width="30" Height="25" Foreground="#FF7C0000" Background="#F7F8FC" Margin="0,0,0,0" Cursor="Hand" BorderThickness="1" BorderBrush="#FF191919" SnapsToDevicePixels="True" MouseDown="PackIcon_MouseDown" ToolTip="Close True Mining Desktop" />
             </WrapPanel>
         </Grid>
     </Grid>

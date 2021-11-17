@@ -70,7 +70,7 @@ namespace TrueMiningDesktop.Server
                     }
 
                     Pages.Dashboard.LabelNextPayout = ((int)23 - (int)DateTime.UtcNow.Hour) + " hours, " + ((int)59 - (int)DateTime.UtcNow.Minute) + " minutes";
-                    Pages.Dashboard.LabelAccumulatedBalance = Decimal.Round(AccumulatedBalance_Points, 0) + " points ⇒ ≈ " + Decimal.Round(AccumulatedBalance_Coins, 4) + ' ' + User.Settings.User.Payment_Coin;
+                    Pages.Dashboard.LabelAccumulatedBalance = Decimal.Round(AccumulatedBalance_Points, 0) + " points ⇒ ≈ " + Decimal.Round(AccumulatedBalance_Coins, 4) + ' ' + User.Settings.User.Payment_Coin.Split(' ', '-').Last();
                     if (Pages.Dashboard.DashboardWarnings.Contains(warningMessage)) Janelas.Pages.Dashboard.DashboardWarnings.Remove(warningMessage); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                 });
             }
@@ -126,15 +126,17 @@ namespace TrueMiningDesktop.Server
                 try
                 {
                     TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw = new();
+                    TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_user_raw_new = new();
                     TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_tm_raw = new();
 
                     List<Task<Action>> getAPIsTask = new();
 
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_user_raw_new = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"))).BTCUSD.ask), 2); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.Payment_Coin + "-BTC")); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + "-BTC")); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef")); return null; }));
 
@@ -148,6 +150,17 @@ namespace TrueMiningDesktop.Server
                     PoolAPI.XMR_nanopool.hashrateHistory_user.Clear();
 
                     foreach (TruePayment.Nanopool.Objects.Datum datum in hashrateHystory_user_raw.data)
+                    {
+                        if (!PoolAPI.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
+                        {
+                            try
+                            {
+                                PoolAPI.XMR_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
+                            }
+                            catch { }
+                        }
+                    }
+                    foreach (TruePayment.Nanopool.Objects.Datum datum in hashrateHystory_user_raw_new.data)
                     {
                         if (!PoolAPI.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
                         {
@@ -235,7 +248,7 @@ namespace TrueMiningDesktop.Server
                 exchangeRatePontosToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins * feeMultiplier / hashesToCompare / 60 / 60 * XMRfinalPrice / COINfinalPrice * HashesPerPoint;
                 AccumulatedBalance_Coins = Decimal.Round(Decimal.Multiply(totalXMRmineradoTrueMining * Decimal.Divide(XMRfinalPrice, COINfinalPrice) * Decimal.Divide(sumHashrate_user, sumHashrate_tm), feeMultiplier), 4);
 
-                string warningMessage = "Balance less than 1 DOGE will be paid once a week when you reach the minimum amount. Your balance will disappear from the dashboard, but it will still be saved in our system";
+                string warningMessage = "Balance less than " + SoftwareParameters.ServerConfig.PaymentCoins.Find(x => Equals(x.CoinTicker, User.Settings.User.PayCoin.CoinTicker)).MinPayout.ToString() + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + " will be paid once a week when you reach the minimum amount. Your balance will disappear from the dashboard, but it will still be saved in our system";
                 string warningMessage2 = "Mined points take an average of 10-20 minutes to be displayed on the dashboard.";
 
                 if (AccumulatedBalance_Coins == 0)
@@ -247,7 +260,7 @@ namespace TrueMiningDesktop.Server
                     if (Pages.Dashboard.DashboardWarnings.Contains(warningMessage2)) Janelas.Pages.Dashboard.DashboardWarnings.Remove(warningMessage2); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                 }
 
-                if (AccumulatedBalance_Coins <= 1 && User.Settings.User.Payment_Coin.Equals("doge", StringComparison.OrdinalIgnoreCase))
+                if (SoftwareParameters.ServerConfig.PaymentCoins.Find(x => Equals(x.CoinTicker, User.Settings.User.PayCoin.CoinTicker)).MinPayout < AccumulatedBalance_Coins)
                 {
                     if (!Pages.Dashboard.DashboardWarnings.Contains(warningMessage)) Janelas.Pages.Dashboard.DashboardWarnings.Add(warningMessage); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                 }

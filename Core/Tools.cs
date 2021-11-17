@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
@@ -128,7 +129,8 @@ namespace TrueMiningDesktop.Core
         public static readonly TorSharpProxy TorSharpProxy = new(TorSharpSettings);
 
         private static bool useTor = false;
-        public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
+        public static bool UseTor
+        { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
         public static bool TorSharpProcessesRunning
         {
@@ -149,7 +151,8 @@ namespace TrueMiningDesktop.Core
         }
 
         private static bool torSharpEnabled = false;
-        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
+        public static bool TorSharpEnabled
+        { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
         public static event PropertyChangedEventHandler PropertyChanged;
 
@@ -376,34 +379,12 @@ namespace TrueMiningDesktop.Core
             {
                 return false;
             }
-            if (address.Length != 34)
+            if (User.Settings.User.PayCoin.AddressPatterns.Any(x => System.Text.RegularExpressions.Regex.IsMatch(address, x)))
             {
-                return false;
+                return true;
             }
 
-            if (!address.StartsWith('D') && !address.StartsWith('R')) { return false; }
-
-            //switch (User.Settings.User.Payment_Coin)
-            //{
-            //    case "RDCT":
-            //        {
-            //            if (!address.StartsWith("R"))
-            //            {
-            //                return false;
-            //            }
-            //            break;
-            //        }
-            //    case "DOGE":
-            //        {
-            //            if (!address.StartsWith("D"))
-            //            {
-            //                return false;
-            //            }
-            //            break;
-            //        }
-            //}
-
-            return true;
+            return false;
         }
 
         public static void OpenLinkInBrowser(string link)

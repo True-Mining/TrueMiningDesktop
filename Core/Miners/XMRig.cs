@@ -330,7 +330,7 @@ namespace TrueMiningDesktop.Core.XMRig
                     conf.AppendLine("           \"algo\": null,");
                     conf.AppendLine("           \"coin\": \"monero\",");
                     conf.AppendLine("           \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
-                    conf.AppendLine("           \"user\": \"" + miningCoin.WalletTm + "." + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
+                    conf.AppendLine("           \"user\": \"" + miningCoin.WalletTm + "." + Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
                     conf.AppendLine("           \"pass\": \"" + miningCoin.Password + "\",");
                     conf.AppendLine("           \"rig-id\": null,");
                     conf.AppendLine("           \"nicehash\": false,");
@@ -348,7 +348,7 @@ namespace TrueMiningDesktop.Core.XMRig
                 conf.AppendLine("           \"algo\": null,");
                 conf.AppendLine("           \"coin\": \"monero\",");
                 conf.AppendLine("           \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
-                conf.AppendLine("           \"user\": \"" + miningCoin.WalletTm + "." + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
+                conf.AppendLine("           \"user\": \"" + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
                 conf.AppendLine("           \"pass\": \"" + miningCoin.Password + "\",");
                 conf.AppendLine("           \"rig-id\": null,");
                 conf.AppendLine("           \"nicehash\": false,");

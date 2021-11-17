@@ -23,6 +23,8 @@ namespace TrueMiningDesktop.Core
                 {
                     Miner.IntentToMine = false;
                     if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Your wallet address is not correct. Check it."); }
+                    IsMining = false;
+                    IntentToMine = false;
                     return;
                 }
 
@@ -74,7 +76,6 @@ namespace TrueMiningDesktop.Core
 
             if (IsMining)
             {
-
                 intentToMine = false;
                 isMining = false;
 
