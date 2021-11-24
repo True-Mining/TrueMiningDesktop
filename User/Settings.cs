@@ -204,7 +204,7 @@ namespace TrueMiningDesktop.User
 
                 try
                 {
-                    if (SoftwareParameters.ServerConfig != null && SoftwareParameters.ServerConfig.PaymentCoins != null)
+                    if (SoftwareParameters.ServerConfig != null && SoftwareParameters.ServerConfig.PaymentCoins != null && value != null)
                     {
                         PayCoin = SoftwareParameters.ServerConfig.PaymentCoins.First(x => value.Split('-', ' ').Any(z => z.Equals(x.CoinName, StringComparison.OrdinalIgnoreCase) || z.Equals(x.CoinTicker, StringComparison.OrdinalIgnoreCase)));
 

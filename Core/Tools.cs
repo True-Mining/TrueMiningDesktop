@@ -72,11 +72,10 @@ namespace TrueMiningDesktop.Core
             {
                 //    headers[HttpRequestHeader.Accept] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
                 //    headers[HttpRequestHeader.AcceptEncoding] = "gzip, deflate, br";
-                //     headers[HttpRequestHeader.AcceptLanguage] = "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3";
+                //    headers[HttpRequestHeader.AcceptLanguage] = "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3";
                 [HttpRequestHeader.CacheControl] = "max-age=0",
                 [HttpRequestHeader.KeepAlive] = "1",
                 [HttpRequestHeader.Allow] = "1",
-                // headers[HttpRequestHeader.Via] = "http://127.0.0.1:8427";
                 [HttpRequestHeader.ProxyAuthorization] = "Basic " + new TorSharpTorSettings().ControlPassword,
                 [HttpRequestHeader.Trailer] = "1",
                 [HttpRequestHeader.Upgrade] = "1",
