@@ -136,7 +136,7 @@ namespace TrueMiningDesktop.Server
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.Coin.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"))).BTCUSD.ask), 2); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + "-BTC")); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.MiningCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + "-BTC")); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef")); return null; }));
 
@@ -151,7 +151,7 @@ namespace TrueMiningDesktop.Server
 
                     foreach (TruePayment.Nanopool.Objects.Datum datum in hashrateHystory_user_raw.data)
                     {
-                        if (!PoolAPI.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
+                        if (User.Settings.User.PayCoin.CoinTicker != "DGB" && !PoolAPI.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
                         {
                             try
                             {
@@ -167,6 +167,14 @@ namespace TrueMiningDesktop.Server
                             try
                             {
                                 PoolAPI.XMR_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
+                            }
+                            catch { }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                PoolAPI.XMR_nanopool.hashrateHistory_user[datum.date] += datum.hashrate;
                             }
                             catch { }
                         }
