@@ -18,15 +18,15 @@
             </WrapPanel>
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
             <WrapPanel Margin="35,5,20,7">
-                <Label Content="Next Payout in " FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
+                <Label Content="Round finish in " FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
                 <Label x:Name="xLabelNextPayout" Content="{Binding LabelNextPayout}" FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
             </WrapPanel>
             <WrapPanel Margin="35,5,20,7">
-                <Label Content="Your wallet address is " FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
+                <Label Content="Payment wallet address is " FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
                 <Label x:Name="xWalletAddress" Content="{Binding WalletAddress}" FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
             </WrapPanel>
             <WrapPanel Margin="35,5,20,7">
-                <Label Content="Wallet accumulated balance " FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
+                <Label Content="Mining results in the current period " FontWeight="Normal" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
                 <Label x:Name="xLabelAccumulatedBalance" Content="{Binding LabelAccumulatedBalance}" FontWeight="Bold" FontFamily="Roboto" FontSize="13" Padding="0"></Label>
             </WrapPanel>
             <WrapPanel x:Name="xWarningWrapVisibility" Margin="35,5,20,5" Orientation="Horizontal" Visibility="{Binding WarningWrapVisibility}">
