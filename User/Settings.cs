@@ -21,7 +21,19 @@ namespace TrueMiningDesktop.User
 
         public static void SettingsSaver(bool now = false)
         {
-            if (now) { WriteSettings(); } else { timerSaveSettings.Elapsed -= TimerSaveSettings_Elapsed; timerSaveSettings.Elapsed += TimerSaveSettings_Elapsed; timerSaveSettings.AutoReset = false; timerSaveSettings.Stop(); timerSaveSettings.Start(); }
+            while (LoadingSettings) { System.Threading.Thread.Sleep(500); }
+            if (now)
+            {
+                WriteSettings();
+            } 
+            else 
+            {
+                timerSaveSettings.Elapsed -= TimerSaveSettings_Elapsed; 
+                timerSaveSettings.Elapsed += TimerSaveSettings_Elapsed;
+                timerSaveSettings.AutoReset = false; 
+                timerSaveSettings.Stop();
+                timerSaveSettings.Start(); 
+            }
         }
 
         private static void TimerSaveSettings_Elapsed(object sender, ElapsedEventArgs e)
