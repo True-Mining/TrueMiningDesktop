@@ -25,14 +25,14 @@ namespace TrueMiningDesktop.User
             if (now)
             {
                 WriteSettings();
-            } 
-            else 
+            }
+            else
             {
-                timerSaveSettings.Elapsed -= TimerSaveSettings_Elapsed; 
+                timerSaveSettings.Elapsed -= TimerSaveSettings_Elapsed;
                 timerSaveSettings.Elapsed += TimerSaveSettings_Elapsed;
-                timerSaveSettings.AutoReset = false; 
+                timerSaveSettings.AutoReset = false;
                 timerSaveSettings.Stop();
-                timerSaveSettings.Start(); 
+                timerSaveSettings.Start();
             }
         }
 
@@ -149,8 +149,10 @@ namespace TrueMiningDesktop.User
     public class CPUSettings
     {
         private bool miningSelected = true;
+
         public bool MiningSelected
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
         public List<string> AlgorithmsList { get; set; } = new();
@@ -163,8 +165,10 @@ namespace TrueMiningDesktop.User
     public class NVIDIASettings
     {
         private bool miningSelected = false;
+
         public bool MiningSelected
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
         public List<string> AlgorithmsList { get; set; } = new List<string>();
@@ -174,8 +178,10 @@ namespace TrueMiningDesktop.User
     public class AMDSettings
     {
         private bool miningSelected = false;
+
         public bool MiningSelected
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
         public List<string> AlgorithmsList { get; set; } = new List<string>();
@@ -267,31 +273,42 @@ namespace TrueMiningDesktop.User
         private List<string> payCoinsList = new();
 
         private bool showCLI = false;
+
         public bool ShowCLI
         { get { return showCLI; } set { showCLI = value; Miner.ShowHideCLI(); } }
+
         private bool autostartSoftwareWithWindows = false;
+
         public bool AutostartSoftwareWithWindows
         { get { return autostartSoftwareWithWindows; } set { autostartSoftwareWithWindows = value; Core.Tools.AutostartSoftwareWithWindowsRegistryWriter(); if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
+
         private bool autostartMining = false;
+
         public bool AutostartMining
         { get { return autostartMining; } set { autostartMining = value; if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
+
         private bool startHide = false;
+
         public bool StartHide
         { get { return startHide; } set { startHide = value; if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
 
         private bool changeTbIcon = false;
+
         public bool ChangeTbIcon
         { get { return changeTbIcon; } set { changeTbIcon = value; Tools.TryChangeTaskbarIconAsSettingsOrder(); } }
 
         private bool avoidWindowsSuspend = true;
+
         public bool AvoidWindowsSuspend
         { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; } }
 
         private bool useAllInterfacesInsteadLocalhost = false;
+
         public bool UseAllInterfacesInsteadLocalhost
         { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
 
         private bool useTorSharpOnAll = false;
+
         public bool UseTorSharpOnMining
         { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.LoadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
     }

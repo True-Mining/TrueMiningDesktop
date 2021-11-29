@@ -35,10 +35,13 @@ namespace TrueMiningDesktop.Janelas
 
         public string LabelNextPayout
         { get { return labelNextPayout; } set { labelNextPayout = value; xLabelNextPayout.Content = value; } }
+
         public string LabelAccumulatedBalance
         { get { return labelAccumulatedBalance; } set { labelAccumulatedBalance = value; xLabelAccumulatedBalance.Content = value; } }
+
         public List<string> DashboardWarnings
         { get { return dashboardWarnings; } set { dashboardWarnings = value; NotifyPropertyChanged(); } }
+
         public Visibility WarningWrapVisibility
         { get { return warningWrapVisibility; } set { warningWrapVisibility = value; NotifyPropertyChanged(); } }
 
@@ -56,10 +59,13 @@ namespace TrueMiningDesktop.Janelas
 
         public PlotModel ChartModel
         { get { return chartModel; } set { chartModel = value; NotifyPropertyChanged(); } }
+
         public OxyPlot.Series.ColumnSeries ColumnChartSeries
         { get { return columnChartSeries; } set { columnChartSeries = value; NotifyPropertyChanged(); } }
+
         public PlotController ChartController
         { get { return chartControler; } set { chartControler = value; NotifyPropertyChanged(); } }
+
         public Visibility ChartVisibility
         { get { return chartVisibility; } set { chartVisibility = value; NotifyPropertyChanged(); } }
 

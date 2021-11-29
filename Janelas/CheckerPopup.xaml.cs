@@ -55,16 +55,22 @@ namespace TrueMiningDesktop.Janelas
 
         public bool Finish
         { get { return property_finish; } set { property_finish = value; ProgressDetails = null; } }
+
         public string StatusTitle
         { get { return property_statusTitle; } set { property_statusTitle = value; Dispatcher.BeginInvoke((Action)(() => { statusTitle.Content = value; })); } }
+
         public string FileName
         { get { return property_fileName; } set { property_fileName = value; Dispatcher.BeginInvoke((Action)(() => { fileName.Content = new TextBlock() { Text = value, TextWrapping = TextWrapping.WrapWithOverflow }; })); } }
+
         public int ProgressBar_Value
         { get { return property_progressBar_Value; } set { if (property_progressBar_Value != value) { property_progressBar_Value = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.Value = value; })); } } }
+
         public bool ProgressBar_IsIndeterminate
         { get { return property_progressBar_IsIndeterminate; } set { if (property_progressBar_IsIndeterminate != value) { property_progressBar_IsIndeterminate = value; Dispatcher.BeginInvoke((Action)(() => { progressBar.IsIndeterminate = value; })); } } }
+
         public string ProgressDetails
         { get { return progressDetails_Content; } set { progressDetails_Content = value; Dispatcher.BeginInvoke((Action)(() => { progressDetails.Content = value; })); } }
+
         public Visibility HostFilesAd_Visibility
         { get { return hostFilesAd_Visibility; } set { hostFilesAd_Visibility = value; Dispatcher.BeginInvoke((Action)(() => { HostFilesAd.Visibility = value; })); } }
 

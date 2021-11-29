@@ -128,6 +128,7 @@ namespace TrueMiningDesktop.Core
         public static readonly TorSharpProxy TorSharpProxy = new(TorSharpSettings);
 
         private static bool useTor = false;
+
         public static bool UseTor
         { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
@@ -150,6 +151,7 @@ namespace TrueMiningDesktop.Core
         }
 
         private static bool torSharpEnabled = false;
+
         public static bool TorSharpEnabled
         { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
