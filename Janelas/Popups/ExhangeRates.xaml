@@ -12,7 +12,7 @@
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
                 <WrapPanel Margin="0,15,0,0">
                     <materialDesign:PackIcon Width="40" Height="40" Kind="Coins" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                    <Label Content="Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="Point" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
                     <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
