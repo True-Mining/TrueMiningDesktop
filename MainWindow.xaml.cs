@@ -327,7 +327,7 @@ namespace TrueMiningDesktop
                     else { e.Cancel = true; return; }
                 }
 
-                if (Tools.CheckerPopup.Tape)
+                if (Tools.CheckerPopup != null && Tools.CheckerPopup.Tape)
                 {
                     if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
                     { e.Cancel = true; return; }
