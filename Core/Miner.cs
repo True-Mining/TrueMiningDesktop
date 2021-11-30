@@ -19,10 +19,19 @@ namespace TrueMiningDesktop.Core
                 while (StoppingMining && !force) { System.Threading.Thread.Sleep(100); }
                 IntentToMine = true;
 
+                if (String.IsNullOrEmpty(User.Settings.User.Payment_Coin) || User.Settings.User.PayCoin == null || User.Settings.User.PayCoin.CoinName == null)
+                {
+                    Miner.IntentToMine = false;
+                    if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Select Payment Coin first"); }
+                    IsMining = false;
+                    IntentToMine = false;
+                    return;
+                }
+
                 if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
                 {
                     Miner.IntentToMine = false;
-                    if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Your wallet address is not correct. Check it."); }
+                    if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Something wrong. Check your wallet address and selected coin."); }
                     IsMining = false;
                     IntentToMine = false;
                     return;

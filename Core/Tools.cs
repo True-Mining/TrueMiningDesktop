@@ -376,14 +376,19 @@ namespace TrueMiningDesktop.Core
 
         public static bool WalletAddressIsValid(string address = "null")
         {
-            if (string.IsNullOrEmpty(address))
+
+            try
             {
-                return false;
+                if (User.Settings.User.PayCoin == null || string.IsNullOrEmpty(address))
+                {
+                    return false;
+                }
+                if (User.Settings.User.PayCoin.AddressPatterns.Any(x => System.Text.RegularExpressions.Regex.IsMatch(address, x)))
+                {
+                    return true;
+                }
             }
-            if (User.Settings.User.PayCoin.AddressPatterns.Any(x => System.Text.RegularExpressions.Regex.IsMatch(address, x)))
-            {
-                return true;
-            }
+            catch { return false; }
 
             return false;
         }
