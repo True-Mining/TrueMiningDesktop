@@ -50,6 +50,8 @@ namespace TrueMiningDesktop.Janelas.Popups
 
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
+                CoinName = User.Settings.User.PayCoin != null ? User.Settings.User.PayCoin.CoinName : "Coins";
+
                 CPU_algorithm = User.Settings.Device.cpu.Algorithm;
                 if (CPU_hashrate_decimal == -1) { CPUpannel.IsEnabled = false; CPU_hashrate_decimal = 0; } else { CPUpannel.IsEnabled = true; }
                 CPU_hashrate = Math.Round(CPU_hashrate_decimal, 2).ToString() + " H/s";

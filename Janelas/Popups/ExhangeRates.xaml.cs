@@ -28,6 +28,7 @@ namespace TrueMiningDesktop.Janelas.Popups
                     else
                     {
                         CoinName = User.Settings.User.PayCoin != null ? User.Settings.User.PayCoin.CoinName : "Coins";
+
                         BTCToCoinRate = decimal.Round(BTCToBTCRate / (PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.MiningCoinBTC_Orderbook.buyLevels[0].price) / 2);
                         BTCToBTCRate = 1;
                         BTCToUSDRate = decimal.Round(PoolAPI.BitcoinPrice.BTCUSD, 2);
