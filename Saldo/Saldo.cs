@@ -58,9 +58,9 @@ namespace TrueMiningDesktop.Server
                         Pages.Dashboard.DashboardContent.IsEnabled = true;
                     }
 
-                    if (lastUpdated.Ticks < DateTime.Now.Ticks || Janelas.Pages.Home.WalletWasChanged && Pages.Dashboard.IsLoaded)
+                    if (lastUpdated.Ticks < DateTime.Now.Ticks || Janelas.Pages.Home.PaymentInfoWasChanged && Pages.Dashboard.IsLoaded)
                     {
-                        Janelas.Pages.Home.WalletWasChanged = false;
+                        Janelas.Pages.Home.PaymentInfoWasChanged = false;
                         lastUpdated = DateTime.Now.AddMinutes(10);
                         try
                         {

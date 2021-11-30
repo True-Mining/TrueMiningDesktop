@@ -245,6 +245,8 @@ namespace TrueMiningDesktop.User
                 if (payment_Coin != newValue)
                 {
                     payment_Coin = newValue;
+
+                    if (!Settings.LoadingSettings) { Janelas.Pages.Home.PaymentInfoWasChanged = true; }
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace TrueMiningDesktop.Janelas
     /// </summary>
     public partial class Home : UserControl
     {
-        public bool WalletWasChanged { get; set; } = false;
+        public bool PaymentInfoWasChanged { get; set; } = false;
 
         public Home()
         {
@@ -66,7 +66,7 @@ namespace TrueMiningDesktop.Janelas
                         ComboBox_PaymentCoin.SelectedItem = null;
                     }
 
-                    WalletWasChanged = true;
+                    PaymentInfoWasChanged = true;
                     Pages.Dashboard.xWalletAddress.Content = TextBox_PaymentAddress.Text;
                 }
                 else
