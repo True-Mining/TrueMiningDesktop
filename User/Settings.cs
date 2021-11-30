@@ -237,7 +237,7 @@ namespace TrueMiningDesktop.User
                         newValue = value;
                     }
                 }
-                catch (Exception e)
+                catch
                 {
                     newValue = value;
                 }

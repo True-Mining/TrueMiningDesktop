@@ -57,8 +57,8 @@ namespace TrueMiningDesktop.Server
                         Pages.Dashboard.loadingVisualElement.Visibility = Visibility.Hidden;
                         Pages.Dashboard.DashboardContent.IsEnabled = true;
                     }
-
-                    if (lastUpdated.Ticks < DateTime.Now.Ticks || Janelas.Pages.Home.PaymentInfoWasChanged && Pages.Dashboard.IsLoaded)
+                    
+                    if ((lastUpdated.Ticks < DateTime.Now.Ticks || Pages.Home.PaymentInfoWasChanged) && Pages.Dashboard.IsLoaded)
                     {
                         Janelas.Pages.Home.PaymentInfoWasChanged = false;
                         lastUpdated = DateTime.Now.AddMinutes(10);
