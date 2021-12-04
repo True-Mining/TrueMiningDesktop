@@ -44,7 +44,7 @@ namespace TrueMiningDesktop.Janelas
                 {
                     List<PaymentCoin> possibleCoinsByCurrentAddress = SoftwareParameters.ServerConfig.PaymentCoins.Where(x => x.AddressPatterns.Any(x => Regex.IsMatch(TextBox_PaymentAddress.Text, x))).ToList<PaymentCoin>();
 
-                    if (possibleCoinsByCurrentAddress.Count() > 0)
+                    if (possibleCoinsByCurrentAddress.Count > 0)
                     {
                         Button_CreateWallet.Visibility = Visibility.Hidden;
                     }
@@ -53,7 +53,7 @@ namespace TrueMiningDesktop.Janelas
                         Button_CreateWallet.Visibility = Visibility.Visible;
                     }
 
-                    if (possibleCoinsByCurrentAddress.Count() == 1)
+                    if (possibleCoinsByCurrentAddress.Count == 1)
                     {
                         ComboBox_PaymentCoin.SelectedItem = possibleCoinsByCurrentAddress.First().CoinTicker + " - " + possibleCoinsByCurrentAddress.First().CoinName;
                     }

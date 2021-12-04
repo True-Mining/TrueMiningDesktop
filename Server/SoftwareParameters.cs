@@ -125,7 +125,7 @@ namespace TrueMiningDesktop.Server
 
                 while (trying)
                 {
-                    Task updateParameters = new Task(() =>
+                    Task updateParameters = new(() =>
                     {
                         lastUpdated = DateTime.Now;
                         try
