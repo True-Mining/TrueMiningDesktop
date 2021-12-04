@@ -48,6 +48,20 @@ namespace TrueMiningDesktop.Core.XMRig
 
                 new Task(() =>
                 {
+                    while (true)
+                    {
+                        try
+                        {
+                            Thread.Sleep(100);
+                            DateTime time = XMRIGminer.StartTime;
+                            if (time.Ticks > 100) { break; }
+                        }
+                        catch { }
+                    }
+                }).Wait(3000);
+
+                new Task(() =>
+                {
                     try
                     {
                         Application.Current.Dispatcher.Invoke((Action)delegate

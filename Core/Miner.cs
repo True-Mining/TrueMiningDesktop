@@ -51,11 +51,10 @@ namespace TrueMiningDesktop.Core
                         {
                             try
                             {
-                                IsMining = true;
-
                                 XMRig.XMRig.CreateConfigFile();
                                 XMRig.XMRig.Start();
 
+                                IsMining = true;
                                 intentToMine = false;
                             }
                             catch (Exception e) { MessageBox.Show(e.Message); intentToMine = false; }
