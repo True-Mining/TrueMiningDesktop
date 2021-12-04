@@ -239,7 +239,7 @@ namespace TrueMiningDesktop.Core
                         }
                     });
                 }
-                catch (Exception e) { MessageBox.Show(e.Message); }
+                catch { }
             }
         }
 

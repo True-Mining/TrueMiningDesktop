@@ -376,7 +376,6 @@ namespace TrueMiningDesktop.Core
 
         public static bool WalletAddressIsValid(string address = "null")
         {
-
             try
             {
                 if (User.Settings.User.PayCoin == null || string.IsNullOrEmpty(address))
