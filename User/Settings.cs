@@ -219,6 +219,7 @@ namespace TrueMiningDesktop.User
             set
             {
                 string newValue = null;
+                bool coinIsInParamsCoins = false;
 
                 try
                 {
@@ -227,6 +228,8 @@ namespace TrueMiningDesktop.User
                         PayCoin = SoftwareParameters.ServerConfig.PaymentCoins.First(x => value.Split('-', ' ').Any(z => z.Equals(x.CoinName, StringComparison.OrdinalIgnoreCase) || z.Equals(x.CoinTicker, StringComparison.OrdinalIgnoreCase)));
 
                         newValue = PayCoin.CoinTicker + " - " + PayCoin.CoinName;
+
+                        coinIsInParamsCoins = true;
                     }
                     else if (Payment_CoinsList.Any(x => x.Contains(value)))
                     {
@@ -247,6 +250,7 @@ namespace TrueMiningDesktop.User
                     payment_Coin = newValue;
 
                     if (!Settings.LoadingSettings) { Janelas.Pages.Home.PaymentInfoWasChanged = true; }
+                    if (!Settings.LoadingSettings && coinIsInParamsCoins) { Settings.SettingsSaver(); }
                 }
             }
         }
