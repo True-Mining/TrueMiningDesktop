@@ -392,6 +392,18 @@ namespace TrueMiningDesktop.Core
             return false;
         }
 
+        public static void KillProcessByName(string ProcessName)
+        {
+            Process[] pname = Process.GetProcessesByName(ProcessName);
+
+            foreach (Process process in pname)
+            {
+                try { process.Kill(true); } catch { }
+                try { process.Close(); } catch { }
+                try { process.Dispose(); } catch { }
+            }
+        }
+
         public static void OpenLinkInBrowser(string link)
         {
             try

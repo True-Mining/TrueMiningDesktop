@@ -110,28 +110,32 @@ namespace TrueMiningDesktop.Core.XMRig
         {
             try
             {
+                bool closed = false;
+
                 Task tryCloseFancy = new(() =>
                 {
                     try
                     {
                         XMRIGminer.CloseMainWindow();
                         XMRIGminer.WaitForExit();
+                        closed = true;
                     }
                     catch
                     {
                         XMRIGminer.Kill();
                         XMRIGminer.WaitForExit();
+                        closed = true;
                     }
                 });
                 tryCloseFancy.Start();
                 tryCloseFancy.Wait(4000);
 
-                XMRIGminer.Kill();
-                XMRIGminer.WaitForExit();
+                if (!closed)
+                {
+                    Tools.KillProcessByName(XMRIGminer.ProcessName);
+                }
             }
             catch { }
-
-            Thread.Sleep(50);
         }
 
         public static void ChangeCompiler()
