@@ -27,13 +27,13 @@
                         <Slider Width="222" Maximum="2" TickPlacement="Both" Value="{Binding Priority}" AutoToolTipPlacement="None" IsSnapToTickEnabled="True" Margin="5,0,5,0" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" />
                         <Label Content="Normal process priority" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                     </WrapPanel>
-                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
-                        <Label Content="Maximum CPU usage config hint" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
+                    <WrapPanel x:Name="PanelMaxUsageHint" VerticalAlignment="Center" Orientation="Horizontal">
+                        <Label Content="Maximum CPU threads usage hint" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                         <Slider Width="300" Maximum="100" TickPlacement="None" Value="{Binding MaxUsageHint}" AutoToolTipPlacement="None" Margin="5,0,5,0" IsSnapToTickEnabled="True" VerticalAlignment="Center" ValueChanged="Slider_ValueChanged" />
                     </WrapPanel>
                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal">
                         <Label Content="CPU Threads" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
-                        <ComboBox SelectedIndex="{Binding Threads}" Width="90" FontFamily="Roboto" FontWeight="Normal" FontSize="13" SnapsToDevicePixels="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="6,6,0,6" Margin="10,0,0,0">
+                        <ComboBox SelectedIndex="{Binding Threads}" Width="90" FontFamily="Roboto" FontWeight="Normal" FontSize="13" SnapsToDevicePixels="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Padding="6,6,0,6" Margin="10,0,0,0" SelectionChanged="ComboBox_SelectionChanged">
                             <ComboBoxItem IsSelected="True">auto-config</ComboBoxItem>
                             <ComboBoxItem>1</ComboBoxItem>
                             <ComboBoxItem>2</ComboBoxItem>
@@ -71,6 +71,34 @@
                             <ComboBoxItem>34</ComboBoxItem>
                             <ComboBoxItem>35</ComboBoxItem>
                             <ComboBoxItem>36</ComboBoxItem>
+                            <ComboBoxItem>37</ComboBoxItem>
+                            <ComboBoxItem>38</ComboBoxItem>
+                            <ComboBoxItem>39</ComboBoxItem>
+                            <ComboBoxItem>40</ComboBoxItem>
+                            <ComboBoxItem>41</ComboBoxItem>
+                            <ComboBoxItem>42</ComboBoxItem>
+                            <ComboBoxItem>43</ComboBoxItem>
+                            <ComboBoxItem>44</ComboBoxItem>
+                            <ComboBoxItem>45</ComboBoxItem>
+                            <ComboBoxItem>46</ComboBoxItem>
+                            <ComboBoxItem>47</ComboBoxItem>
+                            <ComboBoxItem>48</ComboBoxItem>
+                            <ComboBoxItem>49</ComboBoxItem>
+                            <ComboBoxItem>50</ComboBoxItem>
+                            <ComboBoxItem>51</ComboBoxItem>
+                            <ComboBoxItem>52</ComboBoxItem>
+                            <ComboBoxItem>53</ComboBoxItem>
+                            <ComboBoxItem>54</ComboBoxItem>
+                            <ComboBoxItem>55</ComboBoxItem>
+                            <ComboBoxItem>56</ComboBoxItem>
+                            <ComboBoxItem>57</ComboBoxItem>
+                            <ComboBoxItem>58</ComboBoxItem>
+                            <ComboBoxItem>59</ComboBoxItem>
+                            <ComboBoxItem>60</ComboBoxItem>
+                            <ComboBoxItem>61</ComboBoxItem>
+                            <ComboBoxItem>62</ComboBoxItem>
+                            <ComboBoxItem>63</ComboBoxItem>
+                            <ComboBoxItem>64</ComboBoxItem>
                         </ComboBox>
                     </WrapPanel>
                 </WrapPanel>
