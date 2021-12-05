@@ -277,8 +277,8 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("        \"memory-pool\": true,");
             if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"yield\": " + (Settings.Device.cpu.Yield).ToString().ToLowerInvariant() + ","); }
             conf.AppendLine("        \"asm\": true,");
-            if (!Settings.Device.cpu.Autoconfig && Settings.Device.cpu.Threads > 0) { conf.AppendLine("        \"threads\": " + Settings.Device.cpu.Threads + ","); }
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"max-threads-hint\": " + Settings.Device.cpu.MaxUsageHint); }
+            if (!Settings.Device.cpu.Autoconfig && Settings.Device.cpu.Threads == 0) { conf.AppendLine("        \"max-threads-hint\": " + Settings.Device.cpu.MaxUsageHint + ","); }
+            if (!Settings.Device.cpu.Autoconfig && Settings.Device.cpu.Threads > 0) { conf.AppendLine("        \"rx\": {\"threads\": " + Settings.Device.cpu.Threads + "},"); }
             conf.AppendLine("    },");
             conf.AppendLine("    \"randomx\": {");
             conf.AppendLine("        \"init\": -1,");
@@ -297,8 +297,6 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("        \"loader\": null,");
             conf.AppendLine("        \"platform\": \"AMD\",");
             conf.AppendLine("        \"adl\": true,");
-            conf.AppendLine("        \"cn/0\": false,");
-            conf.AppendLine("        \"cn-lite/0\": false");
             conf.AppendLine("    },");
             conf.AppendLine("    \"cuda\": {");
             conf.AppendLine("        \"enabled\": " + Settings.Device.cuda.MiningSelected.ToString().ToLowerInvariant() + ",");
