@@ -19,7 +19,7 @@ using TrueMiningDesktop.Janelas;
 
 namespace TrueMiningDesktop.Core
 {
-    public class Tools
+    public static class Tools
     {
         public static bool IsConnected()
         {
@@ -239,6 +239,11 @@ namespace TrueMiningDesktop.Core
         public static void NotifyPropertyChanged()
         {
             PropertyChanged(null, null);
+        }
+
+        public static decimal SubtractFee(this decimal valor, decimal feePercent)
+        {
+            return valor * (1 - (feePercent / 100));
         }
 
         public static string FileSHA256(string filePath)

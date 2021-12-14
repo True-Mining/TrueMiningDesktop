@@ -39,6 +39,9 @@ namespace TrueMiningDesktop.Server
         [JsonProperty("poolName", NullValueHandling = NullValueHandling.Ignore)]
         public string PoolName { get; set; }
 
+        [JsonProperty("PoolFee", NullValueHandling = NullValueHandling.Ignore)]
+        public decimal PoolFee { get; set; }
+
         [JsonProperty("hosts", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Hosts { get; set; }
 
