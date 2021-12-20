@@ -17,7 +17,7 @@ namespace TrueMiningDesktop.Core.XMRig
     public static class XMRig
     {
         private static readonly Process XMRIGminer = new();
-        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc-zerofee.exe");
+        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
         private static bool inXMRIGexitEvent = false;
         private static readonly DateTime holdTime = DateTime.UtcNow;
         private static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
@@ -156,9 +156,9 @@ namespace TrueMiningDesktop.Core.XMRig
         {
             if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe")
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc-zerofee.exe";
+                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe";
             }
-            else if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc-zerofee.exe")
+            else if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe")
             {
                 XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe";
             }
