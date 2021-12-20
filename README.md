@@ -10,7 +10,12 @@
 
 >True Mining Desktop is a software integrated with the True Mining and True Payment Platform.
 
-True Mining Desktop comes to facilitate the mining of the end user, providing an easy-to-use graphical interface so that the user can mine Dogecoin, RDCT and other currencies that will soon be implemented.
+True Mining Desktop comes to facilitate the mining of the end user, providing an easy-to-use graphical interface to end-user.
+
+Currently supported payment currencies:
+-  Dogecoin (DOGE)
+-  Digibyte (DGB)
+-  RDCToken (RDCT)
 
 Website: https://truemining.online
 

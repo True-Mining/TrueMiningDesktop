@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using TrueMiningDesktop.Core;
+using TrueMiningDesktop.Server;
 
 namespace TrueMiningDesktop.Janelas
 {
@@ -11,12 +15,11 @@ namespace TrueMiningDesktop.Janelas
     /// </summary>
     public partial class Home : UserControl
     {
-        public bool WalletWasChanged { get; set; } = false;
+        public bool PaymentInfoWasChanged { get; set; } = false;
 
         public Home()
         {
             InitializeComponent();
-            DataContext = User.Settings.User;
         }
 
         public void StartStopMining_Click(object sender, RoutedEventArgs e)
@@ -33,28 +36,52 @@ namespace TrueMiningDesktop.Janelas
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (TextBox_PaymentAddress.Text != null)
+            try
             {
-                TextBox_PaymentAddress.Text = TextBox_PaymentAddress.Text.Replace(" ", "");
+                TextBox_PaymentAddress.Text = Regex.Replace(TextBox_PaymentAddress.Text, @"[^\w]", "");
 
-                if (TextBox_PaymentAddress.Text.StartsWith("R"))
-                { User.Settings.User.Payment_Coin = "RDCT"; }
-                if (TextBox_PaymentAddress.Text.StartsWith("D"))
-                { User.Settings.User.Payment_Coin = "DOGE"; }
+                if (!string.IsNullOrEmpty(TextBox_PaymentAddress.Text) && SoftwareParameters.ServerConfig != null && SoftwareParameters.ServerConfig.PaymentCoins != null)
+                {
+                    List<PaymentCoin> possibleCoinsByCurrentAddress = SoftwareParameters.ServerConfig.PaymentCoins.Where(x => x.AddressPatterns.Any(x => Regex.IsMatch(TextBox_PaymentAddress.Text, x))).ToList<PaymentCoin>();
 
-                if (!User.Settings.LoadingSettings) { User.Settings.SettingsSaver(); }
-            }
+                    if (possibleCoinsByCurrentAddress.Count > 0)
+                    {
+                        Button_CreateWallet.Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        Button_CreateWallet.Visibility = Visibility.Visible;
+                    }
 
-            if (TextBox_PaymentAddress.Text.Length == 34 && Tools.WalletAddressIsValid(TextBox_PaymentAddress.Text))
-            {
-                Button_CreateWallet.Visibility = Visibility.Hidden;
-                WalletWasChanged = true;
-                Janelas.Pages.Dashboard.xWalletAddress.Content = TextBox_PaymentAddress.Text;
+                    if (possibleCoinsByCurrentAddress.Count == 1)
+                    {
+                        ComboBox_PaymentCoin.SelectedItem = possibleCoinsByCurrentAddress.First().CoinTicker + " - " + possibleCoinsByCurrentAddress.First().CoinName;
+                    }
+                    else if (User.Settings.User.Payment_Wallet == TextBox_PaymentAddress.Text)
+                    {
+                        ComboBox_PaymentCoin.SelectedItem = User.Settings.User.PayCoin.CoinTicker + " - " + User.Settings.User.PayCoin.CoinName;
+                    }
+                    else
+                    {
+                        ComboBox_PaymentCoin.SelectedItem = null;
+                    }
+
+                    PaymentInfoWasChanged = true;
+                    Pages.Dashboard.xWalletAddress.Content = TextBox_PaymentAddress.Text;
+                }
+                else
+                {
+                    if (User.Settings.User.PayCoin != null && User.Settings.User.PayCoin.AddressPatterns.Any(x => Regex.IsMatch(TextBox_PaymentAddress.Text, x)))
+                    {
+                        Button_CreateWallet.Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        Button_CreateWallet.Visibility = Visibility.Visible;
+                    }
+                }
             }
-            else
-            {
-                Button_CreateWallet.Visibility = Visibility.Visible;
-            }
+            catch { }
         }
 
         private void Button_CreateWallet_Click(object sender, RoutedEventArgs e)

@@ -28,5 +28,24 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             MainWindow.Clicado = false;
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (!User.Settings.Device.cpu.Autoconfig && User.Settings.Device.cpu.Threads > 0)
+                {
+                    PanelMaxUsageHint.IsEnabled = false;
+                }
+                else
+                {
+                    PanelMaxUsageHint.IsEnabled = true;
+                }
+            }
+            catch
+            {
+                PanelMaxUsageHint.IsEnabled = true;
+            }
+        }
     }
 }

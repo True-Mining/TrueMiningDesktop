@@ -2,14 +2,12 @@
 {
     public static class Pages
     {
-        public static Home Home = new Home();
-        public static Settings Settings = new Settings();
-        public static Dashboard Dashboard = new Dashboard();
+        public static Home Home = new();
+        public static Settings Settings = new();
+        public static Dashboard Dashboard = new();
 
-        public static SubMenuSettings.SettingsCPU SettingsCPU = new SubMenuSettings.SettingsCPU();
-        public static SubMenuSettings.SettingsOPENCL SettingsOPENCL = new SubMenuSettings.SettingsOPENCL();
-        public static SubMenuSettings.SettingsCUDA SettingsCUDA = new SubMenuSettings.SettingsCUDA();
-
-        //      public static Other Other = new Other();
+        public static SubMenuSettings.SettingsCPU SettingsCPU = new();
+        public static SubMenuSettings.SettingsOPENCL SettingsOPENCL = new();
+        public static SubMenuSettings.SettingsCUDA SettingsCUDA = new();
     }
 }

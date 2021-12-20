@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
@@ -18,7 +19,7 @@ using TrueMiningDesktop.Janelas;
 
 namespace TrueMiningDesktop.Core
 {
-    public class Tools
+    public static class Tools
     {
         public static bool IsConnected()
         {
@@ -71,11 +72,10 @@ namespace TrueMiningDesktop.Core
             {
                 //    headers[HttpRequestHeader.Accept] = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
                 //    headers[HttpRequestHeader.AcceptEncoding] = "gzip, deflate, br";
-                //     headers[HttpRequestHeader.AcceptLanguage] = "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3";
+                //    headers[HttpRequestHeader.AcceptLanguage] = "pt-BR,pt;q=0.8,en-US;q=0.5,en;q=0.3";
                 [HttpRequestHeader.CacheControl] = "max-age=0",
                 [HttpRequestHeader.KeepAlive] = "1",
                 [HttpRequestHeader.Allow] = "1",
-                // headers[HttpRequestHeader.Via] = "http://127.0.0.1:8427";
                 [HttpRequestHeader.ProxyAuthorization] = "Basic " + new TorSharpTorSettings().ControlPassword,
                 [HttpRequestHeader.Trailer] = "1",
                 [HttpRequestHeader.Upgrade] = "1",
@@ -128,7 +128,9 @@ namespace TrueMiningDesktop.Core
         public static readonly TorSharpProxy TorSharpProxy = new(TorSharpSettings);
 
         private static bool useTor = false;
-        public static bool UseTor { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
+
+        public static bool UseTor
+        { get { return useTor; } set { useTor = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
         public static bool TorSharpProcessesRunning
         {
@@ -149,7 +151,9 @@ namespace TrueMiningDesktop.Core
         }
 
         private static bool torSharpEnabled = false;
-        public static bool TorSharpEnabled { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
+
+        public static bool TorSharpEnabled
+        { get { return torSharpEnabled; } set { torSharpEnabled = value; if (!User.Settings.LoadingSettings) { NotifyPropertyChanged(); } } }
 
         public static event PropertyChangedEventHandler PropertyChanged;
 
@@ -235,6 +239,11 @@ namespace TrueMiningDesktop.Core
         public static void NotifyPropertyChanged()
         {
             PropertyChanged(null, null);
+        }
+
+        public static decimal SubtractFee(this decimal valor, decimal feePercent)
+        {
+            return valor * (1 - (feePercent / 100));
         }
 
         public static string FileSHA256(string filePath)
@@ -372,38 +381,32 @@ namespace TrueMiningDesktop.Core
 
         public static bool WalletAddressIsValid(string address = "null")
         {
-            if (string.IsNullOrEmpty(address))
+            try
             {
-                return false;
+                if (User.Settings.User.PayCoin == null || string.IsNullOrEmpty(address))
+                {
+                    return false;
+                }
+                if (User.Settings.User.PayCoin.AddressPatterns.Any(x => System.Text.RegularExpressions.Regex.IsMatch(address, x)))
+                {
+                    return true;
+                }
             }
-            if (address.Length != 34)
+            catch { return false; }
+
+            return false;
+        }
+
+        public static void KillProcessByName(string ProcessName)
+        {
+            Process[] pname = Process.GetProcessesByName(ProcessName);
+
+            foreach (Process process in pname)
             {
-                return false;
+                try { process.Kill(true); } catch { }
+                try { process.Close(); } catch { }
+                try { process.Dispose(); } catch { }
             }
-
-            if (!address.StartsWith('D') && !address.StartsWith('R')) { return false; }
-
-            //switch (User.Settings.User.Payment_Coin)
-            //{
-            //    case "RDCT":
-            //        {
-            //            if (!address.StartsWith("R"))
-            //            {
-            //                return false;
-            //            }
-            //            break;
-            //        }
-            //    case "DOGE":
-            //        {
-            //            if (!address.StartsWith("D"))
-            //            {
-            //                return false;
-            //            }
-            //            break;
-            //        }
-            //}
-
-            return true;
         }
 
         public static void OpenLinkInBrowser(string link)

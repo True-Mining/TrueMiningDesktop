@@ -33,12 +33,20 @@ namespace TrueMiningDesktop.Janelas
         private List<string> dashboardWarnings = new();
         public Visibility warningWrapVisibility = Visibility.Visible;
 
-        public string LabelNextPayout { get { return labelNextPayout; } set { labelNextPayout = value; xLabelNextPayout.Content = value; } }
-        public string LabelAccumulatedBalance { get { return labelAccumulatedBalance; } set { labelAccumulatedBalance = value; xLabelAccumulatedBalance.Content = value; } }
-        public List<string> DashboardWarnings { get { return dashboardWarnings; } set { dashboardWarnings = value; NotifyPropertyChanged(); } }
-        public Visibility WarningWrapVisibility { get { return warningWrapVisibility; } set { warningWrapVisibility = value; NotifyPropertyChanged(); } }
+        public string LabelNextPayout
+        { get { return labelNextPayout; } set { labelNextPayout = value; xLabelNextPayout.Content = value; } }
 
-        public static string WalletAddress { get { return User.Settings.User.Payment_Wallet; } set { } }
+        public string LabelAccumulatedBalance
+        { get { return labelAccumulatedBalance; } set { labelAccumulatedBalance = value; xLabelAccumulatedBalance.Content = value; } }
+
+        public List<string> DashboardWarnings
+        { get { return dashboardWarnings; } set { dashboardWarnings = value; NotifyPropertyChanged(); } }
+
+        public Visibility WarningWrapVisibility
+        { get { return warningWrapVisibility; } set { warningWrapVisibility = value; NotifyPropertyChanged(); } }
+
+        public static string WalletAddress
+        { get { return User.Settings.User.Payment_Wallet; } set { } }
 
         private bool firstTimeLoad = false;
 
@@ -49,10 +57,17 @@ namespace TrueMiningDesktop.Janelas
         private PlotController chartControler;
         private Visibility chartVisibility = Visibility.Hidden;
 
-        public PlotModel ChartModel { get { return chartModel; } set { chartModel = value; NotifyPropertyChanged(); } }
-        public OxyPlot.Series.ColumnSeries ColumnChartSeries { get { return columnChartSeries; } set { columnChartSeries = value; NotifyPropertyChanged(); } }
-        public PlotController ChartController { get { return chartControler; } set { chartControler = value; NotifyPropertyChanged(); } }
-        public Visibility ChartVisibility { get { return chartVisibility; } set { chartVisibility = value; NotifyPropertyChanged(); } }
+        public PlotModel ChartModel
+        { get { return chartModel; } set { chartModel = value; NotifyPropertyChanged(); } }
+
+        public OxyPlot.Series.ColumnSeries ColumnChartSeries
+        { get { return columnChartSeries; } set { columnChartSeries = value; NotifyPropertyChanged(); } }
+
+        public PlotController ChartController
+        { get { return chartControler; } set { chartControler = value; NotifyPropertyChanged(); } }
+
+        public Visibility ChartVisibility
+        { get { return chartVisibility; } set { chartVisibility = value; NotifyPropertyChanged(); } }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {

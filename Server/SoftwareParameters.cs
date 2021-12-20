@@ -12,8 +12,8 @@ namespace TrueMiningDesktop.Server
         [JsonProperty("MiningCoins", NullValueHandling = NullValueHandling.Ignore)]
         public List<MiningCoin> MiningCoins { get; set; }
 
-        [JsonProperty("hosts", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Hosts { get; set; }
+        [JsonProperty("PaymentCoins", NullValueHandling = NullValueHandling.Ignore)]
+        public List<PaymentCoin> PaymentCoins { get; set; }
 
         [JsonProperty("DynamicFee", NullValueHandling = NullValueHandling.Ignore)]
         public decimal DynamicFee { get; set; }
@@ -39,6 +39,9 @@ namespace TrueMiningDesktop.Server
         [JsonProperty("poolName", NullValueHandling = NullValueHandling.Ignore)]
         public string PoolName { get; set; }
 
+        [JsonProperty("PoolFee", NullValueHandling = NullValueHandling.Ignore)]
+        public decimal PoolFee { get; set; }
+
         [JsonProperty("hosts", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> Hosts { get; set; }
 
@@ -56,6 +59,21 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
         public string Password { get; set; }
+    }
+
+    public partial class PaymentCoin
+    {
+        [JsonProperty("coinTicker", NullValueHandling = NullValueHandling.Ignore)]
+        public string CoinTicker { get; set; }
+
+        [JsonProperty("coinName", NullValueHandling = NullValueHandling.Ignore)]
+        public string CoinName { get; set; }
+
+        [JsonProperty("addressPatterns", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> AddressPatterns { get; set; }
+
+        [JsonProperty("minPayout", NullValueHandling = NullValueHandling.Ignore)]
+        public decimal MinPayout { get; set; }
     }
 
     public partial class ThirdPartyBinaries
@@ -110,7 +128,7 @@ namespace TrueMiningDesktop.Server
 
                 while (trying)
                 {
-                    Task updateParameters = new Task(() =>
+                    Task updateParameters = new(() =>
                     {
                         lastUpdated = DateTime.Now;
                         try

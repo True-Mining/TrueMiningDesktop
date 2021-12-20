@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using TrueMiningDesktop.Core;
+using TrueMiningDesktop.Server;
 
 namespace TrueMiningDesktop.User
 {
@@ -19,7 +21,19 @@ namespace TrueMiningDesktop.User
 
         public static void SettingsSaver(bool now = false)
         {
-            if (now) { WriteSettings(); } else { timerSaveSettings.Elapsed -= TimerSaveSettings_Elapsed; timerSaveSettings.Elapsed += TimerSaveSettings_Elapsed; timerSaveSettings.AutoReset = false; timerSaveSettings.Stop(); timerSaveSettings.Start(); }
+            while (LoadingSettings) { System.Threading.Thread.Sleep(500); }
+            if (now)
+            {
+                WriteSettings();
+            }
+            else
+            {
+                timerSaveSettings.Elapsed -= TimerSaveSettings_Elapsed;
+                timerSaveSettings.Elapsed += TimerSaveSettings_Elapsed;
+                timerSaveSettings.AutoReset = false;
+                timerSaveSettings.Stop();
+                timerSaveSettings.Start();
+            }
         }
 
         private static void TimerSaveSettings_Elapsed(object sender, ElapsedEventArgs e)
@@ -82,6 +96,8 @@ namespace TrueMiningDesktop.User
                     User.ShowCLI = up.ShowCLI;
                     User.StartHide = up.StartHide;
                     User.ChangeTbIcon = up.ChangeTbIcon;
+                    User.Payment_CoinsList = up.Payment_CoinsList;
+                    User.PayCoin = up.PayCoin;
                     User.Payment_Coin = up.Payment_Coin;
                     User.Payment_Wallet = up.Payment_Wallet;
                     User.LICENSE_read = up.LICENSE_read;
@@ -109,6 +125,8 @@ namespace TrueMiningDesktop.User
                         User.ShowCLI = up.ShowCLI;
                         User.StartHide = up.StartHide;
                         User.ChangeTbIcon = up.ChangeTbIcon;
+                        User.Payment_CoinsList = up.Payment_CoinsList;
+                        User.PayCoin = up.PayCoin;
                         User.Payment_Coin = up.Payment_Coin;
                         User.Payment_Wallet = up.Payment_Wallet;
                         User.LICENSE_read = up.LICENSE_read;
@@ -131,7 +149,10 @@ namespace TrueMiningDesktop.User
     public class CPUSettings
     {
         private bool miningSelected = true;
-        public bool MiningSelected { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
+        public bool MiningSelected
+        { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
         public List<string> AlgorithmsList { get; set; } = new();
@@ -144,7 +165,10 @@ namespace TrueMiningDesktop.User
     public class NVIDIASettings
     {
         private bool miningSelected = false;
-        public bool MiningSelected { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
+        public bool MiningSelected
+        { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
         public List<string> AlgorithmsList { get; set; } = new List<string>();
@@ -154,7 +178,10 @@ namespace TrueMiningDesktop.User
     public class AMDSettings
     {
         private bool miningSelected = false;
-        public bool MiningSelected { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
+        public bool MiningSelected
+        { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
         public List<string> AlgorithmsList { get; set; } = new List<string>();
@@ -170,15 +197,9 @@ namespace TrueMiningDesktop.User
             get { return payment_Wallet; }
             set
             {
-                payment_Wallet = value;
-                if (payment_Wallet != null)
+                if (value != null)
                 {
-                    payment_Wallet = payment_Wallet.Replace(" ", "");
-
-                    if (payment_Wallet.StartsWith("R"))
-                    { Payment_Coin = "RDCT"; }
-                    if (payment_Wallet.StartsWith("D"))
-                    { Payment_Coin = "DOGE"; }
+                    payment_Wallet = value;
 
                     if (!Settings.LoadingSettings) { Settings.SettingsSaver(); }
                 }
@@ -187,7 +208,7 @@ namespace TrueMiningDesktop.User
 
         public bool LICENSE_read = false;
 
-        private string payment_Coin;
+        private string payment_Coin = null;
 
         public string Payment_Coin
         {
@@ -197,44 +218,104 @@ namespace TrueMiningDesktop.User
             }
             set
             {
-                payment_Coin = value;
-                Janelas.Pages.Home.ComboBox_PaymentCoin.SelectedIndex = PaymentCoinComboBox_SelectedIndex;
+                string newValue = null;
+                bool coinIsInParamsCoins = false;
+
+                try
+                {
+                    if (SoftwareParameters.ServerConfig != null && SoftwareParameters.ServerConfig.PaymentCoins != null && value != null)
+                    {
+                        PayCoin = SoftwareParameters.ServerConfig.PaymentCoins.First(x => value.Split('-', ' ').Any(z => z.Equals(x.CoinName, StringComparison.OrdinalIgnoreCase) || z.Equals(x.CoinTicker, StringComparison.OrdinalIgnoreCase)));
+
+                        newValue = PayCoin.CoinTicker + " - " + PayCoin.CoinName;
+
+                        coinIsInParamsCoins = true;
+                    }
+                    else if (Payment_CoinsList.Any(x => x.Contains(value)))
+                    {
+                        newValue = Payment_CoinsList.First(x => x.Contains(value));
+                    }
+                    else
+                    {
+                        newValue = value;
+                    }
+                }
+                catch
+                {
+                    newValue = value;
+                }
+
+                if (payment_Coin != newValue)
+                {
+                    payment_Coin = newValue;
+
+                    if (!Settings.LoadingSettings) { Janelas.Pages.Home.PaymentInfoWasChanged = true; }
+                    if (!Settings.LoadingSettings && coinIsInParamsCoins) { Settings.SettingsSaver(); }
+                }
             }
         }
 
-        public List<string> Payment_CoinsList { get; set; } = new List<string>();
-        private bool showCLI = false;
-        public bool ShowCLI { get { return showCLI; } set { showCLI = value; Miner.ShowHideCLI(); } }
-        private bool autostartSoftwareWithWindows = false;
-        public bool AutostartSoftwareWithWindows { get { return autostartSoftwareWithWindows; } set { autostartSoftwareWithWindows = value; Core.Tools.AutostartSoftwareWithWindowsRegistryWriter(); if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
-        private bool autostartMining = false;
-        public bool AutostartMining { get { return autostartMining; } set { autostartMining = value; if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
-        private bool startHide = false;
-        public bool StartHide { get { return startHide; } set { startHide = value; if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
+        public PaymentCoin PayCoin { get; set; } = new();
 
-        private bool changeTbIcon = false;
-        public bool ChangeTbIcon { get { return changeTbIcon; } set { changeTbIcon = value; Tools.TryChangeTaskbarIconAsSettingsOrder(); } }
-
-        private bool avoidWindowsSuspend = true;
-        public bool AvoidWindowsSuspend { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; } }
-
-        public int PaymentCoinComboBox_SelectedIndex
+        public List<string> Payment_CoinsList
         {
             get
             {
-                for (int i = 0; Payment_CoinsList.Count > i; i++)
-                {
-                    if (string.Equals(Payment_CoinsList[i], payment_Coin, StringComparison.OrdinalIgnoreCase)) { return i; }
-                }
-                return 0;
+                return payCoinsList;
             }
-            set { }
+            set
+            {
+                payCoinsList = value;
+
+                if (SoftwareParameters.ServerConfig != null && SoftwareParameters.ServerConfig.PaymentCoins != null && payment_Coin != null)
+                {
+                    PayCoin = SoftwareParameters.ServerConfig.PaymentCoins.First(x => payment_Coin.Split('-', ' ').Any(z => z.Equals(x.CoinName, StringComparison.OrdinalIgnoreCase) || z.Equals(x.CoinTicker, StringComparison.OrdinalIgnoreCase)));
+
+                    Payment_Coin = PayCoin.CoinTicker + " - " + PayCoin.CoinName;
+                }
+            }
         }
 
+        private List<string> payCoinsList = new();
+
+        private bool showCLI = false;
+
+        public bool ShowCLI
+        { get { return showCLI; } set { showCLI = value; Miner.ShowHideCLI(); } }
+
+        private bool autostartSoftwareWithWindows = false;
+
+        public bool AutostartSoftwareWithWindows
+        { get { return autostartSoftwareWithWindows; } set { autostartSoftwareWithWindows = value; Core.Tools.AutostartSoftwareWithWindowsRegistryWriter(); if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
+
+        private bool autostartMining = false;
+
+        public bool AutostartMining
+        { get { return autostartMining; } set { autostartMining = value; if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
+
+        private bool startHide = false;
+
+        public bool StartHide
+        { get { return startHide; } set { startHide = value; if (!Settings.LoadingSettings && startHide && autostartSoftwareWithWindows && autostartMining) { showCLI = false; Janelas.Pages.Settings.ShowMiningConsole_CheckBox.IsChecked = false; } } }
+
+        private bool changeTbIcon = false;
+
+        public bool ChangeTbIcon
+        { get { return changeTbIcon; } set { changeTbIcon = value; Tools.TryChangeTaskbarIconAsSettingsOrder(); } }
+
+        private bool avoidWindowsSuspend = true;
+
+        public bool AvoidWindowsSuspend
+        { get { return avoidWindowsSuspend; } set { avoidWindowsSuspend = value; } }
+
         private bool useAllInterfacesInsteadLocalhost = false;
-        public bool UseAllInterfacesInsteadLocalhost { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
+
+        public bool UseAllInterfacesInsteadLocalhost
+        { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
 
         private bool useTorSharpOnAll = false;
-        public bool UseTorSharpOnMining { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.LoadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
+
+        public bool UseTorSharpOnMining
+        { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.LoadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
     }
 }
