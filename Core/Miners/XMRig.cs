@@ -40,78 +40,88 @@ namespace TrueMiningDesktop.Core.XMRig
             XMRIGminer.Exited += XMRIGminer_Exited;
             XMRIGminer.EnableRaisingEvents = true;
 
-            try
-            {
-                XMRIGminer.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
-                XMRIGminer.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
-                XMRIGminer.Start();
-
-                new Task(() =>
+                try
                 {
-                    while (true)
+                    XMRIGminer.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
+                    XMRIGminer.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
+                    XMRIGminer.Start();
+
+                    new Task(() =>
+                    {
+                        while (true)
+                        {
+                            try
+                            {
+                                Thread.Sleep(100);
+                                DateTime time = XMRIGminer.StartTime;
+                                if (time.Ticks > 100) { break; }
+                            }
+                            catch { }
+                        }
+                    }).Wait(3000);
+
+                    new Task(() =>
                     {
                         try
                         {
-                            Thread.Sleep(100);
-                            DateTime time = XMRIGminer.StartTime;
-                            if (time.Ticks > 100) { break; }
+                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                DateTime initializingTask = DateTime.UtcNow;
+                                while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
+                                Thread.Sleep(1000);
+                                Miner.ShowHideCLI();
+                                Miner.ShowHideCLI();
+                            });
                         }
                         catch { }
-                    }
-                }).Wait(3000);
+                    }).Start();
 
-                new Task(() =>
+                    startedSince = DateTime.UtcNow;
+                }
+                catch (Exception e)
                 {
-                    try
-                    {
-                        Application.Current.Dispatcher.Invoke((Action)delegate
-                        {
-                            DateTime initializingTask = DateTime.UtcNow;
-                            while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
-                            Thread.Sleep(1000);
-                            Miner.ShowHideCLI();
-                            Miner.ShowHideCLI();
-                        });
-                    }
-                    catch { }
-                }).Start();
+                    Miner.StopMiner(true);
+                    Miner.IntentToMine = true;
 
-                startedSince = DateTime.UtcNow;
-            }
-            catch (Exception e)
-            {
-                Miner.StopMiner(true);
-                Miner.IntentToMine = true;
-
-                try
-                {
-                    if (!Tools.HaveADM)
+                    if (minerBinaryChangedTimes < 4)
                     {
-                        Tools.RestartApp(true);
+                        ChangeMinerBinary();
+                        Thread.Sleep(3000);
+                        Miner.StartMiner(true);
                     }
                     else
                     {
-                        if (Tools.AddedTrueMiningDestopToWinDefenderExclusions)
+                        try
                         {
-                            MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
-                        }
-                        else
-                        {
-                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            if (!Tools.HaveADM)
                             {
-                                Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
+                                Tools.RestartApp(true);
+                            }
+                            else
+                            {
+                                if (Tools.AddedTrueMiningDestopToWinDefenderExclusions)
+                                {
+                                    MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
+                                    Miner.IntentToMine = false;
+                                }
+                                else
+                                {
+                                    Application.Current.Dispatcher.Invoke((Action)delegate
+                                    {
+                                        Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
 
-                                Thread.Sleep(3000);
-                                Miner.StartMiner(true);
-                            });
+                                        Thread.Sleep(3000);
+                                        Miner.StartMiner(true);
+                                    });
+                                }
+                            }
+                        }
+                        catch (Exception ee)
+                        {
+                            Miner.StopMiner(true);
+                            MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
                         }
                     }
-                }
-                catch (Exception ee)
-                {
-                    Miner.StopMiner(true);
-                    MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
-                }
             }
         }
 
@@ -152,7 +162,9 @@ namespace TrueMiningDesktop.Core.XMRig
             catch { }
         }
 
-        public static void ChangeCompiler()
+        static int minerBinaryChangedTimes = 0;
+
+        public static void ChangeMinerBinary()
         {
             if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe")
             {
@@ -166,6 +178,8 @@ namespace TrueMiningDesktop.Core.XMRig
             { 
                 XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe";
             }
+
+            if (minerBinaryChangedTimes < 100) { minerBinaryChangedTimes++; }
         }
 
         public static void Show()
@@ -245,7 +259,7 @@ namespace TrueMiningDesktop.Core.XMRig
                     inXMRIGexitEvent = true;
 
                     if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
-                    else { ChangeCompiler(); }
+                    else { ChangeMinerBinary(); }
 
                     if (Miner.IsMining && !Miner.StoppingMining)
                     {
