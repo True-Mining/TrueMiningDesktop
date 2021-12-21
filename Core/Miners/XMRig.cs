@@ -162,7 +162,7 @@ namespace TrueMiningDesktop.Core.XMRig
             catch { }
         }
 
-        static int minerBinaryChangedTimes = 0;
+        private static int minerBinaryChangedTimes = 0;
 
         public static void ChangeMinerBinary()
         {
