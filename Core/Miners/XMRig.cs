@@ -40,88 +40,88 @@ namespace TrueMiningDesktop.Core.XMRig
             XMRIGminer.Exited += XMRIGminer_Exited;
             XMRIGminer.EnableRaisingEvents = true;
 
-                try
+            try
+            {
+                XMRIGminer.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
+                XMRIGminer.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
+                XMRIGminer.Start();
+
+                new Task(() =>
                 {
-                    XMRIGminer.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
-                    XMRIGminer.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
-                    XMRIGminer.Start();
-
-                    new Task(() =>
-                    {
-                        while (true)
-                        {
-                            try
-                            {
-                                Thread.Sleep(100);
-                                DateTime time = XMRIGminer.StartTime;
-                                if (time.Ticks > 100) { break; }
-                            }
-                            catch { }
-                        }
-                    }).Wait(3000);
-
-                    new Task(() =>
+                    while (true)
                     {
                         try
                         {
-                            Application.Current.Dispatcher.Invoke((Action)delegate
-                            {
-                                DateTime initializingTask = DateTime.UtcNow;
-                                while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
-                                Thread.Sleep(1000);
-                                Miner.ShowHideCLI();
-                                Miner.ShowHideCLI();
-                            });
+                            Thread.Sleep(100);
+                            DateTime time = XMRIGminer.StartTime;
+                            if (time.Ticks > 100) { break; }
                         }
                         catch { }
-                    }).Start();
-
-                    startedSince = DateTime.UtcNow;
-                }
-                catch (Exception e)
-                {
-                    Miner.StopMiner(true);
-                    Miner.IntentToMine = true;
-
-                    if (minerBinaryChangedTimes < 4)
-                    {
-                        ChangeMinerBinary();
-                        Thread.Sleep(3000);
-                        Miner.StartMiner(true);
                     }
-                    else
+                }).Wait(3000);
+
+                new Task(() =>
+                {
+                    try
                     {
-                        try
+                        Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            if (!Tools.HaveADM)
+                            DateTime initializingTask = DateTime.UtcNow;
+                            while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
+                            Thread.Sleep(1000);
+                            Miner.ShowHideCLI();
+                            Miner.ShowHideCLI();
+                        });
+                    }
+                    catch { }
+                }).Start();
+
+                startedSince = DateTime.UtcNow;
+            }
+            catch (Exception e)
+            {
+                Miner.StopMiner(true);
+                Miner.IntentToMine = true;
+
+                if (minerBinaryChangedTimes < 4)
+                {
+                    ChangeMinerBinary();
+                    Thread.Sleep(3000);
+                    Miner.StartMiner(true);
+                }
+                else
+                {
+                    try
+                    {
+                        if (!Tools.HaveADM)
+                        {
+                            Tools.RestartApp(true);
+                        }
+                        else
+                        {
+                            if (Tools.AddedTrueMiningDestopToWinDefenderExclusions)
                             {
-                                Tools.RestartApp(true);
+                                Miner.IntentToMine = false;
+                                MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
                             }
                             else
                             {
-                                if (Tools.AddedTrueMiningDestopToWinDefenderExclusions)
+                                Application.Current.Dispatcher.Invoke((Action)delegate
                                 {
-                                    MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
-                                    Miner.IntentToMine = false;
-                                }
-                                else
-                                {
-                                    Application.Current.Dispatcher.Invoke((Action)delegate
-                                    {
-                                        Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
+                                    Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
 
-                                        Thread.Sleep(3000);
-                                        Miner.StartMiner(true);
-                                    });
-                                }
+                                    Thread.Sleep(3000);
+                                    Miner.StartMiner(true);
+                                });
                             }
                         }
-                        catch (Exception ee)
-                        {
-                            Miner.StopMiner(true);
-                            MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
-                        }
                     }
+                    catch (Exception ee)
+                    {
+                        Miner.IntentToMine = false;
+                        MessageBox.Show("XMRig failed to start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
+                    }
+                }
             }
         }
 
@@ -175,7 +175,7 @@ namespace TrueMiningDesktop.Core.XMRig
                 XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe";
             }
             else
-            { 
+            {
                 XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe";
             }
 
@@ -367,8 +367,7 @@ namespace TrueMiningDesktop.Core.XMRig
                 if (User.Settings.User.UseTorSharpOnMining)
                 {
                     conf.AppendLine("        {");
-                    conf.AppendLine("            \"algo\": null,");
-                    conf.AppendLine("            \"coin\": \"monero\",");
+                    conf.AppendLine("            \"algo\": \"rx/0\",");
                     conf.AppendLine("            \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
                     conf.AppendLine("            \"user\": \"" + miningCoin.WalletTm + "." + Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
                     conf.AppendLine("            \"pass\": \"" + miningCoin.Password + "\",");
@@ -385,8 +384,7 @@ namespace TrueMiningDesktop.Core.XMRig
                 }
 
                 conf.AppendLine("        {");
-                conf.AppendLine("            \"algo\": null,");
-                conf.AppendLine("            \"coin\": \"monero\",");
+                conf.AppendLine("            \"algo\": \"rx/0\",");
                 conf.AppendLine("            \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
                 conf.AppendLine("            \"user\": \"" + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
                 conf.AppendLine("            \"pass\": \"" + miningCoin.Password + "\",");
