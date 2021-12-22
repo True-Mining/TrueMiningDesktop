@@ -12,39 +12,40 @@ using System.Windows;
 using TrueMiningDesktop.Server;
 using TrueMiningDesktop.User;
 
-namespace TrueMiningDesktop.Core.XMRig
+namespace TrueMiningDesktop.Core.GMiner
 {
-    public static class XMRig
+    public static class GMiner
     {
-        private static readonly Process XMRigProcess = new();
-        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
-        private static bool inXMRIGexitEvent = false;
+        private static readonly Process GMinerProcess = new();
+        private static readonly ProcessStartInfo GMinerProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\GMiner\" + @"GMiner.exe");
+        private static bool inGMinerexitEvent = false;
         private static readonly DateTime holdTime = DateTime.UtcNow;
         private static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
 
         public static void Start()
         {
-            if (XMRigProcess.StartInfo != XMRigProcessStartInfo)
+            if (GMinerProcess.StartInfo != GMinerProcessStartInfo)
             {
-                XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
-                XMRigProcessStartInfo.UseShellExecute = true;
-                XMRigProcessStartInfo.RedirectStandardError = false;
-                XMRigProcessStartInfo.RedirectStandardOutput = false;
-                XMRigProcessStartInfo.CreateNoWindow = false;
-                XMRigProcessStartInfo.ErrorDialog = false;
-                XMRigProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                XMRigProcess.StartInfo = XMRigProcessStartInfo;
+                GMinerProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\GMiner\";
+                GMinerProcessStartInfo.UseShellExecute = true;
+                GMinerProcessStartInfo.RedirectStandardError = false;
+                GMinerProcessStartInfo.RedirectStandardOutput = false;
+                GMinerProcessStartInfo.CreateNoWindow = false;
+                GMinerProcessStartInfo.ErrorDialog = false;
+                GMinerProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                GMinerProcessStartInfo.Arguments = "--config config-" + User.Settings.Device.cuda.Algorithm.ToLowerInvariant() + ".yml";
+                GMinerProcess.StartInfo = GMinerProcessStartInfo;
             }
 
-            XMRigProcess.Exited -= XMRIGminer_Exited;
-            XMRigProcess.Exited += XMRIGminer_Exited;
-            XMRigProcess.EnableRaisingEvents = true;
+            GMinerProcess.Exited -= GMinerminer_Exited;
+            GMinerProcess.Exited += GMinerminer_Exited;
+            GMinerProcess.EnableRaisingEvents = true;
 
             try
             {
-                XMRigProcess.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
-                XMRigProcess.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
-                XMRigProcess.Start();
+                GMinerProcess.ErrorDataReceived -= GMinerminer_ErrorDataReceived;
+                GMinerProcess.ErrorDataReceived += GMinerminer_ErrorDataReceived;
+                GMinerProcess.Start();
 
                 new Task(() =>
                 {
@@ -53,7 +54,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         try
                         {
                             Thread.Sleep(100);
-                            DateTime time = XMRigProcess.StartTime;
+                            DateTime time = GMinerProcess.StartTime;
                             if (time.Ticks > 100) { break; }
                         }
                         catch { }
@@ -67,7 +68,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
                             DateTime initializingTask = DateTime.UtcNow;
-                            while (Tools.FindWindow(null, "True Mining running XMRig").ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
+                            while (Tools.FindWindow(null, "True Mining running GMiner").ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
                             Thread.Sleep(1000);
                             Miner.ShowHideCLI();
                             Miner.ShowHideCLI();
@@ -102,7 +103,7 @@ namespace TrueMiningDesktop.Core.XMRig
                             if (Tools.AddedTrueMiningDestopToWinDefenderExclusions)
                             {
                                 Miner.IntentToMine = false;
-                                MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
+                                MessageBox.Show("GMiner can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
                             }
                             else
                             {
@@ -119,15 +120,15 @@ namespace TrueMiningDesktop.Core.XMRig
                     catch (Exception ee)
                     {
                         Miner.IntentToMine = false;
-                        MessageBox.Show("XMRig failed to start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
+                        MessageBox.Show("GMiner failed to start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
                     }
                 }
             }
         }
 
-        private static void XMRIGminer_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private static void GMinerminer_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Tools.KillProcess(XMRigProcess.ProcessName); Stop();
+            Tools.KillProcess(GMinerProcess.ProcessName); Stop();
         }
 
         public static void Stop()
@@ -140,14 +141,14 @@ namespace TrueMiningDesktop.Core.XMRig
                 {
                     try
                     {
-                        XMRigProcess.CloseMainWindow();
-                        XMRigProcess.WaitForExit();
+                        GMinerProcess.CloseMainWindow();
+                        GMinerProcess.WaitForExit();
                         closed = true;
                     }
                     catch
                     {
-                        XMRigProcess.Kill();
-                        XMRigProcess.WaitForExit();
+                        GMinerProcess.Kill();
+                        GMinerProcess.WaitForExit();
                         closed = true;
                     }
                 });
@@ -156,7 +157,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
                 if (!closed)
                 {
-                    Tools.KillProcessByName(XMRigProcess.ProcessName);
+                    Tools.KillProcessByName(GMinerProcess.ProcessName);
                 }
             }
             catch { }
@@ -166,17 +167,17 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public static void ChangeMinerBinary()
         {
-            if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe")
+            if (GMinerProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\GMiner\" + @"GMiner-gcc.exe")
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe";
+                GMinerProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\GMiner\" + @"GMiner_zerofee-msvc.exe";
             }
-            else if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe")
+            else if (GMinerProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\GMiner\" + @"GMiner_zerofee-msvc.exe")
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe";
+                GMinerProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\GMiner\" + @"GMiner-msvc.exe";
             }
             else
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe";
+                GMinerProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\GMiner\" + @"GMiner-gcc.exe";
             }
 
             if (minerBinaryChangedTimes < 100) { minerBinaryChangedTimes++; }
@@ -184,12 +185,12 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public static void Show()
         {
-            XMRigProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            GMinerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
         }
 
         public static void Hide()
         {
-            XMRigProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            GMinerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
         }
 
         public static decimal GetHasrate(string backend = null)
@@ -250,13 +251,13 @@ namespace TrueMiningDesktop.Core.XMRig
             return -1;
         }
 
-        private static void XMRIGminer_Exited(object sender, EventArgs e)
+        private static void GMinerminer_Exited(object sender, EventArgs e)
         {
             if (Miner.IsMining && !Miner.StoppingMining)
             {
-                if (!inXMRIGexitEvent)
+                if (!inGMinerexitEvent)
                 {
-                    inXMRIGexitEvent = true;
+                    inGMinerexitEvent = true;
 
                     if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
                     else { ChangeMinerBinary(); }
@@ -266,7 +267,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         Start();
                     }
 
-                    inXMRIGexitEvent = false;
+                    inGMinerexitEvent = false;
                 }
             }
         }
@@ -290,7 +291,7 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("    },");
             conf.AppendLine("    \"autosave\": false,");
             conf.AppendLine("    \"colors\": true,");
-            conf.AppendLine("    \"title\": \"True Mining running XMRig\",");
+            conf.AppendLine("    \"title\": \"True Mining running GMiner\",");
             conf.AppendLine("    \"cpu\": {");
             conf.AppendLine("        \"enabled\": " + Settings.Device.cpu.MiningSelected.ToString().ToLowerInvariant() + ",");
             conf.AppendLine("        \"huge-pages\": true,");
@@ -327,7 +328,7 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("    },");
             conf.AppendLine("    \"donate-level\": 0,");
             conf.AppendLine("    \"donate-over-proxy\": 0,");
-            conf.AppendLine("    \"log-file\": \"XMRig-log.txt\",");
+            conf.AppendLine("    \"log-file\": \"GMiner-log.txt\",");
             conf.AppendLine("    \"retries\": 2,");
             conf.AppendLine("    \"retry-pause\": 3,");
             conf.AppendLine("    \"pools\": [");
@@ -403,7 +404,7 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("   ]");
             conf.AppendLine("}");
 
-            System.IO.File.WriteAllText(@"Miners\xmrig\config.json", conf.ToString());
+            System.IO.File.WriteAllText(@"Miners\GMiner\config.json", conf.ToString());
         }
 
         private static int APIport { get; } = 20202;
