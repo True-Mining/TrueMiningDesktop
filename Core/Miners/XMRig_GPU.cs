@@ -12,19 +12,19 @@ using System.Windows;
 using TrueMiningDesktop.Server;
 using TrueMiningDesktop.User;
 
-namespace TrueMiningDesktop.Core.XMRig
+namespace TrueMiningDesktop.Core.XMRig_GPU
 {
-    public static class XMRig
+    public static class XMRig_GPU
     {
-        private static readonly Process XMRIGminer = new();
-        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
+        private static readonly Process XMRigProcess = new();
+        private static readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe", "--config=config_GPU.json");
         private static bool inXMRIGexitEvent = false;
         private static readonly DateTime holdTime = DateTime.UtcNow;
         private static DateTime startedSince = holdTime.AddTicks(-(holdTime.Ticks));
 
         public static void Start()
         {
-            if (XMRIGminer.StartInfo != XMRigProcessStartInfo)
+            if (XMRigProcess.StartInfo != XMRigProcessStartInfo)
             {
                 XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
                 XMRigProcessStartInfo.UseShellExecute = true;
@@ -33,18 +33,18 @@ namespace TrueMiningDesktop.Core.XMRig
                 XMRigProcessStartInfo.CreateNoWindow = false;
                 XMRigProcessStartInfo.ErrorDialog = false;
                 XMRigProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                XMRIGminer.StartInfo = XMRigProcessStartInfo;
+                XMRigProcess.StartInfo = XMRigProcessStartInfo;
             }
 
-            XMRIGminer.Exited -= XMRIGminer_Exited;
-            XMRIGminer.Exited += XMRIGminer_Exited;
-            XMRIGminer.EnableRaisingEvents = true;
+            XMRigProcess.Exited -= XMRIGminer_Exited;
+            XMRigProcess.Exited += XMRIGminer_Exited;
+            XMRigProcess.EnableRaisingEvents = true;
 
             try
             {
-                XMRIGminer.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
-                XMRIGminer.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
-                XMRIGminer.Start();
+                XMRigProcess.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
+                XMRigProcess.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
+                XMRigProcess.Start();
 
                 new Task(() =>
                 {
@@ -53,7 +53,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         try
                         {
                             Thread.Sleep(100);
-                            DateTime time = XMRIGminer.StartTime;
+                            DateTime time = XMRigProcess.StartTime;
                             if (time.Ticks > 100) { break; }
                         }
                         catch { }
@@ -127,7 +127,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
         private static void XMRIGminer_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Tools.KillProcess(XMRIGminer.ProcessName); Stop();
+            Tools.KillProcess(XMRigProcess.ProcessName); Stop();
         }
 
         public static void Stop()
@@ -140,14 +140,14 @@ namespace TrueMiningDesktop.Core.XMRig
                 {
                     try
                     {
-                        XMRIGminer.CloseMainWindow();
-                        XMRIGminer.WaitForExit();
+                        XMRigProcess.CloseMainWindow();
+                        XMRigProcess.WaitForExit();
                         closed = true;
                     }
                     catch
                     {
-                        XMRIGminer.Kill();
-                        XMRIGminer.WaitForExit();
+                        XMRigProcess.Kill();
+                        XMRigProcess.WaitForExit();
                         closed = true;
                     }
                 });
@@ -156,7 +156,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
                 if (!closed)
                 {
-                    Tools.KillProcessByName(XMRIGminer.ProcessName);
+                    Tools.KillProcessByName(XMRigProcess.ProcessName);
                 }
             }
             catch { }
@@ -184,12 +184,12 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public static void Show()
         {
-            XMRIGminer.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            XMRigProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
         }
 
         public static void Hide()
         {
-            XMRIGminer.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            XMRigProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
         }
 
         public static decimal GetHasrate(string backend = null)
@@ -291,37 +291,16 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("    \"autosave\": false,");
             conf.AppendLine("    \"colors\": true,");
             conf.AppendLine("    \"title\": \"True Mining running XMRig\",");
-            conf.AppendLine("    \"cpu\": {");
-            conf.AppendLine("        \"enabled\": " + Settings.Device.cpu.MiningSelected.ToString().ToLowerInvariant() + ",");
-            conf.AppendLine("        \"huge-pages\": true,");
-            conf.AppendLine("        \"hw-aes\": null,");
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"priority\": " + Settings.Device.cpu.Priority + ","); } else { conf.AppendLine("        \"priority\": 1,"); }
-            conf.AppendLine("        \"memory-pool\": true,");
-            if (!Settings.Device.cpu.Autoconfig) { conf.AppendLine("        \"yield\": " + (Settings.Device.cpu.Yield).ToString().ToLowerInvariant() + ","); }
-            conf.AppendLine("        \"asm\": true,");
-            if (!Settings.Device.cpu.Autoconfig && Settings.Device.cpu.Threads == 0) { conf.AppendLine("        \"max-threads-hint\": " + Settings.Device.cpu.MaxUsageHint + ","); }
-            if (!Settings.Device.cpu.Autoconfig && Settings.Device.cpu.Threads > 0) { conf.AppendLine("        \"rx\": {\"threads\": " + Settings.Device.cpu.Threads + "},"); }
-            conf.AppendLine("    },");
-            conf.AppendLine("    \"randomx\": {");
-            conf.AppendLine("        \"init\": -1,");
-            conf.AppendLine("        \"init-avx2\": -1,");
-            conf.AppendLine("        \"mode\": \"auto\",");
-            conf.AppendLine("        \"1gb-pages\": true,");
-            conf.AppendLine("        \"rdmsr\": true,");
-            conf.AppendLine("        \"wrmsr\": true,");
-            conf.AppendLine("        \"cache_qos\": true,");
-            conf.AppendLine("        \"numa\": true,");
-            conf.AppendLine("        \"scratchpad_prefetch_mode\": true");
-            conf.AppendLine("    },");
+            conf.AppendLine("    \"cpu\": false,");
             conf.AppendLine("    \"opencl\": {");
-            conf.AppendLine("        \"enabled\": " + Settings.Device.opencl.Algorithm == Settings.Device.cpu.Algorithm ? Settings.Device.opencl.MiningSelected.ToString().ToLowerInvariant() : "false" + ",");
+            conf.AppendLine("        \"enabled\": " + Settings.Device.opencl.Algorithm != Settings.Device.cpu.Algorithm ? Settings.Device.opencl.MiningSelected.ToString().ToLowerInvariant() : "false" + ",");
             if (!Settings.Device.opencl.Autoconfig) { conf.AppendLine("     \"cache\": " + Settings.Device.opencl.Cache.ToString().ToLowerInvariant() + ","); }
             conf.AppendLine("        \"loader\": null,");
             conf.AppendLine("        \"platform\": \"AMD\",");
             conf.AppendLine("        \"adl\": true,");
             conf.AppendLine("    },");
             conf.AppendLine("    \"cuda\": {");
-            conf.AppendLine("        \"enabled\": " + Settings.Device.cuda.Algorithm == Settings.Device.cpu.Algorithm ? Settings.Device.cuda.MiningSelected.ToString().ToLowerInvariant() : "false" + ",");
+            conf.AppendLine("        \"enabled\": " + Settings.Device.cuda.Algorithm != Settings.Device.cpu.Algorithm ? Settings.Device.cuda.MiningSelected.ToString().ToLowerInvariant() : "false" + ",");
             conf.AppendLine("        \"loader\": null,");
             if (!Settings.Device.cuda.Autoconfig) { conf.AppendLine("        \"nvml\": " + Settings.Device.cuda.NVML.ToString().ToLowerInvariant()); }
             conf.AppendLine("    },");
@@ -403,9 +382,9 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("   ]");
             conf.AppendLine("}");
 
-            System.IO.File.WriteAllText(@"Miners\xmrig\config.json", conf.ToString());
+            System.IO.File.WriteAllText(@"Miners\xmrig\config_GPU.json", conf.ToString());
         }
 
-        private static int APIport { get; } = 20202;
+        private static int APIport { get; } = 20203;
     }
 }

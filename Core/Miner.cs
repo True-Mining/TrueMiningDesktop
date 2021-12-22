@@ -128,6 +128,30 @@ namespace TrueMiningDesktop.Core
                     XMRig.XMRig.Hide();
                     Tools.ShowWindow(windowIdentifier, 0);
                 }
+
+                IntPtr windowIdentifierGPU = Tools.FindWindow(null, "True Mining running XMRig GPU");
+                if (showCLI)
+                {
+                    if (Application.Current.MainWindow.IsVisible)
+                    {
+                        XMRig.XMRig.Show();
+                        Tools.ShowWindow(windowIdentifier, 1);
+                        Application.Current.Dispatcher.Invoke((Action)delegate
+                        {
+                            Application.Current.MainWindow.Focus();
+                        });
+                    }
+                    else
+                    {
+                        XMRig.XMRig.Show();
+                        Tools.ShowWindow(windowIdentifier, 2);
+                    }
+                }
+                else
+                {
+                    XMRig.XMRig.Hide();
+                    Tools.ShowWindow(windowIdentifier, 0);
+                }
             }
         }
 
@@ -140,6 +164,11 @@ namespace TrueMiningDesktop.Core
                     if (string.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
                     {
                         return XMRig.XMRig.GetHasrate(alias);
+                    }
+
+                    if (string.Equals(algo, "KawPow", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return XMRig_GPU.XMRig_GPU.GetHasrate(alias);
                     }
                 }
             }
