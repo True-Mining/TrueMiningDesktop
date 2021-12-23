@@ -78,8 +78,6 @@ namespace TrueMiningDesktop.Core
         {
             StoppingMining = true;
 
-            System.Threading.Thread.Sleep(200);
-
             while (IntentToMine && !force) { System.Threading.Thread.Sleep(100); }
 
             if (IsMining || force)

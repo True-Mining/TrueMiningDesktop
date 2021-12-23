@@ -318,11 +318,11 @@ namespace TrueMiningDesktop
         {
             try
             {
-                if (Miner.IsMining)
+                if (Miner.IsMining || Miner.IntentToMine)
                 {
                     if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
                     {
-                        Miner.StopMiner();
+                        Miner.StopMiner(true);
                     }
                     else { e.Cancel = true; return; }
                 }
