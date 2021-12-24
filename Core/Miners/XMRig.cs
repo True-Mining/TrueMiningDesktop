@@ -299,8 +299,8 @@ namespace TrueMiningDesktop.Core.XMRig
                 });
 
                 return hashrates;
-        }
-            catch {   return null;           }
+            }
+            catch { return null; }
         }
 
         public void CreateConfigFile(MiningCoin miningCoin)
@@ -405,20 +405,20 @@ namespace TrueMiningDesktop.Core.XMRig
 
             });
 
-                if (Algorithm.Equals("rx/0", StringComparison.OrdinalIgnoreCase) || Algorithm.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
-                {
-                    conf.AppendLine("    \"randomx\": {");
-                    conf.AppendLine("        \"init\": -1,");
-                    conf.AppendLine("        \"init-avx2\": -1,");
-                    conf.AppendLine("        \"mode\": \"auto\",");
-                    conf.AppendLine("        \"1gb-pages\": true,");
-                    conf.AppendLine("        \"rdmsr\": true,");
-                    conf.AppendLine("        \"wrmsr\": true,");
-                    conf.AppendLine("        \"cache_qos\": true,");
-                    conf.AppendLine("        \"numa\": true,");
-                    conf.AppendLine("        \"scratchpad_prefetch_mode\": true");
-                    conf.AppendLine("    },");
-                }
+            if (Algorithm.Equals("rx/0", StringComparison.OrdinalIgnoreCase) || Algorithm.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
+            {
+                conf.AppendLine("    \"randomx\": {");
+                conf.AppendLine("        \"init\": -1,");
+                conf.AppendLine("        \"init-avx2\": -1,");
+                conf.AppendLine("        \"mode\": \"auto\",");
+                conf.AppendLine("        \"1gb-pages\": true,");
+                conf.AppendLine("        \"rdmsr\": true,");
+                conf.AppendLine("        \"wrmsr\": true,");
+                conf.AppendLine("        \"cache_qos\": true,");
+                conf.AppendLine("        \"numa\": true,");
+                conf.AppendLine("        \"scratchpad_prefetch_mode\": true");
+                conf.AppendLine("    },");
+            }
             conf.AppendLine("    \"donate-level\": 0,");
             conf.AppendLine("    \"donate-over-proxy\": 0,");
             conf.AppendLine("    \"log-file\": \"XMRig-" + AlgoBackendsString + ".txt\",");

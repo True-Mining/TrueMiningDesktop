@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -125,48 +124,48 @@ namespace TrueMiningDesktop.Core
 
             XMRigMiners.ForEach(miner =>
             {
-            try
-            {
                 try
                 {
-                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    try
                     {
-                        DateTime initializingTask = DateTime.UtcNow;
-                        while (Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
-                        Thread.Sleep(1000);
-                    });
-                }
-                catch { }
-
-                IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
-                if (showCLI)
-                {
-                    if (Application.Current.MainWindow.IsVisible)
-                    {
-                        XMRigMiners.ForEach(miner => miner.Show());
-                        Tools.ShowWindow(windowIdentifier, 1);
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            Application.Current.MainWindow.Focus();
+                            DateTime initializingTask = DateTime.UtcNow;
+                            while (Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
+                        //    Thread.Sleep(1000);
                         });
+                    }
+                    catch { }
+
+                    IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
+                    if (showCLI)
+                    {
+                        if (Application.Current.MainWindow.IsVisible)
+                        {
+                            XMRigMiners.ForEach(miner => miner.Show());
+                            Tools.ShowWindow(windowIdentifier, 1);
+                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                Application.Current.MainWindow.Focus();
+                            });
+                        }
+                        else
+                        {
+                            XMRigMiners.ForEach(miner => miner.Show());
+                            Tools.ShowWindow(windowIdentifier, 2);
+                        }
                     }
                     else
                     {
-                        XMRigMiners.ForEach(miner => miner.Show());
-                        Tools.ShowWindow(windowIdentifier, 2);
+                        XMRigMiners.ForEach(miner => miner.Hide());
+                        Tools.ShowWindow(windowIdentifier, 0);
                     }
-                }
-                else
-                {
-                    XMRigMiners.ForEach(miner => miner.Hide());
-                    Tools.ShowWindow(windowIdentifier, 0);
-                }
                 }
                 catch { }
             });
         }
 
-        public static decimal GetHashrate(string alias, string algo)
+        public static decimal GetHashrate(string alias = null)
         {
             try
             {
@@ -196,17 +195,23 @@ namespace TrueMiningDesktop.Core
                     catch { }
                 });
 
+                if (hashrates == null || hashrates.Count == 0)
+                {
+                    return -1;
+                }
+
                 Device.DevicesList.ForEach(device =>
                 {
                     if (hashrates.ContainsKey(device.BackendName.ToLowerInvariant()))
                     {
                         device.Hashrate = hashrates[device.BackendName.ToLowerInvariant()];
                     }
-                    else
-                    {
-                        device.Hashrate = -1;
-                    }
                 });
+
+                if (alias != null && hashrates.ContainsKey(alias.ToLowerInvariant()))
+                {
+                    return hashrates[alias.ToLowerInvariant()];
+                }
             }
             catch
             {

@@ -44,9 +44,9 @@ namespace TrueMiningDesktop.Janelas.Popups
 
         private void TimerUpdate_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            CPU_hashrate_decimal = Miner.GetHashrate("cpu", User.Settings.Device.cpu.Algorithm);
-            OPENCL_hashrate_decimal = Miner.GetHashrate("opencl", User.Settings.Device.opencl.Algorithm);
-            CUDA_hashrate_decimal = Miner.GetHashrate("cuda", User.Settings.Device.cuda.Algorithm);
+            CPU_hashrate_decimal = Miner.GetHashrate("cpu");
+            OPENCL_hashrate_decimal = Miner.GetHashrate("opencl");
+            CUDA_hashrate_decimal = Miner.GetHashrate("cuda");
 
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
