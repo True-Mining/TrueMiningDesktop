@@ -141,12 +141,12 @@ namespace TrueMiningDesktop.User
 
     public class DeviceSettings
     {
-        public CPUSettings cpu = new();
-        public NVIDIASettings cuda = new();
-        public AMDSettings opencl = new();
+        public CpuSettings cpu = new();
+        public CudaSettings cuda = new();
+        public OpenClSettings opencl = new();
     }
 
-    public class CPUSettings
+    public class CpuSettings
     {
         private bool miningSelected = true;
 
@@ -162,7 +162,7 @@ namespace TrueMiningDesktop.User
         public bool Yield { get; set; } = true;
     }
 
-    public class NVIDIASettings
+    public class CudaSettings
     {
         private bool miningSelected = false;
 
@@ -175,7 +175,7 @@ namespace TrueMiningDesktop.User
         public bool NVML { get; set; } = true;
     }
 
-    public class AMDSettings
+    public class OpenClSettings
     {
         private bool miningSelected = false;
 
