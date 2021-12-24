@@ -295,7 +295,6 @@ namespace TrueMiningDesktop.Core.XMRig
                             }
                         }
                     }
-
                 });
 
                 return hashrates;
@@ -402,7 +401,6 @@ namespace TrueMiningDesktop.Core.XMRig
                         conf.AppendLine("    },");
                     }
                 }
-
             });
 
             if (Algorithm.Equals("rx/0", StringComparison.OrdinalIgnoreCase) || Algorithm.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
@@ -500,7 +498,5 @@ namespace TrueMiningDesktop.Core.XMRig
 
             System.IO.File.WriteAllText(@"Miners\xmrig\config-" + AlgoBackendsString + ".json", conf.ToString());
         }
-
-
     }
 }

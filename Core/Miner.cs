@@ -132,7 +132,7 @@ namespace TrueMiningDesktop.Core
                         {
                             DateTime initializingTask = DateTime.UtcNow;
                             while (Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
-                        //    Thread.Sleep(1000);
+                            //    Thread.Sleep(1000);
                         });
                     }
                     catch { }

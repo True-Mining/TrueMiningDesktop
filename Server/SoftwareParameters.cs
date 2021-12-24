@@ -35,6 +35,7 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("coinName", NullValueHandling = NullValueHandling.Ignore)]
         public string CoinName { get; set; }
+
         [JsonProperty("algorithm", NullValueHandling = NullValueHandling.Ignore)]
         public string Algorithm { get; set; }
 
