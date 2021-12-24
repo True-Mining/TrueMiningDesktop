@@ -35,11 +35,13 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("coinName", NullValueHandling = NullValueHandling.Ignore)]
         public string CoinName { get; set; }
+        [JsonProperty("algorithm", NullValueHandling = NullValueHandling.Ignore)]
+        public string Algorithm { get; set; }
 
         [JsonProperty("poolName", NullValueHandling = NullValueHandling.Ignore)]
         public string PoolName { get; set; }
 
-        [JsonProperty("PoolFee", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("poolFee", NullValueHandling = NullValueHandling.Ignore)]
         public decimal PoolFee { get; set; }
 
         [JsonProperty("hosts", NullValueHandling = NullValueHandling.Ignore)]
