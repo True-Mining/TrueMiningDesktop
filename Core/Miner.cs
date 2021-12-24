@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using TrueMiningDesktop.Janelas;
@@ -9,6 +13,8 @@ namespace TrueMiningDesktop.Core
     {
         private static readonly DateTime holdTime = DateTime.UtcNow;
         public static DateTime StartedSince = holdTime.AddTicks(-holdTime.Ticks);
+
+        public static List<XMRig.XMRig> XMRigMiners = new();
 
         public static void StartMiner(bool force = false)
         {
@@ -37,6 +43,14 @@ namespace TrueMiningDesktop.Core
                     return;
                 }
 
+                Server.SoftwareParameters.ServerConfig.MiningCoins.ForEach(miningCoin =>
+                {
+                    if (Device.DevicesList.Any(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected))
+                    {
+                        XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected).ToList()));
+                    }
+                }); // joga para uma List<XMRig.XMRig> todos os dispositivos separados por miningCoin. Possível bug: mais moedas com o mesmo algoritmo vão gerar mais moedas por dispositivo
+
                 if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (string.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
@@ -51,11 +65,15 @@ namespace TrueMiningDesktop.Core
                         {
                             try
                             {
-                                XMRig.XMRig.CreateConfigFile();
-                                XMRig.XMRig.Start();
+                                XMRigMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores da lista
 
                                 IsMining = true;
                                 intentToMine = false;
+
+                                Application.Current.Dispatcher.Invoke((Action)delegate
+                                {
+                                    ShowHideCLI();
+                                });
                             }
                             catch (Exception e) { MessageBox.Show(e.Message); intentToMine = false; }
                         })
@@ -92,49 +110,40 @@ namespace TrueMiningDesktop.Core
 
             new System.Threading.Tasks.Task(() =>
             {
-                try { XMRig.XMRig.Stop(); } catch { }
+                try { XMRigMiners.ForEach(miner => miner.Stop()); } catch { }
+
+                XMRigMiners.Clear();
 
                 StoppingMining = false;
             })
             .Start();
         }
 
-        public static void ShowHideCLI(string miner = "all")
+        public static void ShowHideCLI()
         {
             bool showCLI = User.Settings.User.ShowCLI;
 
-            if (string.Equals(miner, "XMRig", StringComparison.OrdinalIgnoreCase) || string.Equals(miner, "all", StringComparison.OrdinalIgnoreCase))
+            XMRigMiners.ForEach(miner =>
             {
-                IntPtr windowIdentifier = Tools.FindWindow(null, "True Mining running XMRig");
-                if (showCLI)
+            try
+            {
+                try
                 {
-                    if (Application.Current.MainWindow.IsVisible)
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        XMRig.XMRig.Show();
-                        Tools.ShowWindow(windowIdentifier, 1);
-                        Application.Current.Dispatcher.Invoke((Action)delegate
-                        {
-                            Application.Current.MainWindow.Focus();
-                        });
-                    }
-                    else
-                    {
-                        XMRig.XMRig.Show();
-                        Tools.ShowWindow(windowIdentifier, 2);
-                    }
+                        DateTime initializingTask = DateTime.UtcNow;
+                        while (Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
+                        Thread.Sleep(1000);
+                    });
                 }
-                else
-                {
-                    XMRig.XMRig.Hide();
-                    Tools.ShowWindow(windowIdentifier, 0);
-                }
+                catch { }
 
-                IntPtr windowIdentifierGPU = Tools.FindWindow(null, "True Mining running XMRig GPU");
+                IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
                 if (showCLI)
                 {
                     if (Application.Current.MainWindow.IsVisible)
                     {
-                        XMRig.XMRig.Show();
+                        XMRigMiners.ForEach(miner => miner.Show());
                         Tools.ShowWindow(windowIdentifier, 1);
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
@@ -143,34 +152,61 @@ namespace TrueMiningDesktop.Core
                     }
                     else
                     {
-                        XMRig.XMRig.Show();
+                        XMRigMiners.ForEach(miner => miner.Show());
                         Tools.ShowWindow(windowIdentifier, 2);
                     }
                 }
                 else
                 {
-                    XMRig.XMRig.Hide();
+                    XMRigMiners.ForEach(miner => miner.Hide());
                     Tools.ShowWindow(windowIdentifier, 0);
                 }
-            }
+                }
+                catch { }
+            });
         }
 
         public static decimal GetHashrate(string alias, string algo)
         {
             try
             {
-                if (Device.DevicesList.Find(x => x.Alias.Equals(alias, StringComparison.OrdinalIgnoreCase)).IsSelected)
-                {
-                    if (string.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return XMRig.XMRig.GetHasrate(alias);
-                    }
+                Dictionary<string, decimal> hashrates = new();
 
-                    if (string.Equals(algo, "KawPow", StringComparison.OrdinalIgnoreCase))
+                XMRigMiners.ForEach(miner =>
+                {
+                    try
                     {
-                        return XMRig_GPU.XMRig_GPU.GetHasrate(alias);
+                        Dictionary<string, decimal> temp_hashrates = miner.GetHasrates();
+
+                        if (temp_hashrates != null)
+                        {
+                            foreach (KeyValuePair<string, decimal> hashrate in temp_hashrates)
+                            {
+                                if (hashrates.ContainsKey(hashrate.Key.ToLowerInvariant()))
+                                {
+                                    hashrates[hashrate.Key.ToLowerInvariant()] += hashrate.Value;
+                                }
+                                else
+                                {
+                                    hashrates.Add(hashrate.Key.ToLowerInvariant(), hashrate.Value);
+                                }
+                            }
+                        }
                     }
-                }
+                    catch { }
+                });
+
+                Device.DevicesList.ForEach(device =>
+                {
+                    if (hashrates.ContainsKey(device.BackendName.ToLowerInvariant()))
+                    {
+                        device.Hashrate = hashrates[device.BackendName.ToLowerInvariant()];
+                    }
+                    else
+                    {
+                        device.Hashrate = -1;
+                    }
+                });
             }
             catch
             {
