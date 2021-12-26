@@ -526,5 +526,10 @@ namespace TrueMiningDesktop.Core
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern bool ShowWindow(IntPtr windowIdentifier, int nCmdShow);
+
+        public static async void WaitTime(int milliseconds)
+        {
+            await Task.Delay(milliseconds);
+        }
     }
 }
