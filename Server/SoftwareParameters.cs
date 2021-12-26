@@ -75,8 +75,8 @@ namespace TrueMiningDesktop.Server
         [JsonProperty("coinName", NullValueHandling = NullValueHandling.Ignore)]
         public string CoinName { get; set; }
 
-        [JsonProperty("marketDataSource", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> MarketDataSource { get; set; }
+        [JsonProperty("marketDataSources", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> MarketDataSources { get; set; }
 
         [JsonProperty("addressPatterns", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> AddressPatterns { get; set; }
