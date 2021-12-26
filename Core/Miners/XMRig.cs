@@ -17,6 +17,10 @@ namespace TrueMiningDesktop.Core.XMRig
 {
     public class XMRig
     {
+        public bool IsMining = false;
+        public bool IsTryingStartMining = false;
+        public bool IsStopping = false;
+
         private List<DeviceInfo> Backends = new();
         private readonly Process XMRigProcess = new();
         private readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
@@ -50,14 +54,14 @@ namespace TrueMiningDesktop.Core.XMRig
                 XMRigProcess.StartInfo = XMRigProcessStartInfo;
             }
 
-            XMRigProcess.Exited -= XMRIGminer_Exited;
-            XMRigProcess.Exited += XMRIGminer_Exited;
+            XMRigProcess.Exited -= XMRigProcess_Exited;
+            XMRigProcess.Exited += XMRigProcess_Exited;
             XMRigProcess.EnableRaisingEvents = true;
 
             try
             {
-                XMRigProcess.ErrorDataReceived -= XMRIGminer_ErrorDataReceived;
-                XMRigProcess.ErrorDataReceived += XMRIGminer_ErrorDataReceived;
+                XMRigProcess.ErrorDataReceived -= XMRigProcess_ErrorDataReceived;
+                XMRigProcess.ErrorDataReceived += XMRigProcess_ErrorDataReceived;
 
                 XMRigProcess.Start();
 
@@ -79,14 +83,14 @@ namespace TrueMiningDesktop.Core.XMRig
             }
             catch (Exception e)
             {
-                Miner.StopMiner(true);
-                Miner.IntentToMine = true;
+                Stop();
+                IsTryingStartMining = true;
 
                 if (minerBinaryChangedTimes < 4)
                 {
                     ChangeMinerBinary();
                     Thread.Sleep(3000);
-                    Miner.StartMiner(true);
+                    Start();
                 }
                 else
                 {
@@ -100,7 +104,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         {
                             if (Tools.AddedTrueMiningDestopToWinDefenderExclusions)
                             {
-                                Miner.IntentToMine = false;
+                                IsTryingStartMining = false;
                                 MessageBox.Show("XMRig can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
                             }
                             else
@@ -110,28 +114,28 @@ namespace TrueMiningDesktop.Core.XMRig
                                     Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
 
                                     Thread.Sleep(3000);
-                                    Miner.StartMiner(true);
+                                    Start();
                                 });
                             }
                         }
                     }
                     catch (Exception ee)
                     {
-                        Miner.IntentToMine = false;
+                        IsTryingStartMining = false;
                         MessageBox.Show("XMRig failed to start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
                     }
                 }
             }
         }
 
-        private void XMRIGminer_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void XMRigProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
             Tools.KillProcess(XMRigProcess.ProcessName); Stop();
         }
 
-        private void XMRIGminer_Exited(object sender, EventArgs e)
+        private void XMRigProcess_Exited(object sender, EventArgs e)
         {
-            if (Miner.IsMining && !Miner.StoppingMining)
+            if (IsMining && !IsStopping)
             {
                 if (!IsInXMRIGexitEvent)
                 {
@@ -140,7 +144,7 @@ namespace TrueMiningDesktop.Core.XMRig
                     if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
                     else { ChangeMinerBinary(); }
 
-                    if (Miner.IsMining && !Miner.StoppingMining)
+                    if (IsMining && !IsStopping)
                     {
                         Start();
                     }
