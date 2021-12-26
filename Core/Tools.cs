@@ -355,7 +355,9 @@ namespace TrueMiningDesktop.Core
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetEntryAssembly();
             FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(assembly.Location);
-            return fileVersion.FileVersion.TrimEnd('.', '0');
+            List<string>fileversionArray = fileVersion.FileVersion.Split('.').ToList();
+
+            return string.Join(".", fileversionArray.Where(x => x.ToString() != "0").ToList());
         }
 
         public static void CreateMissingPatch(string path)
