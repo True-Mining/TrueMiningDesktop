@@ -17,13 +17,52 @@ namespace TrueMiningDesktop.Core.XMRig
 {
     public class XMRig
     {
-        public bool IsMining = false;
-        public bool IsTryingStartMining = false;
-        public bool IsStopping = false;
+        private bool isMining = false;
+        private bool isTryingStartMining = true;
+        private bool isStoppingMining = false;
+
+        public bool IsMining
+        {
+            get
+            {
+                return isMining;
+            }
+            set
+            {
+                isMining = value;
+                Miner.VerifyGeneralMiningState();
+            }
+        }
+
+        public bool IsTryingStartMining
+        {
+            get
+            {
+                return isTryingStartMining;
+            }
+            set
+            {
+                isTryingStartMining = value;
+                Miner.VerifyGeneralMiningState();
+            }
+        }
+
+        public bool IsStoppingMining
+        {
+            get
+            {
+                return isStoppingMining;
+            }
+            set
+            {
+                isStoppingMining = value;
+                Miner.VerifyGeneralMiningState();
+            }
+        }
 
         private List<DeviceInfo> Backends = new();
-        private readonly Process XMRigProcess = new();
-        private readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
+        public readonly Process XMRigProcess = new();
+        public readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
         private string AlgoBackendsString = null;
         public string WindowTitle = "True Mining running XMRig";
         private int APIport = 20210;
@@ -41,6 +80,8 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public void Start()
         {
+            IsTryingStartMining = true;
+
             if (XMRigProcess.StartInfo != XMRigProcessStartInfo)
             {
                 XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
@@ -79,11 +120,15 @@ namespace TrueMiningDesktop.Core.XMRig
                     }
                 }).Wait(3000);
 
+                IsMining = true;
+                IsTryingStartMining = false;
+
                 startedSince = DateTime.UtcNow;
             }
             catch (Exception e)
             {
                 Stop();
+
                 IsTryingStartMining = true;
 
                 if (minerBinaryChangedTimes < 4)
@@ -99,6 +144,8 @@ namespace TrueMiningDesktop.Core.XMRig
                         if (!Tools.HaveADM)
                         {
                             Tools.RestartApp(true);
+
+                            IsTryingStartMining = false;
                         }
                         else
                         {
@@ -135,16 +182,18 @@ namespace TrueMiningDesktop.Core.XMRig
 
         private void XMRigProcess_Exited(object sender, EventArgs e)
         {
-            if (IsMining && !IsStopping)
+            if (IsMining && !IsStoppingMining)
             {
                 if (!IsInXMRIGexitEvent)
                 {
                     IsInXMRIGexitEvent = true;
 
+                    IsTryingStartMining = true;
+
                     if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
                     else { ChangeMinerBinary(); }
 
-                    if (IsMining && !IsStopping)
+                    if (IsMining && !IsStoppingMining)
                     {
                         Start();
                     }
@@ -160,18 +209,26 @@ namespace TrueMiningDesktop.Core.XMRig
             {
                 bool closed = false;
 
+                IsStoppingMining = true;
+
                 Task tryCloseFancy = new(() =>
                 {
                     try
                     {
                         XMRigProcess.CloseMainWindow();
                         XMRigProcess.WaitForExit();
+
                         closed = true;
+                        IsMining = false;
+                        IsStoppingMining = false;
                     }
                     catch
                     {
-                        XMRigProcess.Kill();
+                        XMRigProcess.Kill(true);
+
                         closed = true;
+                        IsMining = false;
+                        IsStoppingMining = false;
                     }
                 });
                 tryCloseFancy.Start();
@@ -181,12 +238,25 @@ namespace TrueMiningDesktop.Core.XMRig
                 {
                     try
                     {
-                        XMRigProcess.Kill();
+                        XMRigProcess.Kill(true);
                         Tools.KillProcessByName(XMRigProcess.ProcessName);
+
                         closed = true;
+                        IsMining = false;
+                        IsStoppingMining = false;
                     }
                     catch { }
                 }
+
+                try
+                {
+                    XMRigProcess.Kill(true);
+
+                    closed = true;
+                    IsMining = false;
+                    IsStoppingMining = false;
+                }
+                catch { }
             }
             catch { }
         }
