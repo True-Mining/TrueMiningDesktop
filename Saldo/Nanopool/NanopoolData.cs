@@ -8,7 +8,9 @@ namespace TruePayment.Nanopool
     {
         internal static HashrateHistory GetHashrateHystory(string coin, string truemining_address, string user_address = null)
         {
-            return JsonSerializer.Deserialize<HashrateHistory>(Tools.HttpGet("https://api.nanopool.org/v1/" + coin + "/history/" + truemining_address + "/" + user_address));
+            HashrateHistory hh = JsonSerializer.Deserialize<HashrateHistory>(Tools.HttpGet("https://api.nanopool.org/v1/" + coin + "/history/" + truemining_address + "/" + user_address));
+            string aa = "a";
+            return hh;
         }
 
         public static AccountBalance GetConfirmedBalance(string coin, string truemining_address)

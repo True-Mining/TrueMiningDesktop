@@ -49,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CoinpaprikaAPI" Version="1.3.21103" />
     <PackageReference Include="Knapcode.TorSharp" Version="2.8.0" />
     <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
     <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />

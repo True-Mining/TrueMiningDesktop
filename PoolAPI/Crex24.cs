@@ -23,6 +23,7 @@ namespace TrueMiningDesktop.PoolAPI
     public class Crex24
     {
         public static Orderbook XMRBTC_Orderbook = new Orderbook();
-        public static Orderbook MiningCoinBTC_Orderbook = new Orderbook();
+        public static Orderbook RVNBTC_Orderbook = new Orderbook();
+        public static Orderbook PaymentCoinBTC_Orderbook = new Orderbook();
     }
 }

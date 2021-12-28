@@ -56,7 +56,7 @@ namespace TrueMiningDesktop.Janelas.Popups
                 if (CPU_hashrate_decimal == -1) { CPUpannel.IsEnabled = false; CPU_hashrate_decimal = 0; } else { CPUpannel.IsEnabled = true; }
                 CPU_hashrate = Math.Round(CPU_hashrate_decimal, 2).ToString() + " H/s";
                 CPUestimated_day_Coins = CPU_hashrate_decimal * (decimal)TimeSpan.FromDays(1).TotalSeconds / HashesPerPoint * ExchangeRatePontosToMiningCoin;
-                CPUestimated_day_Sats = CPUestimated_day_Coins * (decimal)PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
+                CPUestimated_day_Sats = CPUestimated_day_Coins * (decimal)PoolAPI.Crex24.PaymentCoinBTC_Orderbook.sellLevels[0].price;
                 CPUestimated_day_USD = CPUestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.BTCUSD;
                 CPUestimated_day_Coins_string = Math.Round(CPUestimated_day_Coins, 5).ToString();
                 CPUestimated_day_Sats_string = ((decimal)Math.Round(CPUestimated_day_Sats, 8)).ToString();
@@ -66,7 +66,7 @@ namespace TrueMiningDesktop.Janelas.Popups
                 if (OPENCL_hashrate_decimal == -1) { OPENCLpannel.IsEnabled = false; OPENCL_hashrate_decimal = 0; } else { OPENCLpannel.IsEnabled = true; }
                 OPENCL_hashrate = Math.Round(OPENCL_hashrate_decimal, 2).ToString() + " H/s";
                 OPENCLestimated_day_Coins = OPENCL_hashrate_decimal * (decimal)TimeSpan.FromDays(1).TotalSeconds / HashesPerPoint * ExchangeRatePontosToMiningCoin;
-                OPENCLestimated_day_Sats = OPENCLestimated_day_Coins * (decimal)PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
+                OPENCLestimated_day_Sats = OPENCLestimated_day_Coins * (decimal)PoolAPI.Crex24.PaymentCoinBTC_Orderbook.sellLevels[0].price;
                 OPENCLestimated_day_USD = OPENCLestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.BTCUSD;
                 OPENCLestimated_day_Coins_string = Math.Round(OPENCLestimated_day_Coins, 5).ToString();
                 OPENCLestimated_day_Sats_string = ((decimal)Math.Round(OPENCLestimated_day_Sats, 8)).ToString();
@@ -76,7 +76,7 @@ namespace TrueMiningDesktop.Janelas.Popups
                 if (CUDA_hashrate_decimal == -1) { CUDApannel.IsEnabled = false; CUDA_hashrate_decimal = 0; } else { CUDApannel.IsEnabled = true; }
                 CUDA_hashrate = Math.Round(CUDA_hashrate_decimal, 2).ToString() + " H/s";
                 CUDAestimated_day_Coins = CUDA_hashrate_decimal * (decimal)TimeSpan.FromDays(1).TotalSeconds / HashesPerPoint * ExchangeRatePontosToMiningCoin;
-                CUDAestimated_day_Sats = CUDAestimated_day_Coins * (decimal)PoolAPI.Crex24.MiningCoinBTC_Orderbook.sellLevels[0].price;
+                CUDAestimated_day_Sats = CUDAestimated_day_Coins * (decimal)PoolAPI.Crex24.PaymentCoinBTC_Orderbook.sellLevels[0].price;
                 CUDAestimated_day_USD = CUDAestimated_day_Sats * (decimal)PoolAPI.BitcoinPrice.BTCUSD;
                 CUDAestimated_day_Coins_string = Math.Round(CUDAestimated_day_Coins, 5).ToString();
                 CUDAestimated_day_Sats_string = ((decimal)Math.Round(CUDAestimated_day_Sats, 8)).ToString();
