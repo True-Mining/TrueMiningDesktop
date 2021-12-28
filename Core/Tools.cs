@@ -355,7 +355,7 @@ namespace TrueMiningDesktop.Core
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetEntryAssembly();
             FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(assembly.Location);
-            List<string>fileversionArray = fileVersion.FileVersion.Split('.').ToList();
+            List<string> fileversionArray = fileVersion.FileVersion.Split('.').ToList();
 
             return string.Join(".", fileversionArray.Where(x => x.ToString() != "0").ToList());
         }

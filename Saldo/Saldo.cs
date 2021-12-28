@@ -62,18 +62,18 @@ namespace TrueMiningDesktop.Server
                     {
                         Janelas.Pages.Home.PaymentInfoWasChanged = false;
                         lastUpdated = DateTime.Now.AddMinutes(10);
-                        //  try
+                        try
                         {
                             UpdateBalances();
                         }
-                        //   catch { lastUpdated = DateTime.Now.AddSeconds(-5); }
+                        catch { lastUpdated = DateTime.Now.AddSeconds(-5); }
                     }
 
                     Pages.Dashboard.LabelNextPayout = 23 - DateTime.UtcNow.Hour + " hours, " + (59 - DateTime.UtcNow.Minute) + " minutes";
 
                     List<string> listPointslabel = new();
-                    if (AccumulatedBalance_Points_xmr > 0) { listPointslabel.Add(Math.Round(AccumulatedBalance_Points_xmr, 0).ToString() + "RandomX Points"); }
-                    if (AccumulatedBalance_Points_rvn > 0) { listPointslabel.Add(Math.Round(AccumulatedBalance_Points_rvn, 0).ToString() + "KawPow Points"); }
+                    if (AccumulatedBalance_Points_xmr > 0) { listPointslabel.Add(Math.Round(AccumulatedBalance_Points_xmr, 0).ToString() + " RandomX-Points"); }
+                    if (AccumulatedBalance_Points_rvn > 0) { listPointslabel.Add(Math.Round(AccumulatedBalance_Points_rvn, 0).ToString() + " KawPow-Points"); }
 
                     Pages.Dashboard.LabelAccumulatedBalance = (listPointslabel.Count == 0 ? "0 Points" : string.Join(", ", listPointslabel)) + " ⇒ ≈ " + Decimal.Round(AccumulatedBalance_Coins, 5) + ' ' + (User.Settings.User.Payment_Coin != null ? User.Settings.User.Payment_Coin.Split(' ', '-').Last() : "???");
                     if (Pages.Dashboard.DashboardWarnings.Contains(warningMessage)) Pages.Dashboard.DashboardWarnings.Remove(warningMessage); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
@@ -150,7 +150,7 @@ namespace TrueMiningDesktop.Server
 
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_user_raw_new = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { decimal rvnPrice = new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("rvn-ravencoin").Result.Value.Last().Close; Crex24.RVNBTC_Orderbook = new PoolAPI.Orderbook() { buyLevels = new List<PoolAPI.BuyLevel>() { new PoolAPI.BuyLevel() { price = rvnPrice, volume = 1 } }, sellLevels = new List<PoolAPI.SellLevel>() { new PoolAPI.SellLevel() { price = rvnPrice, volume = 1 } } }; return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { decimal rvnPrice = new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("rvn-ravencoin", "BTC").Result.Value.Last().Close; Crex24.RVNBTC_Orderbook = new PoolAPI.Orderbook() { buyLevels = new List<PoolAPI.BuyLevel>() { new PoolAPI.BuyLevel() { price = rvnPrice, volume = 1 } }, sellLevels = new List<PoolAPI.SellLevel>() { new PoolAPI.SellLevel() { price = rvnPrice, volume = 1 } } }; return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare)); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef")); return null; }));
 
@@ -172,11 +172,11 @@ namespace TrueMiningDesktop.Server
                         {
                             if (User.Settings.User.PayCoin.CoinTicker != "DGB" && !PoolAPI.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
                             {
-                                                 try
+                                try
                                 {
                                     PoolAPI.XMR_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
                                 }
-                                                  catch { }
+                                catch { }
                             }
                         }
                     }
@@ -186,19 +186,19 @@ namespace TrueMiningDesktop.Server
                         {
                             if (!PoolAPI.XMR_nanopool.hashrateHistory_user.ContainsKey(datum.date))
                             {
-                                             try
+                                try
                                 {
                                     PoolAPI.XMR_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
                                 }
-                                            catch { }
+                                catch { }
                             }
                             else
                             {
-                                            try
+                                try
                                 {
                                     PoolAPI.XMR_nanopool.hashrateHistory_user[datum.date] += datum.hashrate;
                                 }
-                                          catch { }
+                                catch { }
                             }
                         }
                     }
@@ -208,15 +208,14 @@ namespace TrueMiningDesktop.Server
                         {
                             if (!PoolAPI.XMR_nanopool.hashrateHistory_tm.ContainsKey(datum.date))
                             {
-                                         try
-                                          {
-                                PoolAPI.XMR_nanopool.hashrateHistory_tm.Add(datum.date, datum.hashrate);
-                                          }
-                                          catch { }
+                                try
+                                {
+                                    PoolAPI.XMR_nanopool.hashrateHistory_tm.Add(datum.date, datum.hashrate);
+                                }
+                                catch { }
                             }
                         }
                     }
-
 
                     PoolAPI.RVN_nanopool.hashrateHistory_user.Clear();
 
@@ -226,19 +225,19 @@ namespace TrueMiningDesktop.Server
                         {
                             if (!PoolAPI.RVN_nanopool.hashrateHistory_user.ContainsKey(datum.date))
                             {
-                                     try
+                                try
                                 {
                                     PoolAPI.RVN_nanopool.hashrateHistory_user.Add(datum.date, datum.hashrate);
                                 }
-                                     catch { }
+                                catch { }
                             }
                             else
                             {
-                                     try
+                                try
                                 {
                                     PoolAPI.RVN_nanopool.hashrateHistory_user[datum.date] += datum.hashrate;
                                 }
-                                    catch { }
+                                catch { }
                             }
                         }
                     }
@@ -248,53 +247,53 @@ namespace TrueMiningDesktop.Server
                         {
                             if (!PoolAPI.RVN_nanopool.hashrateHistory_tm.ContainsKey(datum.date))
                             {
-                                       try
+                                try
                                 {
                                     PoolAPI.RVN_nanopool.hashrateHistory_tm.Add(datum.date, datum.hashrate);
                                 }
-                                      catch { }
+                                catch { }
                             }
                         }
                     }
                 }
                 catch { lastUpdated = DateTime.Now.AddSeconds(-10); }
 
-                Int64 sumHashrate_user_xmr =
+                decimal sumHashrate_user_xmr =
                 PoolAPI.XMR_nanopool.hashrateHistory_user
-                .Where((KeyValuePair<int, Int64> value) =>
+                .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-                .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
-                .Aggregate(0, (Func<Int64, Int64, Int64>)((acc, now) =>
+                .Select((KeyValuePair<int, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
+                .Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
                 {
                     return acc + now;
                 }));
 
-                Int64 sumHashrate_tm_xmr =
+                decimal sumHashrate_tm_xmr =
                 PoolAPI.XMR_nanopool.hashrateHistory_tm
-                .Where((KeyValuePair<int, Int64> value) =>
+                .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-                .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
-                .Aggregate(0, (Func<Int64, Int64, Int64>)((acc, now) =>
+                .Select((KeyValuePair<int, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
+                .Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
                 {
                     return acc + now;
                 }));
 
-                Int64 sumHashrate_user_rvn =
+                decimal sumHashrate_user_rvn =
                 PoolAPI.RVN_nanopool.hashrateHistory_user
-                .Where((KeyValuePair<int, Int64> value) =>
+                .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-                .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
-                .Aggregate(0, (Func<Int64, Int64, Int64>)((acc, now) =>
+                .Select((KeyValuePair<int, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
+                .Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
                 {
                     return acc + now;
                 }));
 
-                Int64 sumHashrate_tm_rvn =
+                decimal sumHashrate_tm_rvn =
                 PoolAPI.RVN_nanopool.hashrateHistory_tm
-                .Where((KeyValuePair<int, Int64> value) =>
+                .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-                .Select((KeyValuePair<int, Int64> value) => value.Value * secondsPerAveragehashrateReportInterval)
-                .Aggregate(0, (Func<Int64, Int64, Int64>)((acc, now) =>
+                .Select((KeyValuePair<int, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
+                .Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
                 {
                     return acc + now;
                 }));
@@ -387,11 +386,11 @@ namespace TrueMiningDesktop.Server
                     if (Pages.Dashboard.DashboardWarnings.Contains(warningMessage)) Janelas.Pages.Dashboard.DashboardWarnings.Remove(warningMessage); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                 }
 
-             //   try
+                try
                 {
                     Pages.Dashboard.ChangeChartZoom(null, null);
                 }
-            //    catch { }
+                catch { }
 
                 isUpdatingBalances = false;
             });
