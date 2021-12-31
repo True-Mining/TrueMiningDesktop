@@ -581,4 +581,3 @@ namespace TrueMiningDesktop.Core.Nanominer
         public decimal? PowerWatts { get; set; }
     }
 }
-}

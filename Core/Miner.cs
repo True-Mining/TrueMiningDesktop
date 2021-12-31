@@ -14,6 +14,7 @@ namespace TrueMiningDesktop.Core
         public static DateTime StartedSince = holdTime.AddTicks(-holdTime.Ticks);
 
         public static List<XMRig.XMRig> XMRigMiners = new();
+        public static List<Nanominer.Nanominer> NanominerMiners = new();
 
         public static void StartMiner(bool force = false)
         {
@@ -46,7 +47,14 @@ namespace TrueMiningDesktop.Core
                 {
                     if (Device.DevicesList.Any(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected))
                     {
-                        XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected).ToList()));
+    //                    if (miningCoin.Algorithm.Equals("kawpow", StringComparison.OrdinalIgnoreCase))
+    //                    {
+                            NanominerMiners.Add(new Nanominer.Nanominer(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected).ToList()));
+     //                   }
+    //                    else
+     //                   {
+     //                       XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected).ToList()));
+     //                   }
                     }
                 }); // joga para uma List<XMRig.XMRig> todos os dispositivos separados por miningCoin. Possível bug: mais moedas com o mesmo algoritmo vão gerar mais moedas por dispositivo
 
@@ -64,7 +72,8 @@ namespace TrueMiningDesktop.Core
                         {
                             try
                             {
-                                XMRigMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores da lista
+                                XMRigMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores XMRig da lista
+                                NanominerMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores Nanominer da lista
 
                                 //          IsMining = true;
                                 //          isTryingStartMining = false;
@@ -98,6 +107,7 @@ namespace TrueMiningDesktop.Core
             System.Threading.Thread.Sleep(200);
 
             while (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
+            while (NanominerMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
 
             if (IsMining || force)
             {
@@ -112,6 +122,14 @@ namespace TrueMiningDesktop.Core
                 XMRigMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
 
                 XMRigMiners.Clear();
+            })
+            .Start();
+
+            new System.Threading.Tasks.Task(() =>
+            {
+                NanominerMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
+
+                NanominerMiners.Clear();
             })
             .Start();
         }
@@ -161,6 +179,48 @@ namespace TrueMiningDesktop.Core
                 }
                 catch { }
             });
+
+            NanominerMiners.ForEach(miner =>
+            {
+                try
+                {
+                    try
+                    {
+                        Application.Current.Dispatcher.Invoke((Action)delegate
+                        {
+                            DateTime initializingTask = DateTime.UtcNow;
+                            while (Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
+                            //    Thread.Sleep(1000);
+                        });
+                    }
+                    catch { }
+
+                    IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
+                    if (showCLI)
+                    {
+                        if (Application.Current.MainWindow.IsVisible)
+                        {
+                            NanominerMiners.ForEach(miner => miner.Show());
+                            Tools.ShowWindow(windowIdentifier, 1);
+                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                Application.Current.MainWindow.Focus();
+                            });
+                        }
+                        else
+                        {
+                            NanominerMiners.ForEach(miner => miner.Show());
+                            Tools.ShowWindow(windowIdentifier, 2);
+                        }
+                    }
+                    else
+                    {
+                        NanominerMiners.ForEach(miner => miner.Hide());
+                        Tools.ShowWindow(windowIdentifier, 0);
+                    }
+                }
+                catch { }
+            });
         }
 
         public static decimal GetHashrate(string alias = null)
@@ -170,6 +230,30 @@ namespace TrueMiningDesktop.Core
                 Dictionary<string, decimal> hashrates = new();
 
                 XMRigMiners.ForEach(miner =>
+                {
+                    try
+                    {
+                        Dictionary<string, decimal> temp_hashrates = miner.GetHasrates();
+
+                        if (temp_hashrates != null)
+                        {
+                            foreach (KeyValuePair<string, decimal> hashrate in temp_hashrates)
+                            {
+                                if (hashrates.ContainsKey(hashrate.Key.ToLowerInvariant()))
+                                {
+                                    hashrates[hashrate.Key.ToLowerInvariant()] += hashrate.Value;
+                                }
+                                else
+                                {
+                                    hashrates.Add(hashrate.Key.ToLowerInvariant(), hashrate.Value);
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+                });
+
+                NanominerMiners.ForEach(miner =>
                 {
                     try
                     {
@@ -396,7 +480,7 @@ namespace TrueMiningDesktop.Core
 
         public static void VerifyGeneralMiningState()
         {
-            if (XMRigMiners.Any(miner => miner.IsStoppingMining))
+            if (XMRigMiners.Any(miner => miner.IsStoppingMining) || NanominerMiners.Any(miner => miner.IsStoppingMining))
             {
                 Miner.IsStoppingMining = true;
             }
@@ -404,7 +488,7 @@ namespace TrueMiningDesktop.Core
             {
                 Miner.IsStoppingMining = false;
             }
-            if (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !XMRigMiners.Any(miner => miner.IsMining))
+            if ((XMRigMiners.Any(miner => miner.IsTryingStartMining) && !XMRigMiners.Any(miner => miner.IsMining)) || (NanominerMiners.Any(miner => miner.IsTryingStartMining) && !NanominerMiners.Any(miner => miner.IsMining)))
             {
                 Miner.IsTryingStartMining = true;
             }
@@ -412,7 +496,7 @@ namespace TrueMiningDesktop.Core
             {
                 Miner.IsTryingStartMining = false;
             }
-            if (XMRigMiners.Any(miner => miner.IsMining))
+            if (XMRigMiners.Any(miner => miner.IsMining) || NanominerMiners.Any(miner => miner.IsMining))
             {
                 Miner.IsMining = true;
             }
