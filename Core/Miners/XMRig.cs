@@ -571,6 +571,13 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("}");
 
             System.IO.File.WriteAllText(@"Miners\xmrig\config-" + AlgoBackendsString + ".json", conf.ToString());
+
+            StringBuilder cmdStart = new();
+            cmdStart.AppendLine("cd /d \"%~dp0\"");
+            cmdStart.AppendLine("xmrig.exe --config=" + "config-" + AlgoBackendsString + ".json");
+            cmdStart.AppendLine("pause");
+
+            System.IO.File.WriteAllText(@"Miners\xmrig\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
         }
     }
 }
