@@ -326,7 +326,7 @@ namespace TrueMiningDesktop
 
                         NotifyIcon.Visible = false;
 
-                        Miner.XMRigMiners.ForEach(miner => { try { miner.IsMining = false; miner.XMRigProcess.Kill(true); } catch { } });
+                        Miner.XMRigMiners.ForEach(miner => { try { miner.IsMining = false; miner.MinerProcess.Kill(true); } catch { } });
 
                         Thread.Sleep(1500);
                     }

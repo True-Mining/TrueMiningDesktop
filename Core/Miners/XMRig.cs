@@ -61,13 +61,13 @@ namespace TrueMiningDesktop.Core.XMRig
         }
 
         private List<DeviceInfo> Backends = new();
-        public readonly Process XMRigProcess = new();
-        public readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
+        public readonly Process MinerProcess = new();
+        public readonly ProcessStartInfo MinerProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
         private string AlgoBackendsString = null;
         public string WindowTitle = "True Mining running XMRig";
         private int APIport = 20210;
-        private bool IsInXMRIGexitEvent = false;
-        private DateTime startedSince = DateTime.Now.AddYears(-1);
+        private bool IsInMinerProcessExitEvent = false;
+        private DateTime StartedSince = DateTime.Now.AddYears(-1);
 
         public XMRig(List<DeviceInfo> backends)
         {
@@ -82,29 +82,29 @@ namespace TrueMiningDesktop.Core.XMRig
         {
             IsTryingStartMining = true;
 
-            if (XMRigProcess.StartInfo != XMRigProcessStartInfo)
+            if (MinerProcess.StartInfo != MinerProcessStartInfo)
             {
-                XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
-                XMRigProcessStartInfo.Arguments = "--config=config-" + AlgoBackendsString + ".json";
-                XMRigProcessStartInfo.UseShellExecute = true;
-                XMRigProcessStartInfo.RedirectStandardError = false;
-                XMRigProcessStartInfo.RedirectStandardOutput = false;
-                XMRigProcessStartInfo.CreateNoWindow = false;
-                XMRigProcessStartInfo.ErrorDialog = false;
-                XMRigProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                XMRigProcess.StartInfo = XMRigProcessStartInfo;
+                MinerProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
+                MinerProcessStartInfo.Arguments = "--config=config-" + AlgoBackendsString + ".json";
+                MinerProcessStartInfo.UseShellExecute = true;
+                MinerProcessStartInfo.RedirectStandardError = false;
+                MinerProcessStartInfo.RedirectStandardOutput = false;
+                MinerProcessStartInfo.CreateNoWindow = false;
+                MinerProcessStartInfo.ErrorDialog = false;
+                MinerProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                MinerProcess.StartInfo = MinerProcessStartInfo;
             }
 
-            XMRigProcess.Exited -= XMRigProcess_Exited;
-            XMRigProcess.Exited += XMRigProcess_Exited;
-            XMRigProcess.EnableRaisingEvents = true;
+            MinerProcess.Exited -= MinerProcess_Exited;
+            MinerProcess.Exited += MinerProcess_Exited;
+            MinerProcess.EnableRaisingEvents = true;
 
             try
             {
-                XMRigProcess.ErrorDataReceived -= XMRigProcess_ErrorDataReceived;
-                XMRigProcess.ErrorDataReceived += XMRigProcess_ErrorDataReceived;
+                MinerProcess.ErrorDataReceived -= MinerProcess_ErrorDataReceived;
+                MinerProcess.ErrorDataReceived += MinerProcess_ErrorDataReceived;
 
-                XMRigProcess.Start();
+                MinerProcess.Start();
 
                 new Task(() =>
                 {
@@ -113,7 +113,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         try
                         {
                             Thread.Sleep(100);
-                            DateTime time = XMRigProcess.StartTime;
+                            DateTime time = MinerProcess.StartTime;
                             if (time.Ticks > 100) { break; }
                         }
                         catch { }
@@ -123,7 +123,7 @@ namespace TrueMiningDesktop.Core.XMRig
                 IsMining = true;
                 IsTryingStartMining = false;
 
-                startedSince = DateTime.UtcNow;
+                StartedSince = DateTime.UtcNow;
             }
             catch (Exception e)
             {
@@ -175,22 +175,22 @@ namespace TrueMiningDesktop.Core.XMRig
             }
         }
 
-        private void XMRigProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void MinerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Tools.KillProcess(XMRigProcess.ProcessName); Stop();
+            Tools.KillProcess(MinerProcess.ProcessName); Stop();
         }
 
-        private void XMRigProcess_Exited(object sender, EventArgs e)
+        private void MinerProcess_Exited(object sender, EventArgs e)
         {
             if (IsMining && !IsStoppingMining)
             {
-                if (!IsInXMRIGexitEvent)
+                if (!IsInMinerProcessExitEvent)
                 {
-                    IsInXMRIGexitEvent = true;
+                    IsInMinerProcessExitEvent = true;
 
                     IsTryingStartMining = true;
 
-                    if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
+                    if (StartedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
                     else { ChangeMinerBinary(); }
 
                     if (IsMining && !IsStoppingMining)
@@ -198,7 +198,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         Start();
                     }
 
-                    IsInXMRIGexitEvent = false;
+                    IsInMinerProcessExitEvent = false;
                 }
             }
         }
@@ -215,8 +215,8 @@ namespace TrueMiningDesktop.Core.XMRig
                 {
                     try
                     {
-                        XMRigProcess.CloseMainWindow();
-                        XMRigProcess.WaitForExit();
+                        MinerProcess.CloseMainWindow();
+                        MinerProcess.WaitForExit();
 
                         closed = true;
                         IsMining = false;
@@ -224,7 +224,7 @@ namespace TrueMiningDesktop.Core.XMRig
                     }
                     catch
                     {
-                        XMRigProcess.Kill(true);
+                        MinerProcess.Kill(true);
 
                         closed = true;
                         IsMining = false;
@@ -238,8 +238,8 @@ namespace TrueMiningDesktop.Core.XMRig
                 {
                     try
                     {
-                        XMRigProcess.Kill(true);
-                        Tools.KillProcessByName(XMRigProcess.ProcessName);
+                        MinerProcess.Kill(true);
+                        Tools.KillProcessByName(MinerProcess.ProcessName);
 
                         closed = true;
                         IsMining = false;
@@ -250,7 +250,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
                 try
                 {
-                    XMRigProcess.Kill(true);
+                    MinerProcess.Kill(true);
 
                     closed = true;
                     IsMining = false;
@@ -265,17 +265,17 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public void ChangeMinerBinary()
         {
-            if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe")
+            if (MinerProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe")
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe";
+                MinerProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe";
             }
-            else if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe")
+            else if (MinerProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe")
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe";
+                MinerProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe";
             }
             else
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe";
+                MinerProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe";
             }
 
             if (minerBinaryChangedTimes < 100) { minerBinaryChangedTimes++; }
@@ -283,12 +283,12 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public void Show()
         {
-            XMRigProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            MinerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
         }
 
         public void Hide()
         {
-            XMRigProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            MinerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
         }
 
         public Dictionary<string, decimal> GetHasrates()
