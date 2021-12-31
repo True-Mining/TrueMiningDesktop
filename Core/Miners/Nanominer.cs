@@ -525,14 +525,14 @@ namespace TrueMiningDesktop.Core.Nanominer
                 conf.AppendLine("pool" + (miningCoin.Hosts.IndexOf(host) + 1).ToString() + " = " + host + ":" + miningCoin.StratumPort);
             }
 
-            System.IO.File.WriteAllText(@"Miners\xmrig\config-" + AlgoBackendsString + ".json", conf.ToString());
+            System.IO.File.WriteAllText(@"Miners\Nanominer\config-" + AlgoBackendsString + ".ini", conf.ToString());
 
             StringBuilder cmdStart = new();
             cmdStart.AppendLine("cd /d \"%~dp0\"");
-            cmdStart.AppendLine("xmrig.exe --config=" + "config-" + AlgoBackendsString + ".json");
+            cmdStart.AppendLine("nanominer.exe config-" + AlgoBackendsString + ".ini");
             cmdStart.AppendLine("pause");
 
-            System.IO.File.WriteAllText(@"Miners\xmrig\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
+            System.IO.File.WriteAllText(@"Miners\Nanominer\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
         }
     }
 
