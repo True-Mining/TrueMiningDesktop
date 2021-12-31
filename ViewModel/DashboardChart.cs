@@ -11,7 +11,7 @@ namespace TrueMiningDesktop.ViewModel
 {
     internal class DashboardChart
     {
-        public static void UpdateAxes(Dictionary<int, long> dados, int zoomInterval)
+        public static void UpdateAxes(Dictionary<int, decimal> dados, int zoomInterval)
         {
             PlotModel plotModel = new()
             {
@@ -22,9 +22,9 @@ namespace TrueMiningDesktop.ViewModel
                 PlotAreaBorderThickness = new OxyThickness(0, 0, 0, 0),
             };
 
-            Dictionary<int, int> dataToShow = new();
+            Dictionary<int, decimal> dataToShow = new();
 
-            Dictionary<string, int> dataToShow_formated = new();
+            Dictionary<string, decimal> dataToShow_formated = new();
 
             List<string> listaLegendaX = new();
 
@@ -34,10 +34,10 @@ namespace TrueMiningDesktop.ViewModel
             {
                 zoomInterval = (int)new TimeSpan((int)Math.Floor(TimeSpan.FromSeconds(zoomInterval).TotalHours) - 1, DateTime.UtcNow.Minute, DateTime.UtcNow.Second).TotalSeconds;
 
-                dataToShow = dados.Where((KeyValuePair<int, long> value) =>
+                dataToShow = dados.Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, long> value) => new KeyValuePair<int, int>(value.Key, (int)(value.Value / 840)))
-                .OrderBy((KeyValuePair<int, int> value) => value.Key)
+                .Select((KeyValuePair<int, decimal> value) => new KeyValuePair<int, decimal>(value.Key, (decimal)(value.Value / 840)))
+                .OrderBy((KeyValuePair<int, decimal> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
                 for (int i = 0; zoomInterval / 60 / 60 >= i; i++)
@@ -47,7 +47,7 @@ namespace TrueMiningDesktop.ViewModel
                     listaLegendaX.Add(labelToAdd);
                 }
 
-                foreach (KeyValuePair<int, int> pair in dataToShow)
+                foreach (KeyValuePair<int, decimal> pair in dataToShow)
                 {
                     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(pair.Key).ToLocalTime();
                     string labelToAdd = dateTime.Hour.ToString().PadLeft(2, '0') + ":00";
@@ -67,10 +67,10 @@ namespace TrueMiningDesktop.ViewModel
             {
                 zoomInterval = (int)new TimeSpan((int)Math.Floor(TimeSpan.FromSeconds(zoomInterval).TotalDays) - 1, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second).TotalSeconds;
 
-                dataToShow = dados.Where((KeyValuePair<int, long> value) =>
+                dataToShow = dados.Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, long> value) => new KeyValuePair<int, int>(value.Key, (int)value.Value / 840))
-                .OrderBy((KeyValuePair<int, int> value) => value.Key)
+                .Select((KeyValuePair<int, decimal> value) => new KeyValuePair<int, decimal>(value.Key, value.Value / 840))
+                .OrderBy((KeyValuePair<int, decimal> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
                 for (int i = 0; zoomInterval / 60 / 60 / 24 >= i; i++)
@@ -80,7 +80,7 @@ namespace TrueMiningDesktop.ViewModel
                     listaLegendaX.Add(labelToAdd);
                 }
 
-                foreach (KeyValuePair<int, int> pair in dataToShow)
+                foreach (KeyValuePair<int, decimal> pair in dataToShow)
                 {
                     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(pair.Key);
                     string labelToAdd = dateTime.ToShortDateString() + " (UTC)";
@@ -134,16 +134,16 @@ namespace TrueMiningDesktop.ViewModel
                 StrokeThickness = 1,
             };
 
-            foreach (KeyValuePair<string, int> keyValuePair in dataToShow_formated)
+            foreach (KeyValuePair<string, decimal> keyValuePair in dataToShow_formated)
             {
-                Pages.Dashboard.ColumnChartSeries.Items.Add(new ColumnItem(keyValuePair.Value, listaLegendaX.IndexOf(keyValuePair.Key)));
+                Pages.Dashboard.ColumnChartSeries.Items.Add(new ColumnItem((double)Math.Round(keyValuePair.Value, 8), listaLegendaX.IndexOf(keyValuePair.Key)));
             }
             if (Pages.Dashboard.ColumnChartSeries.Items.Count == 0) Pages.Dashboard.ColumnChartSeries.Items.Add(new ColumnItem(0));
 
             plotModel.Series.Add(Pages.Dashboard.ColumnChartSeries);
 
             ////////////////////////////////
-            int chart_max_value = dataToShow_formated.Count > 0 ? (int)Math.Ceiling(d: (decimal)dataToShow_formated.Max((KeyValuePair<string, int> value) => value.Value)) : 10;
+            int chart_max_value = dataToShow_formated.Count > 0 ? (int)Math.Ceiling(d: (decimal)dataToShow_formated.Max((KeyValuePair<string, decimal> value) => value.Value)) : 10;
             int chart_max_range = (int)((int)Math.Ceiling(chart_max_value / Math.Pow(10, chart_max_value.ToString().Length - 1)) * Math.Pow(10, (chart_max_value.ToString().Length - 1)));
             int chart_Yaxis_major_step = (int)Math.Ceiling((decimal)(chart_max_range / 5));
 

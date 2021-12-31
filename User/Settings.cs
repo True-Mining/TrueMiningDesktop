@@ -99,6 +99,7 @@ namespace TrueMiningDesktop.User
                     User.Payment_CoinsList = up.Payment_CoinsList;
                     User.PayCoin = up.PayCoin;
                     User.Payment_Coin = up.Payment_Coin;
+                    if (up.Payment_Coin == null &&  up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                     User.Payment_Wallet = up.Payment_Wallet;
                     User.LICENSE_read = up.LICENSE_read;
                 }
@@ -128,6 +129,7 @@ namespace TrueMiningDesktop.User
                         User.Payment_CoinsList = up.Payment_CoinsList;
                         User.PayCoin = up.PayCoin;
                         User.Payment_Coin = up.Payment_Coin;
+                        if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                         User.Payment_Wallet = up.Payment_Wallet;
                         User.LICENSE_read = up.LICENSE_read;
                     }
@@ -141,12 +143,12 @@ namespace TrueMiningDesktop.User
 
     public class DeviceSettings
     {
-        public CPUSettings cpu = new();
-        public NVIDIASettings cuda = new();
-        public AMDSettings opencl = new();
+        public CpuSettings cpu = new();
+        public CudaSettings cuda = new();
+        public OpenClSettings opencl = new();
     }
 
-    public class CPUSettings
+    public class CpuSettings
     {
         private bool miningSelected = true;
 
@@ -162,7 +164,7 @@ namespace TrueMiningDesktop.User
         public bool Yield { get; set; } = true;
     }
 
-    public class NVIDIASettings
+    public class CudaSettings
     {
         private bool miningSelected = false;
 
@@ -175,7 +177,7 @@ namespace TrueMiningDesktop.User
         public bool NVML { get; set; } = true;
     }
 
-    public class AMDSettings
+    public class OpenClSettings
     {
         private bool miningSelected = false;
 

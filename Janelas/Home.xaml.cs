@@ -24,11 +24,11 @@ namespace TrueMiningDesktop.Janelas
 
         public void StartStopMining_Click(object sender, RoutedEventArgs e)
         {
-            if (Miner.IsMining && !Miner.StoppingMining)
+            if (Miner.IsMining && !Miner.IsStoppingMining)
             {
                 Miner.StopMiner();
             }
-            else if (!Miner.IsMining && !Miner.IntentToMine && !Miner.StoppingMining)
+            else if (!Miner.IsMining && !Miner.IsTryingStartMining && !Miner.IsStoppingMining)
             {
                 Miner.StartMiner();
             }

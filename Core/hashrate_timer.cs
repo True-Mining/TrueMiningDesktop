@@ -24,7 +24,7 @@ namespace TrueMiningDesktop.Core
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Hashrate = Miner.GetHashrate(DeviceInfo.Alias, DeviceInfo.MiningAlgo);
+            Hashrate = Miner.GetHashrate(DeviceInfo.BackendName);
         }
 
         protected virtual void OnNewHashrate()

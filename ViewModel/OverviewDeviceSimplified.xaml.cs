@@ -71,19 +71,18 @@ namespace TrueMiningDesktop.ViewModel
             OnChanged(null);
 
             ovIcon.Foreground = Brushes.Black;
-
-            if (Miner.IsMining)
+            new System.Threading.Tasks.Task(() =>
             {
-                new System.Threading.Tasks.Task(() =>
+                if (Miner.IsMining || Miner.IsTryingStartMining)
                 {
-                    while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
+                    while (Miner.IsStoppingMining || Miner.IsTryingStartMining) { Thread.Sleep(100); }
 
                     Miner.StopMiner();
 
                     Miner.StartMiner();
-                })
-                .Start();
-            }
+                }
+            })
+            .Start();
         }
 
         private void DeviceIsSelected_Unchecked(object sender, RoutedEventArgs e)
@@ -94,9 +93,9 @@ namespace TrueMiningDesktop.ViewModel
 
             new System.Threading.Tasks.Task(() =>
             {
-                if (Miner.IsMining)
+                if (Miner.IsMining || Miner.IsTryingStartMining)
                 {
-                    while (Miner.StoppingMining || Miner.IntentToMine) { Thread.Sleep(100); }
+                    while (Miner.IsStoppingMining || Miner.IsTryingStartMining) { Thread.Sleep(100); }
 
                     Miner.StopMiner();
 

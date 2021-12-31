@@ -314,7 +314,7 @@ namespace TrueMiningDesktop.Core
         {
             System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
             {
-                NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = System.Windows.Application.Current.MainWindow.Visibility != Visibility.Visible, startMining = Miner.IsMining || Miner.IntentToMine });
+                NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = System.Windows.Application.Current.MainWindow.Visibility != Visibility.Visible, startMining = Miner.IsMining || Miner.IsTryingStartMining });
 
                 Process TrueMiningNewProcess = new()
                 {
@@ -355,7 +355,9 @@ namespace TrueMiningDesktop.Core
         {
             System.Reflection.Assembly assembly = System.Reflection.Assembly.GetEntryAssembly();
             FileVersionInfo fileVersion = FileVersionInfo.GetVersionInfo(assembly.Location);
-            return fileVersion.FileVersion.TrimEnd('.', '0');
+            List<string> fileversionArray = fileVersion.FileVersion.Split('.').ToList();
+
+            return string.Join(".", fileversionArray.Where(x => x.ToString() != "0").ToList());
         }
 
         public static void CreateMissingPatch(string path)
@@ -426,7 +428,7 @@ namespace TrueMiningDesktop.Core
 
         public static void AwakeSystem(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (User.Settings.User.AvoidWindowsSuspend && (Miner.IsMining || Miner.IntentToMine))
+            if (User.Settings.User.AvoidWindowsSuspend && (Miner.IsMining || Miner.IsTryingStartMining))
             {
                 SetThreadExecutionState(ES_CONTINUOUS);
                 SetThreadExecutionState(ES_AWAYMODE_REQUIRED);
@@ -526,5 +528,10 @@ namespace TrueMiningDesktop.Core
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern bool ShowWindow(IntPtr windowIdentifier, int nCmdShow);
+
+        public static async void WaitTime(int milliseconds)
+        {
+            await Task.Delay(milliseconds);
+        }
     }
 }

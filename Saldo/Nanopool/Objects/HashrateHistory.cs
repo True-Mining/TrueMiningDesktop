@@ -9,6 +9,6 @@
     public class Datum
     {
         public int date { get; set; }
-        public int hashrate { get; set; }
+        public decimal hashrate { get; set; }
     }
 }

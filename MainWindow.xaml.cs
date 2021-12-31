@@ -318,11 +318,17 @@ namespace TrueMiningDesktop
         {
             try
             {
-                if (Miner.IsMining || Miner.IntentToMine)
+                if (Miner.IsMining || Miner.IsTryingStartMining)
                 {
                     if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
                     {
-                        Miner.StopMiner(true);
+                        this.Hide();
+
+                        NotifyIcon.Visible = false;
+
+                        Miner.XMRigMiners.ForEach(miner => { try { miner.IsMining = false; miner.XMRigProcess.Kill(true); } catch { } });
+
+                        Thread.Sleep(1500);
                     }
                     else { e.Cancel = true; return; }
                 }
@@ -333,12 +339,15 @@ namespace TrueMiningDesktop
                     { e.Cancel = true; return; }
                 }
 
-                Core.Miner.EmergencyExit = true;
+                Miner.EmergencyExit = true;
+
                 User.Settings.SettingsSaver(true);
-                Application.Current.Shutdown();
+
+                Thread.Sleep(150);
 
                 Tools.CheckerPopup.Close();
-                NotifyIcon.Visible = false;
+
+                Application.Current.Shutdown();
             }
             catch { }
         }

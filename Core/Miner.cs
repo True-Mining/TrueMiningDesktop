@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using TrueMiningDesktop.Janelas;
@@ -10,38 +13,48 @@ namespace TrueMiningDesktop.Core
         private static readonly DateTime holdTime = DateTime.UtcNow;
         public static DateTime StartedSince = holdTime.AddTicks(-holdTime.Ticks);
 
+        public static List<XMRig.XMRig> XMRigMiners = new();
+
         public static void StartMiner(bool force = false)
         {
-            if (!IsMining && !IntentToMine || force)
+            if (!IsMining && !IsTryingStartMining || force)
             {
-                IntentToMine = true;
+                IsTryingStartMining = true;
 
-                while (StoppingMining && !force) { System.Threading.Thread.Sleep(100); }
-                IntentToMine = true;
+                while (IsStoppingMining && !force) { System.Threading.Thread.Sleep(100); }
+                IsTryingStartMining = true;
 
                 if (String.IsNullOrEmpty(User.Settings.User.Payment_Coin) || User.Settings.User.PayCoin == null || User.Settings.User.PayCoin.CoinName == null)
                 {
-                    Miner.IntentToMine = false;
+                    IsTryingStartMining = false;
                     if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Select Payment Coin first"); }
                     IsMining = false;
-                    IntentToMine = false;
+                    IsTryingStartMining = false;
                     return;
                 }
 
                 if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
                 {
-                    Miner.IntentToMine = false;
+                    Miner.IsTryingStartMining = false;
                     if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Something wrong. Check your wallet address and selected coin."); }
                     IsMining = false;
-                    IntentToMine = false;
+                    IsTryingStartMining = false;
                     return;
                 }
+
+                Server.SoftwareParameters.ServerConfig.MiningCoins.ForEach(miningCoin =>
+                {
+                    if (Device.DevicesList.Any(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected))
+                    {
+                        XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected).ToList()));
+                    }
+                }); // joga para uma List<XMRig.XMRig> todos os dispositivos separados por miningCoin. Possível bug: mais moedas com o mesmo algoritmo vão gerar mais moedas por dispositivo
 
                 if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (string.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        IntentToMine = true;
+                        //     IsTryingStartMining = true;
                         Tools.CheckerPopup = new CheckerPopup("all");
                         Tools.CheckerPopup.ShowDialog();
                     });
@@ -51,13 +64,17 @@ namespace TrueMiningDesktop.Core
                         {
                             try
                             {
-                                XMRig.XMRig.CreateConfigFile();
-                                XMRig.XMRig.Start();
+                                XMRigMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores da lista
 
-                                IsMining = true;
-                                intentToMine = false;
+                                //          IsMining = true;
+                                //          isTryingStartMining = false;
+
+                                Application.Current.Dispatcher.Invoke((Action)delegate
+                                {
+                                    ShowHideCLI();
+                                });
                             }
-                            catch (Exception e) { MessageBox.Show(e.Message); intentToMine = false; }
+                            catch (Exception e) { MessageBox.Show(e.Message); isTryingStartMining = false; }
                         })
                         .Start();
                     }
@@ -67,7 +84,7 @@ namespace TrueMiningDesktop.Core
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
                         MessageBox.Show("select at least one device");
-                        IntentToMine = false;
+                        IsTryingStartMining = false;
                         IsMining = false;
                     });
                 }
@@ -76,69 +93,122 @@ namespace TrueMiningDesktop.Core
 
         public static void StopMiner(bool force = false)
         {
-            StoppingMining = true;
+            IsStoppingMining = true;
 
-            while (IntentToMine && !force) { System.Threading.Thread.Sleep(100); }
+            System.Threading.Thread.Sleep(200);
+
+            while (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
 
             if (IsMining || force)
             {
-                intentToMine = false;
+                isTryingStartMining = false;
                 isMining = false;
 
-                StoppingMining = true;
+                IsStoppingMining = true;
             }
 
             new System.Threading.Tasks.Task(() =>
             {
-                try { XMRig.XMRig.Stop(); } catch { }
+                XMRigMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
 
-                StoppingMining = false;
+                XMRigMiners.Clear();
             })
             .Start();
         }
 
-        public static void ShowHideCLI(string miner = "all")
+        public static void ShowHideCLI()
         {
             bool showCLI = User.Settings.User.ShowCLI;
 
-            if (string.Equals(miner, "XMRig", StringComparison.OrdinalIgnoreCase) || string.Equals(miner, "all", StringComparison.OrdinalIgnoreCase))
+            XMRigMiners.ForEach(miner =>
             {
-                IntPtr windowIdentifier = Tools.FindWindow(null, "True Mining running XMRig");
-                if (showCLI)
+                try
                 {
-                    if (Application.Current.MainWindow.IsVisible)
+                    try
                     {
-                        XMRig.XMRig.Show();
-                        Tools.ShowWindow(windowIdentifier, 1);
                         Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            Application.Current.MainWindow.Focus();
+                            DateTime initializingTask = DateTime.UtcNow;
+                            while (Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
+                            //    Thread.Sleep(1000);
                         });
+                    }
+                    catch { }
+
+                    IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
+                    if (showCLI)
+                    {
+                        if (Application.Current.MainWindow.IsVisible)
+                        {
+                            XMRigMiners.ForEach(miner => miner.Show());
+                            Tools.ShowWindow(windowIdentifier, 1);
+                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                Application.Current.MainWindow.Focus();
+                            });
+                        }
+                        else
+                        {
+                            XMRigMiners.ForEach(miner => miner.Show());
+                            Tools.ShowWindow(windowIdentifier, 2);
+                        }
                     }
                     else
                     {
-                        XMRig.XMRig.Show();
-                        Tools.ShowWindow(windowIdentifier, 2);
+                        XMRigMiners.ForEach(miner => miner.Hide());
+                        Tools.ShowWindow(windowIdentifier, 0);
                     }
                 }
-                else
-                {
-                    XMRig.XMRig.Hide();
-                    Tools.ShowWindow(windowIdentifier, 0);
-                }
-            }
+                catch { }
+            });
         }
 
-        public static decimal GetHashrate(string alias, string algo)
+        public static decimal GetHashrate(string alias = null)
         {
             try
             {
-                if (Device.DevicesList.Find(x => x.Alias.Equals(alias, StringComparison.OrdinalIgnoreCase)).IsSelected)
+                Dictionary<string, decimal> hashrates = new();
+
+                XMRigMiners.ForEach(miner =>
                 {
-                    if (string.Equals(algo, "RandomX", StringComparison.OrdinalIgnoreCase))
+                    try
                     {
-                        return XMRig.XMRig.GetHasrate(alias);
+                        Dictionary<string, decimal> temp_hashrates = miner.GetHasrates();
+
+                        if (temp_hashrates != null)
+                        {
+                            foreach (KeyValuePair<string, decimal> hashrate in temp_hashrates)
+                            {
+                                if (hashrates.ContainsKey(hashrate.Key.ToLowerInvariant()))
+                                {
+                                    hashrates[hashrate.Key.ToLowerInvariant()] += hashrate.Value;
+                                }
+                                else
+                                {
+                                    hashrates.Add(hashrate.Key.ToLowerInvariant(), hashrate.Value);
+                                }
+                            }
+                        }
                     }
+                    catch { }
+                });
+
+                if (hashrates == null || hashrates.Count == 0)
+                {
+                    return -1;
+                }
+
+                Device.DevicesList.ForEach(device =>
+                {
+                    if (hashrates.ContainsKey(device.BackendName.ToLowerInvariant()))
+                    {
+                        device.Hashrate = hashrates[device.BackendName.ToLowerInvariant()];
+                    }
+                });
+
+                if (alias != null && hashrates.ContainsKey(alias.ToLowerInvariant()))
+                {
+                    return hashrates[alias.ToLowerInvariant()];
                 }
             }
             catch
@@ -151,13 +221,15 @@ namespace TrueMiningDesktop.Core
         public static bool EmergencyExit;
 
         private static bool isMining;
-        private static bool intentToMine;
-        private static bool stoppingMining;
+        private static bool isTryingStartMining;
+        private static bool isStoppingMining;
 
         public static bool IsMining
         {
             get
             {
+                //   VerifyGeneralMiningState();
+
                 return isMining;
             }
             set
@@ -165,7 +237,7 @@ namespace TrueMiningDesktop.Core
                 try
                 {
                     isMining = value;
-                    if (value) intentToMine = false;
+                    if (value) isTryingStartMining = false;
 
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -173,7 +245,7 @@ namespace TrueMiningDesktop.Core
                         if (Device.opencl.IsSelected) { Device.opencl.IsMining = true; Pages.SettingsOPENCL.AllContent.IsEnabled = false; Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible; }
                         if (Device.cuda.IsSelected) { Device.cuda.IsMining = true; Pages.SettingsCUDA.AllContent.IsEnabled = false; Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible; }
 
-                        if (isMining && !stoppingMining && !intentToMine)
+                        if (isMining && !isStoppingMining && !isTryingStartMining)
                         {
                             StartedSince = DateTime.UtcNow;
 
@@ -198,7 +270,7 @@ namespace TrueMiningDesktop.Core
                                 Device.opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
                             }
                         }
-                        else if (!isMining && !intentToMine && !stoppingMining)
+                        else if (!isMining && !isTryingStartMining && !isStoppingMining)
                         {
                             StartedSince = holdTime.AddTicks(-holdTime.Ticks);
 
@@ -240,15 +312,17 @@ namespace TrueMiningDesktop.Core
             }
         }
 
-        public static bool IntentToMine
+        public static bool IsTryingStartMining
         {
             get
             {
-                return intentToMine;
+                //    VerifyGeneralMiningState();
+
+                return isTryingStartMining;
             }
             set
             {
-                intentToMine = value;
+                isTryingStartMining = value;
 
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
@@ -259,7 +333,7 @@ namespace TrueMiningDesktop.Core
                     Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible;
                     Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible;
 
-                    if (intentToMine)
+                    if (isTryingStartMining)
                     {
                         Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = false;
 
@@ -290,17 +364,19 @@ namespace TrueMiningDesktop.Core
             }
         }
 
-        public static bool StoppingMining
+        public static bool IsStoppingMining
         {
             get
             {
-                return stoppingMining;
+                //   VerifyGeneralMiningState();
+
+                return isStoppingMining;
             }
             set
             {
-                stoppingMining = value;
+                isStoppingMining = value;
 
-                if (stoppingMining)
+                if (isStoppingMining)
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -315,6 +391,34 @@ namespace TrueMiningDesktop.Core
                 }
 
                 IsMining = IsMining;
+            }
+        }
+
+        public static void VerifyGeneralMiningState()
+        {
+            if (XMRigMiners.Any(miner => miner.IsStoppingMining))
+            {
+                Miner.IsStoppingMining = true;
+            }
+            else
+            {
+                Miner.IsStoppingMining = false;
+            }
+            if (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !XMRigMiners.Any(miner => miner.IsMining))
+            {
+                Miner.IsTryingStartMining = true;
+            }
+            else
+            {
+                Miner.IsTryingStartMining = false;
+            }
+            if (XMRigMiners.Any(miner => miner.IsMining))
+            {
+                Miner.IsMining = true;
+            }
+            else
+            {
+                Miner.IsMining = false;
             }
         }
     }

@@ -89,7 +89,7 @@ namespace TrueMiningDesktop.Janelas
                     if (window.Title == "Calculator") { window.Close(); }
                 }
 
-                new Calculator(saldo.HashesPerPoint, saldo.exchangeRatePontosToMiningCoin) { Title = "Calculator" }.Show();
+                new Calculator(saldo.HashesPerPoint_xmr, saldo.exchangeRatePontosXmrToMiningCoin) { Title = "Calculator" }.Show();
             }
             catch { }
         }
@@ -103,7 +103,7 @@ namespace TrueMiningDesktop.Janelas
                     if (window.Title == "Exchange Rates") { window.Close(); }
                 }
 
-                new ExchangeRates(saldo.exchangeRatePontosToMiningCoin) { Title = "Exchange Rates" }.Show();
+                new ExchangeRates(saldo.exchangeRatePontosXmrToMiningCoin) { Title = "Exchange Rates" }.Show();
             }
             catch { }
         }

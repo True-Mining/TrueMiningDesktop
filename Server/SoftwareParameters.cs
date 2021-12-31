@@ -30,16 +30,22 @@ namespace TrueMiningDesktop.Server
 
     public partial class MiningCoin
     {
-        [JsonProperty("coin", NullValueHandling = NullValueHandling.Ignore)]
-        public string Coin { get; set; }
+        [JsonProperty("coinTicker", NullValueHandling = NullValueHandling.Ignore)]
+        public string CoinTicker { get; set; }
 
         [JsonProperty("coinName", NullValueHandling = NullValueHandling.Ignore)]
         public string CoinName { get; set; }
 
+        [JsonProperty("algorithm", NullValueHandling = NullValueHandling.Ignore)]
+        public string Algorithm { get; set; }
+
+        [JsonProperty("marketDataSources", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> MarketDataSources { get; set; }
+
         [JsonProperty("poolName", NullValueHandling = NullValueHandling.Ignore)]
         public string PoolName { get; set; }
 
-        [JsonProperty("PoolFee", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty("poolFee", NullValueHandling = NullValueHandling.Ignore)]
         public decimal PoolFee { get; set; }
 
         [JsonProperty("hosts", NullValueHandling = NullValueHandling.Ignore)]
@@ -68,6 +74,9 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("coinName", NullValueHandling = NullValueHandling.Ignore)]
         public string CoinName { get; set; }
+
+        [JsonProperty("marketDataSources", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> MarketDataSources { get; set; }
 
         [JsonProperty("addressPatterns", NullValueHandling = NullValueHandling.Ignore)]
         public List<string> AddressPatterns { get; set; }
