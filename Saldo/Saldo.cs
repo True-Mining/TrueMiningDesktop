@@ -323,7 +323,7 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                exchangeRatePontosXmrToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60 * new Tools.LiquidityPrices(Crex24.XMRBTC_Orderbook, totalXMRmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * HashesPerPoint_xmr;
+                exchangeRatePontosXmrToMiningCoin = HashesPerPoint_xmr * secondsPerAveragehashrateReportInterval * (XMR_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
                 AccumulatedBalance_Points_rvn =
                 PoolAPI.RVN_nanopool.pointsHistory_user
@@ -335,7 +335,7 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                exchangeRatePontosRvnToMiningCoin = RVN_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60 * new Tools.LiquidityPrices(Crex24.RVNBTC_Orderbook, totalRVNmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * HashesPerPoint_rvn;
+                exchangeRatePontosRvnToMiningCoin = HashesPerPoint_rvn * secondsPerAveragehashrateReportInterval * (RVN_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
                 AccumulatedBalance_Coins = Decimal.Round((totalXMRmineradoTrueMining * Decimal.Divide(new Tools.LiquidityPrices(Crex24.XMRBTC_Orderbook, totalXMRmineradoTrueMining).SellPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_xmr, sumHashrate_tm_xmr)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) + (totalRVNmineradoTrueMining * Decimal.Divide(new Tools.LiquidityPrices(Crex24.RVNBTC_Orderbook, totalRVNmineradoTrueMining).SellPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_rvn, sumHashrate_tm_rvn)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee), 5);
 

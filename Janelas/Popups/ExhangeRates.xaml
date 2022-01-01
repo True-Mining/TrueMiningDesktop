@@ -5,44 +5,70 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TrueMiningDesktop.Janelas.Popups" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Height="275" Width="765" Topmost="True" ResizeMode="NoResize" WindowStyle="None" BorderThickness="1,1,1,1" BorderBrush="#FF2E2E2E" MouseDown="Down" MouseMove="Move" MouseUp="Up">
+        Height="300" Width="775" Topmost="True" ResizeMode="NoResize" WindowStyle="None" BorderThickness="1,1,1,1" BorderBrush="#FF2E2E2E" MouseDown="Down" MouseMove="Move" MouseUp="Up">
     <Grid>
         <ProgressBar x:Name="loadingVisualElement"  Style="{StaticResource MaterialDesignCircularProgressBar}" VerticalAlignment="Center" HorizontalAlignment="Center" Height="150" Width="150" Foreground="#992196F3" Value="0" IsIndeterminate="True" Visibility="Visible" />
         <WrapPanel x:Name="AllContent" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
                 <WrapPanel Margin="0,15,0,0">
                     <materialDesign:PackIcon Width="40" Height="40" Kind="Coins" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                    <Label Content="Point" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="RandomX Point" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="22" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
                     <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
                 <WrapPanel Margin="35,10,0,0">
+                    <Label Content="{Binding PointRandomXToCoinRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                     <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding PointToCoinRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
                     <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding PointToBTCRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="{Binding PointRandomXToBTCRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
                     <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding PointToUSDRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="{Binding PointRandomXToUSDRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                </WrapPanel>
+            </WrapPanel>
+            <WrapPanel Orientation="Vertical" Width="250" Height="250">
+                <WrapPanel Margin="0,15,0,0">
+                    <materialDesign:PackIcon Width="40" Height="40" Kind="Coins" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
+                    <Label Content="KawPow Point" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="22" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                </WrapPanel>
+                <WrapPanel Margin="30,10,0,0">
+                    <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                </WrapPanel>
+                <Separator Width="200" Margin="25,2,0,2" />
+                <WrapPanel Margin="35,10,0,0">
+                    <Label Content="{Binding PointKawPowToCoinRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                </WrapPanel>
+                <WrapPanel Margin="35,10,0,0">
+                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding PointKawPowToBTCRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                </WrapPanel>
+                <WrapPanel Margin="35,10,0,0">
+                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding PointKawPowToUSDRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
             </WrapPanel>
             <WrapPanel Orientation="Vertical" Width="250" Height="250">
                 <WrapPanel Margin="0,15,0,0">
                     <materialDesign:PackIcon Width="40" Height="40" Kind="CoinsOutline" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="22" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="30,10,0,0">
                     <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <Separator Width="200" Margin="25,2,0,2" />
                 <WrapPanel Margin="35,10,0,0">
-                    <Label Content="Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding CoinToPointRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="{Binding CoinToPointRandomXRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="RandomX Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
+                </WrapPanel>
+                <WrapPanel Margin="35,10,0,0">
+                    <Label Content="{Binding CoinToPointKawPowRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
+                    <Label Content="KawPow Points" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                 </WrapPanel>
                 <WrapPanel Margin="35,10,0,0">
                     <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
@@ -51,28 +77,6 @@
                 <WrapPanel Margin="35,10,0,0">
                     <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
                     <Label Content="{Binding CoinToUSDRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
-                </WrapPanel>
-            </WrapPanel>
-            <WrapPanel Orientation="Vertical" Width="250" Height="250">
-                <WrapPanel Margin="0,15,0,0">
-                    <materialDesign:PackIcon Width="40" Height="40" Kind="Bitcoin" HorizontalAlignment="Stretch" TextBlock.Foreground="#FF404040" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Grid.IsSharedSizeScope="True" Margin="25,0,0,0" Background="#02FFFFFF" />
-                    <Label Content="Bitcoin" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="25" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                </WrapPanel>
-                <WrapPanel Margin="30,10,0,0">
-                    <Label Content="1 unit is equals to:" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                </WrapPanel>
-                <Separator Width="200" Margin="25,2,0,2" />
-                <WrapPanel Margin="35,10,0,0">
-                    <Label Content="{Binding CoinName}" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding BTCToCoinRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
-                </WrapPanel>
-                <WrapPanel Margin="35,10,0,0">
-                    <Label Content="BTC" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding BTCToBTCRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
-                </WrapPanel>
-                <WrapPanel Margin="35,10,0,0">
-                    <Label Content="U$" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontSize="14.5" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" />
-                    <Label Content="{Binding BTCToUSDRate}" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" Foreground="#FF404040" IsEnabled="True" VerticalContentAlignment="Center" FontSize="14.5" />
                 </WrapPanel>
             </WrapPanel>
         </WrapPanel>
