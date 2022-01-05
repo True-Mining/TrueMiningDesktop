@@ -109,7 +109,6 @@ namespace TrueMiningDesktop.Server
         private static DateTime lastUpdated = DateTime.Now.AddMinutes(-10);
 
         private static readonly int secondsPerAveragehashrateReportInterval = 60 * 10;
-        public decimal pointsMultiplier = secondsPerAveragehashrateReportInterval * 16;
         public int hashesToCompare = 1000;
 
         public void UpdateBalances()
