@@ -72,8 +72,8 @@ namespace TrueMiningDesktop.Server
         [JsonProperty("shareMmc", NullValueHandling = NullValueHandling.Ignore)]
         public short ShareMmc { get; set; }
 
-        [JsonProperty("defaultHashMu", NullValueHandling = NullValueHandling.Ignore)]
-        public string DefaultHashMu { get; set; }
+        [JsonProperty("defaultHashMuString", NullValueHandling = NullValueHandling.Ignore)]
+        public string DefaultHashMuString { get; set; }
 
         [JsonProperty("defaultHashMuCoef", NullValueHandling = NullValueHandling.Ignore)]
         public short DefaultHashMuCoef { get; set; }
