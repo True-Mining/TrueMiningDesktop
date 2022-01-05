@@ -65,6 +65,12 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
         public string Password { get; set; }
+
+        [JsonProperty("shareCoef", NullValueHandling = NullValueHandling.Ignore)]
+        public decimal ShareCoef { get; set; }
+
+        [JsonProperty("shareMmc", NullValueHandling = NullValueHandling.Ignore)]
+        public short ShareMmc { get; set; }
     }
 
     public partial class PaymentCoin
