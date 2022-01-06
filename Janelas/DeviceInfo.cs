@@ -58,6 +58,7 @@ namespace TrueMiningDesktop.Janelas
         public string MiningAlgo { get; set; }
 
         private decimal hashrateValue_raw = -1;
+
         public decimal HashrateValue_raw
         {
             get => hashrateValue_raw;
@@ -72,17 +73,17 @@ namespace TrueMiningDesktop.Janelas
                     HashrateString = value / miningCoin.DefaultHashMuCoef + ' ' + miningCoin.DefaultHashMuString;
                 }
 
-
                 _ = Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); }));
             }
         }
 
-
         private decimal hashrateValue = -1;
+
         public decimal HashrateValue
         { get => hashrateValue; set { hashrateValue = value; Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); })); } }
 
         private string hashrateString = "0 H/s";
+
         public string HashrateString
         { get => hashrateString; set { hashrateString = value; Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); })); } }
 

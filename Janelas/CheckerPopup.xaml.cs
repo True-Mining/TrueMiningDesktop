@@ -116,7 +116,7 @@ namespace TrueMiningDesktop.Janelas
                     FileName = "Updating software parameters";
                     SoftwareParameters.Update(uri);
 
-                    if (!((File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") || DateTime.UtcNow > new DateTime(2022, 2, 1) || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates)) && (toCheck == "all" || toCheck == "TrueMining"))
+                    if (!((File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") || DateTime.UtcNow > new DateTime(2022, 2, 1)) || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates)) && (toCheck == "all" || toCheck == "TrueMining"))
                     {
                         List<FileToDownload> DlList = new();
 

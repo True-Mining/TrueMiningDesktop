@@ -12,7 +12,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             InitializeComponent();
             DataContext = User.Settings.Device.opencl;
-
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)

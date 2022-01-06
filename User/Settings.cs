@@ -106,7 +106,7 @@ namespace TrueMiningDesktop.User
                     User.Payment_CoinsList = up.Payment_CoinsList;
                     User.PayCoin = up.PayCoin;
                     User.Payment_Coin = up.Payment_Coin;
-                    if (up.Payment_Coin == null &&  up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
+                    if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                     User.Payment_Wallet = up.Payment_Wallet;
                     User.LICENSE_read = up.LICENSE_read;
                 }
