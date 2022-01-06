@@ -83,6 +83,9 @@ namespace TrueMiningDesktop.User
                 if (File.Exists("configsDevices.txt"))
                 {
                     Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"));
+                    if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
+                    if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
+                    if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
                 }
 
                 if (File.Exists("configsUser.txt"))
@@ -157,7 +160,7 @@ namespace TrueMiningDesktop.User
 
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
-        public List<string> AlgorithmsList { get; set; } = new();
+        public List<string> AlgorithmsList { get; set; } = new List<string>() { "RandomX" };
         public int Priority { get; set; } = 1;
         public int MaxUsageHint { get; set; } = 100;
         public int Threads { get; set; } = 0;
@@ -172,8 +175,8 @@ namespace TrueMiningDesktop.User
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
 
         public bool Autoconfig { get; set; } = true;
-        public string Algorithm { get; set; } = "RandomX";
-        public List<string> AlgorithmsList { get; set; } = new List<string>();
+        public string Algorithm { get; set; } = "KawPow";
+        public List<string> AlgorithmsList { get; set; } = new List<string>() { "KawPow", "RandomX" };
         public bool NVML { get; set; } = true;
     }
 
@@ -185,8 +188,8 @@ namespace TrueMiningDesktop.User
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
 
         public bool Autoconfig { get; set; } = true;
-        public string Algorithm { get; set; } = "RandomX";
-        public List<string> AlgorithmsList { get; set; } = new List<string>();
+        public string Algorithm { get; set; } = "KawPow";
+        public List<string> AlgorithmsList { get; set; } = new List<string>() { "KawPow", "RandomX" };
         public bool Cache { get; set; } = true;
     }
 
