@@ -33,10 +33,10 @@ namespace TrueMiningDesktop.ViewModel
 
             if ((bool)ovDeviceIsSelected.IsChecked)
             {
-                if (data.Hashrate > 0)
+                if (data.HashrateValue_raw > 0)
                 {
                     ovHashrate.FontSize = 18;
-                    ovHashrate.Content = data.Hashrate.ToString() + " H/s";
+                    ovHashrate.Content = data.HashrateString;
                 }
                 else
                 {

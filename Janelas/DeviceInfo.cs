@@ -1,5 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System;
+using System.Linq;
 using TrueMiningDesktop.Core;
 using TrueMiningDesktop.ViewModel;
 
@@ -18,7 +19,7 @@ namespace TrueMiningDesktop.Janelas
             BackendName = backendName;
             DeviceName = name;
             MiningAlgo = miningAlgo;
-            Hashrate = hashrate;
+            HashrateValue_raw = hashrate;
             IsSelected = isSelected;
             IconKind = iconKind;
 
@@ -34,7 +35,7 @@ namespace TrueMiningDesktop.Janelas
 
         private void HashrateUpdated(object sender, EventArgs e)
         {
-            Hashrate = hashrate_timer.Hashrate;
+            HashrateValue_raw = hashrate_timer.Hashrate;
         }
 
         protected virtual void OnChangedDevInfo(EventArgs e)
@@ -56,20 +57,44 @@ namespace TrueMiningDesktop.Janelas
         public string DeviceName { get; private set; }
         public string MiningAlgo { get; set; }
 
-        private decimal hashrate = -1;
+        private decimal hashrateValue_raw = -1;
+        public decimal HashrateValue_raw
+        {
+            get => hashrateValue_raw;
+            set
+            {
+                hashrateValue_raw = value;
+                if (Server.SoftwareParameters.ServerConfig != null && Server.SoftwareParameters.ServerConfig.MiningCoins.Any(coin => coin.Algorithm.Equals(MiningAlgo, StringComparison.OrdinalIgnoreCase)))
+                {
+                    Server.MiningCoin miningCoin = Server.SoftwareParameters.ServerConfig.MiningCoins.First(coin => coin.Algorithm.Equals(MiningAlgo, StringComparison.OrdinalIgnoreCase));
 
-        public decimal Hashrate
-        { get { return hashrate; } set { hashrate = value; Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); })); } }
+                    HashrateValue = value / miningCoin.DefaultHashMuCoef;
+                    HashrateString = value / miningCoin.DefaultHashMuCoef + ' ' + miningCoin.DefaultHashMuString;
+                }
+
+
+                _ = Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); }));
+            }
+        }
+
+
+        private decimal hashrateValue = -1;
+        public decimal HashrateValue
+        { get => hashrateValue; set { hashrateValue = value; Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); })); } }
+
+        private string hashrateString = "0 H/s";
+        public string HashrateString
+        { get => hashrateString; set { hashrateString = value; Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); })); } }
 
         private bool isSelected = true;
 
         public bool IsSelected
-        { get { return isSelected; } set { isSelected = value; OnChanged(null); } }
+        { get => isSelected; set { isSelected = value; OnChanged(null); } }
 
         private bool isMining = true;
 
         public bool IsMining
-        { get { return isMining; } set { isMining = value; if (isMining) { hashrate_timer.Start(); } else { hashrate_timer.Stop(); } } }
+        { get => isMining; set { isMining = value; if (isMining) { hashrate_timer.Start(); } else { hashrate_timer.Stop(); } } }
 
         public PackIconKind IconKind { get; set; }
     }
