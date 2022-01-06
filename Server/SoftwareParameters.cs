@@ -67,16 +67,16 @@ namespace TrueMiningDesktop.Server
         public string Password { get; set; }
 
         [JsonProperty("shareCoef", NullValueHandling = NullValueHandling.Ignore)]
-        public decimal ShareCoef { get; set; }
+        public decimal ShareCoef { get; set; } = 1;
 
         [JsonProperty("shareMmc", NullValueHandling = NullValueHandling.Ignore)]
-        public short ShareMmc { get; set; }
+        public short ShareMmc { get; set; } = 1;
 
         [JsonProperty("defaultHashMuString", NullValueHandling = NullValueHandling.Ignore)]
-        public string DefaultHashMuString { get; set; }
+        public string DefaultHashMuString { get; set; } = "H/s";
 
         [JsonProperty("defaultHashMuCoef", NullValueHandling = NullValueHandling.Ignore)]
-        public short DefaultHashMuCoef { get; set; }
+        public short DefaultHashMuCoef { get; set; } = 1;
     }
 
     public partial class PaymentCoin
