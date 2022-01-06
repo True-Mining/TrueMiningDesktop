@@ -86,6 +86,10 @@ namespace TrueMiningDesktop.User
                     if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
                     if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
                     if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
+
+                    Device.cpu.AlgorithmsList = Device.cpu.AlgorithmsList.Distinct().ToList();
+                    Device.cuda.AlgorithmsList = Device.cuda.AlgorithmsList.Distinct().ToList();
+                    Device.opencl.AlgorithmsList = Device.opencl.AlgorithmsList.Distinct().ToList();
                 }
 
                 if (File.Exists("configsUser.txt"))
@@ -116,6 +120,9 @@ namespace TrueMiningDesktop.User
                     if (File.Exists("configsDevices.txt.backup"))
                     {
                         Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt.backup"));
+                        if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
+                        if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
+                        if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
                     }
 
                     if (File.Exists("configsUser.txt.backup"))
@@ -160,7 +167,7 @@ namespace TrueMiningDesktop.User
 
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "RandomX";
-        public List<string> AlgorithmsList { get; set; } = new List<string>() { "RandomX" };
+        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "RandomX" });
         public int Priority { get; set; } = 1;
         public int MaxUsageHint { get; set; } = 100;
         public int Threads { get; set; } = 0;
@@ -176,7 +183,7 @@ namespace TrueMiningDesktop.User
 
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "KawPow";
-        public List<string> AlgorithmsList { get; set; } = new List<string>() { "KawPow", "RandomX" };
+        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
         public bool NVML { get; set; } = true;
     }
 
@@ -189,7 +196,7 @@ namespace TrueMiningDesktop.User
 
         public bool Autoconfig { get; set; } = true;
         public string Algorithm { get; set; } = "KawPow";
-        public List<string> AlgorithmsList { get; set; } = new List<string>() { "KawPow", "RandomX" };
+        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
         public bool Cache { get; set; } = true;
     }
 
