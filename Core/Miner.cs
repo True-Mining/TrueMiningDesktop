@@ -202,7 +202,7 @@ namespace TrueMiningDesktop.Core
                 {
                     if (hashrates.ContainsKey(device.BackendName.ToLowerInvariant()))
                     {
-                        device.Hashrate = hashrates[device.BackendName.ToLowerInvariant()];
+                        device.HashrateValue_raw = hashrates[device.BackendName.ToLowerInvariant()];
                     }
                 });
 

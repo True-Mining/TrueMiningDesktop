@@ -90,7 +90,7 @@ namespace TrueMiningDesktop.Janelas
                     if (window.Title == "Calculator") { window.Close(); }
                 }
 
-                new Calculator(saldo.HashesPerPoint_xmr, saldo.exchangeRatePontosXmrToMiningCoin) { Title = "Calculator" }.Show();
+                new Calculator() { Title = "Calculator" }.Show();
             }
             catch { }
         }

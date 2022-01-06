@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
-    <AssemblyVersion>4.12.1</AssemblyVersion>
-    <FileVersion>4.12.1-beta</FileVersion>
+    <AssemblyVersion>4.12.3</AssemblyVersion>
+    <FileVersion>4.12.3-beta</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <StartupObject>TrueMiningDesktop.App</StartupObject>
     <AssemblyName>True Mining Desktop</AssemblyName>
@@ -20,7 +20,7 @@
     <PackageIcon>logo.png</PackageIcon>
     <Description>True Mining Desktop Mining Software</Description>
     <RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
-    <Version>4.12.1</Version>
+    <Version>4.12.3</Version>
     <PackageProjectUrl>https://truemining.online</PackageProjectUrl>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <PackageId>TrueMiningDesktop</PackageId>
