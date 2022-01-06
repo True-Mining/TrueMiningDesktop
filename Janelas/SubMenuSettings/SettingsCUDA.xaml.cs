@@ -23,5 +23,9 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             WrapPanel_ManualConfig.IsEnabled = true;
         }
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (User.Settings.Device.cuda.AlgorithmsList.Contains(AlgorithmComboBox.Text)) { User.Settings.Device.cuda.Algorithm = AlgorithmComboBox.Text; }
+        }
     }
 }

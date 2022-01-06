@@ -12,6 +12,7 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             InitializeComponent();
             DataContext = User.Settings.Device.opencl;
+
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -22,6 +23,11 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             WrapPanel_ManualConfig.IsEnabled = true;
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (User.Settings.Device.opencl.AlgorithmsList.Contains(AlgorithmComboBox.Text)) { User.Settings.Device.opencl.Algorithm = AlgorithmComboBox.Text; }
         }
     }
 }
