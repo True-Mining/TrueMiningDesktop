@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -145,18 +146,18 @@ namespace TrueMiningDesktop.Server
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_user_raw_new = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef")); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_user_raw_new = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { Crex24.RVNBTC_Orderbook = new PoolAPI.Orderbook() { buyLevels = new List<PoolAPI.BuyLevel>() { new PoolAPI.BuyLevel() { price = rvnPrice, volume = 1 } }, sellLevels = new List<PoolAPI.SellLevel>() { new PoolAPI.SellLevel() { price = rvnPrice, volume = 1 } } }; return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare)); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef")); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
-                    getAPIsTask.Add(new Task<Action>(() => { Crex24.PaymentCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + "-BTC")); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"))).BTCUSD.ask), 2); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.PaymentCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + "-BTC"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture })).BTCUSD.ask), 2); return null; }));
 
                     foreach (Task task in getAPIsTask)
                     {

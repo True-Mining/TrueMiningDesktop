@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using TrueMiningDesktop.Core;
@@ -154,7 +155,7 @@ namespace TrueMiningDesktop.Server
                         lastUpdated = DateTime.Now;
                         try
                         {
-                            SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor)); //update parameters
+                            SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); //update parameters
                             trying = false;
                         }
                         catch

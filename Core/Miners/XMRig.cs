@@ -298,7 +298,7 @@ namespace TrueMiningDesktop.Core.XMRig
             try
             {
                 string backendPureData = new WebClient().DownloadString("http://localhost:" + APIport + "/2/backends");
-                dynamic backendsAPI = JsonConvert.DeserializeObject(backendPureData);
+                dynamic backendsAPI = JsonConvert.DeserializeObject(backendPureData, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
 
                 Dictionary<string, decimal> hashrates = new();
 

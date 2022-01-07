@@ -70,7 +70,7 @@ namespace TrueMiningDesktop.Janelas
                     Server.MiningCoin miningCoin = Server.SoftwareParameters.ServerConfig.MiningCoins.First(coin => coin.Algorithm.Equals(MiningAlgo, StringComparison.OrdinalIgnoreCase));
 
                     HashrateValue = value / miningCoin.DefaultHashMuCoef;
-                    HashrateString = value / miningCoin.DefaultHashMuCoef + ' ' + miningCoin.DefaultHashMuString;
+                    HashrateString = Math.Round(value / miningCoin.DefaultHashMuCoef, 2) + " " + miningCoin.DefaultHashMuString;
                 }
 
                 _ = Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); }));

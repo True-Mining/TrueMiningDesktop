@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,7 +83,7 @@ namespace TrueMiningDesktop.User
             {
                 if (File.Exists("configsDevices.txt"))
                 {
-                    Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"));
+                    Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
                     if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
                     if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
                     if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
@@ -94,7 +95,7 @@ namespace TrueMiningDesktop.User
 
                 if (File.Exists("configsUser.txt"))
                 {
-                    UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt"));
+                    UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
                     User.AutostartMining = up.AutostartMining;
                     User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                     User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
@@ -119,7 +120,7 @@ namespace TrueMiningDesktop.User
                 {
                     if (File.Exists("configsDevices.txt.backup"))
                     {
-                        Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt.backup"));
+                        Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt.backup"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
                         if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
                         if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
                         if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
@@ -127,7 +128,7 @@ namespace TrueMiningDesktop.User
 
                     if (File.Exists("configsUser.txt.backup"))
                     {
-                        UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt.backup"));
+                        UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt.backup"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
                         User.AutostartMining = up.AutostartMining;
                         User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                         User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
