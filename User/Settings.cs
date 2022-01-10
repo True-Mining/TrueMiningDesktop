@@ -112,6 +112,18 @@ namespace TrueMiningDesktop.User
                     User.LICENSE_read = up.LICENSE_read;
                 }
 
+                if (!File.Exists(@"Miners\xmrig\NewAlgo-KawPow.txt"))
+                {
+                    Device.cuda.Algorithm = "KawPow";
+                    Device.opencl.Algorithm = "KawPow";
+
+                    if (!Directory.Exists(@"Miners")) { Directory.CreateDirectory(@"Miners"); }
+                    if (!Directory.Exists(@"Miners\xmrig")) { Directory.CreateDirectory(@"Miners\xmrig"); }
+                    File.WriteAllText(@"Miners\xmrig\NewAlgo-KawPow.txt", "New mining algorithm: KawPow. True Mining automatically set it as default algo in your OPENCL and CUDA devices. Do not delete this file");
+
+                    WriteSettings();
+                }
+
                 LoadingSettings = false;
             }
             catch
