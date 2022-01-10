@@ -55,7 +55,16 @@ namespace TrueMiningDesktop.Janelas
 
         public string BackendName { get; private set; }
         public string DeviceName { get; private set; }
-        public string MiningAlgo { get; set; }
+        public string miningAlgo;
+        public string MiningAlgo
+        {
+            get => miningAlgo;
+            set
+            {
+                miningAlgo = value;
+                _ = Dispatcher.BeginInvoke((Action)(() => { OverviewDeviceSimplified.RefreshDataContext(this); }));
+            }
+        }
 
         private decimal hashrateValue_raw = -1;
 

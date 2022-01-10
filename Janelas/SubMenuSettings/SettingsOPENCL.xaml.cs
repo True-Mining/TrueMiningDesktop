@@ -23,10 +23,5 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             WrapPanel_ManualConfig.IsEnabled = true;
         }
-
-        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (User.Settings.Device.opencl.AlgorithmsList.Contains(AlgorithmComboBox.Text)) { User.Settings.Device.opencl.Algorithm = AlgorithmComboBox.Text; }
-        }
     }
 }

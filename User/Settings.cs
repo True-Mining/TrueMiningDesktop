@@ -179,7 +179,9 @@ namespace TrueMiningDesktop.User
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
 
         public bool Autoconfig { get; set; } = true;
-        public string Algorithm { get; set; } = "RandomX";
+
+        private string algorithm = "RandomX";
+        public string Algorithm { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.cpu.MiningAlgo = value; Settings.SettingsSaver(); } } }
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "RandomX" });
         public int Priority { get; set; } = 1;
         public int MaxUsageHint { get; set; } = 100;
@@ -195,7 +197,9 @@ namespace TrueMiningDesktop.User
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
 
         public bool Autoconfig { get; set; } = true;
-        public string Algorithm { get; set; } = "KawPow";
+
+        private string algorithm = "KawPow";
+        public string Algorithm { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.cuda.MiningAlgo = value; Settings.SettingsSaver(); } } }
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
         public bool NVML { get; set; } = true;
     }
@@ -204,11 +208,12 @@ namespace TrueMiningDesktop.User
     {
         private bool miningSelected = false;
 
-        public bool MiningSelected
-        { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
+        public bool MiningSelected { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
 
         public bool Autoconfig { get; set; } = true;
-        public string Algorithm { get; set; } = "KawPow";
+
+        private string algorithm = "KawPow";
+        public string Algorithm { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.opencl.MiningAlgo = value; Settings.SettingsSaver(); } } }
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
         public bool Cache { get; set; } = true;
     }
