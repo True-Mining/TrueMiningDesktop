@@ -69,10 +69,10 @@ namespace TrueMiningDesktop.Core
                                 //          IsMining = true;
                                 //          isTryingStartMining = false;
 
-                                Application.Current.Dispatcher.Invoke((Action)delegate
-                                {
+                               // Application.Current.Dispatcher.Invoke((Action)delegate
+                               // {
                                     ShowHideCLI();
-                                });
+                               // });
                             }
                             catch (Exception e) { MessageBox.Show(e.Message); isTryingStartMining = false; }
                         })
@@ -124,40 +124,54 @@ namespace TrueMiningDesktop.Core
             {
                 try
                 {
-                    try
-                    {
-                        Application.Current.Dispatcher.Invoke((Action)delegate
-                        {
-                            DateTime initializingTask = DateTime.UtcNow;
-                            while (Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(500); }
-                            //    Thread.Sleep(1000);
-                        });
-                    }
-                    catch { }
+                    DateTime initializingTask = DateTime.UtcNow;
 
-                    IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
-                    if (showCLI)
+                    while (true)
                     {
-                        if (Application.Current.MainWindow.IsVisible)
+                        bool continueWaiting = true;
+                        try
                         {
-                            XMRigMiners.ForEach(miner => miner.Show());
-                            Tools.ShowWindow(windowIdentifier, 1);
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                Application.Current.MainWindow.Focus();
+                                continueWaiting = Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
                             });
+                        }
+                        catch { }
+                        if (continueWaiting)
+                        {
+                            Thread.Sleep(500);
                         }
                         else
                         {
-                            XMRigMiners.ForEach(miner => miner.Show());
-                            Tools.ShowWindow(windowIdentifier, 2);
+                            break;
                         }
+
                     }
-                    else
+
+                    Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        XMRigMiners.ForEach(miner => miner.Hide());
-                        Tools.ShowWindow(windowIdentifier, 0);
-                    }
+                        IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
+                        if (showCLI)
+                        {
+                            if (Application.Current.MainWindow.IsVisible)
+                            {
+                                XMRigMiners.ForEach(miner => miner.Show());
+                                Tools.ShowWindow(windowIdentifier, 1);
+                                Application.Current.MainWindow.Focus();
+
+                            }
+                            else
+                            {
+                                XMRigMiners.ForEach(miner => miner.Show());
+                                Tools.ShowWindow(windowIdentifier, 2);
+                            }
+                        }
+                        else
+                        {
+                            XMRigMiners.ForEach(miner => miner.Hide());
+                            Tools.ShowWindow(windowIdentifier, 0);
+                        }
+                    });
                 }
                 catch { }
             });

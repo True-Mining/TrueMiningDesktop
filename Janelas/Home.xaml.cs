@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading.Tasks;
 using TrueMiningDesktop.Core;
 using TrueMiningDesktop.Server;
 
@@ -26,11 +27,11 @@ namespace TrueMiningDesktop.Janelas
         {
             if (Miner.IsMining && !Miner.IsStoppingMining)
             {
-                Miner.StopMiner();
+               new Task(() => Miner.StopMiner()).Start();
             }
             else if (!Miner.IsMining && !Miner.IsTryingStartMining && !Miner.IsStoppingMining)
             {
-                Miner.StartMiner();
+                new Task(() => Miner.StartMiner()).Start();
             }
         }
 
