@@ -11,9 +11,6 @@ namespace TrueMiningDesktop.Janelas.Popups
     /// </summary>
     public partial class Calculator : Window
     {
-        private readonly decimal HashesPerPoint;
-        private readonly decimal ExchangeRatePontosToMiningCoin;
-
         private readonly System.Timers.Timer timerUpdate = new(2000);
 
         public Calculator()

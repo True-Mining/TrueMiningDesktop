@@ -66,13 +66,7 @@ namespace TrueMiningDesktop.Core
                             {
                                 XMRigMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores da lista
 
-                                //          IsMining = true;
-                                //          isTryingStartMining = false;
-
-                               // Application.Current.Dispatcher.Invoke((Action)delegate
-                               // {
-                                    ShowHideCLI();
-                               // });
+                                ShowHideCLI();
                             }
                             catch (Exception e) { MessageBox.Show(e.Message); isTryingStartMining = false; }
                         })
@@ -145,7 +139,6 @@ namespace TrueMiningDesktop.Core
                         {
                             break;
                         }
-
                     }
 
                     Application.Current.Dispatcher.Invoke((Action)delegate
@@ -158,7 +151,6 @@ namespace TrueMiningDesktop.Core
                                 XMRigMiners.ForEach(miner => miner.Show());
                                 Tools.ShowWindow(windowIdentifier, 1);
                                 Application.Current.MainWindow.Focus();
-
                             }
                             else
                             {
