@@ -96,6 +96,7 @@ namespace TrueMiningDesktop.User
                 if (File.Exists("configsUser.txt"))
                 {
                     UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                    User.LICENSE_read = up.LICENSE_read;
                     User.AutostartMining = up.AutostartMining;
                     User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                     User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
@@ -109,7 +110,7 @@ namespace TrueMiningDesktop.User
                     User.Payment_Coin = up.Payment_Coin;
                     if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                     User.Payment_Wallet = up.Payment_Wallet;
-                    User.LICENSE_read = up.LICENSE_read;
+
                 }
 
                 if (!File.Exists(@"Miners\xmrig\NewAlgo-KawPow.txt"))
@@ -141,6 +142,7 @@ namespace TrueMiningDesktop.User
                     if (File.Exists("configsUser.txt.backup"))
                     {
                         UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt.backup"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                        User.LICENSE_read = up.LICENSE_read;
                         User.AutostartMining = up.AutostartMining;
                         User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                         User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
@@ -154,7 +156,6 @@ namespace TrueMiningDesktop.User
                         User.Payment_Coin = up.Payment_Coin;
                         if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                         User.Payment_Wallet = up.Payment_Wallet;
-                        User.LICENSE_read = up.LICENSE_read;
                     }
 
                     LoadingSettings = false;
