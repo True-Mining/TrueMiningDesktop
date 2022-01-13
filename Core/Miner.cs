@@ -14,6 +14,7 @@ namespace TrueMiningDesktop.Core
         public static DateTime StartedSince = holdTime.AddTicks(-holdTime.Ticks);
 
         public static List<XMRig.XMRig> XMRigMiners = new();
+        public static List<TRex.TRex> TRexMiners = new();
 
         public static void StartMiner(bool force = false)
         {
@@ -44,13 +45,17 @@ namespace TrueMiningDesktop.Core
 
                 Server.SoftwareParameters.ServerConfig.MiningCoins.ForEach(miningCoin =>
                 {
-                    if (Device.DevicesList.Any(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected))
+                    if (Device.DevicesList.Any(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (!device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))))
                     {
-                        XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected).ToList()));
+                        XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (!device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
                     }
-                }); // joga para uma List<XMRig.XMRig> todos os dispositivos separados por miningCoin. Possível bug: mais moedas com o mesmo algoritmo vão gerar mais moedas por dispositivo
+                    if (Device.cuda.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.cuda.IsSelected && !Device.cuda.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
+                    {
+                        TRexMiners.Add(new TRex.TRex(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) && !device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
+                    }
+                }); // joga para listas todos os dispositivos separados por miningCoin. Possível bug: mais moedas com o mesmo algoritmo vão gerar mais moedas por dispositivo
 
-                if ((Device.cpu.IsSelected || Device.opencl.IsSelected || Device.cuda.IsSelected) && (string.Equals(Device.cpu.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.opencl.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase) || string.Equals(Device.cuda.MiningAlgo, "RandomX", StringComparison.OrdinalIgnoreCase)))
+                if (Device.DevicesList.Any(device => Server.SoftwareParameters.ServerConfig.MiningCoins.Any(miningCoin => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase)) && device.IsSelected))
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -65,6 +70,8 @@ namespace TrueMiningDesktop.Core
                             try
                             {
                                 XMRigMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores da lista
+
+                                TRexMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores da lista
 
                                 ShowHideCLI();
                             }
@@ -92,6 +99,7 @@ namespace TrueMiningDesktop.Core
             System.Threading.Thread.Sleep(200);
 
             while (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
+            while (TRexMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
 
             if (IsMining || force)
             {
@@ -104,8 +112,10 @@ namespace TrueMiningDesktop.Core
             new System.Threading.Tasks.Task(() =>
             {
                 XMRigMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
+                TRexMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
 
                 XMRigMiners.Clear();
+                TRexMiners.Clear();
             })
             .Start();
         }
@@ -167,6 +177,60 @@ namespace TrueMiningDesktop.Core
                 }
                 catch { }
             });
+
+            TRexMiners.ForEach(miner =>
+            {
+                try
+                {
+                    DateTime initializingTask = DateTime.UtcNow;
+
+                    while (true)
+                    {
+                        bool continueWaiting = true;
+                        try
+                        {
+                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                continueWaiting = Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
+                            });
+                        }
+                        catch { }
+                        if (continueWaiting)
+                        {
+                            Thread.Sleep(500);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
+                        if (showCLI)
+                        {
+                            if (Application.Current.MainWindow.IsVisible)
+                            {
+                                TRexMiners.ForEach(miner => miner.Show());
+                                Tools.ShowWindow(windowIdentifier, 1);
+                                Application.Current.MainWindow.Focus();
+                            }
+                            else
+                            {
+                                TRexMiners.ForEach(miner => miner.Show());
+                                Tools.ShowWindow(windowIdentifier, 2);
+                            }
+                        }
+                        else
+                        {
+                            TRexMiners.ForEach(miner => miner.Hide());
+                            Tools.ShowWindow(windowIdentifier, 0);
+                        }
+                    });
+                }
+                catch { }
+            });
         }
 
         public static decimal GetHashrate(string alias = null)
@@ -176,6 +240,30 @@ namespace TrueMiningDesktop.Core
                 Dictionary<string, decimal> hashrates = new();
 
                 XMRigMiners.ForEach(miner =>
+                {
+                    try
+                    {
+                        Dictionary<string, decimal> temp_hashrates = miner.GetHasrates();
+
+                        if (temp_hashrates != null)
+                        {
+                            foreach (KeyValuePair<string, decimal> hashrate in temp_hashrates)
+                            {
+                                if (hashrates.ContainsKey(hashrate.Key.ToLowerInvariant()))
+                                {
+                                    hashrates[hashrate.Key.ToLowerInvariant()] += hashrate.Value;
+                                }
+                                else
+                                {
+                                    hashrates.Add(hashrate.Key.ToLowerInvariant(), hashrate.Value);
+                                }
+                            }
+                        }
+                    }
+                    catch { }
+                });
+
+                TRexMiners.ForEach(miner =>
                 {
                     try
                     {
@@ -402,7 +490,7 @@ namespace TrueMiningDesktop.Core
 
         public static void VerifyGeneralMiningState()
         {
-            if (XMRigMiners.Any(miner => miner.IsStoppingMining))
+            if (XMRigMiners.Any(miner => miner.IsStoppingMining) || TRexMiners.Any(miner => miner.IsStoppingMining))
             {
                 Miner.IsStoppingMining = true;
             }
@@ -410,7 +498,7 @@ namespace TrueMiningDesktop.Core
             {
                 Miner.IsStoppingMining = false;
             }
-            if (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !XMRigMiners.Any(miner => miner.IsMining))
+            if (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !XMRigMiners.Any(miner => miner.IsMining) || TRexMiners.Any(miner => miner.IsTryingStartMining) && !TRexMiners.Any(miner => miner.IsMining))
             {
                 Miner.IsTryingStartMining = true;
             }
@@ -418,7 +506,7 @@ namespace TrueMiningDesktop.Core
             {
                 Miner.IsTryingStartMining = false;
             }
-            if (XMRigMiners.Any(miner => miner.IsMining))
+            if (XMRigMiners.Any(miner => miner.IsMining) || TRexMiners.Any(miner => miner.IsMining))
             {
                 Miner.IsMining = true;
             }
