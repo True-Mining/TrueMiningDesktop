@@ -123,6 +123,7 @@ namespace TrueMiningDesktop.Core
         public static void ShowHideCLI()
         {
             bool showCLI = User.Settings.User.ShowCLI;
+            bool MainWindowFocused = Tools.ApplicationIsActivated();
 
             XMRigMiners.ForEach(miner =>
             {
@@ -156,7 +157,7 @@ namespace TrueMiningDesktop.Core
                         IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
                         if (showCLI)
                         {
-                            if (Application.Current.MainWindow.IsVisible)
+                            if (Application.Current.MainWindow.IsVisible && MainWindowFocused)
                             {
                                 XMRigMiners.ForEach(miner => miner.Show());
                                 Tools.ShowWindow(windowIdentifier, 1);
@@ -164,7 +165,7 @@ namespace TrueMiningDesktop.Core
                             }
                             else
                             {
-                                XMRigMiners.ForEach(miner => miner.Show());
+                                TRexMiners.ForEach(miner => miner.TRexProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized);
                                 Tools.ShowWindow(windowIdentifier, 2);
                             }
                         }
@@ -191,7 +192,7 @@ namespace TrueMiningDesktop.Core
                         {
                             Application.Current.Dispatcher.Invoke((Action)delegate
                             {
-                                continueWaiting = Tools.FindWindow(null, miner.WindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
+                                continueWaiting = Tools.FindWindow(null, miner.TRexProcess.MainWindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
                             });
                         }
                         catch { }
@@ -207,10 +208,10 @@ namespace TrueMiningDesktop.Core
 
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        IntPtr windowIdentifier = Tools.FindWindow(null, miner.WindowTitle);
+                        IntPtr windowIdentifier = Tools.FindWindow(null, miner.TRexProcess.MainWindowTitle);
                         if (showCLI)
                         {
-                            if (Application.Current.MainWindow.IsVisible)
+                            if (Application.Current.MainWindow.IsVisible && MainWindowFocused)
                             {
                                 TRexMiners.ForEach(miner => miner.Show());
                                 Tools.ShowWindow(windowIdentifier, 1);
@@ -218,7 +219,7 @@ namespace TrueMiningDesktop.Core
                             }
                             else
                             {
-                                TRexMiners.ForEach(miner => miner.Show());
+                                TRexMiners.ForEach(miner => miner.TRexProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized);
                                 Tools.ShowWindow(windowIdentifier, 2);
                             }
                         }
