@@ -66,7 +66,7 @@ namespace TrueMiningDesktop.Core.TRex
         public readonly ProcessStartInfo TRexProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\TRex\" + @"t-rex.exe");
         private string AlgoBackendsString = null;
         public string WindowTitle = "True Mining running TRex";
-        private int APIport = 20210;
+        private int APIport = 20220;
         private bool IsInTRexexitEvent = false;
         private DateTime startedSince = DateTime.Now.AddYears(-1);
 
@@ -190,7 +190,7 @@ namespace TrueMiningDesktop.Core.TRex
 
                     IsTryingStartMining = true;
 
-                    if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(7000); }
+                    if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(30000); } else { Thread.Sleep(10000); }
 
                     if (IsMining && !IsStoppingMining)
                     {
@@ -359,14 +359,13 @@ namespace TrueMiningDesktop.Core.TRex
 
         public void CreateConfigFile(MiningCoin miningCoin)
         {
-            APIport = 20210 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin);
+            APIport = 20220 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin);
 
             AlgoBackendsString = miningCoin.Algorithm.ToLowerInvariant() + '-' + string.Join(null, Backends.Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.BackendName.ToLowerInvariant())));
 
             WindowTitle = "TRex - " + miningCoin.Algorithm + " - " + string.Join(", ", Backends.Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.BackendName.ToLowerInvariant())));
 
             string Algorithm = miningCoin.Algorithm.ToString().ToLowerInvariant();
-            if (Algorithm.Equals("RandomX", StringComparison.OrdinalIgnoreCase)) { Algorithm = "rx/0"; }
 
             StringBuilder conf = new();
             conf.AppendLine("{");
