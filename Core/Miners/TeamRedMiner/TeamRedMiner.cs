@@ -16,11 +16,13 @@ using TrueMiningDesktop.User;
 
 namespace TrueMiningDesktop.Core.TeamRedMiner
 {
-    public class TRex
+    public class TeamRedMiner
     {
         private bool isMining = false;
         private bool isTryingStartMining = true;
         private bool isStoppingMining = false;
+
+        private string Arguments = "";
 
         public bool IsMining
         {
@@ -62,15 +64,15 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
         }
 
         private List<DeviceInfo> Backends = new();
-        public readonly Process TRexProcess = new();
-        public readonly ProcessStartInfo TRexProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\TRex\" + @"teamredminer.exe");
+        public readonly Process TeamRedMinerProcess = new();
+        public readonly ProcessStartInfo TeamRedMinerProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\TeamRedMiner\" + @"teamredminer.exe");
         private string AlgoBackendsString = null;
-        public string WindowTitle = "True Mining running TRex";
+        public string WindowTitle = "True Mining running TeamRedMiner";
         private int APIport = 20220;
-        private bool IsInTRexexitEvent = false;
+        private bool IsInTeamRedMinerexitEvent = false;
         private DateTime startedSince = DateTime.Now.AddYears(-1);
 
-        public TRex(List<DeviceInfo> backends)
+        public TeamRedMiner(List<DeviceInfo> backends)
         {
             Backends = backends;
 
@@ -83,29 +85,34 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
         {
             IsTryingStartMining = true;
 
-            if (TRexProcess.StartInfo != TRexProcessStartInfo)
+            if (TeamRedMinerProcess.StartInfo != TeamRedMinerProcessStartInfo)
             {
-                TRexProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\TRex\";
-                TRexProcessStartInfo.Arguments = "--config config-" + AlgoBackendsString + ".json";
-                TRexProcessStartInfo.UseShellExecute = true;
-                TRexProcessStartInfo.RedirectStandardError = false;
-                TRexProcessStartInfo.RedirectStandardOutput = false;
-                TRexProcessStartInfo.CreateNoWindow = false;
-                TRexProcessStartInfo.ErrorDialog = false;
-                TRexProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                TRexProcess.StartInfo = TRexProcessStartInfo;
+                TeamRedMinerProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\TeamRedMiner\";
+                TeamRedMinerProcessStartInfo.Arguments = "";
+                TeamRedMinerProcessStartInfo.UseShellExecute = true;
+                TeamRedMinerProcessStartInfo.RedirectStandardError = false;
+                TeamRedMinerProcessStartInfo.RedirectStandardOutput = false;
+                TeamRedMinerProcessStartInfo.CreateNoWindow = false;
+                TeamRedMinerProcessStartInfo.ErrorDialog = false;
+                TeamRedMinerProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                TeamRedMinerProcess.StartInfo = TeamRedMinerProcessStartInfo;
+
+                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_ALLOC_PERCENT", "100"); }
+                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_SINGLE_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_SINGLE_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_SINGLE_ALLOC_PERCENT", "100"); }
+                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_HEAP_SIZE")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_HEAP_SIZE"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_HEAP_SIZE", "100"); }
+                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_USE_SYNC_OBJECTS")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_USE_SYNC_OBJECTS"] = "1"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_USE_SYNC_OBJECTS", "1"); }
             }
 
-            TRexProcess.Exited -= TRexProcess_Exited;
-            TRexProcess.Exited += TRexProcess_Exited;
-            TRexProcess.EnableRaisingEvents = true;
+            TeamRedMinerProcess.Exited -= TeamRedMinerProcess_Exited;
+            TeamRedMinerProcess.Exited += TeamRedMinerProcess_Exited;
+            TeamRedMinerProcess.EnableRaisingEvents = true;
 
             try
             {
-                TRexProcess.ErrorDataReceived -= TRexProcess_ErrorDataReceived;
-                TRexProcess.ErrorDataReceived += TRexProcess_ErrorDataReceived;
+                TeamRedMinerProcess.ErrorDataReceived -= TeamRedMinerProcess_ErrorDataReceived;
+                TeamRedMinerProcess.ErrorDataReceived += TeamRedMinerProcess_ErrorDataReceived;
 
-                TRexProcess.Start();
+                TeamRedMinerProcess.Start();
 
                 new Task(() =>
                 {
@@ -114,7 +121,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                         try
                         {
                             Thread.Sleep(100);
-                            DateTime time = TRexProcess.StartTime;
+                            DateTime time = TeamRedMinerProcess.StartTime;
                             if (time.Ticks > 100) { break; }
                         }
                         catch { }
@@ -152,7 +159,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                             if (Tools.AddedTrueMiningDestopToWinDefenderExclusions)
                             {
                                 IsTryingStartMining = false;
-                                MessageBox.Show("TRex can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
+                                MessageBox.Show("TeamRedMiner can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
                             }
                             else
                             {
@@ -169,24 +176,24 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                     catch (Exception ee)
                     {
                         IsTryingStartMining = false;
-                        MessageBox.Show("TRex failed to start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
+                        MessageBox.Show("TeamRedMiner failed to start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + ee.Message);
                     }
                 }
             }
         }
 
-        private void TRexProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        private void TeamRedMinerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Tools.KillProcess(TRexProcess.ProcessName); Stop();
+            Tools.KillProcess(TeamRedMinerProcess.ProcessName); Stop();
         }
 
-        private void TRexProcess_Exited(object sender, EventArgs e)
+        private void TeamRedMinerProcess_Exited(object sender, EventArgs e)
         {
             if (IsMining && !IsStoppingMining)
             {
-                if (!IsInTRexexitEvent)
+                if (!IsInTeamRedMinerexitEvent)
                 {
-                    IsInTRexexitEvent = true;
+                    IsInTeamRedMinerexitEvent = true;
 
                     IsTryingStartMining = true;
 
@@ -197,7 +204,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                         Start();
                     }
 
-                    IsInTRexexitEvent = false;
+                    IsInTeamRedMinerexitEvent = false;
                 }
             }
         }
@@ -214,8 +221,8 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 {
                     try
                     {
-                        TRexProcess.CloseMainWindow();
-                        TRexProcess.WaitForExit();
+                        TeamRedMinerProcess.CloseMainWindow();
+                        TeamRedMinerProcess.WaitForExit();
 
                         closed = true;
                         IsMining = false;
@@ -223,7 +230,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                     }
                     catch
                     {
-                        TRexProcess.Kill(true);
+                        TeamRedMinerProcess.Kill(true);
 
                         closed = true;
                         IsMining = false;
@@ -237,8 +244,8 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 {
                     try
                     {
-                        TRexProcess.Kill(true);
-                        Tools.KillProcessByName(TRexProcess.ProcessName);
+                        TeamRedMinerProcess.Kill(true);
+                        Tools.KillProcessByName(TeamRedMinerProcess.ProcessName);
 
                         closed = true;
                         IsMining = false;
@@ -249,7 +256,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
                 try
                 {
-                    TRexProcess.Kill(true);
+                    TeamRedMinerProcess.Kill(true);
 
                     closed = true;
                     IsMining = false;
@@ -264,12 +271,12 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
         public void Show()
         {
-            TRexProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            TeamRedMinerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
         }
 
         public void Hide()
         {
-            TRexProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            TeamRedMinerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
         }
 
         public Dictionary<string, decimal> GetHasrates()
@@ -279,7 +286,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             try
             {
                 string backendPureData = new WebClient().DownloadString("http://localhost:" + APIport + "/summary");
-                Miners.TRex.ApiSummary backendsAPI = JsonConvert.DeserializeObject<Miners.TRex.ApiSummary>(backendPureData, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                Miners.TeamRedMiner.ApiSummary backendsAPI = JsonConvert.DeserializeObject<Miners.TeamRedMiner.ApiSummary>(backendPureData, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
 
                 Dictionary<string, decimal> hashrates = new();
 
@@ -288,15 +295,15 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
                     if (backendsAPI.Uptime < 1)
                     {
-                        hashrates.TryAdd("cuda", -1);
+                        hashrates.TryAdd("opencl", -1);
                     }
                     else if (backendsAPI.Hashrate < 1)
                     {
-                        hashrates.TryAdd("cuda", 0);
+                        hashrates.TryAdd("opencl", 0);
                     }
                     else
                     {
-                        hashrates.TryAdd("cuda", Convert.ToDecimal(backendsAPI.Hashrate, CultureInfo.InvariantCulture.NumberFormat));
+                        hashrates.TryAdd("opencl", Convert.ToDecimal(backendsAPI.Hashrate, CultureInfo.InvariantCulture.NumberFormat));
                     }
                 });
 
@@ -307,77 +314,21 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
         public void CreateConfigFile(MiningCoin miningCoin)
         {
-            APIport = 20220 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin);
+            APIport = 20230 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin);
 
             AlgoBackendsString = miningCoin.Algorithm.ToLowerInvariant() + '-' + string.Join(null, Backends.Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.BackendName.ToLowerInvariant())));
 
-            WindowTitle = "TRex - " + miningCoin.Algorithm + " - " + string.Join(", ", Backends.Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.BackendName.ToLowerInvariant())));
+            WindowTitle = "TeamRedMiner - " + miningCoin.Algorithm + " - " + string.Join(", ", Backends.Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.BackendName.ToLowerInvariant())));
 
             string Algorithm = miningCoin.Algorithm.ToString().ToLowerInvariant();
 
-            StringBuilder conf = new();
-            conf.AppendLine("{");
-            conf.AppendLine("  \"algo\": \"" + Algorithm + "\",");
-            conf.AppendLine("  \"coin\" : \"" + miningCoin.CoinTicker.ToLowerInvariant() + "\",");
-            if (User.Settings.User.UseTorSharpOnMining) { conf.AppendLine("  \"proxy\": \"127.0.0.1:8428\","); }
-            conf.AppendLine("  \"pci-indexing\" : false,");
-            conf.AppendLine("  \"ab-indexing\" : false,");
-            conf.AppendLine("  \"gpu-init-mode\" : 0,");
-            conf.AppendLine("  \"keep-gpu-busy\" : false,");
-            conf.AppendLine("  \"api-bind-http\": \"127.0.0.1:" + APIport + "\",");
-            conf.AppendLine("  \"api-https\": false,");
-            conf.AppendLine("  \"api-key\": \"\",");
-            conf.AppendLine("  \"api-webserver-cert\" : \"\",");
-            conf.AppendLine("  \"api-webserver-pkey\" : \"\",");
-            conf.AppendLine("  \"kernel\" : 0,");
-            conf.AppendLine("  \"retries\": 3,");
-            conf.AppendLine("  \"retry-pause\": 10,");
-            conf.AppendLine("  \"timeout\": 150,");
-            conf.AppendLine("  \"intensity\": 20,");
-            conf.AppendLine("  \"dag-build-mode\": 0,");
-            conf.AppendLine("  \"dataset-mode\": 0,");
-            conf.AppendLine("  \"extra-dag-epoch\": -1,");
-            conf.AppendLine("  \"low-load\": 0,");
-            conf.AppendLine("  \"lhr-tune\": -1,");
-            conf.AppendLine("  \"lhr-autotune-mode\": \"full\",");
-            conf.AppendLine("  \"lhr-autotune-step-size\": 0.25,");
-            conf.AppendLine("  \"lhr-autotune-interval\": 15,");
-            conf.AppendLine("  \"lhr-low-power\": false,");
-            conf.AppendLine("  \"hashrate-avr\": 60,");
-            conf.AppendLine("  \"sharerate-avr\": 600,");
-            conf.AppendLine("  \"gpu-report-interval\": 30,");
-            conf.AppendLine("  \"log-path\": \"logs/teamredminer.log\",");
-            conf.AppendLine("  \"cpu-priority\": 2,");
-            conf.AppendLine("  \"autoupdate\": false,");
-            conf.AppendLine("  \"exit-on-cuda-error\": true,");
-            conf.AppendLine("  \"exit-on-connection-lost\": false,");
-            conf.AppendLine("  \"reconnect-on-fail-shares\": 5,");
-            conf.AppendLine("  \"protocol-dump\": false,");
-            conf.AppendLine("  \"no-color\": false,");
-            conf.AppendLine("  \"hide-date\": false,");
-            conf.AppendLine("  \"send-stales\": false,");
-            conf.AppendLine("  \"validate-shares\": false,");
-            conf.AppendLine("  \"no-nvml\": " + (!User.Settings.Device.cuda.NVML).ToString().ToLowerInvariant() + ",");
-            conf.AppendLine("  \"no-strict-ssl\": true,");
-            conf.AppendLine("  \"no-sni\": false,");
-            conf.AppendLine("  \"no-hashrate-report\": false,");
-            conf.AppendLine("  \"no-watchdog\": true,");
-            conf.AppendLine("  \"quiet\": false,");
-            conf.AppendLine("  \"time-limit\": 0,");
-            conf.AppendLine("  \"temperature-color\": \"67,77\",");
-            conf.AppendLine("  \"temperature-color-mem\": \"80,100\",");
-            conf.AppendLine("  \"temperature-limit\": 0,");
-            conf.AppendLine("  \"temperature-start\": 0,");
-            conf.AppendLine("  \"back-to-main-pool-sec\": 6000,");
-            conf.AppendLine("  \"script-start\": \"\",");
-            conf.AppendLine("  \"script-exit\": \"\",");
-            conf.AppendLine("  \"script-epoch-change\": \"\",");
-            conf.AppendLine("  \"script-crash\": \"\",");
-            conf.AppendLine("  \"script-low-hash\": \"\",");
-            conf.AppendLine("  \"monitoring-page\" : {");
-            conf.AppendLine("     \"graph_interval_sec\" : 3600,");
-            conf.AppendLine("     \"update_timeout_sec\" : 10");
-            conf.AppendLine("  },");
+            StringBuilder args = new();
+            args.AppendLine("--hardware=gpu");
+            args.AppendLine("--api_listen=" + (User.Settings.User.UseAllInterfacesInsteadLocalhost ? "0.0.0.0" : "127.0.0.1") + APIport);
+            args.AppendLine("--log_file=\"trm_<algo>_<yyyymmdd_hhmmss>.log\"");
+            args.AppendLine("--log_interval=30");
+            args.AppendLine("--log_rotate=1M,16");
+            args.AppendLine("--enable_compute");
 
             List<string> addresses = miningCoin.Hosts;
 
@@ -409,32 +360,25 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 new Task(() => _ = Tools.TorProxy).Start();
             }
 
-            conf.AppendLine("  \"pools\": [");
-
             foreach (string host in miningCoin.Hosts)
             {
-                conf.AppendLine("    {");
-                conf.AppendLine("      \"user\": \"" + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\",");
-                conf.AppendLine("      \"url\": \"" + host + ":" + miningCoin.StratumPortSsl + "\",");
-                conf.AppendLine("      \"pass\": \"" + miningCoin.Password + "\",");
-                conf.AppendLine("    },");
+                args.AppendLine("-a " + Algorithm + "-o stratum+tcp://" + host + ":" + miningCoin.StratumPort + " -u " + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + " -p " + miningCoin.Password);
             }
 
-            conf.AppendLine("  ]");
-            conf.AppendLine("}");
+            Arguments = String.Join(args.To;
 
             if (!Directory.Exists(@"Miners")) { Directory.CreateDirectory(@"Miners"); }
-            if (!Directory.Exists(@"Miners\TRex")) { Directory.CreateDirectory(@"Miners\TRex"); }
-            if (!Directory.Exists(@"Miners\TRex\logs")) { Directory.CreateDirectory(@"Miners\TRex\logs"); }
+            if (!Directory.Exists(@"Miners\TeamRedMiner")) { Directory.CreateDirectory(@"Miners\TeamRedMiner"); }
+            if (!Directory.Exists(@"Miners\TeamRedMiner\logs")) { Directory.CreateDirectory(@"Miners\TeamRedMiner\logs"); }
 
-            System.IO.File.WriteAllText(@"Miners\TRex\config-" + AlgoBackendsString + ".json", conf.ToString().NormalizeJson());
+            System.IO.File.WriteAllText(@"Miners\TeamRedMiner\config-" + AlgoBackendsString + ".json", args.ToString().NormalizeJson());
 
             StringBuilder cmdStart = new();
             cmdStart.AppendLine("cd /d \"%~dp0\"");
             cmdStart.AppendLine("teamredminer.exe --config " + "config-" + AlgoBackendsString + ".json");
             cmdStart.AppendLine("pause");
 
-            System.IO.File.WriteAllText(@"Miners\TRex\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
+            System.IO.File.WriteAllText(@"Miners\TeamRedMiner\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
         }
     }
 }
