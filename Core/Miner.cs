@@ -77,13 +77,13 @@ namespace TrueMiningDesktop.Core
                                 startMinersTask.Add(new Task<Action>(() => { TRexMiners.ForEach(miner => miner.Start()); return null; }));//inicia cada um dos mineradores da lista
 
                                 foreach (Task task in startMinersTask)
-                                    {
-                                        task.Start();
-                                    }
+                                {
+                                    task.Start();
+                                }
 
-                                    Task.WaitAll(startMinersTask.ToArray());
+                                Task.WaitAll(startMinersTask.ToArray());
 
-                                    ShowHideCLI();
+                                ShowHideCLI();
                             }
                             catch (Exception e) { MessageBox.Show(e.Message); isTryingStartMining = false; }
                         })
@@ -108,28 +108,26 @@ namespace TrueMiningDesktop.Core
 
             List<Task<Action>> stopMinersTask = new();
 
-            stopMinersTask.Add(new Task<Action>(() => 
+            stopMinersTask.Add(new Task<Action>(() =>
             {
                 while (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
-
-                XMRigMiners.ForEach(miner => miner.Start()); return null;
 
                 XMRigMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
 
                 XMRigMiners.Clear();
 
+                return null;
             })); //para cada um dos mineradores da lista
 
             stopMinersTask.Add(new Task<Action>(() =>
             {
                 while (TRexMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
 
-                TRexMiners.ForEach(miner => miner.Start()); return null;
-
                 TRexMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
 
                 TRexMiners.Clear();
 
+                return null;
             })); //para cada um dos mineradores da lista
 
             foreach (Task task in stopMinersTask)
@@ -145,7 +143,7 @@ namespace TrueMiningDesktop.Core
                 IsStoppingMining = true;
             }
 
-            Task.WaitAll(stopMinersTask.ToArray());
+         //   Task.WaitAll(stopMinersTask.ToArray());
         }
 
         public static void ShowHideCLI()
@@ -535,7 +533,7 @@ namespace TrueMiningDesktop.Core
             {
                 Miner.IsTryingStartMining = false;
             }
-            if (XMRigMiners.Any(miner => miner.IsMining) || TRexMiners.Any(miner => miner.IsMining))
+            if ((!XMRigMiners.Any(miner => miner.IsTryingStartMining) && XMRigMiners.Any(miner => miner.IsMining)) || (!TRexMiners.Any(miner => miner.IsTryingStartMining) && TRexMiners.Any(miner => miner.IsMining)))
             {
                 Miner.IsMining = true;
             }

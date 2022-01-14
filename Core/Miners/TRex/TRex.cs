@@ -278,77 +278,25 @@ namespace TrueMiningDesktop.Core.TRex
 
             try
             {
-                string backendPureData = new WebClient().DownloadString("http://localhost:" + APIport + "/2/backends");
-                dynamic backendsAPI = JsonConvert.DeserializeObject(backendPureData, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                string backendPureData = new WebClient().DownloadString("http://localhost:" + APIport + "/summary");
+                Miners.TRex.ApiSummary backendsAPI = JsonConvert.DeserializeObject<Miners.TRex.ApiSummary>(backendPureData, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
 
                 Dictionary<string, decimal> hashrates = new();
 
                 Backends.ForEach(backend =>
                 {
-                    if (backend.BackendName.Equals("cpu", StringComparison.OrdinalIgnoreCase))
-                    {
-                        foreach (dynamic backendLoop in backendsAPI)
-                        {
-                            if (backendLoop.type == "cpu")
-                            {
-                                if (backendLoop.enabled == false)
-                                {
-                                    hashrates.TryAdd("cpu", -1);
-                                }
-                                else if (backendLoop.hashrate[0] == null)
-                                {
-                                    hashrates.TryAdd("cpu", 0);
-                                }
-                                else
-                                {
-                                    hashrates.TryAdd("cpu", Convert.ToDecimal(backendLoop.hashrate[0], CultureInfo.InvariantCulture.NumberFormat));
-                                }
-                            }
-                        }
-                    }
 
-                    if (backend.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase))
+                    if (backendsAPI.Uptime < 1)
                     {
-                        foreach (dynamic backendLoop in backendsAPI)
-                        {
-                            if (backendLoop.type == "opencl")
-                            {
-                                if (backendLoop.enabled == false)
-                                {
-                                    hashrates.TryAdd("opencl", -1);
-                                }
-                                else if (backendLoop.hashrate[0] == null)
-                                {
-                                    hashrates.TryAdd("opencl", 0);
-                                }
-                                else
-                                {
-                                    hashrates.TryAdd("opencl", Convert.ToDecimal(backendLoop.hashrate[0], CultureInfo.InvariantCulture.NumberFormat));
-                                }
-                            }
-                        }
+                        hashrates.TryAdd("cuda", -1);
                     }
-
-                    if (backend.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase))
+                    else if (backendsAPI.Hashrate < 1)
                     {
-                        foreach (dynamic backendLoop in backendsAPI)
-                        {
-                            if (backendLoop.type == "cuda")
-                            {
-                                if (backendLoop.enabled == false)
-                                {
-                                    hashrates.TryAdd("cuda", -1);
-                                }
-                                else if (backendLoop.hashrate[0] == null)
-                                {
-                                    hashrates.TryAdd("cuda", 0);
-                                }
-                                else
-                                {
-                                    hashrates.TryAdd("cuda", Convert.ToDecimal(backendLoop.hashrate[0], CultureInfo.InvariantCulture.NumberFormat));
-                                }
-                            }
-                        }
+                        hashrates.TryAdd("cuda", 0);
+                    }
+                    else
+                    {
+                        hashrates.TryAdd("cuda", Convert.ToDecimal(backendsAPI.Hashrate, CultureInfo.InvariantCulture.NumberFormat));
                     }
                 });
 
