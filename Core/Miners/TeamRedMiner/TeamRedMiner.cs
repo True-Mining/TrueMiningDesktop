@@ -325,9 +325,9 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             StringBuilder args = new();
             args.AppendLine("--hardware=gpu");
             args.AppendLine("--api_listen=" + (User.Settings.User.UseAllInterfacesInsteadLocalhost ? "0.0.0.0" : "127.0.0.1") + APIport);
-            args.AppendLine("--log_file=\"trm_<algo>_<yyyymmdd_hhmmss>.log\"");
+            args.AppendLine("--log_file=\"logs/trm_" + AlgoBackendsString + ".log\"");
             args.AppendLine("--log_interval=30");
-            args.AppendLine("--log_rotate=1M,16");
+            args.AppendLine("--log_rotate=1M,4");
             args.AppendLine("--enable_compute");
 
             List<string> addresses = miningCoin.Hosts;
@@ -362,21 +362,23 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
             foreach (string host in miningCoin.Hosts)
             {
-                args.AppendLine("-a " + Algorithm + "-o stratum+tcp://" + host + ":" + miningCoin.StratumPort + " -u " + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + " -p " + miningCoin.Password);
+                args.AppendLine("-a " + Algorithm + " -o stratum+tcp://" + host + ":" + miningCoin.StratumPort + " -u " + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + " -p " + miningCoin.Password);
             }
 
-            Arguments = String.Join(args.To;
+            args.Remove(args.Length - 1, 1);
+
+            Arguments = args.ToString().Replace(Environment.NewLine, " ");
+            TeamRedMinerProcessStartInfo.Arguments = Arguments;
 
             if (!Directory.Exists(@"Miners")) { Directory.CreateDirectory(@"Miners"); }
             if (!Directory.Exists(@"Miners\TeamRedMiner")) { Directory.CreateDirectory(@"Miners\TeamRedMiner"); }
             if (!Directory.Exists(@"Miners\TeamRedMiner\logs")) { Directory.CreateDirectory(@"Miners\TeamRedMiner\logs"); }
 
-            System.IO.File.WriteAllText(@"Miners\TeamRedMiner\config-" + AlgoBackendsString + ".json", args.ToString().NormalizeJson());
-
             StringBuilder cmdStart = new();
             cmdStart.AppendLine("cd /d \"%~dp0\"");
-            cmdStart.AppendLine("teamredminer.exe --config " + "config-" + AlgoBackendsString + ".json");
-            cmdStart.AppendLine("pause");
+            cmdStart.AppendLine();
+            cmdStart.AppendLine("teamredminer.exe ^\n" + args.ToString().Replace(Environment.NewLine, " ^\n"));
+            cmdStart.Append("pause");
 
             System.IO.File.WriteAllText(@"Miners\TeamRedMiner\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
         }
