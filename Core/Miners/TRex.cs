@@ -410,11 +410,11 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("  \"hide-date\": false,");
             conf.AppendLine("  \"send-stales\": false,");
             conf.AppendLine("  \"validate-shares\": false,");
-            conf.AppendLine("  \"no-nvml\": " + !User.Settings.Device.cuda.NVML + ",");
+            conf.AppendLine("  \"no-nvml\": " + (!User.Settings.Device.cuda.NVML).ToString().ToLowerInvariant() + ",");
             conf.AppendLine("  \"no-strict-ssl\": true,");
             conf.AppendLine("  \"no-sni\": false,");
             conf.AppendLine("  \"no-hashrate-report\": false,");
-            conf.AppendLine("  \"no-watchdog\": false,");
+            conf.AppendLine("  \"no-watchdog\": true,");
             conf.AppendLine("  \"quiet\": false,");
             conf.AppendLine("  \"time-limit\": 0,");
             conf.AppendLine("  \"temperature-color\": \"67,77\",");
@@ -468,7 +468,7 @@ namespace TrueMiningDesktop.Core.TRex
             {
                 conf.AppendLine("    {");
                 conf.AppendLine("      \"user\": \"" + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\",");
-                conf.AppendLine("      \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
+                conf.AppendLine("      \"url\": \"" + host + ":" + miningCoin.StratumPortSsl + "\",");
                 conf.AppendLine("      \"pass\": \"" + miningCoin.Password + "\",");
                 conf.AppendLine("    },");
             }
@@ -480,11 +480,11 @@ namespace TrueMiningDesktop.Core.TRex
             if (!Directory.Exists(@"Miners\TRex")) { Directory.CreateDirectory(@"Miners\TRex"); }
             if (!Directory.Exists(@"Miners\TRex\logs")) { Directory.CreateDirectory(@"Miners\TRex\logs"); }
 
-            System.IO.File.WriteAllText(@"Miners\TRex\config-" + AlgoBackendsString + ".json", conf.ToString());
+            System.IO.File.WriteAllText(@"Miners\TRex\config-" + AlgoBackendsString + ".json", conf.ToString().NormalizeJson());
 
             StringBuilder cmdStart = new();
             cmdStart.AppendLine("cd /d \"%~dp0\"");
-            cmdStart.AppendLine("TRex.exe --config " + "config-" + AlgoBackendsString + ".json");
+            cmdStart.AppendLine("t-rex.exe --config " + "config-" + AlgoBackendsString + ".json");
             cmdStart.AppendLine("pause");
 
             System.IO.File.WriteAllText(@"Miners\TRex\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
