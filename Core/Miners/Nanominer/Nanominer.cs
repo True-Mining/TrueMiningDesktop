@@ -299,7 +299,7 @@ namespace TrueMiningDesktop.Core.Nanominer
             try
             {
                 string apiPureData = new WebClient().DownloadString("http://localhost:" + APIport + "/stats");
-                ApiObj apiObj = JsonConvert.DeserializeObject<ApiObj>(apiPureData);
+                Miners.Nanominer.ApiSummary apiObj = JsonConvert.DeserializeObject<Miners.Nanominer.ApiSummary>(apiPureData);
 
                 Dictionary<string, decimal> hashrates = new();
 
@@ -534,50 +534,5 @@ namespace TrueMiningDesktop.Core.Nanominer
 
             System.IO.File.WriteAllText(@"Miners\Nanominer\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
         }
-    }
-
-    public partial class ApiObj
-    {
-        [JsonProperty("Algorithms", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Dictionary<string, dynamic>> Algorithms { get; set; }
-
-        [JsonProperty("Devices", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Dictionary<string, DeviceData>> Devices { get; set; }
-
-        [JsonProperty("WorkTime", NullValueHandling = NullValueHandling.Ignore)]
-        public long? WorkTimeSeconds { get; set; }
-    }
-
-    public partial class SharesInfo
-    {
-        [JsonProperty("Accepted", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Accepted { get; set; }
-
-        [JsonProperty("Denied", NullValueHandling = NullValueHandling.Ignore)]
-        public long? Denied { get; set; }
-
-        [JsonProperty("Hashrate", NullValueHandling = NullValueHandling.Ignore)]
-        public string Hashrate { get; set; }
-    }
-
-    public partial class DeviceData
-    {
-        [JsonProperty("Name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty("Platform", NullValueHandling = NullValueHandling.Ignore)]
-        public string Platform { get; set; }
-
-        [JsonProperty("Pci", NullValueHandling = NullValueHandling.Ignore)]
-        public string Pci { get; set; }
-
-        [JsonProperty("Fan", NullValueHandling = NullValueHandling.Ignore)]
-        public long? FanPercent { get; set; }
-
-        [JsonProperty("Temperature", NullValueHandling = NullValueHandling.Ignore)]
-        public long? TemperatureCelcius { get; set; }
-
-        [JsonProperty("Power", NullValueHandling = NullValueHandling.Ignore)]
-        public decimal? PowerWatts { get; set; }
     }
 }
