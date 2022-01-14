@@ -66,6 +66,11 @@ namespace TrueMiningDesktop.Core
             catch { return new KeyValuePair<string, long>(address, 10000); }
         }
 
+        public static string NormalizeJson(this string input)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(Newtonsoft.Json.JsonConvert.DeserializeObject<object>(input), Newtonsoft.Json.Formatting.Indented);
+        }
+
         public static WebHeaderCollection WebRequestHeaders()
         {
             WebHeaderCollection headers = new()
@@ -528,6 +533,28 @@ namespace TrueMiningDesktop.Core
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern bool ShowWindow(IntPtr windowIdentifier, int nCmdShow);
+
+        public static bool ApplicationIsActivated()
+        {
+            var activatedHandle = GetForegroundWindow();
+            if (activatedHandle == IntPtr.Zero)
+            {
+                return false;       // No window is currently activated
+            }
+
+            var procId = Process.GetCurrentProcess().Id;
+            int activeProcId;
+            GetWindowThreadProcessId(activatedHandle, out activeProcId);
+
+            return activeProcId == procId;
+        }
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
         public static async void WaitTime(int milliseconds)
         {
