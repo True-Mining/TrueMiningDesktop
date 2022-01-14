@@ -293,17 +293,17 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 Backends.ForEach(backend =>
                 {
 
-                    if (backendsAPI.Uptime < 1)
+                  //  if (backendsAPI.Uptime < 1)
                     {
                         hashrates.TryAdd("opencl", -1);
                     }
-                    else if (backendsAPI.Hashrate < 1)
+                //    else if (backendsAPI.Hashrate < 1)
                     {
-                        hashrates.TryAdd("opencl", 0);
+                //        hashrates.TryAdd("opencl", 0);
                     }
-                    else
+               //     else
                     {
-                        hashrates.TryAdd("opencl", Convert.ToDecimal(backendsAPI.Hashrate, CultureInfo.InvariantCulture.NumberFormat));
+                //        hashrates.TryAdd("opencl", Convert.ToDecimal(backendsAPI.Hashrate, CultureInfo.InvariantCulture.NumberFormat));
                     }
                 });
 

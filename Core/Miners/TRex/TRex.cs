@@ -432,7 +432,7 @@ namespace TrueMiningDesktop.Core.TRex
             StringBuilder cmdStart = new();
             cmdStart.AppendLine("cd /d \"%~dp0\"");
             cmdStart.AppendLine("t-rex.exe --config " + "config-" + AlgoBackendsString + ".json");
-            cmdStart.AppendLine("pause");
+            cmdStart.Append("pause");
 
             System.IO.File.WriteAllText(@"Miners\TRex\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
         }
