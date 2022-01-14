@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using TrueMiningDesktop.Janelas;
@@ -69,11 +70,20 @@ namespace TrueMiningDesktop.Core
                         {
                             try
                             {
-                                XMRigMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores da lista
+                                List<Task<Action>> startMinersTask = new();
 
-                                TRexMiners.ForEach(miner => miner.Start()); //inicia cada um dos mineradores da lista
+                                startMinersTask.Add(new Task<Action>(() => { XMRigMiners.ForEach(miner => miner.Start()); return null; })); //inicia cada um dos mineradores da lista
 
-                                ShowHideCLI();
+                                startMinersTask.Add(new Task<Action>(() => { TRexMiners.ForEach(miner => miner.Start()); return null; }));//inicia cada um dos mineradores da lista
+
+                                foreach (Task task in startMinersTask)
+                                    {
+                                        task.Start();
+                                    }
+
+                                    Task.WaitAll(startMinersTask.ToArray());
+
+                                    ShowHideCLI();
                             }
                             catch (Exception e) { MessageBox.Show(e.Message); isTryingStartMining = false; }
                         })
@@ -96,10 +106,36 @@ namespace TrueMiningDesktop.Core
         {
             IsStoppingMining = true;
 
-            System.Threading.Thread.Sleep(200);
+            List<Task<Action>> stopMinersTask = new();
 
-            while (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
-            while (TRexMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
+            stopMinersTask.Add(new Task<Action>(() => 
+            {
+                while (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
+
+                XMRigMiners.ForEach(miner => miner.Start()); return null;
+
+                XMRigMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
+
+                XMRigMiners.Clear();
+
+            })); //para cada um dos mineradores da lista
+
+            stopMinersTask.Add(new Task<Action>(() =>
+            {
+                while (TRexMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
+
+                TRexMiners.ForEach(miner => miner.Start()); return null;
+
+                TRexMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
+
+                TRexMiners.Clear();
+
+            })); //para cada um dos mineradores da lista
+
+            foreach (Task task in stopMinersTask)
+            {
+                task.Start();
+            }
 
             if (IsMining || force)
             {
@@ -109,15 +145,7 @@ namespace TrueMiningDesktop.Core
                 IsStoppingMining = true;
             }
 
-            new System.Threading.Tasks.Task(() =>
-            {
-                XMRigMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
-                TRexMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
-
-                XMRigMiners.Clear();
-                TRexMiners.Clear();
-            })
-            .Start();
+            Task.WaitAll(stopMinersTask.ToArray());
         }
 
         public static void ShowHideCLI()
