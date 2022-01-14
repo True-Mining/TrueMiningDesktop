@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -298,7 +299,7 @@ namespace TrueMiningDesktop.Core.XMRig
             try
             {
                 string backendPureData = new WebClient().DownloadString("http://localhost:" + APIport + "/2/backends");
-                dynamic backendsAPI = JsonConvert.DeserializeObject(backendPureData);
+                dynamic backendsAPI = JsonConvert.DeserializeObject(backendPureData, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
 
                 Dictionary<string, decimal> hashrates = new();
 
@@ -493,7 +494,7 @@ namespace TrueMiningDesktop.Core.XMRig
             }
             conf.AppendLine("    \"donate-level\": 0,");
             conf.AppendLine("    \"donate-over-proxy\": 0,");
-            conf.AppendLine("    \"log-file\": \"XMRig-" + AlgoBackendsString + ".txt\",");
+            conf.AppendLine("    \"log-file\": \"logs/XMRig-" + AlgoBackendsString + ".log\",");
             conf.AppendLine("    \"retries\": 2,");
             conf.AppendLine("    \"retry-pause\": 3,");
 
@@ -569,6 +570,10 @@ namespace TrueMiningDesktop.Core.XMRig
 
             conf.AppendLine("   ]");
             conf.AppendLine("}");
+
+            if (!Directory.Exists(@"Miners")) { Directory.CreateDirectory(@"Miners"); }
+            if (!Directory.Exists(@"Miners\xmrig")) { Directory.CreateDirectory(@"Miners\xmrig"); }
+            if (!Directory.Exists(@"Miners\xmrig\logs")) { Directory.CreateDirectory(@"Miners\xmrig\logs"); }
 
             System.IO.File.WriteAllText(@"Miners\xmrig\config-" + AlgoBackendsString + ".json", conf.ToString());
 

@@ -66,6 +66,11 @@ namespace TrueMiningDesktop.Core
             catch { return new KeyValuePair<string, long>(address, 10000); }
         }
 
+        public static string NormalizeJson(this string input)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(Newtonsoft.Json.JsonConvert.DeserializeObject<object>(input), Newtonsoft.Json.Formatting.Indented);
+        }
+
         public static WebHeaderCollection WebRequestHeaders()
         {
             WebHeaderCollection headers = new()
@@ -529,9 +534,73 @@ namespace TrueMiningDesktop.Core
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern bool ShowWindow(IntPtr windowIdentifier, int nCmdShow);
 
+        public static bool ApplicationIsActivated()
+        {
+            var activatedHandle = GetForegroundWindow();
+            if (activatedHandle == IntPtr.Zero)
+            {
+                return false;       // No window is currently activated
+            }
+
+            var procId = Process.GetCurrentProcess().Id;
+            int activeProcId;
+            GetWindowThreadProcessId(activatedHandle, out activeProcId);
+
+            return activeProcId == procId;
+        }
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
+
         public static async void WaitTime(int milliseconds)
         {
             await Task.Delay(milliseconds);
+        }
+
+        public class LiquidityPrices
+        {
+            public decimal BuyPrice;
+            public decimal SellPrice;
+
+            public LiquidityPrices(PoolAPI.Orderbook orderbook, decimal volumeForSell_valueForBuy = 0)
+            {
+                if (orderbook == null || (orderbook.buyLevels.Count == 0 && orderbook.sellLevels.Count == 0) || volumeForSell_valueForBuy == 0) { BuyPrice = 0; SellPrice = 0; return; }
+
+                decimal accumulatedVolume;
+                decimal accumulatedValue;
+
+                accumulatedVolume = 0;
+                accumulatedValue = 0;
+
+                if (volumeForSell_valueForBuy == 0)
+                {
+                    BuyPrice = orderbook.sellLevels[0].price;
+                    SellPrice = orderbook.buyLevels[0].price;
+                }
+                else
+                {
+                    for (int i = 0; accumulatedValue < volumeForSell_valueForBuy && orderbook.sellLevels.Count > i; i++)
+                    {
+                        accumulatedVolume += orderbook.sellLevels[i].volume;
+                        accumulatedValue += orderbook.sellLevels[i].price * orderbook.sellLevels[i].volume;
+                    }
+                    BuyPrice = accumulatedValue / accumulatedVolume;
+
+                    accumulatedVolume = 0;
+                    accumulatedValue = 0;
+
+                    for (int i = 0; accumulatedVolume < volumeForSell_valueForBuy && orderbook.buyLevels.Count > i; i++)
+                    {
+                        accumulatedVolume += orderbook.buyLevels[i].volume;
+                        accumulatedValue += orderbook.buyLevels[i].price * orderbook.buyLevels[i].volume;
+                    }
+                    SellPrice = accumulatedValue / accumulatedVolume;
+                }
+            }
         }
     }
 }

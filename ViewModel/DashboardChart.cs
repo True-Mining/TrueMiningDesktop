@@ -36,7 +36,7 @@ namespace TrueMiningDesktop.ViewModel
 
                 dataToShow = dados.Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, decimal> value) => new KeyValuePair<int, decimal>(value.Key, (decimal)(value.Value / 840)))
+                .Select((KeyValuePair<int, decimal> value) => new KeyValuePair<int, decimal>(value.Key, value.Value))
                 .OrderBy((KeyValuePair<int, decimal> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
@@ -69,7 +69,7 @@ namespace TrueMiningDesktop.ViewModel
 
                 dataToShow = dados.Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, decimal> value) => new KeyValuePair<int, decimal>(value.Key, value.Value / 840))
+                .Select((KeyValuePair<int, decimal> value) => new KeyValuePair<int, decimal>(value.Key, value.Value))
                 .OrderBy((KeyValuePair<int, decimal> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 

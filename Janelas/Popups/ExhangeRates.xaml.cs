@@ -9,7 +9,7 @@ namespace TrueMiningDesktop.Janelas.Popups
     /// </summary>
     public partial class ExchangeRates : Window
     {
-        public ExchangeRates(decimal exchangeRatePontosToMiningCoin)
+        public ExchangeRates(decimal exchangeRatePontosRandomXToMiningCoin, decimal exchangeRatePontosKawPowToMiningCoin)
         {
             InitializeComponent();
             new System.Threading.Tasks.Task(() =>
@@ -33,14 +33,19 @@ namespace TrueMiningDesktop.Janelas.Popups
                         BTCToBTCRate = 1;
                         BTCToUSDRate = decimal.Round(PoolAPI.BitcoinPrice.BTCUSD, 2);
 
-                        PointToCoinRate = decimal.Round(exchangeRatePontosToMiningCoin, 5);
-                        PointToBTCRate = decimal.Round((PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate, 8);
-                        PointToUSDRate = decimal.Round((PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price) / 2 * exchangeRatePontosToMiningCoin / BTCToBTCRate * BTCToUSDRate, 5);
+                        PointRandomXToCoinRate = decimal.Round(exchangeRatePontosRandomXToMiningCoin * (PoolAPI.Crex24.XMRBTC_Orderbook.sellLevels[0].price / PoolAPI.Crex24.PaymentCoinBTC_Orderbook.sellLevels[0].price), 6);
+                        PointRandomXToBTCRate = decimal.Round((PoolAPI.Crex24.XMRBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.XMRBTC_Orderbook.sellLevels[0].price) / 2 * exchangeRatePontosRandomXToMiningCoin / BTCToBTCRate, 8);
+                        PointRandomXToUSDRate = decimal.Round((PoolAPI.Crex24.XMRBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.XMRBTC_Orderbook.sellLevels[0].price) / 2 * exchangeRatePontosRandomXToMiningCoin / BTCToBTCRate * BTCToUSDRate, 6);
+
+                        PointKawPowToCoinRate = decimal.Round(exchangeRatePontosKawPowToMiningCoin * (PoolAPI.Crex24.RVNBTC_Orderbook.sellLevels[0].price / PoolAPI.Crex24.PaymentCoinBTC_Orderbook.sellLevels[0].price), 6);
+                        PointKawPowToBTCRate = decimal.Round((PoolAPI.Crex24.RVNBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.RVNBTC_Orderbook.sellLevels[0].price) / 2 * exchangeRatePontosKawPowToMiningCoin / BTCToBTCRate, 8);
+                        PointKawPowToUSDRate = decimal.Round((PoolAPI.Crex24.RVNBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.RVNBTC_Orderbook.sellLevels[0].price) / 2 * exchangeRatePontosKawPowToMiningCoin / BTCToBTCRate * BTCToUSDRate, 6);
 
                         CoinToCoinRate = 1;
-                        CoinToPointRate = decimal.Round(CoinToCoinRate / PointToCoinRate, 5);
+                        CoinToPointRandomXRate = decimal.Round(CoinToCoinRate / PointRandomXToCoinRate, 2);
+                        CoinToPointKawPowRate = decimal.Round(CoinToCoinRate / PointKawPowToCoinRate, 2);
                         CoinToBTCRate = decimal.Round((PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate, 8);
-                        CoinToUSDRate = decimal.Round((PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate * BTCToUSDRate, 5);
+                        CoinToUSDRate = decimal.Round((PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate * BTCToUSDRate, 6);
 
                         loadingVisualElement.Visibility = Visibility.Hidden;
                         AllContent.Visibility = Visibility.Visible;
@@ -54,12 +59,17 @@ namespace TrueMiningDesktop.Janelas.Popups
 
         public string CoinName { get; set; }
 
-        public decimal PointToCoinRate { get; set; } = 1;
-        public decimal PointToBTCRate { get; set; } = 1;
-        public decimal PointToUSDRate { get; set; } = 1;
+        public decimal PointRandomXToCoinRate { get; set; } = 1;
+        public decimal PointRandomXToBTCRate { get; set; } = 1;
+        public decimal PointRandomXToUSDRate { get; set; } = 1;
+
+        public decimal PointKawPowToCoinRate { get; set; } = 1;
+        public decimal PointKawPowToBTCRate { get; set; } = 1;
+        public decimal PointKawPowToUSDRate { get; set; } = 1;
 
         public decimal CoinToCoinRate { get; set; } = 1;
-        public decimal CoinToPointRate { get; set; } = 1;
+        public decimal CoinToPointRandomXRate { get; set; } = 1;
+        public decimal CoinToPointKawPowRate { get; set; } = 1;
         public decimal CoinToBTCRate { get; set; } = 1;
         public decimal CoinToUSDRate { get; set; } = 1;
 
@@ -67,7 +77,7 @@ namespace TrueMiningDesktop.Janelas.Popups
         public decimal BTCToBTCRate { get; set; } = 1;
         public decimal BTCToUSDRate { get; set; } = 1;
 
-        private void CloseButton_click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void CloseButton_click(object sender, MouseButtonEventArgs e)
         {
             Close();
         }
@@ -89,8 +99,8 @@ namespace TrueMiningDesktop.Janelas.Popups
         {
             if (clicado && e.LeftButton == MouseButtonState.Pressed)
             {
-                Left = (System.Windows.Forms.Control.MousePosition.X + lm.X);
-                Top = (System.Windows.Forms.Control.MousePosition.Y + lm.Y);
+                Left = System.Windows.Forms.Control.MousePosition.X + lm.X;
+                Top = System.Windows.Forms.Control.MousePosition.Y + lm.Y;
             }
             else { clicado = false; }
         }

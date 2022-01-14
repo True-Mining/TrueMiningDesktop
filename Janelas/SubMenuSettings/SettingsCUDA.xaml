@@ -15,11 +15,11 @@
             <Label x:Name="LockWarning" Content="Stop Mining to change configs" VerticalAlignment="Center" SnapsToDevicePixels="True" FontFamily="Roboto" FontWeight="Bold" FontSize="12" Foreground="#FFD86F17" IsEnabled="True" Height="20" Width="595" VerticalContentAlignment="Center" Padding="0,0,0,0" Margin="0,-20,0,0" Visibility="Hidden" />
             <Separator HorizontalContentAlignment="Center" VerticalContentAlignment="Top" Margin="20,3,20,3" SnapsToDevicePixels="True" />
             <WrapPanel x:Name="AllContent" VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
-                <CheckBox IsChecked="{Binding Autoconfig}"  Style="{StaticResource MaterialDesignCheckBox}" Content="Configure automatically" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                <CheckBox IsChecked="{Binding Autoconfig}" Style="{StaticResource MaterialDesignCheckBox}" Content="Configure automatically" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
                 <WrapPanel x:Name="WrapPanel_ManualConfig" VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
-                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal"  Visibility="Collapsed">
+                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal"  Visibility="Visible">
                         <Label Content="Mining Algorithm" FontFamily="Roboto" FontWeight="Normal" Margin="0,0,0,0" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
-                        <ComboBox ItemsSource="{Binding AlgorithmsList}" SelectedIndex="0" VerticalAlignment="Top" Width="120" FontFamily="Roboto" FontWeight="Normal" Margin="5,0,0,0" FontSize="13" SnapsToDevicePixels="True" Foreground="Black" />
+                        <ComboBox x:Name="AlgorithmComboBox" ItemsSource="{Binding AlgorithmsList}" SelectedItem="{Binding Algorithm}" VerticalAlignment="Top" Width="120" FontFamily="Roboto" FontWeight="Normal" Margin="5,0,0,0" FontSize="13" SnapsToDevicePixels="True" Foreground="Black" />
                     </WrapPanel>
                     <CheckBox IsChecked="{Binding NVML}"  Style="{StaticResource MaterialDesignCheckBox}" Content="NVML monitoring via console" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" />
                 </WrapPanel>

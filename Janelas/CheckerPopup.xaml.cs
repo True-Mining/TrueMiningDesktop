@@ -32,7 +32,7 @@ namespace TrueMiningDesktop.Janelas
 
             Tools.NotifyPropertyChanged();
 
-            TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/TrueMiningDesktopDotnet5.json"), toCheck));
+            TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/TrueMiningDesktop.json"), toCheck));
             TaskChecker.Start();
         }
 
@@ -116,7 +116,7 @@ namespace TrueMiningDesktop.Janelas
                     FileName = "Updating software parameters";
                     SoftwareParameters.Update(uri);
 
-                    if (!(File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates)) && (toCheck == "all" || toCheck == "TrueMining"))
+                    if (!((File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") || DateTime.UtcNow > new DateTime(2022, 2, 1)) || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates)) && (toCheck == "all" || toCheck == "TrueMining"))
                     {
                         List<FileToDownload> DlList = new();
 

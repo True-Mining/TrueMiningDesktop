@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
-    <AssemblyVersion>4.11</AssemblyVersion>
-    <FileVersion>4.11-beta</FileVersion>
+    <AssemblyVersion>4.12</AssemblyVersion>
+    <FileVersion>4.12</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <StartupObject>TrueMiningDesktop.App</StartupObject>
     <AssemblyName>True Mining Desktop</AssemblyName>
@@ -20,7 +20,7 @@
     <PackageIcon>logo.png</PackageIcon>
     <Description>True Mining Desktop Mining Software</Description>
     <RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
-    <Version>4.11</Version>
+    <Version>4.12</Version>
     <PackageProjectUrl>https://truemining.online</PackageProjectUrl>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <PackageId>TrueMiningDesktop</PackageId>
@@ -50,9 +50,9 @@
 
   <ItemGroup>
     <PackageReference Include="CoinpaprikaAPI" Version="1.3.21103" />
-    <PackageReference Include="Knapcode.TorSharp" Version="2.8.0" />
-    <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+    <PackageReference Include="Knapcode.TorSharp" Version="2.8.1" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="OxyPlot.Wpf" Version="2.0.0" />
   </ItemGroup>

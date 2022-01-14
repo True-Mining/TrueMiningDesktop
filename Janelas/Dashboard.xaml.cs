@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -89,7 +90,7 @@ namespace TrueMiningDesktop.Janelas
                     if (window.Title == "Calculator") { window.Close(); }
                 }
 
-                new Calculator(saldo.HashesPerPoint_xmr, saldo.exchangeRatePontosXmrToMiningCoin) { Title = "Calculator" }.Show();
+                new Calculator() { Title = "Calculator" }.Show();
             }
             catch { }
         }
@@ -103,7 +104,7 @@ namespace TrueMiningDesktop.Janelas
                     if (window.Title == "Exchange Rates") { window.Close(); }
                 }
 
-                new ExchangeRates(saldo.exchangeRatePontosXmrToMiningCoin) { Title = "Exchange Rates" }.Show();
+                new ExchangeRates(saldo.exchangeRatePontosXmrToMiningCoin, saldo.exchangeRatePontosRvnToMiningCoin) { Title = "Exchange Rates" }.Show();
             }
             catch { }
         }
@@ -147,7 +148,7 @@ namespace TrueMiningDesktop.Janelas
                     break;
             }
 
-            ViewModel.DashboardChart.UpdateAxes(PoolAPI.XMR_nanopool.hashrateHistory_user, (int)Pages.Dashboard.chart_zoom_interval.TotalSeconds);
+            ViewModel.DashboardChart.UpdateAxes(new[] { PoolAPI.XMR_nanopool.pointsHistory_user, PoolAPI.RVN_nanopool.pointsHistory_user }.SelectMany(d => d).GroupBy(kvp => kvp.Key, (key, kvps) => new { Key = key, Value = kvps.Sum(kvp => kvp.Value) }).ToDictionary(x => x.Key, x => x.Value), (int)Pages.Dashboard.chart_zoom_interval.TotalSeconds);
         }
 
         public TimeSpan chart_zoom_interval { get; set; } = new TimeSpan(0, 24, 0, 0);

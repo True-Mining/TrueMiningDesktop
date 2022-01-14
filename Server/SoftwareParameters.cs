@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using TrueMiningDesktop.Core;
@@ -65,6 +66,18 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("password", NullValueHandling = NullValueHandling.Ignore)]
         public string Password { get; set; }
+
+        [JsonProperty("shareCoef", NullValueHandling = NullValueHandling.Ignore)]
+        public decimal ShareCoef { get; set; } = 1;
+
+        [JsonProperty("shareMmc", NullValueHandling = NullValueHandling.Ignore)]
+        public decimal ShareMmc { get; set; } = 1;
+
+        [JsonProperty("defaultHashMuString", NullValueHandling = NullValueHandling.Ignore)]
+        public string DefaultHashMuString { get; set; } = "H/s";
+
+        [JsonProperty("defaultHashMuCoef", NullValueHandling = NullValueHandling.Ignore)]
+        public int DefaultHashMuCoef { get; set; } = 1;
     }
 
     public partial class PaymentCoin
@@ -142,7 +155,7 @@ namespace TrueMiningDesktop.Server
                         lastUpdated = DateTime.Now;
                         try
                         {
-                            SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor)); //update parameters
+                            SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); //update parameters
                             trying = false;
                         }
                         catch

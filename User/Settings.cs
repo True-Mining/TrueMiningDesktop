@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,12 +83,20 @@ namespace TrueMiningDesktop.User
             {
                 if (File.Exists("configsDevices.txt"))
                 {
-                    Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"));
+                    Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                    if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
+                    if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
+                    if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
+
+                    Device.cpu.AlgorithmsList = Device.cpu.AlgorithmsList.Distinct().ToList();
+                    Device.cuda.AlgorithmsList = Device.cuda.AlgorithmsList.Distinct().ToList();
+                    Device.opencl.AlgorithmsList = Device.opencl.AlgorithmsList.Distinct().ToList();
                 }
 
                 if (File.Exists("configsUser.txt"))
                 {
-                    UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt"));
+                    UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                    User.LICENSE_read = up.LICENSE_read;
                     User.AutostartMining = up.AutostartMining;
                     User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                     User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
@@ -99,9 +108,21 @@ namespace TrueMiningDesktop.User
                     User.Payment_CoinsList = up.Payment_CoinsList;
                     User.PayCoin = up.PayCoin;
                     User.Payment_Coin = up.Payment_Coin;
-                    if (up.Payment_Coin == null &&  up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
+                    if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                     User.Payment_Wallet = up.Payment_Wallet;
-                    User.LICENSE_read = up.LICENSE_read;
+
+                }
+
+                if (!File.Exists(@"Miners\xmrig\NewAlgo-KawPow.txt"))
+                {
+                    Device.cuda.Algorithm = "KawPow";
+                    Device.opencl.Algorithm = "KawPow";
+
+                    if (!Directory.Exists(@"Miners")) { Directory.CreateDirectory(@"Miners"); }
+                    if (!Directory.Exists(@"Miners\xmrig")) { Directory.CreateDirectory(@"Miners\xmrig"); }
+                    File.WriteAllText(@"Miners\xmrig\NewAlgo-KawPow.txt", "New mining algorithm: KawPow. True Mining automatically set it as default algo in your OPENCL and CUDA devices. Do not delete this file");
+
+                    WriteSettings();
                 }
 
                 LoadingSettings = false;
@@ -112,12 +133,16 @@ namespace TrueMiningDesktop.User
                 {
                     if (File.Exists("configsDevices.txt.backup"))
                     {
-                        Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt.backup"));
+                        Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt.backup"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                        if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
+                        if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
+                        if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
                     }
 
                     if (File.Exists("configsUser.txt.backup"))
                     {
-                        UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt.backup"));
+                        UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt.backup"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                        User.LICENSE_read = up.LICENSE_read;
                         User.AutostartMining = up.AutostartMining;
                         User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
                         User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
@@ -131,7 +156,6 @@ namespace TrueMiningDesktop.User
                         User.Payment_Coin = up.Payment_Coin;
                         if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                         User.Payment_Wallet = up.Payment_Wallet;
-                        User.LICENSE_read = up.LICENSE_read;
                     }
 
                     LoadingSettings = false;
@@ -156,8 +180,11 @@ namespace TrueMiningDesktop.User
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
 
         public bool Autoconfig { get; set; } = true;
-        public string Algorithm { get; set; } = "RandomX";
-        public List<string> AlgorithmsList { get; set; } = new();
+
+        private string algorithm = "RandomX";
+        public string Algorithm
+        { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.cpu.MiningAlgo = value; Settings.SettingsSaver(); } } }
+        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "RandomX" });
         public int Priority { get; set; } = 1;
         public int MaxUsageHint { get; set; } = 100;
         public int Threads { get; set; } = 0;
@@ -172,8 +199,11 @@ namespace TrueMiningDesktop.User
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
 
         public bool Autoconfig { get; set; } = true;
-        public string Algorithm { get; set; } = "RandomX";
-        public List<string> AlgorithmsList { get; set; } = new List<string>();
+
+        private string algorithm = "KawPow";
+        public string Algorithm
+        { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.cuda.MiningAlgo = value; Settings.SettingsSaver(); } } }
+        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
         public bool NVML { get; set; } = true;
     }
 
@@ -185,8 +215,11 @@ namespace TrueMiningDesktop.User
         { get { return miningSelected; } set { miningSelected = value; if (!Settings.LoadingSettings) { Settings.SettingsSaver(); } } }
 
         public bool Autoconfig { get; set; } = true;
-        public string Algorithm { get; set; } = "RandomX";
-        public List<string> AlgorithmsList { get; set; } = new List<string>();
+
+        private string algorithm = "KawPow";
+        public string Algorithm
+        { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.opencl.MiningAlgo = value; Settings.SettingsSaver(); } } }
+        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
         public bool Cache { get; set; } = true;
     }
 

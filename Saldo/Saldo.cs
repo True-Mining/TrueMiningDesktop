@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace TrueMiningDesktop.Server
         {
             Task.Run(() =>
             {
-                Server.SoftwareParameters.Update(new Uri("https://truemining.online/TrueMiningDesktopDotnet5.json"));
+                Server.SoftwareParameters.Update(new Uri("https://truemining.online/TrueMiningDesktop.json"));
 
                 while (User.Settings.LoadingSettings) { Thread.Sleep(500); }
 
@@ -109,7 +110,6 @@ namespace TrueMiningDesktop.Server
         private static DateTime lastUpdated = DateTime.Now.AddMinutes(-10);
 
         private static readonly int secondsPerAveragehashrateReportInterval = 60 * 10;
-        public decimal pointsMultiplier = secondsPerAveragehashrateReportInterval * 16;
         public int hashesToCompare = 1000;
 
         public void UpdateBalances()
@@ -141,21 +141,23 @@ namespace TrueMiningDesktop.Server
 
                     List<Task<Action>> getAPIsTask = new();
 
+                    decimal rvnPrice = new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("rvn-ravencoin", "BTC").Result.Value.Last().Close;
+
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_user_raw_new = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC")); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare)); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef")); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.XMRBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_user_raw_new = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).WalletTm, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).WalletTm); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { decimal rvnPrice = new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("rvn-ravencoin", "BTC").Result.Value.Last().Close; Crex24.RVNBTC_Orderbook = new PoolAPI.Orderbook() { buyLevels = new List<PoolAPI.BuyLevel>() { new PoolAPI.BuyLevel() { price = rvnPrice, volume = 1 } }, sellLevels = new List<PoolAPI.SellLevel>() { new PoolAPI.SellLevel() { price = rvnPrice, volume = 1 } } }; return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare)); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef")); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.RVNBTC_Orderbook = new PoolAPI.Orderbook() { buyLevels = new List<PoolAPI.BuyLevel>() { new PoolAPI.BuyLevel() { price = rvnPrice, volume = 1 } }, sellLevels = new List<PoolAPI.SellLevel>() { new PoolAPI.SellLevel() { price = rvnPrice, volume = 1 } } }; return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
-                    getAPIsTask.Add(new Task<Action>(() => { Crex24.PaymentCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + "-BTC")); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"))).BTCUSD.ask), 2); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { Crex24.PaymentCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + "-BTC"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture })).BTCUSD.ask), 2); return null; }));
 
                     foreach (Task task in getAPIsTask)
                     {
@@ -297,73 +299,45 @@ namespace TrueMiningDesktop.Server
                 {
                     return acc + now;
                 }));
+
+                XMR_nanopool.pointsHistory_user = XMR_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<int, decimal>(x.Key, x.Value / XMR_nanopool.sharecoef.data / 16)).ToDictionary((KeyValuePair<int, decimal> y) => y.Key, y => y.Value);
+                RVN_nanopool.pointsHistory_user = RVN_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<int, decimal>(x.Key, x.Value / RVN_nanopool.sharecoef.data / 6)).ToDictionary((KeyValuePair<int, decimal> y) => y.Key, y => y.Value);
+
+                HashesPerPoint_xmr = XMR_nanopool.sharecoef.data * 16;
+                HashesPerPoint_rvn = RVN_nanopool.sharecoef.data * 6;
+
                 decimal totalXMRmineradoTrueMining = (decimal)XMR_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) /*desconto da fee da pool que não está sendo inserida no cálculo*/ / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_xmr;
-
-                decimal XMRpraVirarBTC = (decimal)totalXMRmineradoTrueMining;
-
-                decimal XMRfinalPrice = 0;
-
-                for (int i = 0; XMRpraVirarBTC > 0; i++)
-                {
-                    int I = i;
-                    if (Crex24.XMRBTC_Orderbook.buyLevels[I].volume > XMRpraVirarBTC)
-                    {
-                        XMRpraVirarBTC -= Crex24.XMRBTC_Orderbook.buyLevels[I].volume;
-                        XMRfinalPrice = Crex24.XMRBTC_Orderbook.buyLevels[I].price;
-                    }
-                    else
-                    {
-                        XMRpraVirarBTC -= Crex24.XMRBTC_Orderbook.buyLevels[I].volume;
-                    }
-                }
-
                 decimal totalRVNmineradoTrueMining = (decimal)RVN_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) /*desconto da fee da pool que não está sendo inserida no cálculo*/ / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_rvn;
 
-                decimal RVNpraVirarBTC = (decimal)totalRVNmineradoTrueMining;
+                decimal BTCpraVirarPaymentCoin = (totalXMRmineradoTrueMining * new Tools.LiquidityPrices(Crex24.XMRBTC_Orderbook, totalXMRmineradoTrueMining).SellPrice) + (totalRVNmineradoTrueMining * new Tools.LiquidityPrices(Crex24.RVNBTC_Orderbook, totalRVNmineradoTrueMining).SellPrice);
 
-                decimal RVNfinalPrice = 0;
+                decimal PaymentCoinFinalPrice = new Tools.LiquidityPrices(Crex24.PaymentCoinBTC_Orderbook, BTCpraVirarPaymentCoin).BuyPrice;
 
-                for (int i = 0; RVNpraVirarBTC > 0; i++)
+                AccumulatedBalance_Points_xmr =
+                PoolAPI.XMR_nanopool.pointsHistory_user
+                .Where((KeyValuePair<int, decimal> value) =>
+                value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
+                .Select((KeyValuePair<int, decimal> value) => value.Value)
+                .Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
                 {
-                    int I = i;
-                    if (Crex24.RVNBTC_Orderbook.buyLevels[I].volume > RVNpraVirarBTC)
-                    {
-                        RVNpraVirarBTC -= Crex24.RVNBTC_Orderbook.buyLevels[I].volume;
-                        RVNfinalPrice = Crex24.RVNBTC_Orderbook.buyLevels[I].price;
-                    }
-                    else
-                    {
-                        RVNpraVirarBTC -= Crex24.RVNBTC_Orderbook.buyLevels[I].volume;
-                    }
-                }
+                    return acc + now;
+                }));
 
-                decimal BTCpraVirarPaymentCoin = ((decimal)totalXMRmineradoTrueMining * XMRfinalPrice) + ((decimal)totalRVNmineradoTrueMining * RVNfinalPrice);
+                exchangeRatePontosXmrToMiningCoin = HashesPerPoint_xmr * secondsPerAveragehashrateReportInterval * (XMR_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
-                decimal PaymentCoinFinalPrice = 0;
-
-                for (int i = 0; BTCpraVirarPaymentCoin > 0; i++)
+                AccumulatedBalance_Points_rvn =
+                PoolAPI.RVN_nanopool.pointsHistory_user
+                .Where((KeyValuePair<int, decimal> value) =>
+                value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
+                .Select((KeyValuePair<int, decimal> value) => value.Value)
+                .Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
                 {
-                    int I = i;
-                    if (Crex24.PaymentCoinBTC_Orderbook.sellLevels[I].volume > BTCpraVirarPaymentCoin / Crex24.PaymentCoinBTC_Orderbook.sellLevels[I].price)
-                    {
-                        BTCpraVirarPaymentCoin -= Crex24.PaymentCoinBTC_Orderbook.sellLevels[I].volume;
-                        PaymentCoinFinalPrice = Crex24.PaymentCoinBTC_Orderbook.sellLevels[I].price;
-                    }
-                    else
-                    {
-                        BTCpraVirarPaymentCoin -= Crex24.PaymentCoinBTC_Orderbook.sellLevels[I].price * Crex24.PaymentCoinBTC_Orderbook.sellLevels[I].volume;
-                    }
-                }
+                    return acc + now;
+                }));
 
-                HashesPerPoint_xmr = XMR_nanopool.sharecoef.data * pointsMultiplier;
-                AccumulatedBalance_Points_xmr = (decimal)sumHashrate_user_xmr / HashesPerPoint_xmr;
-                exchangeRatePontosXmrToMiningCoin = XMR_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60 * XMRfinalPrice / PaymentCoinFinalPrice * HashesPerPoint_xmr;
+                exchangeRatePontosRvnToMiningCoin = HashesPerPoint_rvn * secondsPerAveragehashrateReportInterval * (RVN_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
-                HashesPerPoint_rvn = RVN_nanopool.sharecoef.data * pointsMultiplier;
-                AccumulatedBalance_Points_rvn = (decimal)sumHashrate_user_rvn / HashesPerPoint_rvn;
-                exchangeRatePontosRvnToMiningCoin = RVN_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60 * RVNfinalPrice / PaymentCoinFinalPrice * HashesPerPoint_rvn;
-
-                AccumulatedBalance_Coins = Decimal.Round((totalXMRmineradoTrueMining * Decimal.Divide(XMRfinalPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_xmr, sumHashrate_tm_xmr)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) + (totalRVNmineradoTrueMining * Decimal.Divide(RVNfinalPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_rvn, sumHashrate_tm_rvn)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee), 5);
+                AccumulatedBalance_Coins = Decimal.Round((totalXMRmineradoTrueMining * Decimal.Divide(new Tools.LiquidityPrices(Crex24.XMRBTC_Orderbook, totalXMRmineradoTrueMining).SellPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_xmr, sumHashrate_tm_xmr)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) + (totalRVNmineradoTrueMining * Decimal.Divide(new Tools.LiquidityPrices(Crex24.RVNBTC_Orderbook, totalRVNmineradoTrueMining).SellPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_rvn, sumHashrate_tm_rvn)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee), 5);
 
                 string warningMessage = "Balance less than " + SoftwareParameters.ServerConfig.PaymentCoins.Find(x => Equals(x.CoinTicker, User.Settings.User.PayCoin.CoinTicker)).MinPayout.ToString() + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + " will be paid once a week when you reach the minimum amount. Your balance will disappear from the dashboard, but it will still be saved in our system";
                 string warningMessage2 = "Mined points take an average of 10-20 minutes to be displayed on the dashboard.";
