@@ -102,7 +102,7 @@ namespace TrueMiningDesktop
         private void SystemEvents_SessionEnding(object sender, Microsoft.Win32.SessionEndingEventArgs e)
         {
             Miner.EmergencyExit = true;
-            Miner.StopMiner();
+            Miner.StopMiners();
             Application.Current.Shutdown();
         }
 
@@ -256,7 +256,7 @@ namespace TrueMiningDesktop
                 {
                     if (!string.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
                     {
-                        if (!Miner.IsMining) { Miner.StartMiner(); }
+                        if (!Miner.IsMining) { Miner.StartMiners(); }
                     }
                 }
             }
@@ -266,7 +266,7 @@ namespace TrueMiningDesktop
                 {
                     if (!string.IsNullOrEmpty(User.Settings.User.Payment_Wallet))
                     {
-                        if (!Miner.IsMining) { Miner.StartMiner(); }
+                        if (!Miner.IsMining) { Miner.StartMiners(); }
                     }
                 }
             }

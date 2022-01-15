@@ -18,7 +18,7 @@ namespace TrueMiningDesktop.Core
         public static List<TRex.TRex> TRexMiners = new();
         public static List<TeamRedMiner.TeamRedMiner> TeamRedMinerMiners = new();
 
-        public static void StartMiner(bool force = false)
+        public static void StartMiners(bool force = false)
         {
             if (!IsMining && !IsTryingStartMining || force)
             {
@@ -109,7 +109,7 @@ namespace TrueMiningDesktop.Core
             }
         }
 
-        public static void StopMiner(bool force = false)
+        public static void StopMiners(bool force = false)
         {
             IsStoppingMining = true;
 

@@ -110,7 +110,6 @@ namespace TrueMiningDesktop.User
                     User.Payment_Coin = up.Payment_Coin;
                     if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                     User.Payment_Wallet = up.Payment_Wallet;
-
                 }
 
                 if (!File.Exists(@"Miners\xmrig\NewAlgo-KawPow.txt"))
@@ -182,8 +181,10 @@ namespace TrueMiningDesktop.User
         public bool Autoconfig { get; set; } = true;
 
         private string algorithm = "RandomX";
+
         public string Algorithm
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.cpu.MiningAlgo = value; Settings.SettingsSaver(); } } }
+
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "RandomX" });
         public int Priority { get; set; } = 1;
         public int MaxUsageHint { get; set; } = 100;
@@ -201,8 +202,10 @@ namespace TrueMiningDesktop.User
         public bool Autoconfig { get; set; } = true;
 
         private string algorithm = "KawPow";
+
         public string Algorithm
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.cuda.MiningAlgo = value; Settings.SettingsSaver(); } } }
+
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
         public bool NVML { get; set; } = true;
     }
@@ -217,8 +220,10 @@ namespace TrueMiningDesktop.User
         public bool Autoconfig { get; set; } = true;
 
         private string algorithm = "KawPow";
+
         public string Algorithm
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.opencl.MiningAlgo = value; Settings.SettingsSaver(); } } }
+
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
         public bool Cache { get; set; } = true;
     }
@@ -346,11 +351,11 @@ namespace TrueMiningDesktop.User
         private bool useAllInterfacesInsteadLocalhost = false;
 
         public bool UseAllInterfacesInsteadLocalhost
-        { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
+        { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiners(); Miner.StartMiners(); }; } }
 
         private bool useTorSharpOnAll = false;
 
         public bool UseTorSharpOnMining
-        { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.LoadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiner(); Miner.StartMiner(); }; } }
+        { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.LoadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiners(); Miner.StartMiners(); }; } }
     }
 }

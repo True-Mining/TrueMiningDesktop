@@ -77,9 +77,9 @@ namespace TrueMiningDesktop.ViewModel
                 {
                     while (Miner.IsStoppingMining || Miner.IsTryingStartMining) { Thread.Sleep(100); }
 
-                    Miner.StopMiner();
+                    Miner.StopMiners();
 
-                    Miner.StartMiner();
+                    Miner.StartMiners();
                 }
             })
             .Start();
@@ -97,9 +97,9 @@ namespace TrueMiningDesktop.ViewModel
                 {
                     while (Miner.IsStoppingMining || Miner.IsTryingStartMining) { Thread.Sleep(100); }
 
-                    Miner.StopMiner();
+                    Miner.StopMiners();
 
-                    Miner.StartMiner();
+                    Miner.StartMiners();
                 }
             })
             .Start();

@@ -180,7 +180,7 @@ namespace TrueMiningDesktop.Janelas
                             };
                             if (Tools.HaveADM) { TrueMiningAsAdmin.StartInfo.Verb = "runas"; }
 
-                            try { TrueMiningAsAdmin.Start(); Miner.StopMiner(); } catch (Exception e) { MessageBox.Show(e.Message); }
+                            try { TrueMiningAsAdmin.Start(); Miner.StopMiners(); } catch (Exception e) { MessageBox.Show(e.Message); }
 
                             Application.Current.Shutdown();
                         });

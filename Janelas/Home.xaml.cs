@@ -27,11 +27,11 @@ namespace TrueMiningDesktop.Janelas
         {
             if (Miner.IsMining && !Miner.IsStoppingMining)
             {
-                new Task(() => Miner.StopMiner()).Start();
+                new Task(() => Miner.StopMiners()).Start();
             }
             else if (!Miner.IsMining && !Miner.IsTryingStartMining && !Miner.IsStoppingMining)
             {
-                new Task(() => Miner.StartMiner()).Start();
+                new Task(() => Miner.StartMiners()).Start();
             }
         }
 
