@@ -83,10 +83,10 @@ namespace TrueMiningDesktop.Core
 
                                 startMinersTask.Add(new Task<Action>(() => { TeamRedMinerMiners.ForEach(miner => miner.Start()); return null; })); //inicia cada um dos mineradores da lista
 
-                                foreach (Task task in startMinersTask)
+                                Parallel.ForEach(startMinersTask, task =>
                                 {
                                     task.Start();
-                                }
+                                });
 
                                 Task.WaitAll(startMinersTask.ToArray(), 15000);
 
@@ -148,10 +148,10 @@ namespace TrueMiningDesktop.Core
                 return null;
             })); //para cada um dos mineradores da lista
 
-            foreach (Task task in stopMinersTask)
+            Parallel.ForEach(stopMinersTask, task =>
             {
                 task.Start();
-            }
+            });
 
             if (IsMining || force)
             {
@@ -161,7 +161,7 @@ namespace TrueMiningDesktop.Core
                 IsStoppingMining = true;
             }
 
-         //   Task.WaitAll(stopMinersTask.ToArray());
+            Task.WaitAll(stopMinersTask.ToArray());
         }
 
         public static void ShowHideCLI()
@@ -175,7 +175,6 @@ namespace TrueMiningDesktop.Core
             {
                 XMRigMiners.ForEach(miner =>
                 {
-
                     try
                     {
                         DateTime initializingTask = DateTime.UtcNow;
@@ -226,7 +225,6 @@ namespace TrueMiningDesktop.Core
                         });
                     }
                     catch { }
-
                 });
                 return null;
             }));
@@ -234,125 +232,125 @@ namespace TrueMiningDesktop.Core
             showHideMinersTask.Add(new Task<Action>(() =>
             {
                 TRexMiners.ForEach(miner =>
-            {
-                try
                 {
-                    DateTime initializingTask = DateTime.UtcNow;
-
-                    while (true)
+                    try
                     {
-                        bool continueWaiting = true;
-                        try
-                        {
-                            Application.Current.Dispatcher.Invoke((Action)delegate
-                            {
-                                continueWaiting = Tools.FindWindow(null, miner.TRexProcess.MainWindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
-                            });
-                        }
-                        catch { }
-                        if (continueWaiting)
-                        {
-                            Thread.Sleep(500);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
+                        DateTime initializingTask = DateTime.UtcNow;
 
-                    Application.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        IntPtr windowIdentifier = Tools.FindWindow(null, miner.TRexProcess.MainWindowTitle);
-                        if (showCLI)
+                        while (true)
                         {
-                            if (Application.Current.MainWindow.IsVisible && MainWindowFocused)
+                            bool continueWaiting = true;
+                            try
                             {
-                                TRexMiners.ForEach(miner => miner.Show());
-                                Tools.ShowWindow(windowIdentifier, 1);
-                                Application.Current.MainWindow.Focus();
+                                Application.Current.Dispatcher.Invoke((Action)delegate
+                                {
+                                    continueWaiting = Tools.FindWindow(null, miner.TRexProcess.MainWindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
+                                });
+                            }
+                            catch { }
+                            if (continueWaiting)
+                            {
+                                Thread.Sleep(500);
                             }
                             else
                             {
-                                TRexMiners.ForEach(miner => miner.TRexProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized);
-                                Tools.ShowWindow(windowIdentifier, 2);
+                                break;
                             }
                         }
-                        else
+
+                        Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            TRexMiners.ForEach(miner => miner.Hide());
-                            Tools.ShowWindow(windowIdentifier, 0);
-                        }
-                    });
-                }
-                catch { }
-            });
+                            IntPtr windowIdentifier = Tools.FindWindow(null, miner.TRexProcess.MainWindowTitle);
+                            if (showCLI)
+                            {
+                                if (Application.Current.MainWindow.IsVisible && MainWindowFocused)
+                                {
+                                    TRexMiners.ForEach(miner => miner.Show());
+                                    Tools.ShowWindow(windowIdentifier, 1);
+                                    Application.Current.MainWindow.Focus();
+                                }
+                                else
+                                {
+                                    TRexMiners.ForEach(miner => miner.TRexProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized);
+                                    Tools.ShowWindow(windowIdentifier, 2);
+                                }
+                            }
+                            else
+                            {
+                                TRexMiners.ForEach(miner => miner.Hide());
+                                Tools.ShowWindow(windowIdentifier, 0);
+                            }
+                        });
+                    }
+                    catch { }
+                });
                 return null;
             }));
 
             showHideMinersTask.Add(new Task<Action>(() =>
             {
                 TeamRedMinerMiners.ForEach(miner =>
-            {
-                try
                 {
-                    DateTime initializingTask = DateTime.UtcNow;
-
-                    while (true)
+                    try
                     {
-                        bool continueWaiting = true;
-                        try
-                        {
-                            Application.Current.Dispatcher.Invoke((Action)delegate
-                            {
-                                continueWaiting = Tools.FindWindow(null, miner.TeamRedMinerProcess.MainWindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
-                            });
-                        }
-                        catch { }
-                        if (continueWaiting)
-                        {
-                            Thread.Sleep(500);
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
+                        DateTime initializingTask = DateTime.UtcNow;
 
-                    Application.Current.Dispatcher.Invoke((Action)delegate
-                    {
-                        IntPtr windowIdentifier = Tools.FindWindow(null, miner.TeamRedMinerProcess.MainWindowTitle);
-                        if (showCLI)
+                        while (true)
                         {
-                            if (Application.Current.MainWindow.IsVisible && MainWindowFocused)
+                            bool continueWaiting = true;
+                            try
                             {
-                                TRexMiners.ForEach(miner => miner.Show());
-                                Tools.ShowWindow(windowIdentifier, 1);
-                                Application.Current.MainWindow.Focus();
+                                Application.Current.Dispatcher.Invoke((Action)delegate
+                                {
+                                    continueWaiting = Tools.FindWindow(null, miner.TeamRedMinerProcess.MainWindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
+                                });
+                            }
+                            catch { }
+                            if (continueWaiting)
+                            {
+                                Thread.Sleep(500);
                             }
                             else
                             {
-                                TRexMiners.ForEach(miner => miner.TRexProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized);
-                                Tools.ShowWindow(windowIdentifier, 2);
+                                break;
                             }
                         }
-                        else
+
+                        Application.Current.Dispatcher.Invoke((Action)delegate
                         {
-                            TRexMiners.ForEach(miner => miner.Hide());
-                            Tools.ShowWindow(windowIdentifier, 0);
-                        }
-                    });
-                }
-                catch { }
-            });
+                            IntPtr windowIdentifier = Tools.FindWindow(null, miner.TeamRedMinerProcess.MainWindowTitle);
+                            if (showCLI)
+                            {
+                                if (Application.Current.MainWindow.IsVisible && MainWindowFocused)
+                                {
+                                    TRexMiners.ForEach(miner => miner.Show());
+                                    Tools.ShowWindow(windowIdentifier, 1);
+                                    Application.Current.MainWindow.Focus();
+                                }
+                                else
+                                {
+                                    TRexMiners.ForEach(miner => miner.TRexProcessStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Minimized);
+                                    Tools.ShowWindow(windowIdentifier, 2);
+                                }
+                            }
+                            else
+                            {
+                                TRexMiners.ForEach(miner => miner.Hide());
+                                Tools.ShowWindow(windowIdentifier, 0);
+                            }
+                        });
+                    }
+                    catch { }
+                });
                 return null;
             }));
 
-            foreach (Task task in showHideMinersTask)
+            Parallel.ForEach(showHideMinersTask, task =>
             {
                 task.Start();
-            }
+            });
 
-            Task.WaitAll(showHideMinersTask.ToArray(), 10000);
+            Task.WaitAll(showHideMinersTask.ToArray(), 5000);
         }
 
         public static decimal GetHashrate(string alias = null)
@@ -636,30 +634,11 @@ namespace TrueMiningDesktop.Core
 
         public static void VerifyGeneralMiningState()
         {
-            if (XMRigMiners.Any(miner => miner.IsStoppingMining) || TRexMiners.Any(miner => miner.IsStoppingMining) || TeamRedMinerMiners.Any(miner => miner.IsStoppingMining))
-            {
-                Miner.IsStoppingMining = true;
-            }
-            else
-            {
-                Miner.IsStoppingMining = false;
-            }
-            if (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !XMRigMiners.Any(miner => miner.IsMining) || TRexMiners.Any(miner => miner.IsTryingStartMining) && !TRexMiners.Any(miner => miner.IsMining) || TeamRedMinerMiners.Any(miner => miner.IsTryingStartMining) && !TeamRedMinerMiners.Any(miner => miner.IsMining))
-            {
-                Miner.IsTryingStartMining = true;
-            }
-            else
-            {
-                Miner.IsTryingStartMining = false;
-            }
-            if ((!XMRigMiners.Any(miner => miner.IsTryingStartMining) && XMRigMiners.Any(miner => miner.IsMining)) || (!TRexMiners.Any(miner => miner.IsTryingStartMining) && TRexMiners.Any(miner => miner.IsMining)) || (!TeamRedMinerMiners.Any(miner => miner.IsTryingStartMining) && TeamRedMinerMiners.Any(miner => miner.IsMining)))
-            {
-                Miner.IsMining = true;
-            }
-            else
-            {
-                Miner.IsMining = false;
-            }
+            Miner.IsStoppingMining = XMRigMiners.Any(miner => miner.IsStoppingMining) || TRexMiners.Any(miner => miner.IsStoppingMining) || TeamRedMinerMiners.Any(miner => miner.IsStoppingMining);
+
+            Miner.IsMining = XMRigMiners.Any(miner => !miner.IsTryingStartMining && miner.IsMining && !miner.IsStoppingMining) || TRexMiners.Any(miner => !miner.IsTryingStartMining && miner.IsMining && !miner.IsStoppingMining) || TeamRedMinerMiners.Any(miner => !miner.IsTryingStartMining && miner.IsMining && !miner.IsStoppingMining);
+
+            Miner.IsTryingStartMining = !Miner.IsMining && (XMRigMiners.Any(miner => miner.IsTryingStartMining) || TRexMiners.Any(miner => miner.IsTryingStartMining) || TeamRedMinerMiners.Any(miner => miner.IsTryingStartMining));
         }
     }
 }
