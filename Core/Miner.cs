@@ -22,27 +22,35 @@ namespace TrueMiningDesktop.Core
         {
             if (!IsMining && !IsTryingStartMining || force)
             {
-                IsTryingStartMining = true;
-
                 while (IsStoppingMining && !force) { System.Threading.Thread.Sleep(100); }
-                IsTryingStartMining = true;
+
+                Application.Current.Dispatcher.Invoke((Action)delegate
+                {
+                    IsTryingStartMining = true;
+                });
 
                 if (String.IsNullOrEmpty(User.Settings.User.Payment_Coin) || User.Settings.User.PayCoin == null || User.Settings.User.PayCoin.CoinName == null)
                 {
-                    IsTryingStartMining = false;
-                    if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Select Payment Coin first"); }
-                    IsMining = false;
-                    IsTryingStartMining = false;
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        if (Application.Current.MainWindow.WindowState != WindowState.Minimized) { MessageBox.Show("Select Payment Coin first"); }
+
+                        IsTryingStartMining = false;
+                        IsMining = false;
+                    });
                     return;
                 }
 
                 if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
                 {
-                    Miner.IsTryingStartMining = false;
-                    if (Application.Current.MainWindow.IsVisible) { MessageBox.Show("Something wrong. Check your wallet address and selected coin."); }
-                    IsMining = false;
-                    IsTryingStartMining = false;
-                    return;
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        if (Application.Current.MainWindow.WindowState != WindowState.Minimized) { MessageBox.Show("Something wrong. Check your wallet address and selected coin."); }
+
+                        IsTryingStartMining = false;
+                        IsMining = false;
+                    });
+                    return;                    
                 }
 
                 Server.SoftwareParameters.ServerConfig.MiningCoins.ForEach(miningCoin =>
@@ -92,7 +100,7 @@ namespace TrueMiningDesktop.Core
 
                                 ShowHideCLI();
                             }
-                            catch (Exception e) { MessageBox.Show(e.Message); isTryingStartMining = false; }
+                            catch { Application.Current.Dispatcher.Invoke((Action)delegate { IsTryingStartMining = false; }); }
                         })
                         .Start();
                     }
