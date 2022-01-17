@@ -123,6 +123,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                             Thread.Sleep(100);
                             DateTime time = TeamRedMinerProcess.StartTime;
                             if (time.Ticks > 100) { break; }
+                            if (time.Ticks > 100) { try { Tools.SetWindowText(TeamRedMinerProcess.MainWindowHandle, WindowTitle); } catch { } break; }
                         }
                         catch { }
                     }

@@ -543,6 +543,8 @@ namespace TrueMiningDesktop.Core
             return activeProcId == procId;
         }
 
+        [DllImport("user32.dll")]
+        public static extern int SetWindowText(IntPtr hWnd, string text);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern IntPtr GetForegroundWindow();

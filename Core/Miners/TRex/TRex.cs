@@ -115,7 +115,7 @@ namespace TrueMiningDesktop.Core.TRex
                         {
                             Thread.Sleep(100);
                             DateTime time = TRexProcess.StartTime;
-                            if (time.Ticks > 100) { break; }
+                            if (time.Ticks > 100) { try { Tools.SetWindowText(TRexProcess.MainWindowHandle, WindowTitle); } catch { } break; }
                         }
                         catch { }
                     }
