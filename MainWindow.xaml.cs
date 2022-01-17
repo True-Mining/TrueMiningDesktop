@@ -313,9 +313,9 @@ namespace TrueMiningDesktop
                     {
                         this.Hide();
 
-                        NotifyIcon.Visible = false;
+                        new Thread(() => Miner.StopMiners(true)).Start();
 
-                        Miner.XMRigMiners.ForEach(miner => { try { miner.IsMining = false; miner.XMRigProcess.Kill(true); } catch { } });
+                        NotifyIcon.Visible = false;
 
                         Thread.Sleep(1500);
                     }
