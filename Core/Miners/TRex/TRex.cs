@@ -12,14 +12,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using TrueMiningDesktop.Janelas;
 using TrueMiningDesktop.Server;
-using TrueMiningDesktop.User;
 
 namespace TrueMiningDesktop.Core.TRex
 {
     public class TRex
     {
         private bool isMining = false;
-        private bool isTryingStartMining = true;
+        private bool isTryingStartMining = false;
         private bool isStoppingMining = false;
 
         public bool IsMining
@@ -188,8 +187,6 @@ namespace TrueMiningDesktop.Core.TRex
                 {
                     IsInTRexexitEvent = true;
 
-                    IsTryingStartMining = true;
-
                     if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(30000); } else { Thread.Sleep(10000); }
 
                     if (IsMining && !IsStoppingMining)
@@ -206,9 +203,11 @@ namespace TrueMiningDesktop.Core.TRex
         {
             try
             {
-                bool closed = false;
-
-                IsStoppingMining = true;
+                try
+                {
+                    IsStoppingMining = true;
+                }
+                catch { }
 
                 Task tryCloseFancy = new(() =>
                 {
@@ -217,15 +216,14 @@ namespace TrueMiningDesktop.Core.TRex
                         TRexProcess.CloseMainWindow();
                         TRexProcess.WaitForExit();
 
-                        closed = true;
                         IsMining = false;
                         IsStoppingMining = false;
                     }
                     catch
                     {
                         TRexProcess.Kill(true);
+                        Tools.KillProcessByName(TRexProcess.ProcessName);
 
-                        closed = true;
                         IsMining = false;
                         IsStoppingMining = false;
                     }
@@ -233,14 +231,13 @@ namespace TrueMiningDesktop.Core.TRex
                 tryCloseFancy.Start();
                 tryCloseFancy.Wait(4000);
 
-                if (!closed)
+                if (!tryCloseFancy.Wait(4000))
                 {
                     try
                     {
                         TRexProcess.Kill(true);
                         Tools.KillProcessByName(TRexProcess.ProcessName);
 
-                        closed = true;
                         IsMining = false;
                         IsStoppingMining = false;
                     }
@@ -249,11 +246,13 @@ namespace TrueMiningDesktop.Core.TRex
 
                 try
                 {
-                    TRexProcess.Kill(true);
+                    if (TRexProcess.Responding || !TRexProcess.HasExited)
+                    {
+                        TRexProcess.Kill(true);
 
-                    closed = true;
-                    IsMining = false;
-                    IsStoppingMining = false;
+                        IsMining = false;
+                        IsStoppingMining = false;
+                    }
                 }
                 catch { }
             }
@@ -285,7 +284,6 @@ namespace TrueMiningDesktop.Core.TRex
 
                 Backends.ForEach(backend =>
                 {
-
                     if (backendsAPI.Uptime < 1)
                     {
                         hashrates.TryAdd("cuda", -1);

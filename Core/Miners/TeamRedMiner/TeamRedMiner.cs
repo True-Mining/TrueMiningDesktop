@@ -12,14 +12,13 @@ using System.Threading.Tasks;
 using System.Windows;
 using TrueMiningDesktop.Janelas;
 using TrueMiningDesktop.Server;
-using TrueMiningDesktop.User;
 
 namespace TrueMiningDesktop.Core.TeamRedMiner
 {
     public class TeamRedMiner
     {
         private bool isMining = false;
-        private bool isTryingStartMining = true;
+        private bool isTryingStartMining = false;
         private bool isStoppingMining = false;
 
         private string Arguments = "";
@@ -97,10 +96,10 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 TeamRedMinerProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 TeamRedMinerProcess.StartInfo = TeamRedMinerProcessStartInfo;
 
-                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_ALLOC_PERCENT", "100"); }
-                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_SINGLE_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_SINGLE_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_SINGLE_ALLOC_PERCENT", "100"); }
-                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_HEAP_SIZE")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_HEAP_SIZE"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_HEAP_SIZE", "100"); }
-                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_USE_SYNC_OBJECTS")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_USE_SYNC_OBJECTS"] = "1"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_USE_SYNC_OBJECTS", "1"); }
+                // if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_ALLOC_PERCENT", "100"); }
+                // if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_SINGLE_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_SINGLE_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_SINGLE_ALLOC_PERCENT", "100"); }
+                // if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_HEAP_SIZE")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_HEAP_SIZE"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_HEAP_SIZE", "100"); }
+                // if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_USE_SYNC_OBJECTS")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_USE_SYNC_OBJECTS"] = "1"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_USE_SYNC_OBJECTS", "1"); }
             }
 
             TeamRedMinerProcess.Exited -= TeamRedMinerProcess_Exited;
@@ -122,10 +121,9 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                         {
                             Thread.Sleep(100);
                             DateTime time = TeamRedMinerProcess.StartTime;
-                            if (time.Ticks > 100) { break; }
                             if (time.Ticks > 100) { try { Tools.SetWindowText(TeamRedMinerProcess.MainWindowHandle, WindowTitle); } catch { } break; }
                         }
-                        catch { }
+                        catch (Exception e) { MessageBox.Show(e.Message); }
                     }
                 }).Wait(3000);
 
@@ -136,6 +134,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.Message);
                 Stop();
 
                 IsTryingStartMining = true;
@@ -185,7 +184,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
         private void TeamRedMinerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Tools.KillProcess(TeamRedMinerProcess.ProcessName); Stop();
+            //    Tools.KillProcess(TeamRedMinerProcess.ProcessName); Stop();
         }
 
         private void TeamRedMinerProcess_Exited(object sender, EventArgs e)
@@ -195,8 +194,6 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 if (!IsInTeamRedMinerexitEvent)
                 {
                     IsInTeamRedMinerexitEvent = true;
-
-                    IsTryingStartMining = true;
 
                     if (startedSince < DateTime.UtcNow.AddSeconds(-30)) { Thread.Sleep(30000); } else { Thread.Sleep(10000); }
 
@@ -214,9 +211,11 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
         {
             try
             {
-                bool closed = false;
-
-                IsStoppingMining = true;
+                try
+                {
+                    IsStoppingMining = true;
+                }
+                catch { }
 
                 Task tryCloseFancy = new(() =>
                 {
@@ -225,15 +224,14 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                         TeamRedMinerProcess.CloseMainWindow();
                         TeamRedMinerProcess.WaitForExit();
 
-                        closed = true;
                         IsMining = false;
                         IsStoppingMining = false;
                     }
                     catch
                     {
                         TeamRedMinerProcess.Kill(true);
+                        Tools.KillProcessByName(TeamRedMinerProcess.ProcessName);
 
-                        closed = true;
                         IsMining = false;
                         IsStoppingMining = false;
                     }
@@ -241,14 +239,13 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 tryCloseFancy.Start();
                 tryCloseFancy.Wait(4000);
 
-                if (!closed)
+                if (!tryCloseFancy.Wait(4000))
                 {
                     try
                     {
                         TeamRedMinerProcess.Kill(true);
                         Tools.KillProcessByName(TeamRedMinerProcess.ProcessName);
 
-                        closed = true;
                         IsMining = false;
                         IsStoppingMining = false;
                     }
@@ -257,11 +254,13 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
                 try
                 {
-                    TeamRedMinerProcess.Kill(true);
+                    if (TeamRedMinerProcess.Responding || !TeamRedMinerProcess.HasExited)
+                    {
+                        TeamRedMinerProcess.Kill(true);
 
-                    closed = true;
-                    IsMining = false;
-                    IsStoppingMining = false;
+                        IsMining = false;
+                        IsStoppingMining = false;
+                    }
                 }
                 catch { }
             }
@@ -293,18 +292,17 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
                 Backends.ForEach(backend =>
                 {
-
-                  //  if (backendsAPI.Uptime < 1)
+                    //  if (backendsAPI.Uptime < 1)
                     {
                         hashrates.TryAdd("opencl", -1);
                     }
-                //    else if (backendsAPI.Hashrate < 1)
+                    //    else if (backendsAPI.Hashrate < 1)
                     {
-                //        hashrates.TryAdd("opencl", 0);
+                        //        hashrates.TryAdd("opencl", 0);
                     }
-               //     else
+                    //     else
                     {
-                //        hashrates.TryAdd("opencl", Convert.ToDecimal(backendsAPI.Hashrate, CultureInfo.InvariantCulture.NumberFormat));
+                        //        hashrates.TryAdd("opencl", Convert.ToDecimal(backendsAPI.Hashrate, CultureInfo.InvariantCulture.NumberFormat));
                     }
                 });
 
