@@ -100,8 +100,23 @@ namespace TrueMiningDesktop.Server
 
     public partial class ThirdPartyBinaries
     {
-        [JsonProperty("files", NullValueHandling = NullValueHandling.Ignore)]
-        public List<FileToDownload> Files { get; set; }
+        [JsonProperty("tools", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FileToDownload> Tools { get; set; }
+
+        [JsonProperty("backendMiners", NullValueHandling = NullValueHandling.Ignore)]
+        public BackendMiners BackendMiners { get; set; }
+    }
+
+    public partial class BackendMiners
+    {
+        [JsonProperty("cpu", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FileToDownload> Cpu { get; set; }
+
+        [JsonProperty("opencl", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FileToDownload> Opencl { get; set; }
+
+        [JsonProperty("cuda", NullValueHandling = NullValueHandling.Ignore)]
+        public List<FileToDownload> Cuda { get; set; }
     }
 
     public partial class MarkAsOldFiles
