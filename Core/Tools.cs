@@ -503,12 +503,6 @@ namespace TrueMiningDesktop.Core
             catch { }
         }
 
-        public static void KillMiners()
-        {
-            KillProcess("xmrig-gcc.exe");
-            KillProcess("xmrig-msvc.exe");
-        }
-
         public static void KillProcess(string processName)
         {
             Process mataminers = new()

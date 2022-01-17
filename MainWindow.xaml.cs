@@ -75,8 +75,6 @@ namespace TrueMiningDesktop
             Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseMove += Move;
             Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseUp += Up;
 
-            Tools.KillMiners();
-
             Microsoft.Win32.SystemEvents.SessionEnding += SystemEvents_SessionEnding;
 
             Application.Current.Exit += Current_Exit;
