@@ -63,7 +63,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
         private List<DeviceInfo> Backends = new();
         public readonly Process XMRigProcess = new();
-        public readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe");
+        public readonly ProcessStartInfo XMRigProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig_zerofee-msvc.exe");
         private string AlgoBackendsString = null;
         public string WindowTitle = "True Mining running XMRig";
         private int APIport = 20210;
@@ -85,7 +85,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
             if (XMRigProcess.StartInfo != XMRigProcessStartInfo)
             {
-                XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\xmrig\";
+                XMRigProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\XMRig\";
                 XMRigProcessStartInfo.Arguments = "--config=config-" + AlgoBackendsString + ".json";
                 XMRigProcessStartInfo.UseShellExecute = true;
                 XMRigProcessStartInfo.RedirectStandardError = false;
@@ -266,17 +266,17 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public void ChangeMinerBinary()
         {
-            if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe")
+            if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig-gcc.exe")
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe";
+                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig_zerofee-msvc.exe";
             }
-            else if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig_zerofee-msvc.exe")
+            else if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig_zerofee-msvc.exe")
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-msvc.exe";
+                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig-msvc.exe";
             }
             else
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\xmrig\" + @"xmrig-gcc.exe";
+                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig-gcc.exe";
             }
 
             if (minerBinaryChangedTimes < 100) { minerBinaryChangedTimes++; }
