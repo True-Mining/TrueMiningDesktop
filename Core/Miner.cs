@@ -59,11 +59,11 @@ namespace TrueMiningDesktop.Core
                     {
                         XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (!device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase)) && (!device.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
                     }
-                    if (Device.cuda.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.cuda.IsSelected && !Device.cuda.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
+                    if (Device.Cuda.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.Cuda.IsSelected && !Device.Cuda.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
                     {
                         TRexMiners.Add(new TRex.TRex(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) && !device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
                     }
-                    if (Device.opencl.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.opencl.IsSelected && !Device.opencl.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
+                    if (Device.Opencl.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.Opencl.IsSelected && !Device.Opencl.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
                     {
                         TeamRedMinerMiners.Add(new TeamRedMiner.TeamRedMiner(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (device.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase) && !device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
                     }
@@ -73,8 +73,7 @@ namespace TrueMiningDesktop.Core
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        //     IsTryingStartMining = true;
-                        Tools.CheckerPopup = new CheckerPopup("all");
+                        Tools.CheckerPopup = new CheckerPopup(CheckerPopup.ToCheck.SelectedBackendMiners);
                         Tools.CheckerPopup.ShowDialog();
                     });
                     if (!EmergencyExit || force)
@@ -123,9 +122,11 @@ namespace TrueMiningDesktop.Core
 
             List<Task<Action>> stopMinersTask = new();
 
+            DateTime dateTimeStopInit = new DateTime(DateTime.UtcNow.Ticks).AddSeconds(30);
+
             stopMinersTask.Add(new Task<Action>(() =>
             {
-                while (XMRigMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
+                while (DateTime.UtcNow < dateTimeStopInit && XMRigMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
 
                 XMRigMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
 
@@ -136,7 +137,7 @@ namespace TrueMiningDesktop.Core
 
             stopMinersTask.Add(new Task<Action>(() =>
             {
-                while (TRexMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
+                while (DateTime.UtcNow < dateTimeStopInit && TRexMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
 
                 TRexMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
 
@@ -147,7 +148,7 @@ namespace TrueMiningDesktop.Core
 
             stopMinersTask.Add(new Task<Action>(() =>
             {
-                while (TeamRedMinerMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
+                while (DateTime.UtcNow < dateTimeStopInit && TeamRedMinerMiners.Any(miner => miner.IsTryingStartMining) && !force) { System.Threading.Thread.Sleep(100); }
 
                 TeamRedMinerMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
 
@@ -487,9 +488,9 @@ namespace TrueMiningDesktop.Core
 
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        if (Device.cpu.IsSelected) { Device.cpu.IsMining = true; Pages.SettingsCPU.AllContent.IsEnabled = false; Pages.SettingsCPU.LockWarning.Visibility = Visibility.Visible; }
-                        if (Device.opencl.IsSelected) { Device.opencl.IsMining = true; Pages.SettingsOPENCL.AllContent.IsEnabled = false; Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible; }
-                        if (Device.cuda.IsSelected) { Device.cuda.IsMining = true; Pages.SettingsCUDA.AllContent.IsEnabled = false; Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible; }
+                        if (Device.Cpu.IsSelected) { Device.Cpu.IsMining = true; Pages.SettingsCPU.AllContent.IsEnabled = false; Pages.SettingsCPU.LockWarning.Visibility = Visibility.Visible; }
+                        if (Device.Opencl.IsSelected) { Device.Opencl.IsMining = true; Pages.SettingsOPENCL.AllContent.IsEnabled = false; Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible; }
+                        if (Device.Cuda.IsSelected) { Device.Cuda.IsMining = true; Pages.SettingsCUDA.AllContent.IsEnabled = false; Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible; }
 
                         if (isMining && !isStoppingMining && !isTryingStartMining)
                         {
@@ -503,26 +504,26 @@ namespace TrueMiningDesktop.Core
                             Pages.Home.StartStopButton.Background = Brushes.DarkOrange;
                             Pages.Home.StartStopButton.BorderBrush = Brushes.DarkOrange;
 
-                            if (Device.cpu.IsSelected)
+                            if (Device.Cpu.IsSelected)
                             {
-                                Device.cpu.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                                Device.Cpu.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
                             }
-                            if (Device.cuda.IsSelected)
+                            if (Device.Cuda.IsSelected)
                             {
-                                Device.cuda.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                                Device.Cuda.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
                             }
-                            if (Device.opencl.IsSelected)
+                            if (Device.Opencl.IsSelected)
                             {
-                                Device.opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                                Device.Opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
                             }
                         }
                         else if (!isMining && !isTryingStartMining && !isStoppingMining)
                         {
                             StartedSince = holdTime.AddTicks(-holdTime.Ticks);
 
-                            Device.cpu.IsMining = false;
-                            Device.opencl.IsMining = false;
-                            Device.cuda.IsMining = false;
+                            Device.Cpu.IsMining = false;
+                            Device.Opencl.IsMining = false;
+                            Device.Cuda.IsMining = false;
 
                             Pages.SettingsCPU.AllContent.IsEnabled = true;
                             Pages.SettingsCUDA.AllContent.IsEnabled = true;
@@ -539,17 +540,17 @@ namespace TrueMiningDesktop.Core
                             Pages.Home.StartStopButton.Background = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#5C7AEA");
                             Pages.Home.StartStopButton.BorderBrush = (Brush)new System.Windows.Media.BrushConverter().ConvertFromString("#5C7AEA");
 
-                            if (Device.cpu.IsSelected)
+                            if (Device.Cpu.IsSelected)
                             {
-                                Device.cpu.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
+                                Device.Cpu.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
                             }
-                            if (Device.cuda.IsSelected)
+                            if (Device.Cuda.IsSelected)
                             {
-                                Device.cuda.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
+                                Device.Cuda.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
                             }
-                            if (Device.opencl.IsSelected)
+                            if (Device.Opencl.IsSelected)
                             {
-                                Device.opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
+                                Device.Opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.Black;
                             }
                         }
                     });
@@ -591,17 +592,17 @@ namespace TrueMiningDesktop.Core
                         Pages.Home.StartStopButton.Background = Brushes.ForestGreen;
                         Pages.Home.StartStopButton.BorderBrush = Brushes.ForestGreen;
 
-                        if (Device.cpu.IsSelected)
+                        if (Device.Cpu.IsSelected)
                         {
-                            Device.cpu.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                            Device.Cpu.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
                         }
-                        if (Device.cuda.IsSelected)
+                        if (Device.Cuda.IsSelected)
                         {
-                            Device.cuda.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                            Device.Cuda.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
                         }
-                        if (Device.opencl.IsSelected)
+                        if (Device.Opencl.IsSelected)
                         {
-                            Device.opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
+                            Device.Opencl.OverviewDeviceSimplified.ovIcon.Foreground = Brushes.ForestGreen;
                         }
                     }
 

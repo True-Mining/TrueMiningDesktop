@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace TrueMiningDesktop.Janelas
         public bool Tape = false;
         private readonly Task TaskChecker = new(() => { });
 
-        public CheckerPopup(string toCheck = "all")
+        public CheckerPopup(ToCheck toCheck = ToCheck.All)
         {
             InitializeComponent();
             DataContext = this;
@@ -32,7 +33,7 @@ namespace TrueMiningDesktop.Janelas
 
             Tools.NotifyPropertyChanged();
 
-            TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/TrueMiningDesktop.json"), toCheck));
+            TaskChecker = new Task(() => Checker(new Uri("https://truemining.online/config.json"), toCheck));
             TaskChecker.Start();
         }
 
@@ -78,7 +79,19 @@ namespace TrueMiningDesktop.Janelas
 
         public bool allDone = false;
 
-        public void Checker(Uri uri, string toCheck)
+        public enum ToCheck
+        {
+            All,
+            AppFiles,
+            Tools,
+            AllBackendMiners,
+            SelectedBackendMiners,
+            BackendCpu,
+            BackendOpencl,
+            BackendCuda
+        }
+
+        public void Checker(Uri uri, ToCheck toCheck)
         {
             Tape = true;
 
@@ -116,49 +129,113 @@ namespace TrueMiningDesktop.Janelas
                     FileName = "Updating software parameters";
                     SoftwareParameters.Update(uri);
 
-                    if (!((File.Exists(Environment.CurrentDirectory + @"\DoNotUpdate") || DateTime.UtcNow > new DateTime(2022, 2, 1)) || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates)) && (toCheck == "all" || toCheck == "TrueMining"))
+                    if ((File.Exists("DoNotUpdate") && DateTime.UtcNow < new DateTime(2022, 02, 02)) || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates))
                     {
-                        List<FileToDownload> DlList = new();
+                        FileName = "Force do not update";
+                        Thread.Sleep(1000);
+                        Dispatcher.BeginInvoke((Action)(() => { Close(); }));
+                    }
+                    else
+                    {
+                        FileName = "Checking Files";
 
-                        foreach (FileToDownload file in SoftwareParameters.ServerConfig.TrueMiningFiles.Files)
+                        // cria lista de arquivos esperados que serão verificados
+                        List<Server.FileInfo> filesToCheck = new List<Server.FileInfo>();
+
+                        // adiciona os arquivos esperados na lista, com base em qual categoria de arquivos foi solicitada
+                        if (toCheck == ToCheck.All)
                         {
-                            FileName = "Checking Files";
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.AppFiles);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.Tools);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Common);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cpu);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Opencl);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cuda);
+                        }
+                        else if (toCheck == ToCheck.AppFiles)
+                        {
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.AppFiles);
+                        }
+                        else if (toCheck == ToCheck.Tools)
+                        {
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.Tools);
+                        }
+                        else if (toCheck == ToCheck.SelectedBackendMiners)
+                        {
+                            if (Device.DevicesList.Any(device => device.IsSelected)) { filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Common); }
 
-                            file.Path = Tools.FormatPath(file.Path);
+                            if (Device.Cpu.IsSelected) { filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cpu); }
+                            if (Device.Opencl.IsSelected) { filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Opencl); }
+                            if (Device.Cuda.IsSelected) { filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cuda); }
+                        }
+                        else if (toCheck == ToCheck.AllBackendMiners)
+                        {
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Common);
 
-                            if (!File.Exists(file.Path + file.FileName) || Tools.FileSHA256(file.Path + file.FileName) != file.Sha256)
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cpu);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Opencl);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cuda);
+                        }
+                        else if (toCheck == ToCheck.BackendCpu)
+                        {
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Common);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cpu);
+                        }
+                        else if (toCheck == ToCheck.BackendOpencl)
+                        {
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Common);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Opencl);
+                        }
+                        else if (toCheck == ToCheck.BackendCuda)
+                        {
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Common);
+                            filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cuda);
+                        }
+
+                        // cria lsita de arquivos que precisam ser baixados
+                        List<Server.FileInfo> filesToDowload = new List<Server.FileInfo>();
+
+                        // adiciona na lista de downloads os arquivos que não existirem ou tiverem o chcksum sha256 diferente
+                        filesToCheck.ForEach(file =>
+                        {
+                            file.Directory = Tools.FormatPath(file.Directory);
+
+                            if (!File.Exists(file.Directory + file.FileName) || Tools.FileSHA256(file.Directory + file.FileName) != file.Sha256)
                             {
-                                DlList.Add(file);
+                                filesToDowload.Add(file);
                             }
-                        }
+                        });
 
-                        foreach (FileToDownload file in DlList)
+                        // faz downlaod de cada arquivo da lista de downloads
+                        filesToDowload.ForEach(file =>
                         {
-                            while (!Downloader(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")")) { Thread.Sleep(300); };
-                        }
+                            while (!Downloader(file, "(" + filesToDowload.IndexOf(file) + "/" + filesToDowload.Count + ")")) { Thread.Sleep(300); };
+                        });
 
-                        foreach (FileToDownload file in DlList)
+                        // aplica cada arquivo, movendo o arquivo existente (ou não) para uma localização de descarte e movendo o arquivo baixado para a localização do arquivo antigo
+                        filesToDowload.ForEach(file =>
                         {
-                            while (!ApplyDownloadedFile(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")")) { Thread.Sleep(300); };
+                            while (!ApplyDownloadedFile(file, "(" + filesToDowload.IndexOf(file) + "/" + filesToDowload.Count + ")")) { Thread.Sleep(300); };
                             needRestart = true;
-                        }
+                        });
                     }
 
-                    foreach (FileToDownload file in SoftwareParameters.ServerConfig.MarkAsOldFiles.Files)
+                    // remove os arquivos marcados como RemovedFiles
+                    SoftwareParameters.ServerConfig.RemovedFiles.ForEach(removeFile =>
                     {
                         try
                         {
-                            file.Path = Tools.FormatPath(file.Path);
+                            removeFile.Directory = Tools.FormatPath(removeFile.Directory);
 
-                            if (File.Exists(file.Path + file.FileName))
+                            if (File.Exists(removeFile.Directory + removeFile.FileName))
                             {
                                 FileName = "Marking old files";
 
-                                File.Move(file.Path + file.FileName, file.Path + file.FileName + ".old", true);
+                                File.Move(removeFile.Directory + removeFile.FileName, removeFile.Directory + removeFile.FileName + ".old", true);
                             }
                         }
                         catch { }
-                    }
+                    });
 
                     if (needRestart)
                     {
@@ -186,33 +263,6 @@ namespace TrueMiningDesktop.Janelas
                         });
                     }
 
-                    if (toCheck == "all" || toCheck == "ThirdPartyBinaries")
-                    {
-                        List<FileToDownload> DlList = new();
-
-                        foreach (FileToDownload file in SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files)
-                        {
-                            FileName = "Checking Files";
-
-                            file.Path = Tools.FormatPath(file.Path);
-
-                            if (!File.Exists(file.Path + file.FileName) || Tools.FileSHA256(file.Path + file.FileName) != file.Sha256)
-                            {
-                                DlList.Add(file);
-                            }
-                        }
-
-                        foreach (FileToDownload file in DlList)
-                        {
-                            Downloader(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")");
-                        }
-
-                        foreach (FileToDownload file in DlList)
-                        {
-                            while (!ApplyDownloadedFile(file, "(" + DlList.IndexOf(file) + "/" + DlList.Count + ")")) { Thread.Sleep(300); };
-                        }
-                    }
-
                     HostFilesAd_Visibility = Visibility.Collapsed;
                     trying = false;
                 }
@@ -224,26 +274,39 @@ namespace TrueMiningDesktop.Janelas
                 try
                 {
                     FileName = "Removing old files";
-                    string[] arquivosOdl = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
-                    foreach (var arq in arquivosOdl)
+                    string[] filesDotOld = Directory.GetFiles(Environment.CurrentDirectory, "*.old", SearchOption.AllDirectories);
+                    foreach (var file in filesDotOld)
                     {
                         try
                         {
-                            if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                            if (!Tools.IsFileLocked(new System.IO.FileInfo(file))) { File.Delete(file); }
                         }
                         catch { };
                     }
 
-                    string[] arquivosDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
-                    foreach (string arq in arquivosDl)
-                    {
-                        string arqSha256 = Tools.FileSHA256(arq);
+                    string[] FilesDotDl = Directory.GetFiles(Environment.CurrentDirectory, "*.dl", SearchOption.AllDirectories);
 
-                        if (!SoftwareParameters.ServerConfig.ThirdPartyBinaries.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)) && !SoftwareParameters.ServerConfig.TrueMiningFiles.Files.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)))
+                    List<Server.FileInfo> AllSoftwareFilesOrigin = new List<Server.FileInfo>();
+
+                    if (FilesDotDl.Length > 0)
+                    {
+                        AllSoftwareFilesOrigin.AddRange(SoftwareParameters.ServerConfig.AppFiles);
+                        AllSoftwareFilesOrigin.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.Tools);
+                        AllSoftwareFilesOrigin.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Common);
+                        AllSoftwareFilesOrigin.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cpu);
+                        AllSoftwareFilesOrigin.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Opencl);
+                        AllSoftwareFilesOrigin.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cuda);
+                    }
+
+                    foreach (string file in FilesDotDl)
+                    {
+                        string arqSha256 = Tools.FileSHA256(file);
+
+                        if (!AllSoftwareFilesOrigin.Exists(x => string.Equals(arqSha256, x.Sha256, StringComparison.OrdinalIgnoreCase)))
                         {
                             try
                             {
-                                if (!Tools.IsFileLocked(new FileInfo(arq))) { File.Delete(arq); }
+                                if (!Tools.IsFileLocked(new System.IO.FileInfo(file))) { File.Delete(file); }
                             }
                             catch { };
                         }
@@ -290,7 +353,7 @@ namespace TrueMiningDesktop.Janelas
 
         private bool useTor = false;
 
-        public bool Downloader(FileToDownload file, string progress = null)
+        public bool Downloader(Server.FileInfo file, string progress = null)
         {
             try
             {
@@ -298,7 +361,7 @@ namespace TrueMiningDesktop.Janelas
                 ProgressBar_Value = 0;
                 HostFilesAd_Visibility = Visibility.Visible;
 
-                if ((File.Exists(file.Path + file.FileName + ".dl") && Tools.FileSHA256(file.Path + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Path + file.FileName) && Tools.FileSHA256(file.Path + file.FileName) == file.Sha256)) { return true; }
+                if ((File.Exists(file.Directory + file.FileName + ".dl") && Tools.FileSHA256(file.Directory + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Directory + file.FileName) && Tools.FileSHA256(file.Directory + file.FileName) == file.Sha256)) { return true; }
 
                 downloaderTryesCount = 0;
                 webClientTryesCount = 0;
@@ -310,7 +373,7 @@ namespace TrueMiningDesktop.Janelas
 
                 useTor = false;
 
-                while (!File.Exists(file.Path + file.FileName + ".dl") || Tools.FileSHA256(file.Path + file.FileName + ".dl") != file.Sha256)
+                while (!File.Exists(file.Directory + file.FileName + ".dl") || Tools.FileSHA256(file.Directory + file.FileName + ".dl") != file.Sha256)
                 {
                     downloaderTryesCount++;
 
@@ -326,7 +389,7 @@ namespace TrueMiningDesktop.Janelas
                     webClient.DownloadFileCompleted -= WebClient_DownloadFileCompleted;
                     webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
                     webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
-                    webClient.DownloadFileAsync(new Uri(file.DlLink), file.Path + file.FileName + ".dl");
+                    webClient.DownloadFileAsync(new Uri(file.DlLink), file.Directory + file.FileName + ".dl");
 
                     long currentDownloadOLastTotalBytesReceived = currentDownloadBytesReceived;
                     DateTime currentDownloadLastProgressUpdated = DateTime.UtcNow.AddSeconds(useTor ? 25 : 5);
@@ -340,10 +403,11 @@ namespace TrueMiningDesktop.Janelas
                                 ProgressDetails = "Progress: restarting...";
                                 FileName += " => fail. restarting app...";
                                 StatusTitle = "Fail > Restarting Application";
-                                Thread.Sleep(4000);
+                                Thread.Sleep(30000);
 
                                 webClient.CancelAsync();
-                                Tools.RestartApp(false);
+                                
+                                Dispatcher.BeginInvoke((Action)(() => { Tools.RestartApp(false); Close(); }));
                             }
                         }
                         else
@@ -355,13 +419,13 @@ namespace TrueMiningDesktop.Janelas
                     }
                     //    webClient.Dispose();
                 }
-                if ((File.Exists(file.Path + file.FileName + ".dl") && Tools.FileSHA256(file.Path + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Path + file.FileName) && Tools.FileSHA256(file.Path + file.FileName) == file.Sha256)) { return true; } else { return false; }
+                if ((File.Exists(file.Directory + file.FileName + ".dl") && Tools.FileSHA256(file.Directory + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Directory + file.FileName) && Tools.FileSHA256(file.Directory + file.FileName) == file.Sha256)) { return true; } else { return false; }
             }
             catch { }
             return false;
         }
 
-        public bool ApplyDownloadedFile(FileToDownload file, string progress = null)
+        public bool ApplyDownloadedFile(Server.FileInfo file, string progress = null)
         {
             FileName = file.FileName;
             StatusTitle = "Moving files " + progress;
@@ -369,7 +433,7 @@ namespace TrueMiningDesktop.Janelas
 
             int TryCount = 0;
 
-            while (!File.Exists(file.Path + file.FileName) || String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) != 0)
+            while (!File.Exists(file.Directory + file.FileName) || String.Compare(Tools.FileSHA256(file.Directory + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) != 0)
             {
                 TryCount++;
 
@@ -378,25 +442,25 @@ namespace TrueMiningDesktop.Janelas
 
                 try
                 {
-                    if (String.Compare(Tools.FileSHA256(file.Path + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (String.Compare(Tools.FileSHA256(file.Directory + file.FileName + ".dl"), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0)
                     {
-                        if (Tools.IsFileLocked(new FileInfo(file.Path + file.FileName)))
+                        if (Tools.IsFileLocked(new System.IO.FileInfo(file.Directory + file.FileName)))
                         {
-                            File.Move(file.Path + file.FileName, file.Path + file.FileName + ".old", true);
+                            File.Move(file.Directory + file.FileName, file.Directory + file.FileName + ".old", true);
                         }
                         try
                         {
-                            File.Move(file.Path + file.FileName + ".dl", file.Path + file.FileName, true);
+                            File.Move(file.Directory + file.FileName + ".dl", file.Directory + file.FileName, true);
                         }
-                        catch { File.Move(file.Path + file.FileName, file.Path + file.FileName + ".old", true); File.Move(file.Path + file.FileName + ".dl", file.Path + file.FileName, true); }
+                        catch { File.Move(file.Directory + file.FileName, file.Directory + file.FileName + ".old", true); File.Move(file.Directory + file.FileName + ".dl", file.Directory + file.FileName, true); }
                     }
 
-                    if (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
+                    if (File.Exists(file.Directory + file.FileName) && String.Compare(Tools.FileSHA256(file.Directory + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
                 }
                 catch { }
             }
 
-            if (File.Exists(file.Path + file.FileName) && String.Compare(Tools.FileSHA256(file.Path + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
+            if (File.Exists(file.Directory + file.FileName) && String.Compare(Tools.FileSHA256(file.Directory + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
 
             return false;
         }

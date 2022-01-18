@@ -38,7 +38,7 @@ namespace TrueMiningDesktop
 
             TapeAllRequest += CheckerPopup_TapeAllRequest;
 
-            Device.cpu.what();
+            Device.Cpu.what();
 
             _ = new Device();
 
@@ -224,7 +224,7 @@ namespace TrueMiningDesktop
 
             MenuMenu.SelectedIndex = 0; // mostra a tela Home
 
-            Tools.CheckerPopup = new Janelas.CheckerPopup("TrueMining");
+            Tools.CheckerPopup = new Janelas.CheckerPopup(Janelas.CheckerPopup.ToCheck.AppFiles);
             Tools.CheckerPopup.ShowDialog();
 
             try

@@ -39,9 +39,9 @@ namespace TrueMiningDesktop.Janelas.Popups
 
         private void TimerUpdate_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            CPU_hashrate_decimal = Device.cpu.HashrateValue;
-            OPENCL_hashrate_decimal = Device.opencl.HashrateValue;
-            CUDA_hashrate_decimal = Device.cuda.HashrateValue;
+            CPU_hashrate_decimal = Device.Cpu.HashrateValue;
+            OPENCL_hashrate_decimal = Device.Opencl.HashrateValue;
+            CUDA_hashrate_decimal = Device.Cuda.HashrateValue;
 
             Application.Current.Dispatcher.Invoke((Action)delegate
             {
@@ -49,7 +49,7 @@ namespace TrueMiningDesktop.Janelas.Popups
 
                 CPU_algorithm = User.Settings.Device.cpu.Algorithm;
                 if (CPU_hashrate_decimal <= 0) { CPUpannel.IsEnabled = false; CPU_hashrate_decimal = 0; } else { CPUpannel.IsEnabled = true; }
-                CPU_hashrate = Device.cpu.HashrateString;
+                CPU_hashrate = Device.Cpu.HashrateString;
 
                 if (Server.SoftwareParameters.ServerConfig != null && Server.SoftwareParameters.ServerConfig.MiningCoins.Any(coin => coin.Algorithm.Equals(User.Settings.Device.cpu.Algorithm, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -73,7 +73,7 @@ namespace TrueMiningDesktop.Janelas.Popups
 
                 OPENCL_algorithm = User.Settings.Device.opencl.Algorithm;
                 if (OPENCL_hashrate_decimal <= 0) { OPENCLpannel.IsEnabled = false; OPENCL_hashrate_decimal = 0; } else { OPENCLpannel.IsEnabled = true; }
-                OPENCL_hashrate = Device.opencl.HashrateString;
+                OPENCL_hashrate = Device.Opencl.HashrateString;
 
                 if (Server.SoftwareParameters.ServerConfig != null && Server.SoftwareParameters.ServerConfig.MiningCoins.Any(coin => coin.Algorithm.Equals(User.Settings.Device.opencl.Algorithm, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -97,7 +97,7 @@ namespace TrueMiningDesktop.Janelas.Popups
 
                 CUDA_algorithm = User.Settings.Device.cuda.Algorithm;
                 if (CUDA_hashrate_decimal <= 0) { CUDApannel.IsEnabled = false; CUDA_hashrate_decimal = 0; } else { CUDApannel.IsEnabled = true; }
-                CUDA_hashrate = Device.cuda.HashrateString;
+                CUDA_hashrate = Device.Cuda.HashrateString;
 
                 if (Server.SoftwareParameters.ServerConfig != null && Server.SoftwareParameters.ServerConfig.MiningCoins.Any(coin => coin.Algorithm.Equals(User.Settings.Device.cuda.Algorithm, StringComparison.OrdinalIgnoreCase)))
                 {
