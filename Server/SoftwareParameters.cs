@@ -20,13 +20,13 @@ namespace TrueMiningDesktop.Server
         public decimal DynamicFee { get; set; }
 
         [JsonProperty("TrueMiningFiles", NullValueHandling = NullValueHandling.Ignore)]
-        public TrueMiningFiles TrueMiningFiles { get; set; }
+        public AppFiles AppFiles { get; set; }
 
-        [JsonProperty("ThirdPartyBinaries", NullValueHandling = NullValueHandling.Ignore)]
-        public ThirdPartyBinaries ThirdPartyBinaries { get; set; }
+        [JsonProperty("ExtraFiles", NullValueHandling = NullValueHandling.Ignore)]
+        public ExtraFiles ExtraFiles { get; set; }
 
-        [JsonProperty("MarkAsOldFiles", NullValueHandling = NullValueHandling.Ignore)]
-        public MarkAsOldFiles MarkAsOldFiles { get; set; }
+        [JsonProperty("RemovedFiles", NullValueHandling = NullValueHandling.Ignore)]
+        public RemovedFiles RemovedFiles { get; set; }
     }
 
     public partial class MiningCoin
@@ -98,10 +98,10 @@ namespace TrueMiningDesktop.Server
         public decimal MinPayout { get; set; }
     }
 
-    public partial class ThirdPartyBinaries
+    public partial class ExtraFiles
     {
         [JsonProperty("tools", NullValueHandling = NullValueHandling.Ignore)]
-        public List<FileToDownload> Tools { get; set; }
+        public List<FileExpected> Tools { get; set; }
 
         [JsonProperty("backendMiners", NullValueHandling = NullValueHandling.Ignore)]
         public BackendMiners BackendMiners { get; set; }
@@ -110,28 +110,28 @@ namespace TrueMiningDesktop.Server
     public partial class BackendMiners
     {
         [JsonProperty("cpu", NullValueHandling = NullValueHandling.Ignore)]
-        public List<FileToDownload> Cpu { get; set; }
+        public List<FileExpected> Cpu { get; set; }
 
         [JsonProperty("opencl", NullValueHandling = NullValueHandling.Ignore)]
-        public List<FileToDownload> Opencl { get; set; }
+        public List<FileExpected> Opencl { get; set; }
 
         [JsonProperty("cuda", NullValueHandling = NullValueHandling.Ignore)]
-        public List<FileToDownload> Cuda { get; set; }
+        public List<FileExpected> Cuda { get; set; }
     }
 
-    public partial class MarkAsOldFiles
+    public partial class RemovedFiles
     {
         [JsonProperty("files", NullValueHandling = NullValueHandling.Ignore)]
-        public List<FileToDownload> Files { get; set; }
+        public List<FileExpected> Files { get; set; }
     }
 
-    public partial class FileToDownload
+    public partial class FileExpected
     {
         [JsonProperty("dlLink", NullValueHandling = NullValueHandling.Ignore)]
         public string DlLink { get; set; }
 
-        [JsonProperty("path")]
-        public string Path { get; set; }
+        [JsonProperty("Directory")]
+        public string Directory { get; set; }
 
         [JsonProperty("fileName", NullValueHandling = NullValueHandling.Ignore)]
         public string FileName { get; set; }
@@ -140,13 +140,13 @@ namespace TrueMiningDesktop.Server
         public string Sha256 { get; set; }
     }
 
-    public partial class TrueMiningFiles
+    public partial class AppFiles
     {
         [JsonProperty("changelogLink", NullValueHandling = NullValueHandling.Ignore)]
         public Uri ChangelogLink { get; set; }
 
         [JsonProperty("files", NullValueHandling = NullValueHandling.Ignore)]
-        public List<FileToDownload> Files { get; set; }
+        public List<FileExpected> Files { get; set; }
     }
 
     public class SoftwareParameters
