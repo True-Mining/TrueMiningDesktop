@@ -151,10 +151,14 @@ namespace TrueMiningDesktop.Janelas
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cpu);
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Opencl);
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cuda);
+
+                            needRestart = true;
                         }
                         else if (toCheck == ToCheck.AppFiles)
                         {
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.AppFiles);
+
+                            needRestart = true;
                         }
                         else if (toCheck == ToCheck.Tools)
                         {
@@ -216,7 +220,6 @@ namespace TrueMiningDesktop.Janelas
                         filesToDowload.ForEach(file =>
                         {
                             while (!ApplyDownloadedFile(file, "(" + filesToDowload.IndexOf(file) + "/" + filesToDowload.Count + ")")) { Thread.Sleep(300); };
-                            needRestart = true;
                         });
                     }
 
@@ -406,7 +409,7 @@ namespace TrueMiningDesktop.Janelas
                                 Thread.Sleep(30000);
 
                                 webClient.CancelAsync();
-                                
+
                                 Dispatcher.BeginInvoke((Action)(() => { Tools.RestartApp(false); Close(); }));
                             }
                         }

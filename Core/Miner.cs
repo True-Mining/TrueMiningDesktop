@@ -50,7 +50,7 @@ namespace TrueMiningDesktop.Core
                         IsTryingStartMining = false;
                         IsMining = false;
                     });
-                    return;                    
+                    return;
                 }
 
                 Server.SoftwareParameters.ServerConfig.MiningCoins.ForEach(miningCoin =>
