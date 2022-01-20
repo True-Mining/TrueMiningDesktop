@@ -62,6 +62,35 @@ namespace TrueMiningDesktop.Core
                     });
                     if (!EmergencyExit || force)
                     {
+                        Server.SoftwareParameters.ServerConfig.MiningCoins.ForEach(miningCoin =>
+                        {
+                            if (Device.DevicesList.Any(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (!device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase)) && (!device.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))))
+                            {
+                                try
+                                {
+                                    XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (!device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase)) && (!device.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
+                                }
+                                catch { }
+                            }
+
+                            if (Device.Cuda.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.Cuda.IsSelected && !Device.Cuda.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
+                            {
+                                try
+                                {
+                                    TRexMiners.Add(new TRex.TRex(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) && !device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
+                                }
+                                catch { }
+                            }
+                            if (Device.Opencl.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.Opencl.IsSelected && !Device.Opencl.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
+                            {
+                                try
+                                {
+                                    TeamRedMinerMiners.Add(new TeamRedMiner.TeamRedMiner(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (device.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase) && !device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
+                                }
+                                catch { }
+                            }
+                        }); // joga para listas todos os dispositivos separados por miningCoin. Possível bug: mais moedas com o mesmo algoritmo vão gerar mais moedas por dispositivo
+
                         new System.Threading.Tasks.Task(() =>
                         {
                             try
@@ -85,7 +114,7 @@ namespace TrueMiningDesktop.Core
                             }
                             catch { Application.Current.Dispatcher.Invoke((Action)delegate { IsTryingStartMining = false; }); }
                         })
-                        .Start();
+                        .Start(); // inicia os mineradores de todas as listas
                     }
                 }
                 else
@@ -98,23 +127,6 @@ namespace TrueMiningDesktop.Core
                         return;
                     });
                 }
-
-                Server.SoftwareParameters.ServerConfig.MiningCoins.ForEach(miningCoin =>
-                {
-                    if (Device.DevicesList.Any(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (!device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase)) && (!device.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))))
-                    {
-                        XMRigMiners.Add(new XMRig.XMRig(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (!device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase)) && (!device.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase) || device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
-                    }
-                    
-                    if (Device.Cuda.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.Cuda.IsSelected && !Device.Cuda.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
-                    {
-                        TRexMiners.Add(new TRex.TRex(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (device.BackendName.Equals("cuda", StringComparison.OrdinalIgnoreCase) && !device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
-                    }
-                    if (Device.Opencl.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && Device.Opencl.IsSelected && !Device.Opencl.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
-                    {
-                        TeamRedMinerMiners.Add(new TeamRedMiner.TeamRedMiner(Device.DevicesList.Where(device => device.MiningAlgo.Equals(miningCoin.Algorithm, StringComparison.OrdinalIgnoreCase) && device.IsSelected && (device.BackendName.Equals("opencl", StringComparison.OrdinalIgnoreCase) && !device.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))).ToList()));
-                    }
-                }); // joga para listas todos os dispositivos separados por miningCoin. Possível bug: mais moedas com o mesmo algoritmo vão gerar mais moedas por dispositivo
             }
         }
 
