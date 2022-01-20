@@ -328,8 +328,15 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             args.AppendLine("--log_interval=30");
             args.AppendLine("--log_rotate=1M,4");
             args.AppendLine("--enable_compute");
+            args.AppendLine("--watchdog_disabled");
 
-            List<string> addresses = miningCoin.Hosts;
+            args.AppendLine("--fan_control=" + User.Settings.Device.opencl.ChipFansFullspeedTemp + "::" + User.Settings.Device.opencl.MemFansFullspeedTemp + "::40:100");
+            args.AppendLine("--temp_limit=" + User.Settings.Device.opencl.ChipPauseMiningTemp);
+            args.AppendLine("--temp_resume=" + (User.Settings.Device.opencl.ChipPauseMiningTemp - 25));
+            args.AppendLine("--mem_temp_limit=" + User.Settings.Device.opencl.MemPauseMiningTemp);
+            args.AppendLine("--mem_temp_resume=" + (User.Settings.Device.opencl.MemPauseMiningTemp - 25));
+
+            List<string> addresses = miningCoin.PoolHosts;
 
             List<Task<KeyValuePair<string, long>>> pingReturnTasks = new();
             foreach (string address in addresses)
@@ -352,16 +359,16 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
             bool useTor = pingHosts.Count < pingHosts.Where((KeyValuePair<string, long> pair) => pair.Value == 2000).Count() * 2;
 
-            miningCoin.Hosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
+            miningCoin.PoolHosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
 
             if (User.Settings.User.UseTorSharpOnMining)
             {
                 new Task(() => _ = Tools.TorProxy).Start();
             }
 
-            foreach (string host in miningCoin.Hosts)
+            foreach (string host in miningCoin.PoolHosts)
             {
-                args.AppendLine("-a " + Algorithm + " -o stratum+tcp://" + host + ":" + miningCoin.StratumPort + " -u " + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + " -p " + miningCoin.Password);
+                args.AppendLine("-a " + Algorithm + " -o stratum+tcp://" + host + ":" + miningCoin.StratumPort + " -u " + miningCoin.DepositAddressTrueMining + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + " -p " + miningCoin.Password);
             }
 
             args.Remove(args.Length - 1, 1);

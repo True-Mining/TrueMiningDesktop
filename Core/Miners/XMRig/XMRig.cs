@@ -498,7 +498,7 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("    \"retries\": 2,");
             conf.AppendLine("    \"retry-pause\": 3,");
 
-            List<string> addresses = miningCoin.Hosts;
+            List<string> addresses = miningCoin.PoolHosts;
 
             List<Task<KeyValuePair<string, long>>> pingReturnTasks = new();
             foreach (string address in addresses)
@@ -521,7 +521,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
             bool useTor = pingHosts.Count < pingHosts.Where((KeyValuePair<string, long> pair) => pair.Value == 2000).Count() * 2;
 
-            miningCoin.Hosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
+            miningCoin.PoolHosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
 
             if (User.Settings.User.UseTorSharpOnMining)
             {
@@ -530,14 +530,14 @@ namespace TrueMiningDesktop.Core.XMRig
 
             conf.AppendLine("    \"pools\": [");
 
-            foreach (string host in miningCoin.Hosts)
+            foreach (string host in miningCoin.PoolHosts)
             {
                 if (User.Settings.User.UseTorSharpOnMining)
                 {
                     conf.AppendLine("        {");
                     conf.AppendLine("            \"algo\": \"" + Algorithm + "\",");
                     conf.AppendLine("            \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
-                    conf.AppendLine("            \"user\": \"" + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
+                    conf.AppendLine("            \"user\": \"" + miningCoin.DepositAddressTrueMining + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
                     conf.AppendLine("            \"pass\": \"" + miningCoin.Password + "\",");
                     conf.AppendLine("            \"rig-id\": null,");
                     conf.AppendLine("            \"nicehash\": false,");
@@ -554,7 +554,7 @@ namespace TrueMiningDesktop.Core.XMRig
                 conf.AppendLine("        {");
                 conf.AppendLine("            \"algo\": \"" + Algorithm + "\",");
                 conf.AppendLine("            \"url\": \"" + host + ":" + miningCoin.StratumPort + "\",");
-                conf.AppendLine("            \"user\": \"" + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
+                conf.AppendLine("            \"user\": \"" + miningCoin.DepositAddressTrueMining + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\", ");
                 conf.AppendLine("            \"pass\": \"" + miningCoin.Password + "\",");
                 conf.AppendLine("            \"rig-id\": null,");
                 conf.AppendLine("            \"nicehash\": false,");

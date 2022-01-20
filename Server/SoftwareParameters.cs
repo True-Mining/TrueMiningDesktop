@@ -49,8 +49,8 @@ namespace TrueMiningDesktop.Server
         [JsonProperty("poolFee", NullValueHandling = NullValueHandling.Ignore)]
         public decimal PoolFee { get; set; }
 
-        [JsonProperty("hosts", NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Hosts { get; set; }
+        [JsonProperty("poolHosts", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> PoolHosts { get; set; }
 
         [JsonProperty("stratumPort", NullValueHandling = NullValueHandling.Ignore)]
         public short? StratumPort { get; set; }
@@ -58,8 +58,8 @@ namespace TrueMiningDesktop.Server
         [JsonProperty("stratumPortSSL", NullValueHandling = NullValueHandling.Ignore)]
         public short? StratumPortSsl { get; set; }
 
-        [JsonProperty("wallet_TM", NullValueHandling = NullValueHandling.Ignore)]
-        public string WalletTm { get; set; }
+        [JsonProperty("depositAddressTrueMining", NullValueHandling = NullValueHandling.Ignore)]
+        public string DepositAddressTrueMining { get; set; }
 
         [JsonProperty("email", NullValueHandling = NullValueHandling.Ignore)]
         public string Email { get; set; }

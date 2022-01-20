@@ -364,8 +364,9 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("  \"time-limit\": 0,");
             conf.AppendLine("  \"temperature-color\": \"67,77\",");
             conf.AppendLine("  \"temperature-color-mem\": \"80,100\",");
-            conf.AppendLine("  \"temperature-limit\": 0,");
-            conf.AppendLine("  \"temperature-start\": 0,");
+            conf.AppendLine("  \"temperature-limit\": " + User.Settings.Device.cuda.ChipPauseMiningTemp + ",");
+            conf.AppendLine("  \"temperature-start\": " + (User.Settings.Device.cuda.ChipPauseMiningTemp - 25) + ",");
+            conf.AppendLine("  \"fan\": t:" + User.Settings.Device.cuda.ChipFansFullspeedTemp + ",");
             conf.AppendLine("  \"back-to-main-pool-sec\": 6000,");
             conf.AppendLine("  \"script-start\": \"\",");
             conf.AppendLine("  \"script-exit\": \"\",");
@@ -377,7 +378,7 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("     \"update_timeout_sec\" : 10");
             conf.AppendLine("  },");
 
-            List<string> addresses = miningCoin.Hosts;
+            List<string> addresses = miningCoin.PoolHosts;
 
             List<Task<KeyValuePair<string, long>>> pingReturnTasks = new();
             foreach (string address in addresses)
@@ -400,7 +401,7 @@ namespace TrueMiningDesktop.Core.TRex
 
             bool useTor = pingHosts.Count < pingHosts.Where((KeyValuePair<string, long> pair) => pair.Value == 2000).Count() * 2;
 
-            miningCoin.Hosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
+            miningCoin.PoolHosts = pingHosts.OrderBy((KeyValuePair<string, long> value) => value.Value).ToDictionary(x => x.Key, x => x.Value).Keys.ToList();
 
             if (User.Settings.User.UseTorSharpOnMining)
             {
@@ -409,10 +410,10 @@ namespace TrueMiningDesktop.Core.TRex
 
             conf.AppendLine("  \"pools\": [");
 
-            foreach (string host in miningCoin.Hosts)
+            foreach (string host in miningCoin.PoolHosts)
             {
                 conf.AppendLine("    {");
-                conf.AppendLine("      \"user\": \"" + miningCoin.WalletTm + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\",");
+                conf.AppendLine("      \"user\": \"" + miningCoin.DepositAddressTrueMining + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + "\",");
                 conf.AppendLine("      \"url\": \"" + host + ":" + miningCoin.StratumPortSsl + "\",");
                 conf.AppendLine("      \"pass\": \"" + miningCoin.Password + "\",");
                 conf.AppendLine("    },");

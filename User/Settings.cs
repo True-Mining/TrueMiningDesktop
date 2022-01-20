@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -207,6 +208,12 @@ namespace TrueMiningDesktop.User
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Cuda.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
+
+        public int ChipPauseMiningTemp { get; set; } = 80;
+        public int ChipFansFullspeedTemp { get; set; } = 50;
+
+        public int MemPauseMiningTemp { get; set; } = 95;
+        public int MemFansFullspeedTemp { get; set; } = 65;
     }
 
     public class OpenClSettings
@@ -224,6 +231,12 @@ namespace TrueMiningDesktop.User
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Opencl.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
+
+        public int ChipPauseMiningTemp { get; set; } = 85;
+        public int ChipFansFullspeedTemp { get; set; } = 55;
+
+        public int MemPauseMiningTemp { get; set; } = 95;
+        public int MemFansFullspeedTemp { get; set; } = 65;
     }
 
     public class UserPreferences
