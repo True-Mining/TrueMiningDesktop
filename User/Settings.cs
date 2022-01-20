@@ -224,7 +224,6 @@ namespace TrueMiningDesktop.User
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Opencl.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
-        public bool Cache { get; set; } = true;
     }
 
     public class UserPreferences

@@ -448,7 +448,7 @@ namespace TrueMiningDesktop.Core.XMRig
                     {
                         conf.AppendLine("    \"opencl\": {");
                         conf.AppendLine("        \"enabled\": true,");
-                        if (!openclSettings.Autoconfig) { conf.AppendLine("     \"cache\": " + openclSettings.Cache.ToString().ToLowerInvariant() + ","); }
+                        if (!openclSettings.Autoconfig) { conf.AppendLine("     \"cache\": true,"); }
                         conf.AppendLine("        \"loader\": null,");
                         conf.AppendLine("        \"platform\": \"AMD\",");
                         conf.AppendLine("        \"adl\": true,");
