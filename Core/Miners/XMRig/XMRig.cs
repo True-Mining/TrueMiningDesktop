@@ -572,17 +572,17 @@ namespace TrueMiningDesktop.Core.XMRig
             conf.AppendLine("}");
 
             if (!Directory.Exists(@"Miners")) { Directory.CreateDirectory(@"Miners"); }
-            if (!Directory.Exists(@"Miners\xmrig")) { Directory.CreateDirectory(@"Miners\xmrig"); }
-            if (!Directory.Exists(@"Miners\xmrig\logs")) { Directory.CreateDirectory(@"Miners\xmrig\logs"); }
+            if (!Directory.Exists(@"Miners\XMRig")) { Directory.CreateDirectory(@"Miners\XMRig"); }
+            if (!Directory.Exists(@"Miners\XMRig\logs")) { Directory.CreateDirectory(@"Miners\XMRig\logs"); }
 
-            System.IO.File.WriteAllText(@"Miners\xmrig\config-" + AlgoBackendsString + ".json", conf.ToString());
+            System.IO.File.WriteAllText(@"Miners\XMRig\config-" + AlgoBackendsString + ".json", conf.ToString());
 
             StringBuilder cmdStart = new();
             cmdStart.AppendLine("cd /d \"%~dp0\"");
             cmdStart.AppendLine("xmrig.exe --config=" + "config-" + AlgoBackendsString + ".json");
             cmdStart.Append("pause");
 
-            System.IO.File.WriteAllText(@"Miners\xmrig\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
+            System.IO.File.WriteAllText(@"Miners\XMRig\start-" + AlgoBackendsString + ".cmd", cmdStart.ToString());
         }
     }
 }
