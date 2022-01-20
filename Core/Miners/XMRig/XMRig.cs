@@ -472,7 +472,7 @@ namespace TrueMiningDesktop.Core.XMRig
                         conf.AppendLine("    \"cuda\": {");
                         conf.AppendLine("        \"enabled\": true,");//
                         conf.AppendLine("        \"loader\": null,");
-                        if (!cudaSettings.Autoconfig) { conf.AppendLine("        \"nvml\": " + cudaSettings.NVML.ToString().ToLowerInvariant()); }
+                        if (!cudaSettings.Autoconfig) { conf.AppendLine("        \"nvml\": true"); }
                         conf.AppendLine("    },");
                     }
                 }

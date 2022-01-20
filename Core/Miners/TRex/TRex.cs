@@ -355,7 +355,7 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("  \"hide-date\": false,");
             conf.AppendLine("  \"send-stales\": false,");
             conf.AppendLine("  \"validate-shares\": false,");
-            conf.AppendLine("  \"no-nvml\": " + (!User.Settings.Device.cuda.NVML).ToString().ToLowerInvariant() + ",");
+            conf.AppendLine("  \"no-nvml\": false,");
             conf.AppendLine("  \"no-strict-ssl\": true,");
             conf.AppendLine("  \"no-sni\": false,");
             conf.AppendLine("  \"no-hashrate-report\": false,");
