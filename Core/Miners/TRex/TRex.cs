@@ -364,9 +364,9 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("  \"time-limit\": 0,");
             conf.AppendLine("  \"temperature-color\": \"67,77\",");
             conf.AppendLine("  \"temperature-color-mem\": \"80,100\",");
-            conf.AppendLine("  \"temperature-limit\": " + User.Settings.Device.cuda.ChipPauseMiningTemp + ",");
-            conf.AppendLine("  \"temperature-start\": " + (User.Settings.Device.cuda.ChipPauseMiningTemp - 25) + ",");
-            conf.AppendLine("  \"fan\": t:" + User.Settings.Device.cuda.ChipFansFullspeedTemp + ",");
+            conf.AppendLine("  \"temperature-limit\": " + (string)User.Settings.Device.cuda.ChipPauseMiningTemp.ToString() + ",");
+            conf.AppendLine("  \"temperature-start\": " + (string)(User.Settings.Device.cuda.ChipPauseMiningTemp - 25).ToString() + ",");
+            conf.AppendLine("  \"fan\": \"t:" + (string)User.Settings.Device.cuda.ChipFansFullspeedTemp.ToString() + "\",");
             conf.AppendLine("  \"back-to-main-pool-sec\": 6000,");
             conf.AppendLine("  \"script-start\": \"\",");
             conf.AppendLine("  \"script-exit\": \"\",");
