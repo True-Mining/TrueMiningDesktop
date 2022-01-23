@@ -29,23 +29,22 @@ namespace TrueMiningDesktop.Core
                     IsTryingStartMining = true;
                 });
 
-                if (String.IsNullOrEmpty(User.Settings.User.Payment_Coin) || User.Settings.User.PayCoin == null || User.Settings.User.PayCoin.CoinName == null)
+                if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        if (Application.Current.MainWindow.WindowState != WindowState.Minimized) { MessageBox.Show("Select Payment Coin first"); }
+                        if (Application.Current.MainWindow.WindowState != WindowState.Minimized) { MessageBox.Show("Something wrong. Check your wallet address and selected coin."); }
 
                         IsTryingStartMining = false;
                         IsMining = false;
                     });
                     return;
                 }
-
-                if (!Tools.WalletAddressIsValid(User.Settings.User.Payment_Wallet))
+                if (String.IsNullOrEmpty(User.Settings.User.Payment_Coin) || User.Settings.User.PayCoin == null || User.Settings.User.PayCoin.CoinName == null)
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
-                        if (Application.Current.MainWindow.WindowState != WindowState.Minimized) { MessageBox.Show("Something wrong. Check your wallet address and selected coin."); }
+                        if (Application.Current.MainWindow.WindowState != WindowState.Minimized) { MessageBox.Show("Select Payment Coin first"); }
 
                         IsTryingStartMining = false;
                         IsMining = false;
