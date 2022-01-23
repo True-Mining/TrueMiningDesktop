@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
 namespace TrueMiningDesktop.Janelas.SubMenuSettings

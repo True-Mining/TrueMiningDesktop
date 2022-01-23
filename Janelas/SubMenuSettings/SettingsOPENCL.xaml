@@ -17,7 +17,7 @@
             <WrapPanel x:Name="AllContent" VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
                 <CheckBox IsChecked="{Binding Autoconfig}" Style="{StaticResource MaterialDesignCheckBox}" Content="Configure automatically" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
                 <WrapPanel x:Name="WrapPanel_ManualConfig" VerticalAlignment="Top" Margin="25,10,25,10" Orientation="Vertical">
-                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="Visible" Margin="0,0,0,5" >
+                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" Visibility="Visible" Margin="0,0,0,5">
                         <Label Content="Mining Algorithm" FontFamily="Roboto" FontWeight="Normal" Margin="0,0,0,0" FontSize="13" SnapsToDevicePixels="True" VerticalAlignment="Center" Foreground="Black" />
                         <ComboBox x:Name="AlgorithmComboBox" ItemsSource="{Binding AlgorithmsList}" SelectedItem="{Binding Algorithm}" VerticalAlignment="Center" Width="120" FontFamily="Roboto" FontWeight="Normal" Margin="5,0,0,0" FontSize="13" SnapsToDevicePixels="True" Foreground="Black" />
                     </WrapPanel>

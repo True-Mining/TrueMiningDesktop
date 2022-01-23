@@ -430,12 +430,10 @@ namespace TrueMiningDesktop.Core
 
         public static void RestartApp(bool asAdministrator = true)
         {
-
-
             System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
             {
                 NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = System.Windows.Application.Current.MainWindow.Visibility != Visibility.Visible, startMining = Miner.IsMining || Miner.IsTryingStartMining });
-                
+
                 new Thread(() => Miner.StopMiners(true)).Start();
 
                 Process TrueMiningNewProcess = new()

@@ -1,13 +1,10 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -124,7 +121,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                         {
                             Thread.Sleep(30);
                             DateTime time = TeamRedMinerProcess.StartTime;
-                            if (time.Ticks > 10) 
+                            if (time.Ticks > 10)
                             {
                                 Task hideIfNecessary = new Task(() =>
                                 {
@@ -135,7 +132,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
                                 try { Tools.SetWindowText(TeamRedMinerProcess.MainWindowHandle, WindowTitle); } catch { }
 
-                                break; 
+                                break;
                             }
                         }
                         catch (Exception e) { MessageBox.Show(e.Message); }
@@ -198,7 +195,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
         private void TeamRedMinerProcess_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            //    Tools.KillProcess(TeamRedMinerProcess.ProcessName); Stop();
+            Tools.KillProcess(TeamRedMinerProcess.ProcessName); Stop();
         }
 
         private void TeamRedMinerProcess_Exited(object sender, EventArgs e)
