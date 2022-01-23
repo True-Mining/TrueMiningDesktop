@@ -183,6 +183,52 @@ namespace TrueMiningDesktop.Core
             return response;
         }
 
+        public static async Task<string> HttpClientPost(string hostname, int port, string data)
+        {
+            string response = null;
+            HttpClient httpClient = null;
+            try
+            {
+                httpClient = new HttpClient();
+                Stream stream = httpClient.GetStreamAsync(hostname + ':' + port).Result;
+
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(data);
+                await stream.WriteAsync(bytesToSend, 0, bytesToSend.Length).ConfigureAwait(false);
+
+                byte[] incomingBuffer = new byte[httpClient.MaxResponseContentBufferSize];
+                int offset = 0;
+                bool fin = false;
+
+                while (!fin)
+                {
+                    var readTask = await stream.ReadAsync(incomingBuffer, offset, (int)httpClient.MaxResponseContentBufferSize - offset).ConfigureAwait(false);
+                    for (var i = offset; i < offset + readTask; i++)
+                    {
+                        if (incomingBuffer[i] == 0x7C || incomingBuffer[i] == 0x7d || incomingBuffer[i] == 0x00)
+                        {
+                            fin = true;
+                            break;
+                        }
+                    }
+
+                    offset += readTask;
+                }
+
+                if (offset > 0)
+                    response = Encoding.ASCII.GetString(incomingBuffer);
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                httpClient?.CancelPendingRequests();
+            }
+
+            return response;
+        }
+
         private static readonly TorSharpSettings TorSharpSettings = new()
         {
             ZippedToolsDirectory = Path.Combine(Path.GetTempPath(), Assembly.GetExecutingAssembly().GetName().Name, "Knapcode.TorSharp", "ZippedTools"),
