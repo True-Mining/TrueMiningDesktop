@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,6 +7,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -285,26 +287,29 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
             try
             {
-                string backendPureData = new WebClient().DownloadString("http://localhost:" + APIport + "/summary");
+                string backendPureData = Tools.TcpPost("http://127.0.0.1", APIport, "{\"command\":\"devs\"}").Result;
+               // string backendPureData = Tools.HttpPost("http://localhost:" + APIport, "{\"command\":\"devs\"}");
                 Miners.TeamRedMiner.ApiSummary backendsAPI = JsonConvert.DeserializeObject<Miners.TeamRedMiner.ApiSummary>(backendPureData, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
 
                 Dictionary<string, decimal> hashrates = new();
 
-                Backends.ForEach(backend =>
+                double hashrate = 0;
+
+                var devsJson = JToken.Parse(backendPureData)["DEVS"].Children().ToList();
+                if (devsJson.Count == 1)
                 {
-                    //  if (backendsAPI.Uptime < 1)
+                    hashrate = devsJson[0].Value<double>("KHS 30s");
+                }
+                else if (devsJson.Count > 1)
+                {
+                    foreach (JToken devJson in devsJson)
                     {
-                        hashrates.TryAdd("opencl", -1);
+                        hashrate += devJson.Value<double>("KHS 30s");
                     }
-                    //    else if (backendsAPI.Hashrate < 1)
-                    {
-                        //        hashrates.TryAdd("opencl", 0);
-                    }
-                    //     else
-                    {
-                        //        hashrates.TryAdd("opencl", Convert.ToDecimal(backendsAPI.Hashrate, CultureInfo.InvariantCulture.NumberFormat));
-                    }
-                });
+                }
+                hashrate *= 1000;
+
+                hashrates.TryAdd("opencl", Convert.ToDecimal(hashrate, CultureInfo.InvariantCulture.NumberFormat));
 
                 return hashrates;
             }
@@ -323,7 +328,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
             StringBuilder args = new();
             args.AppendLine("--hardware=gpu");
-            args.AppendLine("--api_listen=" + (User.Settings.User.UseAllInterfacesInsteadLocalhost ? "0.0.0.0" : "127.0.0.1") + APIport);
+            args.AppendLine("--api_listen=" + (User.Settings.User.UseAllInterfacesInsteadLocalhost ? "0.0.0.0" : "127.0.0.1") + ':' + APIport);
             args.AppendLine("--log_file=\"logs/trm_" + AlgoBackendsString + ".log\"");
             args.AppendLine("--log_interval=30");
             args.AppendLine("--log_rotate=1M,4");
@@ -368,6 +373,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
             foreach (string host in miningCoin.PoolHosts)
             {
+                args.AppendLine("-a " + Algorithm + " -o stratum+tcp://" + host + ":" + miningCoin.StratumPortSsl + " -u " + miningCoin.DepositAddressTrueMining + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + " -p " + miningCoin.Password);
                 args.AppendLine("-a " + Algorithm + " -o stratum+tcp://" + host + ":" + miningCoin.StratumPort + " -u " + miningCoin.DepositAddressTrueMining + "." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + "/" + miningCoin.Email + " -p " + miningCoin.Password);
             }
 

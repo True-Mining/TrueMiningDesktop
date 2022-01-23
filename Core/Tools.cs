@@ -7,7 +7,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -114,6 +117,70 @@ namespace TrueMiningDesktop.Core
             }
 
             throw new Exception();
+        }
+
+        public static string HttpPost(string uri, string data)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                try
+                {
+                    HttpClient httpClient = new HttpClient();
+                    HttpResponseMessage response = httpClient.PostAsJsonAsync(uri, data).Result;
+                    response.EnsureSuccessStatusCode();
+
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+                catch { if (i > 1) useTor = true; UseTor = true; }
+            }
+
+            throw new Exception();
+        }
+
+        public static async Task<string> TcpPost(string hostname, int port, string data)
+        {
+            string response = null;
+            TcpClient tcpClient = null;
+            try
+            {
+                tcpClient = new TcpClient(hostname, port);
+                NetworkStream stream = tcpClient.GetStream();
+
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(data);
+                await stream.WriteAsync(bytesToSend, 0, bytesToSend.Length).ConfigureAwait(false);
+
+                byte[] incomingBuffer = new byte[tcpClient.ReceiveBufferSize];
+                int offset = 0;
+                bool fin = false;
+
+                while (!fin && tcpClient.Client.Connected)
+                {
+                    var readTask = await stream.ReadAsync(incomingBuffer, offset, tcpClient.ReceiveBufferSize - offset).ConfigureAwait(false);
+                    for (var i = offset; i < offset + readTask; i++)
+                    {
+                        if (incomingBuffer[i] == 0x7C || incomingBuffer[i] == 0x7d || incomingBuffer[i] == 0x00)
+                        {
+                            fin = true;
+                            break;
+                        }
+                    }
+
+                    offset += readTask;
+                }
+
+                if (offset > 0)
+                    response = Encoding.ASCII.GetString(incomingBuffer);
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                tcpClient?.Close();
+            }
+
+            return response;
         }
 
         private static readonly TorSharpSettings TorSharpSettings = new()
