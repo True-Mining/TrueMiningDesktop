@@ -352,9 +352,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
             try
             {
-                string backendPureData = Tools.TcpPost("http://127.0.0.1", APIport, "{\"command\":\"devs\"}").Result;
-               // string backendPureData = Tools.HttpPost("http://localhost:" + APIport, "{\"command\":\"devs\"}");
-                Miners.TeamRedMiner.ApiSummary backendsAPI = JsonConvert.DeserializeObject<Miners.TeamRedMiner.ApiSummary>(backendPureData, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+                string backendPureData = Tools.TcpPost("127.0.0.1", APIport, "{\"command\":\"devs\"}").Result;
 
                 Dictionary<string, decimal> hashrates = new();
 
