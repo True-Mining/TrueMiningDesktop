@@ -96,12 +96,13 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 TeamRedMinerProcessStartInfo.CreateNoWindow = false;
                 TeamRedMinerProcessStartInfo.ErrorDialog = false;
                 TeamRedMinerProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
                 TeamRedMinerProcess.StartInfo = TeamRedMinerProcessStartInfo;
 
-                // if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_ALLOC_PERCENT", "100"); }
-                // if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_SINGLE_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_SINGLE_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_SINGLE_ALLOC_PERCENT", "100"); }
-                // if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_HEAP_SIZE")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_HEAP_SIZE"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_HEAP_SIZE", "100"); }
-                // if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_USE_SYNC_OBJECTS")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_USE_SYNC_OBJECTS"] = "1"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_USE_SYNC_OBJECTS", "1"); }
+                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_ALLOC_PERCENT", "100"); }
+                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_SINGLE_ALLOC_PERCENT")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_SINGLE_ALLOC_PERCENT"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_SINGLE_ALLOC_PERCENT", "100"); }
+                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_MAX_HEAP_SIZE")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_MAX_HEAP_SIZE"] = "100"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_MAX_HEAP_SIZE", "100"); }
+                if (TeamRedMinerProcessStartInfo.EnvironmentVariables.ContainsKey("GPU_USE_SYNC_OBJECTS")) { TeamRedMinerProcessStartInfo.EnvironmentVariables["GPU_USE_SYNC_OBJECTS"] = "1"; } else { TeamRedMinerProcessStartInfo.EnvironmentVariables.Add("GPU_USE_SYNC_OBJECTS", "1"); }
             }
 
             TeamRedMinerProcess.Exited -= TeamRedMinerProcess_Exited;
@@ -121,9 +122,21 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                     {
                         try
                         {
-                            Thread.Sleep(100);
+                            Thread.Sleep(30);
                             DateTime time = TeamRedMinerProcess.StartTime;
-                            if (time.Ticks > 100) { try { Tools.SetWindowText(TeamRedMinerProcess.MainWindowHandle, WindowTitle); } catch { } break; }
+                            if (time.Ticks > 10) 
+                            {
+                                Task hideIfNecessary = new Task(() =>
+                                {
+                                    if (!User.Settings.User.ShowCLI) { Hide(true); }
+                                });
+                                hideIfNecessary.Start();
+                                hideIfNecessary.Wait(3000);
+
+                                try { Tools.SetWindowText(TeamRedMinerProcess.MainWindowHandle, WindowTitle); } catch { }
+
+                                break; 
+                            }
                         }
                         catch (Exception e) { MessageBox.Show(e.Message); }
                     }
@@ -136,7 +149,6 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             }
             catch (Exception e)
             {
-     //          MessageBox.Show(e.Message);
                 Stop();
 
                 IsTryingStartMining = true;
@@ -276,8 +288,61 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             TeamRedMinerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
         }
 
-        public void Hide()
+        public void Hide(bool self = false)
         {
+            bool showCLI = User.Settings.User.ShowCLI;
+            bool MainWindowFocused = Tools.ApplicationIsActivated();
+
+            if (self)
+            {
+                try
+                {
+                    DateTime initializingTask = DateTime.UtcNow;
+
+                    while (true)
+                    {
+                        bool continueWaiting = true;
+                        try
+                        {
+                            Application.Current.Dispatcher.Invoke((Action)delegate
+                            {
+                                continueWaiting = Tools.FindWindow(null, TeamRedMinerProcess.MainWindowTitle).ToInt32() == 0 && initializingTask >= DateTime.UtcNow.AddSeconds(-30);
+                            });
+                        }
+                        catch { }
+                        if (continueWaiting)
+                        {
+                            Thread.Sleep(50);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    Application.Current.Dispatcher.Invoke((Action)delegate
+                    {
+                        IntPtr windowIdentifier = Tools.FindWindow(null, TeamRedMinerProcess.MainWindowTitle);
+                        if (showCLI)
+                        {
+                            if (Application.Current.MainWindow.IsVisible && MainWindowFocused)
+                            {
+                                Tools.ShowWindow(windowIdentifier, 1);
+                            }
+                            else
+                            {
+                                Tools.ShowWindow(windowIdentifier, 2);
+                            }
+                        }
+                        else
+                        {
+                            Tools.ShowWindow(windowIdentifier, 0);
+                        }
+                    });
+                }
+                catch { }
+            }
+
             TeamRedMinerProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
         }
 

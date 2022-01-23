@@ -151,7 +151,7 @@ namespace TrueMiningDesktop.Core.TRex
                             if (Tools.AddedTrueMiningDestopToWinDefenderExclusions)
                             {
                                 IsTryingStartMining = false;
-                                MessageBox.Show("TRex can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
+                                MessageBox.Show("T-Rex can't start. Try add True Mining Desktop folder in Antivirus/Windows Defender exclusions. " + e.Message);
                             }
                             else
                             {
