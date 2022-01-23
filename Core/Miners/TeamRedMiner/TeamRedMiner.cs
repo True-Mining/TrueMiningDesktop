@@ -66,7 +66,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
         private List<DeviceInfo> Backends = new();
         public readonly Process TeamRedMinerProcess = new();
-        public readonly ProcessStartInfo TeamRedMinerProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\TeamRedMiner\" + @"teamredminer.exe");
+        public readonly ProcessStartInfo TeamRedMinerProcessStartInfo = new(Environment.CurrentDirectory + @"\Miners\TeamRedMiner\teamredminer.exe");
         private string AlgoBackendsString = null;
         public string WindowTitle = "True Mining running TeamRedMiner";
         private int APIport = 20220;
@@ -89,8 +89,8 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             if (TeamRedMinerProcess.StartInfo != TeamRedMinerProcessStartInfo)
             {
                 TeamRedMinerProcessStartInfo.WorkingDirectory = Environment.CurrentDirectory + @"\Miners\TeamRedMiner\";
-                TeamRedMinerProcessStartInfo.Arguments = "";
-                TeamRedMinerProcessStartInfo.UseShellExecute = true;
+                TeamRedMinerProcessStartInfo.Arguments = Arguments;
+                TeamRedMinerProcessStartInfo.UseShellExecute = false;
                 TeamRedMinerProcessStartInfo.RedirectStandardError = false;
                 TeamRedMinerProcessStartInfo.RedirectStandardOutput = false;
                 TeamRedMinerProcessStartInfo.CreateNoWindow = false;
@@ -136,7 +136,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+     //          MessageBox.Show(e.Message);
                 Stop();
 
                 IsTryingStartMining = true;
