@@ -430,9 +430,13 @@ namespace TrueMiningDesktop.Core
 
         public static void RestartApp(bool asAdministrator = true)
         {
+
+
             System.Windows.Application.Current.Dispatcher.Invoke((Action)delegate
             {
                 NextStart.Actions.Save(new NextStart.Instructions() { useThisInstructions = true, ignoreUpdates = false, startHiden = System.Windows.Application.Current.MainWindow.Visibility != Visibility.Visible, startMining = Miner.IsMining || Miner.IsTryingStartMining });
+                
+                new Thread(() => Miner.StopMiners(true)).Start();
 
                 Process TrueMiningNewProcess = new()
                 {
@@ -444,28 +448,17 @@ namespace TrueMiningDesktop.Core
                 };
                 if (asAdministrator) { TrueMiningNewProcess.StartInfo.Verb = "runas"; }
 
-                try { TrueMiningNewProcess.Start(); Miner.StopMiners(true); } catch (Exception e) { System.Windows.MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); }
+                try { TrueMiningNewProcess.Start(); } catch (Exception e) { System.Windows.MessageBox.Show(e.Message); NextStart.Actions.DeleteInstructions(); return; }
 
-                Process thisProcess = Process.GetCurrentProcess();
+                MainWindow.NotifyIcon.Visible = false;
 
-                new Task(() =>
-                {
-                    while (!TrueMiningNewProcess.HasExited)
-                    {
-                        Thread.Sleep(100);
+                Miner.EmergencyExit = true;
 
-                        Process[] processesWithTrueMiningName = Process.GetProcessesByName(thisProcess.ProcessName);
+                Thread.Sleep(150);
 
-                        foreach (Process process in processesWithTrueMiningName)
-                        {
-                            if (process.Id != thisProcess.Id && process.Responding)
-                            {
-                                MainWindow.NotifyIcon.Visible = false;
-                                thisProcess.Kill();
-                            }
-                        }
-                    }
-                }).Start();
+                Tools.CheckerPopup.Close();
+
+                Application.Current.Shutdown();
             });
         }
 
