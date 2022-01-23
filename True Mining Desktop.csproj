@@ -7,8 +7,8 @@
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>icone.ico</ApplicationIcon>
-    <AssemblyVersion>4.12</AssemblyVersion>
-    <FileVersion>4.12</FileVersion>
+    <AssemblyVersion>4.15</AssemblyVersion>
+    <FileVersion>4.15</FileVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <StartupObject>TrueMiningDesktop.App</StartupObject>
     <AssemblyName>True Mining Desktop</AssemblyName>
