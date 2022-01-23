@@ -169,7 +169,7 @@ namespace TrueMiningDesktop
         {
             if (!User.Settings.User.LICENSE_read)
             {
-                if (MessageBoxResult.Yes == MessageBox.Show("By using the software in any way you are agreeing to the license located at " + AppDomain.CurrentDomain.BaseDirectory + @"LICENSE.md" + "\n\nContinue?", "Accept True Mining License", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+                if (MessageBoxResult.Yes == MessageBox.Show("By using the software in any way you are agreeing to the license located at " + Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", @"LICENSE.md") + "\n\nContinue?", "Accept True Mining License", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
                 {
                     User.Settings.User.LICENSE_read = true;
                 }

@@ -37,11 +37,6 @@
 
   <ItemGroup>
     <None Remove="icone.ico" />
-    <None Include="LICENSE.md">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
@@ -69,10 +64,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="LICENSEs %28libs, frameworks, etc.%29.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\icone.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\iconeTaskbar2.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\LICENSE.md">
+      <PackagePath></PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Pack>True</Pack>
+    </None>
+    <None Update="Resources\LICENSEs %28libs, frameworks, etc.%29.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
