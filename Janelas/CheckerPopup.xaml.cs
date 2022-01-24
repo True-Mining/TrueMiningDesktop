@@ -75,7 +75,8 @@ namespace TrueMiningDesktop.Janelas
         public Visibility HostFilesAd_Visibility
         { get { return hostFilesAd_Visibility; } set { hostFilesAd_Visibility = value; Dispatcher.BeginInvoke((Action)(() => { HostFilesAd.Visibility = value; })); } }
 
-        private bool needRestart = false;
+        private bool needRestartIfChanges = false;
+        private bool changes = false;
 
         public bool allDone = false;
 
@@ -152,13 +153,13 @@ namespace TrueMiningDesktop.Janelas
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Opencl);
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.BackendMiners.Cuda);
 
-                            needRestart = true;
+                            needRestartIfChanges = true;
                         }
                         else if (toCheck == ToCheck.AppFiles && !(File.Exists("DoNotUpdateAppFiles") && DateTime.UtcNow < new DateTime(2022, 02, 02)))
                         {
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.AppFiles);
 
-                            needRestart = true;
+                            needRestartIfChanges = true;
                         }
                         else if (toCheck == ToCheck.Tools)
                         {
@@ -220,6 +221,7 @@ namespace TrueMiningDesktop.Janelas
                         filesToDowload.ForEach(file =>
                         {
                             while (!ApplyDownloadedFile(file, "(" + filesToDowload.IndexOf(file) + "/" + filesToDowload.Count + ")")) { Thread.Sleep(300); };
+                            changes = true;
                         });
                     }
 
@@ -240,7 +242,7 @@ namespace TrueMiningDesktop.Janelas
                         catch { }
                     });
 
-                    if (needRestart)
+                    if (needRestartIfChanges && changes)
                     {
                         HostFilesAd_Visibility = Visibility.Collapsed;
                         ProgressBar_Value = 0;
