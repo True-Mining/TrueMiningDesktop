@@ -78,7 +78,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Pack>True</Pack>
     </None>
-    <None Update="Resources\LICENSEs %28libs, frameworks, etc.%29.md">
+    <None Update="Resources\LICENSEs-other.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
