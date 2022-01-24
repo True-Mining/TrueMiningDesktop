@@ -586,15 +586,12 @@ namespace TrueMiningDesktop.Core
 
                 Application.Current.Dispatcher.Invoke((Action)delegate
                 {
-                    Pages.SettingsCPU.AllContent.IsEnabled = false;
-                    Pages.SettingsCUDA.AllContent.IsEnabled = false;
-                    Pages.SettingsOPENCL.AllContent.IsEnabled = false;
-                    Pages.SettingsCPU.LockWarning.Visibility = Visibility.Visible;
-                    Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible;
-                    Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible;
-
-                    if (isTryingStartMining)
+                    if (value)
                     {
+                        if (Device.Cpu.IsSelected) { Device.Cpu.IsMining = true; Pages.SettingsCPU.AllContent.IsEnabled = false; Pages.SettingsCPU.LockWarning.Visibility = Visibility.Visible; }
+                        if (Device.Opencl.IsSelected) { Device.Opencl.IsMining = true; Pages.SettingsOPENCL.AllContent.IsEnabled = false; Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Visible; }
+                        if (Device.Cuda.IsSelected) { Device.Cuda.IsMining = true; Pages.SettingsCUDA.AllContent.IsEnabled = false; Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Visible; }
+
                         Janelas.Pages.Home.GridUserWalletCoin.IsEnabled = false;
 
                         Pages.Home.StartStopButton_text.Content = "Loading";
@@ -636,7 +633,7 @@ namespace TrueMiningDesktop.Core
             {
                 isStoppingMining = value;
 
-                if (isStoppingMining)
+                if (value)
                 {
                     Application.Current.Dispatcher.Invoke((Action)delegate
                     {
@@ -647,6 +644,13 @@ namespace TrueMiningDesktop.Core
 
                         Pages.Home.StartStopButton.Background = Brushes.OrangeRed;
                         Pages.Home.StartStopButton.BorderBrush = Brushes.OrangeRed;
+
+                        Pages.SettingsCPU.AllContent.IsEnabled = true;
+                        Pages.SettingsCUDA.AllContent.IsEnabled = true;
+                        Pages.SettingsOPENCL.AllContent.IsEnabled = true;
+                        Pages.SettingsCPU.LockWarning.Visibility = Visibility.Hidden;
+                        Pages.SettingsCUDA.LockWarning.Visibility = Visibility.Hidden;
+                        Pages.SettingsOPENCL.LockWarning.Visibility = Visibility.Hidden;
                     });
                 }
 
