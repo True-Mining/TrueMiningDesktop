@@ -364,9 +364,18 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("  \"time-limit\": 0,");
             conf.AppendLine("  \"temperature-color\": \"67,77\",");
             conf.AppendLine("  \"temperature-color-mem\": \"80,100\",");
-            conf.AppendLine("  \"temperature-limit\": " + (string)User.Settings.Device.cuda.ChipPauseMiningTemp.ToString() + ",");
-            conf.AppendLine("  \"temperature-start\": " + (string)(User.Settings.Device.cuda.ChipPauseMiningTemp - 25).ToString() + ",");
-            conf.AppendLine("  \"fan\": \"t:" + (string)User.Settings.Device.cuda.ChipFansFullspeedTemp.ToString() + "\",");
+
+            if (User.Settings.Device.opencl.ChipPauseMiningTemp > 0)
+            {
+                conf.AppendLine("  \"temperature-limit\": " + (string)User.Settings.Device.cuda.ChipPauseMiningTemp.ToString() + ",");
+                conf.AppendLine("  \"temperature-start\": " + (string)(User.Settings.Device.cuda.ChipPauseMiningTemp - 30).ToString() + ",");
+            }
+
+            if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0)
+            {
+                conf.AppendLine("  \"fan\": \"t:" + (string)User.Settings.Device.cuda.ChipFansFullspeedTemp.ToString() + "\",");
+            }
+
             conf.AppendLine("  \"back-to-main-pool-sec\": 6000,");
             conf.AppendLine("  \"script-start\": \"\",");
             conf.AppendLine("  \"script-exit\": \"\",");

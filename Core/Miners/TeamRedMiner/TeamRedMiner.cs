@@ -395,11 +395,22 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             args.AppendLine("--enable_compute");
             args.AppendLine("--watchdog_disabled");
 
-            args.AppendLine("--fan_control=" + User.Settings.Device.opencl.ChipFansFullspeedTemp + "::" + User.Settings.Device.opencl.MemFansFullspeedTemp + "::40:100");
-            args.AppendLine("--temp_limit=" + User.Settings.Device.opencl.ChipPauseMiningTemp);
-            args.AppendLine("--temp_resume=" + (User.Settings.Device.opencl.ChipPauseMiningTemp - 25));
-            args.AppendLine("--mem_temp_limit=" + User.Settings.Device.opencl.MemPauseMiningTemp);
-            args.AppendLine("--mem_temp_resume=" + (User.Settings.Device.opencl.MemPauseMiningTemp - 25));
+            if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 || User.Settings.Device.opencl.MemFansFullspeedTemp > 0)
+            { 
+                args.AppendLine("--fan_control=" + (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 ? User.Settings.Device.opencl.ChipFansFullspeedTemp : "") + "::" + (User.Settings.Device.opencl.MemFansFullspeedTemp > 0 ? User.Settings.Device.opencl.MemFansFullspeedTemp : "") + "::40:100");
+            }
+            
+            if (User.Settings.Device.opencl.ChipPauseMiningTemp > 0)
+            {
+                args.AppendLine("--temp_limit=" + User.Settings.Device.opencl.ChipPauseMiningTemp);
+                args.AppendLine("--temp_resume=" + (User.Settings.Device.opencl.ChipPauseMiningTemp - 30));
+            }
+
+            if (User.Settings.Device.opencl.MemPauseMiningTemp > 0)
+            {
+                args.AppendLine("--mem_temp_limit=" + User.Settings.Device.opencl.MemPauseMiningTemp);
+                args.AppendLine("--mem_temp_resume=" + (User.Settings.Device.opencl.MemPauseMiningTemp - 30));
+            }
 
             List<string> addresses = miningCoin.PoolHosts;
 

@@ -208,11 +208,11 @@ namespace TrueMiningDesktop.User
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
 
-        public int ChipPauseMiningTemp { get; set; } = 80;
-        public int ChipFansFullspeedTemp { get; set; } = 50;
+        public int ChipPauseMiningTemp { get; set; } = 85;
+        public int ChipFansFullspeedTemp { get; set; } = 65;
 
         public int MemPauseMiningTemp { get; set; } = 95;
-        public int MemFansFullspeedTemp { get; set; } = 65;
+        public int MemFansFullspeedTemp { get; set; } = 75;
     }
 
     public class OpenClSettings
@@ -232,10 +232,10 @@ namespace TrueMiningDesktop.User
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
 
         public int ChipPauseMiningTemp { get; set; } = 85;
-        public int ChipFansFullspeedTemp { get; set; } = 55;
+        public int ChipFansFullspeedTemp { get; set; } = 65;
 
         public int MemPauseMiningTemp { get; set; } = 95;
-        public int MemFansFullspeedTemp { get; set; } = 65;
+        public int MemFansFullspeedTemp { get; set; } = 75;
     }
 
     public class UserPreferences

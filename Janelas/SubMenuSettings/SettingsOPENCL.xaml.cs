@@ -45,7 +45,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             User.Settings.Device.opencl.ChipFansFullspeedTemp++;
 
-            if (User.Settings.Device.opencl.ChipFansFullspeedTemp < 0) { User.Settings.Device.opencl.ChipFansFullspeedTemp = 0; }
             if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 100) { User.Settings.Device.opencl.ChipFansFullspeedTemp = 100; }
 
             ChipFansFullspeedTempTxt.Text = User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 ? User.Settings.Device.opencl.ChipFansFullspeedTemp.ToString() + " °C" : "auto";
@@ -56,7 +55,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             User.Settings.Device.opencl.ChipFansFullspeedTemp--;
 
             if (User.Settings.Device.opencl.ChipFansFullspeedTemp < 0) { User.Settings.Device.opencl.ChipFansFullspeedTemp = 0; }
-            if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 100) { User.Settings.Device.opencl.ChipFansFullspeedTemp = 100; }
 
             ChipFansFullspeedTempTxt.Text = User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 ? User.Settings.Device.opencl.ChipFansFullspeedTemp.ToString() + " °C" : "auto";
         }
@@ -65,7 +63,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             User.Settings.Device.opencl.MemFansFullspeedTemp++;
 
-            if (User.Settings.Device.opencl.MemFansFullspeedTemp < 0) { User.Settings.Device.opencl.MemFansFullspeedTemp = 0; }
             if (User.Settings.Device.opencl.MemFansFullspeedTemp > 100) { User.Settings.Device.opencl.MemFansFullspeedTemp = 100; }
 
             MemFansFullspeedTempTxt.Text = User.Settings.Device.opencl.MemFansFullspeedTemp > 0 ? User.Settings.Device.opencl.MemFansFullspeedTemp.ToString() + " °C" : "auto";
@@ -76,7 +73,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             User.Settings.Device.opencl.MemFansFullspeedTemp--;
 
             if (User.Settings.Device.opencl.MemFansFullspeedTemp < 0) { User.Settings.Device.opencl.MemFansFullspeedTemp = 0; }
-            if (User.Settings.Device.opencl.MemFansFullspeedTemp > 100) { User.Settings.Device.opencl.MemFansFullspeedTemp = 100; }
 
             MemFansFullspeedTempTxt.Text = User.Settings.Device.opencl.MemFansFullspeedTemp > 0 ? User.Settings.Device.opencl.MemFansFullspeedTemp.ToString() + " °C" : "auto";
         }
@@ -85,7 +81,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             User.Settings.Device.opencl.ChipPauseMiningTemp++;
 
-            if (User.Settings.Device.opencl.ChipPauseMiningTemp < 0) { User.Settings.Device.opencl.ChipPauseMiningTemp = 0; }
             if (User.Settings.Device.opencl.ChipPauseMiningTemp > 100) { User.Settings.Device.opencl.ChipPauseMiningTemp = 100; }
 
             ChipPauseMiningTempTxt.Text = User.Settings.Device.opencl.ChipPauseMiningTemp > 0 ? User.Settings.Device.opencl.ChipPauseMiningTemp.ToString() + " °C" : "auto";
@@ -96,7 +91,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             User.Settings.Device.opencl.ChipPauseMiningTemp--;
 
             if (User.Settings.Device.opencl.ChipPauseMiningTemp < 0) { User.Settings.Device.opencl.ChipPauseMiningTemp = 0; }
-            if (User.Settings.Device.opencl.ChipPauseMiningTemp > 100) { User.Settings.Device.opencl.ChipPauseMiningTemp = 100; }
 
             ChipPauseMiningTempTxt.Text = User.Settings.Device.opencl.ChipPauseMiningTemp > 0 ? User.Settings.Device.opencl.ChipPauseMiningTemp.ToString() + " °C" : "auto";
         }
@@ -105,7 +99,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             User.Settings.Device.opencl.MemPauseMiningTemp++;
 
-            if (User.Settings.Device.opencl.MemPauseMiningTemp < 0) { User.Settings.Device.opencl.MemPauseMiningTemp = 0; }
             if (User.Settings.Device.opencl.MemPauseMiningTemp > 100) { User.Settings.Device.opencl.MemPauseMiningTemp = 100; }
 
             MemPauseMiningTempTxt.Text = User.Settings.Device.opencl.MemPauseMiningTemp > 0 ? User.Settings.Device.opencl.MemPauseMiningTemp.ToString() + " °C" : "auto";
@@ -116,7 +109,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             User.Settings.Device.opencl.MemPauseMiningTemp--;
 
             if (User.Settings.Device.opencl.MemPauseMiningTemp < 0) { User.Settings.Device.opencl.MemPauseMiningTemp = 0; }
-            if (User.Settings.Device.opencl.MemPauseMiningTemp > 100) { User.Settings.Device.opencl.MemPauseMiningTemp = 100; }
 
             MemPauseMiningTempTxt.Text = User.Settings.Device.opencl.MemPauseMiningTemp > 0 ? User.Settings.Device.opencl.MemPauseMiningTemp.ToString() + " °C" : "auto";
         }

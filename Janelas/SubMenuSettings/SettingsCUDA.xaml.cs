@@ -45,7 +45,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             User.Settings.Device.cuda.ChipFansFullspeedTemp++;
 
-            if (User.Settings.Device.cuda.ChipFansFullspeedTemp < 0) { User.Settings.Device.cuda.ChipFansFullspeedTemp = 0; }
             if (User.Settings.Device.cuda.ChipFansFullspeedTemp > 100) { User.Settings.Device.cuda.ChipFansFullspeedTemp = 100; }
 
             ChipFansFullspeedTempTxt.Text = User.Settings.Device.cuda.ChipFansFullspeedTemp > 0 ? User.Settings.Device.cuda.ChipFansFullspeedTemp.ToString() + " °C" : "auto";
@@ -56,7 +55,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             User.Settings.Device.cuda.ChipFansFullspeedTemp--;
 
             if (User.Settings.Device.cuda.ChipFansFullspeedTemp < 0) { User.Settings.Device.cuda.ChipFansFullspeedTemp = 0; }
-            if (User.Settings.Device.cuda.ChipFansFullspeedTemp > 100) { User.Settings.Device.cuda.ChipFansFullspeedTemp = 100; }
 
             ChipFansFullspeedTempTxt.Text = User.Settings.Device.cuda.ChipFansFullspeedTemp > 0 ? User.Settings.Device.cuda.ChipFansFullspeedTemp.ToString() + " °C" : "auto";
         }
@@ -65,7 +63,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             User.Settings.Device.cuda.MemFansFullspeedTemp++;
 
-            if (User.Settings.Device.cuda.MemFansFullspeedTemp < 0) { User.Settings.Device.cuda.MemFansFullspeedTemp = 0; }
             if (User.Settings.Device.cuda.MemFansFullspeedTemp > 100) { User.Settings.Device.cuda.MemFansFullspeedTemp = 100; }
 
             MemFansFullspeedTempTxt.Text = User.Settings.Device.cuda.MemFansFullspeedTemp > 0 ? User.Settings.Device.cuda.MemFansFullspeedTemp.ToString() + " °C" : "auto";
@@ -76,7 +73,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             User.Settings.Device.cuda.MemFansFullspeedTemp--;
 
             if (User.Settings.Device.cuda.MemFansFullspeedTemp < 0) { User.Settings.Device.cuda.MemFansFullspeedTemp = 0; }
-            if (User.Settings.Device.cuda.MemFansFullspeedTemp > 100) { User.Settings.Device.cuda.MemFansFullspeedTemp = 100; }
 
             MemFansFullspeedTempTxt.Text = User.Settings.Device.cuda.MemFansFullspeedTemp > 0 ? User.Settings.Device.cuda.MemFansFullspeedTemp.ToString() + " °C" : "auto";
         }
@@ -85,7 +81,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             User.Settings.Device.cuda.ChipPauseMiningTemp++;
 
-            if (User.Settings.Device.cuda.ChipPauseMiningTemp < 0) { User.Settings.Device.cuda.ChipPauseMiningTemp = 0; }
             if (User.Settings.Device.cuda.ChipPauseMiningTemp > 100) { User.Settings.Device.cuda.ChipPauseMiningTemp = 100; }
 
             ChipPauseMiningTempTxt.Text = User.Settings.Device.cuda.ChipPauseMiningTemp > 0 ? User.Settings.Device.cuda.ChipPauseMiningTemp.ToString() + " °C" : "auto";
@@ -96,7 +91,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             User.Settings.Device.cuda.ChipPauseMiningTemp--;
 
             if (User.Settings.Device.cuda.ChipPauseMiningTemp < 0) { User.Settings.Device.cuda.ChipPauseMiningTemp = 0; }
-            if (User.Settings.Device.cuda.ChipPauseMiningTemp > 100) { User.Settings.Device.cuda.ChipPauseMiningTemp = 100; }
 
             ChipPauseMiningTempTxt.Text = User.Settings.Device.cuda.ChipPauseMiningTemp > 0 ? User.Settings.Device.cuda.ChipPauseMiningTemp.ToString() + " °C" : "auto";
         }
@@ -105,7 +99,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         {
             User.Settings.Device.cuda.MemPauseMiningTemp++;
 
-            if (User.Settings.Device.cuda.MemPauseMiningTemp < 0) { User.Settings.Device.cuda.MemPauseMiningTemp = 0; }
             if (User.Settings.Device.cuda.MemPauseMiningTemp > 100) { User.Settings.Device.cuda.MemPauseMiningTemp = 100; }
 
             MemPauseMiningTempTxt.Text = User.Settings.Device.cuda.MemPauseMiningTemp > 0 ? User.Settings.Device.cuda.MemPauseMiningTemp.ToString() + " °C" : "auto";
@@ -116,7 +109,6 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             User.Settings.Device.cuda.MemPauseMiningTemp--;
 
             if (User.Settings.Device.cuda.MemPauseMiningTemp < 0) { User.Settings.Device.cuda.MemPauseMiningTemp = 0; }
-            if (User.Settings.Device.cuda.MemPauseMiningTemp > 100) { User.Settings.Device.cuda.MemPauseMiningTemp = 100; }
 
             MemPauseMiningTempTxt.Text = User.Settings.Device.cuda.MemPauseMiningTemp > 0 ? User.Settings.Device.cuda.MemPauseMiningTemp.ToString() + " °C" : "auto";
         }
