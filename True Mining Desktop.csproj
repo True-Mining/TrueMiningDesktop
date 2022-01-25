@@ -15,7 +15,7 @@
     <Company>True Mining</Company>
     <Authors>Matheus Bach</Authors>
     <Product>True Mining Desktop</Product>
-    <Copyright>Copyright (C) 2019-2021 True Mining</Copyright>
+    <Copyright>Copyright (C) 2019-2022 True Mining</Copyright>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageIcon>logo.png</PackageIcon>
     <Description>True Mining Desktop Mining Software</Description>
