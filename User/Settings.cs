@@ -186,6 +186,8 @@ namespace TrueMiningDesktop.User
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Cpu.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "RandomX" });
+
+        public string minerName { get; set; } = "XMRig";
         public int Priority { get; set; } = 1;
         public int MaxUsageHint { get; set; } = 100;
         public int Threads { get; set; } = 0;
@@ -207,6 +209,8 @@ namespace TrueMiningDesktop.User
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Cuda.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
+
+        public string minerName { get; set; } = "TRex";
 
         public int ChipPauseMiningTemp { get; set; } = 85;
         public int ChipFansFullspeedTemp { get; set; } = 65;
@@ -230,6 +234,8 @@ namespace TrueMiningDesktop.User
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Opencl.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "RandomX" });
+
+        public string minerName { get; set; } = "TeamRedMiner";
 
         public int ChipPauseMiningTemp { get; set; } = 85;
         public int ChipFansFullspeedTemp { get; set; } = 65;

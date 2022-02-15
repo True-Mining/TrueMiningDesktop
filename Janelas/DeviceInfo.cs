@@ -14,11 +14,12 @@ namespace TrueMiningDesktop.Janelas
 
         private readonly Hashrate_timer hashrate_timer;
 
-        public DeviceInfo(string backendName, string name, string miningAlgo = null, bool isSelected = false, decimal hashrate = -1, PackIconKind iconKind = PackIconKind.Cpu64Bit)
+        public DeviceInfo(string backendName, string devName, string minerName, string miningAlgo = null, bool isSelected = false, decimal hashrate = -1, PackIconKind iconKind = PackIconKind.Cpu64Bit)
         {
             BackendName = backendName;
-            DeviceName = name;
+            DeviceName = devName;
             MiningAlgo = miningAlgo;
+            MinerName = minerName;
             HashrateValue_raw = hashrate;
             IsSelected = isSelected;
             IconKind = iconKind;
@@ -55,6 +56,7 @@ namespace TrueMiningDesktop.Janelas
 
         public string BackendName { get; private set; }
         public string DeviceName { get; private set; }
+        public string MinerName { get; private set; }
         public string miningAlgo;
 
         public string MiningAlgo
