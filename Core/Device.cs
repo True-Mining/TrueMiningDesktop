@@ -6,9 +6,9 @@ namespace TrueMiningDesktop.Core
 {
     public class Device
     {
-        public static DeviceInfo Cpu = new DeviceInfo("cpu", "x64 CPU(s)", User.Settings.Device.cpu.Algorithm, (bool)User.Settings.Device.cpu.MiningSelected, -1, PackIconKind.Cpu64Bit);
-        public static DeviceInfo Opencl = new DeviceInfo("opencl", "AMD GPU(s)", User.Settings.Device.opencl.Algorithm, (bool)User.Settings.Device.opencl.MiningSelected, -1, PackIconKind.Gpu);
-        public static DeviceInfo Cuda = new DeviceInfo("cuda", "NVIDIA GPU(s)", User.Settings.Device.cuda.Algorithm, (bool)User.Settings.Device.cuda.MiningSelected, -1, PackIconKind.Gpu);
+        public static DeviceInfo Cpu = new DeviceInfo("cpu", "x64 CPU(s)", User.Settings.Device.cpu.minerName, User.Settings.Device.cpu.Algorithm, (bool)User.Settings.Device.cpu.MiningSelected, -1, PackIconKind.Cpu64Bit);
+        public static DeviceInfo Opencl = new DeviceInfo("opencl", "AMD GPU(s)", User.Settings.Device.opencl.minerName, User.Settings.Device.opencl.Algorithm, (bool)User.Settings.Device.opencl.MiningSelected, -1, PackIconKind.Gpu);
+        public static DeviceInfo Cuda = new DeviceInfo("cuda", "NVIDIA GPU(s)", User.Settings.Device.cuda.minerName, User.Settings.Device.cuda.Algorithm, (bool)User.Settings.Device.cuda.MiningSelected, -1, PackIconKind.Gpu);
 
         public Device()
         {
