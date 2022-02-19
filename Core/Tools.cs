@@ -125,7 +125,7 @@ namespace TrueMiningDesktop.Core
             {
                 try
                 {
-                    HttpClient httpClient = new HttpClient();
+                    HttpClient httpClient = new();
                     HttpResponseMessage response = httpClient.PostAsJsonAsync(uri, data).Result;
                     response.EnsureSuccessStatusCode();
 
@@ -147,7 +147,7 @@ namespace TrueMiningDesktop.Core
                 NetworkStream stream = tcpClient.GetStream();
 
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(data);
-                await stream.WriteAsync(bytesToSend, 0, bytesToSend.Length).ConfigureAwait(false);
+                await stream.WriteAsync(bytesToSend).ConfigureAwait(false);
 
                 byte[] incomingBuffer = new byte[tcpClient.ReceiveBufferSize];
                 int offset = 0;
@@ -155,7 +155,7 @@ namespace TrueMiningDesktop.Core
 
                 while (!fin && tcpClient.Client.Connected)
                 {
-                    var readTask = await stream.ReadAsync(incomingBuffer, offset, tcpClient.ReceiveBufferSize - offset).ConfigureAwait(false);
+                    var readTask = await stream.ReadAsync(incomingBuffer.AsMemory(offset, tcpClient.ReceiveBufferSize - offset)).ConfigureAwait(false);
                     for (var i = offset; i < offset + readTask; i++)
                     {
                         if (incomingBuffer[i] == 0x7C || incomingBuffer[i] == 0x7d || incomingBuffer[i] == 0x00)
@@ -193,7 +193,7 @@ namespace TrueMiningDesktop.Core
                 Stream stream = httpClient.GetStreamAsync(hostname + ':' + port).Result;
 
                 byte[] bytesToSend = Encoding.ASCII.GetBytes(data);
-                await stream.WriteAsync(bytesToSend, 0, bytesToSend.Length).ConfigureAwait(false);
+                await stream.WriteAsync(bytesToSend).ConfigureAwait(false);
 
                 byte[] incomingBuffer = new byte[httpClient.MaxResponseContentBufferSize];
                 int offset = 0;
@@ -201,7 +201,7 @@ namespace TrueMiningDesktop.Core
 
                 while (!fin)
                 {
-                    var readTask = await stream.ReadAsync(incomingBuffer, offset, (int)httpClient.MaxResponseContentBufferSize - offset).ConfigureAwait(false);
+                    var readTask = await stream.ReadAsync(incomingBuffer.AsMemory(offset, (int)httpClient.MaxResponseContentBufferSize - offset)).ConfigureAwait(false);
                     for (var i = offset; i < offset + readTask; i++)
                     {
                         if (incomingBuffer[i] == 0x7C || incomingBuffer[i] == 0x7d || incomingBuffer[i] == 0x00)
@@ -640,14 +640,13 @@ namespace TrueMiningDesktop.Core
                 return false;       // No window is currently activated
             }
 
-            var procId = Process.GetCurrentProcess().Id;
-            int activeProcId;
-            GetWindowThreadProcessId(activatedHandle, out activeProcId);
+            var procId = Environment.ProcessId;
+            GetWindowThreadProcessId(activatedHandle, out int activeProcId);
 
             return activeProcId == procId;
         }
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern int SetWindowText(IntPtr hWnd, string text);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
