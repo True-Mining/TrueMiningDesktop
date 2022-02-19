@@ -302,6 +302,24 @@ namespace TrueMiningDesktop.User
                     if (!Settings.LoadingSettings) { Janelas.Pages.Home.PaymentInfoWasChanged = true; }
                     if (!Settings.LoadingSettings && coinIsInParamsCoins) { Settings.SettingsSaver(); }
                 }
+
+                if (!Settings.LoadingSettings && coinIsInParamsCoins)
+                {
+                    try
+                    {
+                        // Se a PaymentCoin selecionada estiver em fase de deslistagem, exibe warning na Home Page
+                        if (PayCoin != null && PayCoin.Unlisting)
+                        {
+                            Janelas.Pages.Home.ImportantWarningTextBlock.Text = "Warning: Payment Coin " + PayCoin.CoinTicker + " - " + PayCoin.CoinName + " is in Unlisting Phase. Please change your Payment Coin as soon as possible. After the unlisting phase ends, payments in that coin will no longer happen";
+                            Janelas.Pages.Home.ImportantWarningTextBlock.Visibility = System.Windows.Visibility.Visible;
+                        }
+                        else if (PayCoin != null && !PayCoin.Unlisting)
+                        {
+                            Janelas.Pages.Home.ImportantWarningTextBlock.Visibility = System.Windows.Visibility.Collapsed;
+                        }
+                    }
+                    catch { }
+                }
             }
         }
 

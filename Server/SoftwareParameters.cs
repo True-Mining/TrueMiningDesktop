@@ -96,6 +96,9 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("minPayout", NullValueHandling = NullValueHandling.Ignore)]
         public decimal MinPayout { get; set; }
+
+        [JsonProperty("unlisting", NullValueHandling = NullValueHandling.Ignore)]
+        public bool Unlisting { get; set; } = false;
     }
 
     public partial class ExtraFiles

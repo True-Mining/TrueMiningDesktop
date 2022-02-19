@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Linq;
 using TrueMiningDesktop.Core;
 using TrueMiningDesktop.ViewModel;
 using Application = System.Windows.Application;
@@ -271,6 +272,16 @@ namespace TrueMiningDesktop
                     }
                 }
             }
+
+            try
+            {
+                // Se a PaymentCoin selecionada (ou não) não for uma moeda em fase de deslistagem, remova as moedas em fase de deslistagem da lista para que não sejam mais selecionadas
+                if (!User.Settings.User.PayCoin.Unlisting)
+                {
+                    Server.SoftwareParameters.ServerConfig.PaymentCoins.Where(coin => coin.Unlisting).ToList().ForEach(coin => User.Settings.User.Payment_CoinsList.Remove(coin.CoinTicker + " - " + coin.CoinName));
+                }
+            }
+            catch { }
         }
 
         private void Notifier_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
