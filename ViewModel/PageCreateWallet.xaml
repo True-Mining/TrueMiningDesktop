@@ -16,17 +16,29 @@
 
             <WrapPanel Orientation="Horizontal">
                 <WrapPanel Orientation="Vertical">
-                    <Label Content="RDCToken (RDCT) Wallets" FontSize="15" FontStyle="Normal" Margin="0,10,0,0" HorizontalAlignment="Center" FontWeight="Bold" Foreground="#DD000000"></Label>
-                    <Button x:Name="RDCT_crex24" Height="30" Width="252" Background="#F7F8FC" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
+                    <Label Content="Ravencoin (RVN) Wallets" FontSize="15" FontStyle="Normal" Margin="0,10,0,0" HorizontalAlignment="Center" FontWeight="Bold" Foreground="#DD000000"></Label>
+                    <Button x:Name="RVN_binance" Height="30" Width="252" Background="#F7F8FC" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="https://crex24.com/assets/favicon/favicon-32x32.png" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="#DD000000" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
-                            <Label Content="Crex24 Exchange" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#DD000000" IsEnabled="True" VerticalContentAlignment="Center" />
+                            <Image Source="https://bin.bnbstatic.com/static/images/common/favicon.ico" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="#DD000000" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
+                            <Label Content="Binance Exchange" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#DD000000" IsEnabled="True" VerticalContentAlignment="Center" />
                         </WrapPanel>
                     </Button>
-                    <Button x:Name="RDCT_github" Height="30" Width="252" Background="#F7F8FC" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
+                    <Button x:Name="RVN_github_core" Height="30" Width="252" Background="#F7F8FC" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Image Source="https://github.githubassets.com/favicons/favicon.png" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="#DD000000" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
-                            <Label Content="Core Wallet (fullnode)" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#DD000000" IsEnabled="True" VerticalContentAlignment="Center" />
+                            <Label Content="Desktop Wallet (fullnode)" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#DD000000" IsEnabled="True" VerticalContentAlignment="Center" />
+                        </WrapPanel>
+                    </Button>
+                    <Button x:Name="RVN_github_electrum" Height="30" Width="252" Background="#F7F8FC" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
+                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="https://github.githubassets.com/favicons/favicon.png" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="#DD000000" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
+                            <Label Content="Desktop Wallet (electrum)" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#DD000000" IsEnabled="True" VerticalContentAlignment="Center" />
+                        </WrapPanel>
+                    </Button>
+                    <Button x:Name="RVN_dot_org_site" Height="30" Width="252" Background="#F7F8FC" BorderBrush="Gray" Margin="0,5,0,0" Click="button_click">
+                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="https://ravencoin.org/favicon.png" Width="20" Height="20" HorizontalAlignment="Stretch" TextBlock.Foreground="#DD000000" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
+                            <Label Content="ravencoin.org suggestions" FontSize="15" VerticalAlignment="Center" SnapsToDevicePixels="True" Padding="5,0,0,0" Foreground="#DD000000" IsEnabled="True" VerticalContentAlignment="Center" />
                         </WrapPanel>
                     </Button>
                 </WrapPanel>

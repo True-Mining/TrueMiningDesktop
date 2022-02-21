@@ -28,15 +28,27 @@ namespace TrueMiningDesktop.ViewModel
 
             switch (content)
             {
-                case "RDCT_github":
+                case "RVN_binance":
                     {
-                        Tools.OpenLinkInBrowser("https://github.com/reidocoin/rdctoken/releases");
+                        Tools.OpenLinkInBrowser("https://www.binance.com/pt-BR/register?ref=15277911");
                     }
                     break;
 
-                case "RDCT_crex24":
+                case "RVN_github_core":
                     {
-                        Tools.OpenLinkInBrowser("https://crex24.com/?refid=ves323roqu7eousuh5wm");
+                        Tools.OpenLinkInBrowser("https://github.com/RavenProject/Ravencoin/releases");
+                    }
+                    break;
+
+                case "RVN_github_electrum":
+                    {
+                        Tools.OpenLinkInBrowser("https://github.com/Electrum-RVN-SIG/Electrum-Ravencoin/releases");
+                    }
+                    break;
+
+                case "RVN_dot_org_site":
+                    {
+                        Tools.OpenLinkInBrowser("https://ravencoin.org/wallet/");
                     }
                     break;
 
