@@ -156,7 +156,39 @@ namespace TrueMiningDesktop.Server
                     getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<PoolAPI.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<PoolAPI.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
-                    getAPIsTask.Add(new Task<Action>(() => { Crex24.PaymentCoinBTC_Orderbook = JsonConvert.DeserializeObject<Orderbook>(Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + "-BTC"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() =>
+                    {
+                        try
+                        {
+                            if (User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("Crex24", StringComparison.OrdinalIgnoreCase)))
+                            {
+                                string webRequestResult = Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpper() + "-BTC");
+                                PoolAPI.Orderbook orderbookObj = JsonConvert.DeserializeObject<PoolAPI.Orderbook>(webRequestResult);
+
+                                Crex24.PaymentCoinBTC_Orderbook = orderbookObj;
+                            }
+                        }
+                        catch { }
+
+                        try
+                        {
+                            if (User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("Coinpaprika", StringComparison.OrdinalIgnoreCase)))
+                            {
+                                CoinpaprikaAPI.Client coinpaprikaAPI = new();
+
+                                List<CoinpaprikaAPI.Entity.CoinInfo> coinList = coinpaprikaAPI.GetCoinsAsync().Result.Value;
+
+                                decimal coinLastPrice = coinpaprikaAPI.GetLatestOhlcForCoinAsync(coinList.First(cName => cName.Symbol.Equals(User.Settings.User.PayCoin.CoinTicker, StringComparison.OrdinalIgnoreCase) && cName.Name.Equals(User.Settings.User.PayCoin.CoinName, StringComparison.OrdinalIgnoreCase)).Id, "BTC").Result.Value.Last().Close;
+
+                                PoolAPI.Orderbook orderbookObj = new() { buyLevels = new List<PoolAPI.BuyLevel>() { new PoolAPI.BuyLevel() { price = coinLastPrice, volume = 1 } }, sellLevels = new List<PoolAPI.SellLevel>() { new PoolAPI.SellLevel() { price = coinLastPrice, volume = 1 } } };
+
+                                Crex24.PaymentCoinBTC_Orderbook = orderbookObj;
+                            }
+                        }
+                        catch { }
+                        ; return null;
+                    }));
+
                     getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(Convert.ToDecimal(((dynamic)JsonConvert.DeserializeObject(Tools.HttpGet("https://economia.awesomeapi.com.br/json/last/BTC-USD"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture })).BTCUSD.ask), 2); return null; }));
 
                     foreach (Task task in getAPIsTask)
