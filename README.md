@@ -15,7 +15,7 @@ True Mining Desktop comes to facilitate the CPU and GPU mining of the end user, 
 Currently supported payment currencies:
 -  Dogecoin (DOGE)
 -  Digibyte (DGB)
--  RDCToken (RDCT)
+-  Ravencoin (RVN)
 
 Website: https://truemining.online
 
