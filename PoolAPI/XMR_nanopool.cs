@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueMiningDesktop.PoolAPI
+namespace TrueMiningDesktop.ExternalApi
 {
     public class Minute
     {

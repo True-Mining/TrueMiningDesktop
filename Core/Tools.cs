@@ -665,7 +665,7 @@ namespace TrueMiningDesktop.Core
             public decimal BuyPrice;
             public decimal SellPrice;
 
-            public LiquidityPrices(PoolAPI.Orderbook orderbook, decimal volumeForSell_valueForBuy = 0)
+            public LiquidityPrices(ExternalApi.Orderbook orderbook, decimal volumeForSell_valueForBuy = 0)
             {
                 if (orderbook == null || (orderbook.buyLevels.Count == 0 && orderbook.sellLevels.Count == 0) || volumeForSell_valueForBuy == 0) { BuyPrice = 0; SellPrice = 0; return; }
 

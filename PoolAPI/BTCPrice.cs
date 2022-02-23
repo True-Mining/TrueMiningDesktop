@@ -1,4 +1,4 @@
-﻿namespace TrueMiningDesktop.PoolAPI
+﻿namespace TrueMiningDesktop.ExternalApi
 {
     public class BitcoinPrice
     {

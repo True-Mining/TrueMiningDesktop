@@ -29,23 +29,23 @@ namespace TrueMiningDesktop.Janelas.Popups
                     {
                         CoinName = User.Settings.User.PayCoin != null ? User.Settings.User.PayCoin.CoinName : "Coins";
 
-                        BTCToCoinRate = decimal.Round(BTCToBTCRate / (PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price) / 2);
+                        BTCToCoinRate = decimal.Round(BTCToBTCRate / (ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price) / 2);
                         BTCToBTCRate = 1;
-                        BTCToUSDRate = decimal.Round(PoolAPI.BitcoinPrice.BTCUSD, 2);
+                        BTCToUSDRate = decimal.Round(ExternalApi.BitcoinPrice.BTCUSD, 2);
 
-                        PointRandomXToCoinRate = decimal.Round(exchangeRatePontosRandomXToMiningCoin * (PoolAPI.Crex24.XMRBTC_Orderbook.sellLevels[0].price / PoolAPI.Crex24.PaymentCoinBTC_Orderbook.sellLevels[0].price), 6);
-                        PointRandomXToBTCRate = decimal.Round((PoolAPI.Crex24.XMRBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.XMRBTC_Orderbook.sellLevels[0].price) / 2 * exchangeRatePontosRandomXToMiningCoin / BTCToBTCRate, 8);
-                        PointRandomXToUSDRate = decimal.Round((PoolAPI.Crex24.XMRBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.XMRBTC_Orderbook.sellLevels[0].price) / 2 * exchangeRatePontosRandomXToMiningCoin / BTCToBTCRate * BTCToUSDRate, 6);
+                        PointRandomXToCoinRate = decimal.Round(exchangeRatePontosRandomXToMiningCoin * (ExternalApi.ExchangeOrderbooks.XMRBTC.sellLevels[0].price / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price), 6);
+                        PointRandomXToBTCRate = decimal.Round((ExternalApi.ExchangeOrderbooks.XMRBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.XMRBTC.sellLevels[0].price) / 2 * exchangeRatePontosRandomXToMiningCoin / BTCToBTCRate, 8);
+                        PointRandomXToUSDRate = decimal.Round((ExternalApi.ExchangeOrderbooks.XMRBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.XMRBTC.sellLevels[0].price) / 2 * exchangeRatePontosRandomXToMiningCoin / BTCToBTCRate * BTCToUSDRate, 6);
 
-                        PointKawPowToCoinRate = decimal.Round(exchangeRatePontosKawPowToMiningCoin * (PoolAPI.Crex24.RVNBTC_Orderbook.sellLevels[0].price / PoolAPI.Crex24.PaymentCoinBTC_Orderbook.sellLevels[0].price), 6);
-                        PointKawPowToBTCRate = decimal.Round((PoolAPI.Crex24.RVNBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.RVNBTC_Orderbook.sellLevels[0].price) / 2 * exchangeRatePontosKawPowToMiningCoin / BTCToBTCRate, 8);
-                        PointKawPowToUSDRate = decimal.Round((PoolAPI.Crex24.RVNBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.RVNBTC_Orderbook.sellLevels[0].price) / 2 * exchangeRatePontosKawPowToMiningCoin / BTCToBTCRate * BTCToUSDRate, 6);
+                        PointKawPowToCoinRate = decimal.Round(exchangeRatePontosKawPowToMiningCoin * (ExternalApi.ExchangeOrderbooks.RVNBTC.sellLevels[0].price / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price), 6);
+                        PointKawPowToBTCRate = decimal.Round((ExternalApi.ExchangeOrderbooks.RVNBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.RVNBTC.sellLevels[0].price) / 2 * exchangeRatePontosKawPowToMiningCoin / BTCToBTCRate, 8);
+                        PointKawPowToUSDRate = decimal.Round((ExternalApi.ExchangeOrderbooks.RVNBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.RVNBTC.sellLevels[0].price) / 2 * exchangeRatePontosKawPowToMiningCoin / BTCToBTCRate * BTCToUSDRate, 6);
 
                         CoinToCoinRate = 1;
                         CoinToPointRandomXRate = decimal.Round(CoinToCoinRate / PointRandomXToCoinRate, 2);
                         CoinToPointKawPowRate = decimal.Round(CoinToCoinRate / PointKawPowToCoinRate, 2);
-                        CoinToBTCRate = decimal.Round((PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate, 8);
-                        CoinToUSDRate = decimal.Round((PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price + PoolAPI.Crex24.PaymentCoinBTC_Orderbook.buyLevels[0].price) / 2 / BTCToBTCRate * BTCToUSDRate, 6);
+                        CoinToBTCRate = decimal.Round((ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price) / 2 / BTCToBTCRate, 8);
+                        CoinToUSDRate = decimal.Round((ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price) / 2 / BTCToBTCRate * BTCToUSDRate, 6);
 
                         loadingVisualElement.Visibility = Visibility.Hidden;
                         AllContent.Visibility = Visibility.Visible;

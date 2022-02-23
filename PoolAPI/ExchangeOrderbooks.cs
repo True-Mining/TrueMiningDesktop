@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueMiningDesktop.PoolAPI
+namespace TrueMiningDesktop.ExternalApi
 {
     public class BuyLevel
     {
@@ -20,10 +20,10 @@ namespace TrueMiningDesktop.PoolAPI
         public List<SellLevel> sellLevels = new List<SellLevel>();
     }
 
-    public class Crex24
+    public class ExchangeOrderbooks
     {
-        public static Orderbook XMRBTC_Orderbook = new Orderbook();
-        public static Orderbook RVNBTC_Orderbook = new Orderbook();
-        public static Orderbook PaymentCoinBTC_Orderbook = new Orderbook();
+        public static Orderbook XMRBTC = new Orderbook();
+        public static Orderbook RVNBTC = new Orderbook();
+        public static Orderbook PaymentCoinBTC = new Orderbook();
     }
 }

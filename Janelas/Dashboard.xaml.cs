@@ -148,7 +148,7 @@ namespace TrueMiningDesktop.Janelas
                     break;
             }
 
-            ViewModel.DashboardChart.UpdateAxes(new[] { PoolAPI.XMR_nanopool.pointsHistory_user, PoolAPI.RVN_nanopool.pointsHistory_user }.SelectMany(d => d).GroupBy(kvp => kvp.Key, (key, kvps) => new { Key = key, Value = kvps.Sum(kvp => kvp.Value) }).ToDictionary(x => x.Key, x => x.Value), (int)Pages.Dashboard.chart_zoom_interval.TotalSeconds);
+            ViewModel.DashboardChart.UpdateAxes(new[] { ExternalApi.XMR_nanopool.pointsHistory_user, ExternalApi.RVN_nanopool.pointsHistory_user }.SelectMany(d => d).GroupBy(kvp => kvp.Key, (key, kvps) => new { Key = key, Value = kvps.Sum(kvp => kvp.Value) }).ToDictionary(x => x.Key, x => x.Value), (int)Pages.Dashboard.chart_zoom_interval.TotalSeconds);
         }
 
         public TimeSpan chart_zoom_interval { get; set; } = new TimeSpan(0, 24, 0, 0);
