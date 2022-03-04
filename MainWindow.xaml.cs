@@ -230,21 +230,51 @@ namespace TrueMiningDesktop
 
             try
             {
-                List<string> list = new List<string>();
+                List<string> coinList = new List<string>();
 
                 foreach (Server.PaymentCoin paymentCoin in Server.SoftwareParameters.ServerConfig.PaymentCoins)
                 {
-                    if (!list.Contains(paymentCoin.CoinTicker + " - " + paymentCoin.CoinName))
+                    if (!coinList.Contains(paymentCoin.CoinTicker + " - " + paymentCoin.CoinName))
                     {
-                        list.Add(paymentCoin.CoinTicker + " - " + paymentCoin.CoinName);
+                        coinList.Add(paymentCoin.CoinTicker + " - " + paymentCoin.CoinName);
                     }
                 }
-                User.Settings.User.Payment_CoinsList = list;
+                User.Settings.User.Payment_CoinsList.Clear();
+                User.Settings.User.Payment_CoinsList.AddRange(coinList);
 
                 Dispatcher.BeginInvoke((Action)(() =>
                 {
                     Janelas.Pages.Home.DataContext = User.Settings.User;
                 }));
+            }
+            catch { }
+
+            try
+            {
+                List<string> algoListCpu = new List<string>();
+                List<string> algoListOpencl = new List<string>();
+                List<string> algoListCuda = new List<string>();
+
+                foreach (Server.MiningAlgorithm miningAlgorithm in Server.SoftwareParameters.ServerConfig.MiningAlgorithms)
+                {
+                    if (miningAlgorithm.SuportedDevices.Contains("cpu")) { algoListCpu.Add(miningAlgorithm.AlgorithmName); }
+                    if (miningAlgorithm.SuportedDevices.Contains("opencl")) { algoListOpencl.Add(miningAlgorithm.AlgorithmName); }
+                    if (miningAlgorithm.SuportedDevices.Contains("cuda")) { algoListCuda.Add(miningAlgorithm.AlgorithmName); }
+                }
+
+                User.Settings.Device.cpu.AlgorithmsList.Clear();
+                User.Settings.Device.opencl.AlgorithmsList.Clear();
+                User.Settings.Device.cuda.AlgorithmsList.Clear();
+
+                User.Settings.Device.cpu.AlgorithmsList.AddRange(algoListCpu.Distinct());
+                User.Settings.Device.opencl.AlgorithmsList.AddRange(algoListOpencl.Distinct().ToList());
+                User.Settings.Device.cuda.AlgorithmsList.AddRange(algoListCuda.Distinct().ToList());
+
+
+
+                if (!User.Settings.Device.cpu.AlgorithmsList.Contains(User.Settings.Device.cpu.Algorithm)) { User.Settings.Device.cpu.Algorithm = User.Settings.Device.cpu.AlgorithmsList.First(); }
+                if (!User.Settings.Device.cuda.AlgorithmsList.Contains(User.Settings.Device.cuda.Algorithm)) { User.Settings.Device.cuda.Algorithm = User.Settings.Device.cuda.AlgorithmsList.First(); }
+                if (!User.Settings.Device.opencl.AlgorithmsList.Contains(User.Settings.Device.opencl.Algorithm)) { User.Settings.Device.opencl.Algorithm = User.Settings.Device.opencl.AlgorithmsList.First(); }
             }
             catch { }
 

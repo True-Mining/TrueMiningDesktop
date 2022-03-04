@@ -84,13 +84,6 @@ namespace TrueMiningDesktop.User
                 if (File.Exists("configsDevices.txt"))
                 {
                     Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
-                    if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
-                    if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
-                    if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
-
-                    Device.cpu.AlgorithmsList = Device.cpu.AlgorithmsList.Distinct().ToList();
-                    Device.cuda.AlgorithmsList = Device.cuda.AlgorithmsList.Distinct().ToList();
-                    Device.opencl.AlgorithmsList = Device.opencl.AlgorithmsList.Distinct().ToList();
                 }
 
                 if (File.Exists("configsUser.txt"))
@@ -110,18 +103,6 @@ namespace TrueMiningDesktop.User
                     User.Payment_Coin = up.Payment_Coin;
                     if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
                     User.Payment_Wallet = up.Payment_Wallet;
-                }
-
-                if (!File.Exists(@"Miners\XMRig\NewAlgo-KawPow.txt"))
-                {
-                    Device.cuda.Algorithm = "KawPow";
-                    Device.opencl.Algorithm = "KawPow";
-
-                    if (!Directory.Exists(@"Miners")) { Directory.CreateDirectory(@"Miners"); }
-                    if (!Directory.Exists(@"Miners\XMRig")) { Directory.CreateDirectory(@"Miners\XMRig"); }
-                    File.WriteAllText(@"Miners\XMRig\NewAlgo-KawPow.txt", "New mining algorithm: KawPow. True Mining automatically set it as default algo in your OPENCL and CUDA devices. Do not delete this file");
-
-                    WriteSettings();
                 }
 
                 LoadingSettings = false;
