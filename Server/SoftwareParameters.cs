@@ -16,6 +16,9 @@ namespace TrueMiningDesktop.Server
         [JsonProperty("PaymentCoins", NullValueHandling = NullValueHandling.Ignore)]
         public List<PaymentCoin> PaymentCoins { get; set; }
 
+        [JsonProperty("MiningAlgorithms", NullValueHandling = NullValueHandling.Ignore)]
+        public List<MiningAlgorithm> MiningAlgorithms { get; set; }
+
         [JsonProperty("DynamicFee", NullValueHandling = NullValueHandling.Ignore)]
         public decimal DynamicFee { get; set; }
 
@@ -78,6 +81,18 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("defaultHashMuCoef", NullValueHandling = NullValueHandling.Ignore)]
         public int DefaultHashMuCoef { get; set; } = 1;
+    }
+
+    public partial class MiningAlgorithm
+    {
+        [JsonProperty("algorithmName", NullValueHandling = NullValueHandling.Ignore)]
+        public string AlgorithmName { get; set; }
+
+        [JsonProperty("settledName", NullValueHandling = NullValueHandling.Ignore)]
+        public string SettledName { get; set; }
+
+        [JsonProperty("suportedDevices", NullValueHandling = NullValueHandling.Ignore)]
+        public List<string> SuportedDevices { get; set; }
     }
 
     public partial class PaymentCoin
