@@ -399,20 +399,23 @@ namespace TrueMiningDesktop.Core
 
         public static void AddFirewallRule(string name, string filePatch, bool forceAdmin = false)
         {
-            StreamWriter wr = new(Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd"));
-            wr.Write("netsh advfirewall firewall del rule name=\"" + name + "\"\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=in action=allow\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=out action=allow");
-            wr.Close();
+            if (!firewallRuleAdded)
+            {
+                StreamWriter wr = new(Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd"));
+                wr.Write("netsh advfirewall firewall del rule name=\"" + name + "\"\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=in action=allow\nnetsh advfirewall firewall add rule name=\"" + name + "\" program=\"" + filePatch + "\" dir=out action=allow");
+                wr.Close();
 
-            Process addfwrule = new();
-            addfwrule.StartInfo.FileName = Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd");
-            addfwrule.StartInfo.UseShellExecute = true;
-            addfwrule.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-            addfwrule.StartInfo.CreateNoWindow = true;
-            if (forceAdmin) { addfwrule.StartInfo.Verb = "runas"; }
-            addfwrule.Start();
-            addfwrule.WaitForExit();
+                Process addFwRule = new();
+                addFwRule.StartInfo.FileName = Path.Combine(Path.GetTempPath(), "addfirewallrule.cmd");
+                addFwRule.StartInfo.UseShellExecute = true;
+                addFwRule.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                addFwRule.StartInfo.CreateNoWindow = true;
+                if (forceAdmin) { addFwRule.StartInfo.Verb = "runas"; }
+                addFwRule.Start();
+                addFwRule.WaitForExit();
 
-            firewallRuleAdded = true;
+                firewallRuleAdded = true;
+            }
         }
 
         public static void TryChangeTaskbarIconAsSettingsOrder()
