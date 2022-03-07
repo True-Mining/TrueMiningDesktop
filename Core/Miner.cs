@@ -61,14 +61,14 @@ namespace TrueMiningDesktop.Core
                     });
                     if (!EmergencyExit || force)
                     {
-                            if (Device.Cpu.IsSelected && Server.SoftwareParameters.ServerConfig.MiningAlgorithms.Any(algo => algo.AlgorithmName.Equals(Device.Cpu.MiningAlgo, StringComparison.OrdinalIgnoreCase) && algo.SuportedDevices.Contains(Device.Cpu.BackendName)))
+                        if (Device.Cpu.IsSelected && Server.SoftwareParameters.ServerConfig.MiningAlgorithms.Any(algo => algo.AlgorithmName.Equals(Device.Cpu.MiningAlgo, StringComparison.OrdinalIgnoreCase) && algo.SuportedDevices.Contains(Device.Cpu.BackendName)))
+                        {
+                            try
                             {
-                                try
-                                {
-                                    XMRigMiners.Add(new XMRig.XMRig(new List<DeviceInfo>() { Device.Cpu }));
-                                }
-                                catch { }
+                                XMRigMiners.Add(new XMRig.XMRig(new List<DeviceInfo>() { Device.Cpu }));
                             }
+                            catch { }
+                        }
 
                         if (Device.Opencl.IsSelected && Server.SoftwareParameters.ServerConfig.MiningAlgorithms.Any(algo => algo.AlgorithmName.Equals(Device.Opencl.MiningAlgo, StringComparison.OrdinalIgnoreCase) && algo.SuportedDevices.Contains(Device.Opencl.BackendName)))
                         {

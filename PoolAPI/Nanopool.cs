@@ -106,4 +106,13 @@ namespace TrueMiningDesktop.ExternalApi
         public static share_coefficient sharecoef = new share_coefficient();
         public static Dictionary<int, decimal> pointsHistory_user = new Dictionary<int, decimal>();
     }
+
+    public class ETC_nanopool
+    {
+        public static Dictionary<int, decimal> hashrateHistory_user = new Dictionary<int, decimal>();
+        public static Dictionary<int, decimal> hashrateHistory_tm = new Dictionary<int, decimal>();
+        public static approximated_earnings approximated_earnings = new approximated_earnings();
+        public static share_coefficient sharecoef = new share_coefficient();
+        public static Dictionary<int, decimal> pointsHistory_user = new Dictionary<int, decimal>();
+    }
 }

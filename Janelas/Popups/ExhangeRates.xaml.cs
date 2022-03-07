@@ -9,7 +9,7 @@ namespace TrueMiningDesktop.Janelas.Popups
     /// </summary>
     public partial class ExchangeRates : Window
     {
-        public ExchangeRates(decimal exchangeRatePontosRandomXToMiningCoin, decimal exchangeRatePontosKawPowToMiningCoin)
+        public ExchangeRates(decimal exchangeRatePontosRandomXToMiningCoin, decimal exchangeRatePontosKawPowToMiningCoin, decimal exchangeRatePontosEtchashToMiningCoin)
         {
             InitializeComponent();
             new System.Threading.Tasks.Task(() =>
@@ -41,9 +41,14 @@ namespace TrueMiningDesktop.Janelas.Popups
                         PointKawPowToBTCRate = decimal.Round((ExternalApi.ExchangeOrderbooks.RVNBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.RVNBTC.sellLevels[0].price) / 2 * exchangeRatePontosKawPowToMiningCoin / BTCToBTCRate, 8);
                         PointKawPowToUSDRate = decimal.Round((ExternalApi.ExchangeOrderbooks.RVNBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.RVNBTC.sellLevels[0].price) / 2 * exchangeRatePontosKawPowToMiningCoin / BTCToBTCRate * BTCToUSDRate, 6);
 
+                        PointEtchashToCoinRate = decimal.Round(exchangeRatePontosEtchashToMiningCoin * (ExternalApi.ExchangeOrderbooks.ETCBTC.sellLevels[0].price / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price), 6);
+                        PointEtchashToBTCRate = decimal.Round((ExternalApi.ExchangeOrderbooks.ETCBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.ETCBTC.sellLevels[0].price) / 2 * exchangeRatePontosEtchashToMiningCoin / BTCToBTCRate, 8);
+                        PointEtchashToUSDRate = decimal.Round((ExternalApi.ExchangeOrderbooks.ETCBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.ETCBTC.sellLevels[0].price) / 2 * exchangeRatePontosEtchashToMiningCoin / BTCToBTCRate * BTCToUSDRate, 6);
+
                         CoinToCoinRate = 1;
                         CoinToPointRandomXRate = decimal.Round(CoinToCoinRate / PointRandomXToCoinRate, 2);
                         CoinToPointKawPowRate = decimal.Round(CoinToCoinRate / PointKawPowToCoinRate, 2);
+                        CoinToPointEtchashRate = decimal.Round(CoinToCoinRate / PointEtchashToCoinRate, 2);
                         CoinToBTCRate = decimal.Round((ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price) / 2 / BTCToBTCRate, 8);
                         CoinToUSDRate = decimal.Round((ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price + ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price) / 2 / BTCToBTCRate * BTCToUSDRate, 6);
 
@@ -67,9 +72,14 @@ namespace TrueMiningDesktop.Janelas.Popups
         public decimal PointKawPowToBTCRate { get; set; } = 1;
         public decimal PointKawPowToUSDRate { get; set; } = 1;
 
+        public decimal PointEtchashToCoinRate { get; set; } = 1;
+        public decimal PointEtchashToBTCRate { get; set; } = 1;
+        public decimal PointEtchashToUSDRate { get; set; } = 1;
+
         public decimal CoinToCoinRate { get; set; } = 1;
         public decimal CoinToPointRandomXRate { get; set; } = 1;
         public decimal CoinToPointKawPowRate { get; set; } = 1;
+        public decimal CoinToPointEtchashRate { get; set; } = 1;
         public decimal CoinToBTCRate { get; set; } = 1;
         public decimal CoinToUSDRate { get; set; } = 1;
 

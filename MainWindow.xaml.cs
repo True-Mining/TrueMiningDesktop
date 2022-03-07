@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Linq;
 using TrueMiningDesktop.Core;
 using TrueMiningDesktop.ViewModel;
 using Application = System.Windows.Application;
@@ -269,8 +269,6 @@ namespace TrueMiningDesktop
                 User.Settings.Device.cpu.AlgorithmsList.AddRange(algoListCpu.Distinct());
                 User.Settings.Device.opencl.AlgorithmsList.AddRange(algoListOpencl.Distinct().ToList());
                 User.Settings.Device.cuda.AlgorithmsList.AddRange(algoListCuda.Distinct().ToList());
-
-
 
                 if (!User.Settings.Device.cpu.AlgorithmsList.Contains(User.Settings.Device.cpu.Algorithm)) { User.Settings.Device.cpu.Algorithm = User.Settings.Device.cpu.AlgorithmsList.First(); }
                 if (!User.Settings.Device.cuda.AlgorithmsList.Contains(User.Settings.Device.cuda.Algorithm)) { User.Settings.Device.cuda.Algorithm = User.Settings.Device.cuda.AlgorithmsList.First(); }

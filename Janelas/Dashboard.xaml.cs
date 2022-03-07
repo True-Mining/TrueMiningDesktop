@@ -104,7 +104,7 @@ namespace TrueMiningDesktop.Janelas
                     if (window.Title == "Exchange Rates") { window.Close(); }
                 }
 
-                new ExchangeRates(saldo.exchangeRatePontosXmrToMiningCoin, saldo.exchangeRatePontosRvnToMiningCoin) { Title = "Exchange Rates" }.Show();
+                new ExchangeRates(saldo.exchangeRatePontosXmrToMiningCoin, saldo.exchangeRatePontosRvnToMiningCoin, saldo.exchangeRatePontosEtcToMiningCoin) { Title = "Exchange Rates" }.Show();
             }
             catch { }
         }
