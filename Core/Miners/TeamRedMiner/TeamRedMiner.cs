@@ -92,7 +92,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 TeamRedMinerProcessStartInfo.RedirectStandardOutput = false;
                 TeamRedMinerProcessStartInfo.CreateNoWindow = !User.Settings.User.ShowCLI;
                 TeamRedMinerProcessStartInfo.ErrorDialog = false;
-                TeamRedMinerProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                TeamRedMinerProcessStartInfo.WindowStyle = User.Settings.User.ShowCLI? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden;
 
                 TeamRedMinerProcess.StartInfo = TeamRedMinerProcessStartInfo;
 
@@ -396,10 +396,10 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             args.AppendLine("--watchdog_disabled");
 
             if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 || User.Settings.Device.opencl.MemFansFullspeedTemp > 0)
-            { 
+            {
                 args.AppendLine("--fan_control=" + (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 ? User.Settings.Device.opencl.ChipFansFullspeedTemp : "") + "::" + (User.Settings.Device.opencl.MemFansFullspeedTemp > 0 ? User.Settings.Device.opencl.MemFansFullspeedTemp : "") + "::40:100");
             }
-            
+
             if (User.Settings.Device.opencl.ChipPauseMiningTemp > 0)
             {
                 args.AppendLine("--temp_limit=" + User.Settings.Device.opencl.ChipPauseMiningTemp);

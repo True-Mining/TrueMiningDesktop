@@ -91,7 +91,7 @@ namespace TrueMiningDesktop.Core.TRex
                 TRexProcessStartInfo.RedirectStandardOutput = false;
                 TRexProcessStartInfo.CreateNoWindow = false;
                 TRexProcessStartInfo.ErrorDialog = false;
-                TRexProcessStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                TRexProcessStartInfo.WindowStyle = User.Settings.User.ShowCLI ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden;
                 TRexProcess.StartInfo = TRexProcessStartInfo;
             }
 
