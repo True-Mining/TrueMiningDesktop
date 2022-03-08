@@ -379,7 +379,7 @@ namespace TrueMiningDesktop.Core.XMRig
 
         public void CreateConfigFile(MiningCoin miningCoin)
         {
-            APIport = 20210 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin);
+            APIport = 20100 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin) + Device.DevicesList.IndexOf(this.Backends.Last());
 
             AlgoBackendsString = miningCoin.Algorithm.ToLowerInvariant() + '-' + string.Join(null, Backends.Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.BackendName.ToLowerInvariant())));
 

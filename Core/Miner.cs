@@ -74,7 +74,14 @@ namespace TrueMiningDesktop.Core
                         {
                             try
                             {
-                                TeamRedMinerMiners.Add(new TeamRedMiner.TeamRedMiner(new List<DeviceInfo>() { Device.Opencl }));
+                                if (Device.Opencl.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    XMRigMiners.Add(new XMRig.XMRig(new List<DeviceInfo>() { Device.Opencl }));
+                                }
+                                else
+                                {
+                                    TeamRedMinerMiners.Add(new TeamRedMiner.TeamRedMiner(new List<DeviceInfo>() { Device.Opencl }));
+                                }
                             }
                             catch { }
                         }
@@ -83,7 +90,14 @@ namespace TrueMiningDesktop.Core
                         {
                             try
                             {
-                                TRexMiners.Add(new TRex.TRex(new List<DeviceInfo>() { Device.Cuda }));
+                                if (Device.Cuda.MiningAlgo.Equals("RandomX", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    XMRigMiners.Add(new XMRig.XMRig(new List<DeviceInfo>() { Device.Cuda }));
+                                }
+                                else
+                                {
+                                    TRexMiners.Add(new TRex.TRex(new List<DeviceInfo>() { Device.Cuda }));
+                                }
                             }
                             catch { }
                         }

@@ -305,7 +305,7 @@ namespace TrueMiningDesktop.Core.TRex
 
         public void CreateConfigFile(MiningCoin miningCoin)
         {
-            APIport = 20220 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin);
+            APIport = 20200 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin) + Device.DevicesList.IndexOf(this.Backends.Last());
 
             AlgoBackendsString = miningCoin.Algorithm.ToLowerInvariant() + '-' + string.Join(null, Backends.Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.BackendName.ToLowerInvariant())));
 

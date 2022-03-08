@@ -378,7 +378,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
         public void CreateConfigFile(MiningCoin miningCoin)
         {
-            APIport = 20230 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin);
+            APIport = 20300 + SoftwareParameters.ServerConfig.MiningCoins.IndexOf(miningCoin) + Device.DevicesList.IndexOf(this.Backends.Last());
 
             AlgoBackendsString = miningCoin.Algorithm.ToLowerInvariant() + '-' + string.Join(null, Backends.Select(x => CultureInfo.CurrentCulture.TextInfo.ToTitleCase(x.BackendName.ToLowerInvariant())));
 
