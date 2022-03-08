@@ -393,6 +393,10 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             args.AppendLine("--log_interval=30");
             args.AppendLine("--log_rotate=1M,4");
             args.AppendLine("--enable_compute");
+            args.AppendLine("--eth_micro_delay=32");
+            args.AppendLine("--eth_no_4gb_kernels");
+            args.AppendLine("--eth_stagger");
+            args.AppendLine("--prog_stagger");
             args.AppendLine("--watchdog_disabled");
 
             if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 || User.Settings.Device.opencl.MemFansFullspeedTemp > 0)
@@ -459,6 +463,11 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 
             StringBuilder cmdStart = new();
             cmdStart.AppendLine("cd /d \"%~dp0\"");
+            cmdStart.AppendLine();
+            cmdStart.AppendLine("set GPU_MAX_ALLOC_PERCENT=100");
+            cmdStart.AppendLine("set GPU_SINGLE_ALLOC_PERCENT=100");
+            cmdStart.AppendLine("set GPU_MAX_HEAP_SIZE=100");
+            cmdStart.AppendLine("set GPU_USE_SYNC_OBJECTS=1");
             cmdStart.AppendLine();
             cmdStart.AppendLine("teamredminer.exe ^\n" + args.ToString().Replace(Environment.NewLine, " ^\n"));
             cmdStart.Append("pause");
