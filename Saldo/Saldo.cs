@@ -111,6 +111,22 @@ namespace TrueMiningDesktop.Server
         public decimal HashesPerPoint_etc;
         public decimal exchangeRatePontosEtcToMiningCoin;
 
+        decimal sumHashrate_tm_xmr = 0;
+        decimal sumHashrate_user_xmr = 0;
+        decimal sumHashrate_tm_rvn = 0;
+        decimal sumHashrate_user_rvn = 0;
+        decimal sumHashrate_tm_etc = 0;
+        decimal sumHashrate_user_etc = 0;
+
+        decimal totalXMRmineradoTrueMining = 0;
+        decimal totalRVNmineradoTrueMining = 0;
+        decimal totalETCmineradoTrueMining = 0;
+
+        decimal BTCpraVirarPaymentCoin = 0;
+
+        decimal PaymentCoinFinalPrice = 0;
+
+
         private static DateTime lastUpdated = DateTime.Now.AddMinutes(-10);
 
         private static readonly int secondsPerAveragehashrateReportInterval = 60 * 10;
@@ -185,7 +201,7 @@ namespace TrueMiningDesktop.Server
                             }
                         }
                         catch { }
-    ; return null;
+                        ; return null;
                     }));
 
                     getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
@@ -207,7 +223,7 @@ namespace TrueMiningDesktop.Server
                             ExchangeOrderbooks.RVNBTC = orderbookObj;
                         }
                         catch { }
-; return null;
+                        ; return null;
                     }));
                     getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
@@ -246,7 +262,7 @@ namespace TrueMiningDesktop.Server
                             }
                         }
                         catch { }
-; return null;
+                        ; return null;
                     }));
                     getAPIsTask.Add(new Task<Action>(() => { ETC_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/etc/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { ETC_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/etc/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
@@ -429,7 +445,7 @@ namespace TrueMiningDesktop.Server
                 }
                 catch { lastUpdated = DateTime.Now.AddSeconds(-10); }
 
-                decimal sumHashrate_user_xmr =
+                sumHashrate_user_xmr =
                 ExternalApi.XMR_nanopool.hashrateHistory_user
                 .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
@@ -439,7 +455,7 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                decimal sumHashrate_tm_xmr =
+                sumHashrate_tm_xmr =
                 ExternalApi.XMR_nanopool.hashrateHistory_tm
                 .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
@@ -449,7 +465,7 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                decimal sumHashrate_user_rvn =
+                sumHashrate_user_rvn =
                 ExternalApi.RVN_nanopool.hashrateHistory_user
                 .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
@@ -459,7 +475,7 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                decimal sumHashrate_tm_rvn =
+                sumHashrate_tm_rvn =
                 ExternalApi.RVN_nanopool.hashrateHistory_tm
                 .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
@@ -469,18 +485,8 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                decimal sumHashrate_user_etc =
-ExternalApi.ETC_nanopool.hashrateHistory_user
-.Where((KeyValuePair<int, decimal> value) =>
-value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-.Select((KeyValuePair<int, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
-.Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
-{
-    return acc + now;
-}));
-
-                decimal sumHashrate_tm_etc =
-                ExternalApi.ETC_nanopool.hashrateHistory_tm
+                sumHashrate_user_etc =
+                ExternalApi.ETC_nanopool.hashrateHistory_user
                 .Where((KeyValuePair<int, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<int, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -489,21 +495,33 @@ value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                     return acc + now;
                 }));
 
-                XMR_nanopool.pointsHistory_user = XMR_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<int, decimal>(x.Key, x.Value / XMR_nanopool.sharecoef.data / 16)).ToDictionary((KeyValuePair<int, decimal> y) => y.Key, y => y.Value);
-                RVN_nanopool.pointsHistory_user = RVN_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<int, decimal>(x.Key, x.Value / RVN_nanopool.sharecoef.data / 6)).ToDictionary((KeyValuePair<int, decimal> y) => y.Key, y => y.Value);
-                ETC_nanopool.pointsHistory_user = ETC_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<int, decimal>(x.Key, x.Value / ETC_nanopool.sharecoef.data / 6)).ToDictionary((KeyValuePair<int, decimal> y) => y.Key, y => y.Value);
-
+                sumHashrate_tm_etc =
+                ExternalApi.ETC_nanopool.hashrateHistory_tm
+                .Where((KeyValuePair<int, decimal> value) =>
+                value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
+                .Select((KeyValuePair<int, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
+                .Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
+                {
+                    return acc + now;
+                }));
+                
                 HashesPerPoint_xmr = XMR_nanopool.sharecoef.data * 16;
                 HashesPerPoint_rvn = RVN_nanopool.sharecoef.data * 6;
-                HashesPerPoint_etc = ETC_nanopool.sharecoef.data * 6;
+                HashesPerPoint_etc = ETC_nanopool.sharecoef.data * 2;
 
-                decimal totalXMRmineradoTrueMining = (decimal)XMR_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) /*desconto da fee da pool que não está sendo inserida no cálculo*/ / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_xmr;
-                decimal totalRVNmineradoTrueMining = (decimal)RVN_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) /*desconto da fee da pool que não está sendo inserida no cálculo*/ / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_rvn;
-                decimal totalETCmineradoTrueMining = (decimal)ETC_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) /*desconto da fee da pool que não está sendo inserida no cálculo*/ / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_etc;
+                XMR_nanopool.pointsHistory_user = XMR_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<int, decimal>(x.Key, x.Value / XMR_nanopool.sharecoef.data / 16)).ToDictionary((KeyValuePair<int, decimal> y) => y.Key, y => y.Value);
+                RVN_nanopool.pointsHistory_user = RVN_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<int, decimal>(x.Key, x.Value / RVN_nanopool.sharecoef.data / 6)).ToDictionary((KeyValuePair<int, decimal> y) => y.Key, y => y.Value);
+                ETC_nanopool.pointsHistory_user = ETC_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<int, decimal>(x.Key, x.Value / ETC_nanopool.sharecoef.data / 2)).ToDictionary((KeyValuePair<int, decimal> y) => y.Key, y => y.Value);
 
-                decimal BTCpraVirarPaymentCoin = (totalXMRmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.XMRBTC, totalXMRmineradoTrueMining).SellPrice) + (totalRVNmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.RVNBTC, totalRVNmineradoTrueMining).SellPrice) + (totalETCmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.ETCBTC, totalETCmineradoTrueMining).SellPrice);
 
-                decimal PaymentCoinFinalPrice = new Tools.LiquidityPrices(ExchangeOrderbooks.PaymentCoinBTC, BTCpraVirarPaymentCoin).BuyPrice;
+
+                totalXMRmineradoTrueMining = (decimal)XMR_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_xmr;
+                totalRVNmineradoTrueMining = (decimal)RVN_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_rvn;
+                totalETCmineradoTrueMining = (decimal)ETC_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_etc;
+
+                BTCpraVirarPaymentCoin = (totalXMRmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.XMRBTC, totalXMRmineradoTrueMining).SellPrice) + (totalRVNmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.RVNBTC, totalRVNmineradoTrueMining).SellPrice) + (totalETCmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.ETCBTC, totalETCmineradoTrueMining).SellPrice);
+
+                PaymentCoinFinalPrice = new Tools.LiquidityPrices(ExchangeOrderbooks.PaymentCoinBTC, BTCpraVirarPaymentCoin).BuyPrice;
 
                 AccumulatedBalance_Points_xmr =
                 ExternalApi.XMR_nanopool.pointsHistory_user
@@ -530,23 +548,26 @@ value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 exchangeRatePontosRvnToMiningCoin = HashesPerPoint_rvn * secondsPerAveragehashrateReportInterval * (RVN_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
                 AccumulatedBalance_Points_etc =
-ExternalApi.ETC_nanopool.pointsHistory_user
-.Where((KeyValuePair<int, decimal> value) =>
-value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
-.Select((KeyValuePair<int, decimal> value) => value.Value)
-.Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
-{
-    return acc + now;
-}));
+                ExternalApi.ETC_nanopool.pointsHistory_user
+                .Where((KeyValuePair<int, decimal> value) =>
+                value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
+                .Select((KeyValuePair<int, decimal> value) => value.Value)
+                .Aggregate(0, (Func<decimal, decimal, decimal>)((acc, now) =>
+                {
+                    return acc + now;
+                }));
 
                 exchangeRatePontosEtcToMiningCoin = HashesPerPoint_etc * secondsPerAveragehashrateReportInterval * (ETC_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
-                AccumulatedBalance_Coins = Decimal.Round((totalXMRmineradoTrueMining * Decimal.Divide(new Tools.LiquidityPrices(ExchangeOrderbooks.XMRBTC, totalXMRmineradoTrueMining).SellPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_xmr, sumHashrate_tm_xmr)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) + (totalRVNmineradoTrueMining * Decimal.Divide(new Tools.LiquidityPrices(ExchangeOrderbooks.RVNBTC, totalRVNmineradoTrueMining).SellPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_rvn, sumHashrate_tm_rvn)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) + (totalETCmineradoTrueMining * Decimal.Divide(new Tools.LiquidityPrices(ExchangeOrderbooks.ETCBTC, totalETCmineradoTrueMining).SellPrice, PaymentCoinFinalPrice) * Decimal.Divide(sumHashrate_user_etc, sumHashrate_tm_etc)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee), 5);
+                AccumulatedBalance_Coins = Decimal.Round(
+                (totalXMRmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.XMRBTC, totalXMRmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * (sumHashrate_tm_xmr > 0 ? Decimal.Divide(sumHashrate_user_xmr, sumHashrate_tm_xmr) : 0)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) +
+                (totalRVNmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.RVNBTC, totalRVNmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * (sumHashrate_tm_rvn > 0 ? Decimal.Divide(sumHashrate_user_rvn, sumHashrate_tm_rvn) : 0)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) + 
+                (totalETCmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.ETCBTC, totalETCmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * (sumHashrate_tm_etc > 0 ? Decimal.Divide(sumHashrate_user_etc, sumHashrate_tm_etc) : 0)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee), 5);
 
                 string warningMessage = "Balance less than " + SoftwareParameters.ServerConfig.PaymentCoins.Find(x => Equals(x.CoinTicker, User.Settings.User.PayCoin.CoinTicker)).MinPayout.ToString() + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + " will be paid once a week when you reach the minimum amount. Your balance will disappear from the dashboard, but it will still be saved in our system";
                 string warningMessage2 = "Mined points take an average of 10-20 minutes to be displayed on the dashboard.";
 
-                if (AccumulatedBalance_Coins == 0)
+                if (AccumulatedBalance_Coins !> 0)
                 {
                     if (!Pages.Dashboard.DashboardWarnings.Contains(warningMessage2)) Janelas.Pages.Dashboard.DashboardWarnings.Add(warningMessage2); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                 }
@@ -555,7 +576,7 @@ value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                     if (Pages.Dashboard.DashboardWarnings.Contains(warningMessage2)) Janelas.Pages.Dashboard.DashboardWarnings.Remove(warningMessage2); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                 }
 
-                if (SoftwareParameters.ServerConfig.PaymentCoins.Find(x => Equals(x.CoinTicker, User.Settings.User.PayCoin.CoinTicker)).MinPayout < AccumulatedBalance_Coins)
+                if (SoftwareParameters.ServerConfig.PaymentCoins.Find(x => Equals(x.CoinTicker, User.Settings.User.PayCoin.CoinTicker)).MinPayout > AccumulatedBalance_Coins)
                 {
                     if (!Pages.Dashboard.DashboardWarnings.Contains(warningMessage)) Janelas.Pages.Dashboard.DashboardWarnings.Add(warningMessage); Pages.Dashboard.WarningWrapVisibility = Pages.Dashboard.DashboardWarnings.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
                 }
