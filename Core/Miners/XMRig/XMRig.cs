@@ -272,7 +272,7 @@ namespace TrueMiningDesktop.Core.XMRig
             }
             else if (XMRigProcessStartInfo.FileName == Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig_zerofee-msvc.exe")
             {
-                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig-msvc.exe";
+                XMRigProcessStartInfo.FileName = Environment.CurrentDirectory + @"\Miners\XMRig\" + @"xmrig-gcc.exe";
             }
             else
             {
