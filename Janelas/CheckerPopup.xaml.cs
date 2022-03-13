@@ -374,15 +374,17 @@ namespace TrueMiningDesktop.Janelas
                 CheckInternet();
 
                 FileName = file.FileName;
-                StatusTitle = "Downloading Files " + progress;
+                StatusTitle = "Downloading Files " + progress + (downloaderTryesCount > 0 ? (" [try " + downloaderTryesCount + "]") : "");
 
                 useTor = false;
 
                 while (!File.Exists(file.Directory + file.FileName + ".dl") || Tools.FileSHA256(file.Directory + file.FileName + ".dl") != file.Sha256)
                 {
+                    StatusTitle = "Downloading Files " + progress + (downloaderTryesCount > 0 ? (" [try " + downloaderTryesCount + "]") : "");
+
                     downloaderTryesCount++;
 
-                    if (downloaderTryesCount > 2 || webClientTryesCount > 5) { if (!Tools.HaveADM) { Tools.RestartApp(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
+                    if (downloaderTryesCount > 2 || webClientTryesCount > 5) { if (!Tools.HaveADM) { Tools.RestartApp(true); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
                     if (downloaderTryesCount > 3 || webClientTryesCount > 7) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
 
                     while (!Tools.IsConnected()) { ProgressDetails = "Waiting for internet connection..."; Thread.Sleep(2000); }
@@ -426,7 +428,20 @@ namespace TrueMiningDesktop.Janelas
                 }
                 if ((File.Exists(file.Directory + file.FileName + ".dl") && Tools.FileSHA256(file.Directory + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Directory + file.FileName) && Tools.FileSHA256(file.Directory + file.FileName) == file.Sha256)) { return true; } else { return false; }
             }
-            catch { }
+            catch 
+            {
+                // verifica se o erro está no processo de hashing do arquivo baixado. Se for isso então provavelmente é o Windows Defender bloqueando. Nesse caso, adiciona nas exclusões
+                try
+                {
+                    if (File.Exists(file.Directory + file.FileName + ".dl")) { _ = Tools.FileSHA256(file.Directory + file.FileName + ".dl"); }
+                    if (File.Exists(file.Directory + file.FileName)) { _ = Tools.FileSHA256(file.Directory + file.FileName); }
+                }
+                catch
+                {
+                    ProgressDetails = "Waiting WindowsPowerShell Aprovation - PREASE CONFIRM";
+                    Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
+                }
+            }
             return false;
         }
 
@@ -442,7 +457,7 @@ namespace TrueMiningDesktop.Janelas
             {
                 TryCount++;
 
-                if (TryCount > 3) { if (!Tools.HaveADM) { Tools.RestartApp(); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
+                if (TryCount > 3) { if (!Tools.HaveADM) { Tools.RestartApp(true); } else { Tools.AddTrueMiningDestopToWinDefenderExclusions(true); } }
                 if (TryCount > 4) { MessageBox.Show("An unexpected error has occurred. Check your internet and add the main folder of True Mining Desktop in the exceptions / exclusions of your antivirus, firewall and windows defender, then restart True Mining"); Application.Current.Dispatcher.Invoke((Action)delegate { Core.Miner.EmergencyExit = true; Application.Current.Shutdown(); Tools.CheckerPopup.Close(); }); }
 
                 try
@@ -462,7 +477,20 @@ namespace TrueMiningDesktop.Janelas
 
                     if (File.Exists(file.Directory + file.FileName) && String.Compare(Tools.FileSHA256(file.Directory + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
                 }
-                catch { }
+                catch
+                {
+                    // verifica se o erro está no processo de hashing do arquivo baixado. Se for isso então provavelmente é o Windows Defender bloqueando. Nesse caso, adiciona nas exclusões
+                    try
+                    {
+                        if (File.Exists(file.Directory + file.FileName + ".dl")) { _ = Tools.FileSHA256(file.Directory + file.FileName + ".dl"); }
+                        if (File.Exists(file.Directory + file.FileName)) { _ = Tools.FileSHA256(file.Directory + file.FileName); }
+                    }
+                    catch
+                    {
+                        ProgressDetails = "Waiting WindowsPowerShell Aprovation - PREASE CONFIRM";
+                        Tools.AddTrueMiningDestopToWinDefenderExclusions(true);
+                    }
+                }
             }
 
             if (File.Exists(file.Directory + file.FileName) && String.Compare(Tools.FileSHA256(file.Directory + file.FileName), file.Sha256, StringComparison.OrdinalIgnoreCase) == 0) { return true; }
@@ -486,7 +514,11 @@ namespace TrueMiningDesktop.Janelas
                     Tools.NotifyPropertyChanged();
                 }
             }
-            else { webClientTryesCount = 0; }
+            else 
+            { 
+                ProgressDetails = "download complete"; 
+                webClientTryesCount = 0; 
+            }
         }
 
         private void CheckInternet()

@@ -587,7 +587,7 @@ namespace TrueMiningDesktop.Core
         {
             try
             {
-                if (Tools.HaveADM || forceAdmin)
+                if ((Tools.HaveADM || forceAdmin) && !AddedTrueMiningDestopToWinDefenderExclusions)
                 {
                     string command = @"Add-MpPreference -ExclusionPath " + '"' + System.AppDomain.CurrentDomain.BaseDirectory + '"' + " -Force";
                     byte[] commandBytes = System.Text.Encoding.Unicode.GetBytes(command);
