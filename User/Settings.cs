@@ -182,12 +182,12 @@ namespace TrueMiningDesktop.User
 
         public bool Autoconfig { get; set; } = true;
 
-        private string algorithm = "KawPow";
+        private string algorithm = "EtcHash";
 
         public string Algorithm
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Cuda.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
-        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "EtcHash", "RandomX" });
+        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "EtcHash", "KawPow", "RandomX" });
 
         public int ChipPauseMiningTemp { get; set; } = 85;
         public int ChipFansFullspeedTemp { get; set; } = 65;
@@ -205,12 +205,12 @@ namespace TrueMiningDesktop.User
 
         public bool Autoconfig { get; set; } = true;
 
-        private string algorithm = "KawPow";
+        private string algorithm = "EtcHash";
 
         public string Algorithm
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Opencl.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
-        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "KawPow", "EtcHash", "RandomX" });
+        public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "EtcHash", "KawPow", "RandomX" });
 
         public int ChipPauseMiningTemp { get; set; } = 85;
         public int ChipFansFullspeedTemp { get; set; } = 65;
