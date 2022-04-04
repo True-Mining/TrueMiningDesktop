@@ -300,7 +300,7 @@ namespace TrueMiningDesktop.Server
                         ; return null;
                     }));
 
-                    getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("etc-ethereum-classic", "BTC").Result.Value.Last().Close, 2); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("btc-bitcoin", "USD").Result.Value.Last().Close, 2); return null; }));
 
                     getAPIsTask.ForEach(task => task.Start());
                     getAPIsTask.ForEach(task => task.Wait(60000));
