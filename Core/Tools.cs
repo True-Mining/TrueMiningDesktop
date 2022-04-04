@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -95,23 +96,25 @@ namespace TrueMiningDesktop.Core
 
         public static string HttpGet(string uri, bool forceUseTor = false)
         {
-            bool useTor = false;
+            bool useTor = forceUseTor;
 
             for (int i = 0; i < 4; i++)
             {
                 try
                 {
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-                    request.AutomaticDecompression = DecompressionMethods.All;
-                    request.Proxy = useTor || forceUseTor ? Tools.TorProxy : null;
-                    request.Headers = Tools.WebRequestHeaders();
-                    request.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
-                    using HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                    using Stream stream = response.GetResponseStream();
-                    using StreamReader reader = new(stream);
-                    UseTor = false;
-                    return reader.ReadToEnd();
+                    HttpClient client = new(handler: useTor ? TorHttpClientHandler : new HttpClientHandler(), disposeHandler: !useTor);
+
+                    client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MaxAge = new TimeSpan(0) };
+                    client.DefaultRequestHeaders.UserAgent.TryParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0");
+
+                    HttpResponseMessage response = client.GetAsync(uri).Result;
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = response.Content.ReadAsStringAsync().Result;
+
+                    client.CancelPendingRequests();
+
+                    return responseBody;
                 }
                 catch { if (i > 1) useTor = true; UseTor = true; }
             }
@@ -353,6 +356,11 @@ namespace TrueMiningDesktop.Core
             }
             set { }
         }
+
+        public static HttpClientHandler TorHttpClientHandler = new HttpClientHandler
+        {
+            Proxy = TorProxy,
+        };
 
         public static void NotifyPropertyChanged()
         {
