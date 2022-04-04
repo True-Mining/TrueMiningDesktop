@@ -104,7 +104,7 @@ namespace TrueMiningDesktop
         private void SystemEvents_SessionEnding(object sender, Microsoft.Win32.SessionEndingEventArgs e)
         {
             Miner.EmergencyExit = true;
-            Miner.StopMiners();
+            Miner.StopMiners(true);
             Application.Current.Shutdown();
         }
 
