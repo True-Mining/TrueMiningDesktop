@@ -11,7 +11,7 @@ namespace TrueMiningDesktop.ViewModel
 {
     internal class DashboardChart
     {
-        public static void UpdateAxes(Dictionary<int, decimal> dados, int zoomInterval)
+        public static void UpdateAxes(Dictionary<long, decimal> dados, int zoomInterval)
         {
             PlotModel plotModel = new()
             {
@@ -22,7 +22,7 @@ namespace TrueMiningDesktop.ViewModel
                 PlotAreaBorderThickness = new OxyThickness(0, 0, 0, 0),
             };
 
-            Dictionary<int, decimal> dataToShow = new();
+            Dictionary<long, decimal> dataToShow = new();
 
             Dictionary<string, decimal> dataToShow_formated = new();
 
@@ -34,10 +34,10 @@ namespace TrueMiningDesktop.ViewModel
             {
                 zoomInterval = (int)new TimeSpan((int)Math.Floor(TimeSpan.FromSeconds(zoomInterval).TotalHours) - 1, DateTime.UtcNow.Minute, DateTime.UtcNow.Second).TotalSeconds;
 
-                dataToShow = dados.Where((KeyValuePair<int, decimal> value) =>
+                dataToShow = dados.Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, decimal> value) => new KeyValuePair<int, decimal>(value.Key, value.Value))
-                .OrderBy((KeyValuePair<int, decimal> value) => value.Key)
+                .Select((KeyValuePair<long, decimal> value) => new KeyValuePair<long, decimal>(value.Key, value.Value))
+                .OrderBy((KeyValuePair<long, decimal> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
                 for (int i = 0; zoomInterval / 60 / 60 >= i; i++)
@@ -47,7 +47,7 @@ namespace TrueMiningDesktop.ViewModel
                     listaLegendaX.Add(labelToAdd);
                 }
 
-                foreach (KeyValuePair<int, decimal> pair in dataToShow)
+                foreach (KeyValuePair<long, decimal> pair in dataToShow)
                 {
                     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(pair.Key).ToLocalTime();
                     string labelToAdd = dateTime.Hour.ToString().PadLeft(2, '0') + ":00";
@@ -67,10 +67,10 @@ namespace TrueMiningDesktop.ViewModel
             {
                 zoomInterval = (int)new TimeSpan((int)Math.Floor(TimeSpan.FromSeconds(zoomInterval).TotalDays) - 1, DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second).TotalSeconds;
 
-                dataToShow = dados.Where((KeyValuePair<int, decimal> value) =>
+                dataToShow = dados.Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)DateTime.UtcNow).ToUnixTimeSeconds() - zoomInterval)
-                .Select((KeyValuePair<int, decimal> value) => new KeyValuePair<int, decimal>(value.Key, value.Value))
-                .OrderBy((KeyValuePair<int, decimal> value) => value.Key)
+                .Select((KeyValuePair<long, decimal> value) => new KeyValuePair<long, decimal>(value.Key, value.Value))
+                .OrderBy((KeyValuePair<long, decimal> value) => value.Key)
                 .ToDictionary(x => x.Key, x => x.Value);
 
                 for (int i = 0; zoomInterval / 60 / 60 / 24 >= i; i++)
@@ -80,7 +80,7 @@ namespace TrueMiningDesktop.ViewModel
                     listaLegendaX.Add(labelToAdd);
                 }
 
-                foreach (KeyValuePair<int, decimal> pair in dataToShow)
+                foreach (KeyValuePair<long, decimal> pair in dataToShow)
                 {
                     DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc).AddSeconds(pair.Key);
                     string labelToAdd = dateTime.ToShortDateString() + " (UTC)";

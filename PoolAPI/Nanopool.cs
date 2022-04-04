@@ -91,28 +91,28 @@ namespace TrueMiningDesktop.ExternalApi
 
     public class XMR_nanopool
     {
-        public static Dictionary<int, decimal> hashrateHistory_user = new Dictionary<int, decimal>();
-        public static Dictionary<int, decimal> hashrateHistory_tm = new Dictionary<int, decimal>();
+        public static Dictionary<long, decimal> hashrateHistory_user = new Dictionary<long, decimal>();
+        public static Dictionary<long, decimal> hashrateHistory_tm = new Dictionary<long, decimal>();
         public static approximated_earnings approximated_earnings = new approximated_earnings();
         public static share_coefficient sharecoef = new share_coefficient();
-        public static Dictionary<int, decimal> pointsHistory_user = new Dictionary<int, decimal>();
+        public static Dictionary<long, decimal> pointsHistory_user = new Dictionary<long, decimal>();
     }
 
     public class RVN_nanopool
     {
-        public static Dictionary<int, decimal> hashrateHistory_user = new Dictionary<int, decimal>();
-        public static Dictionary<int, decimal> hashrateHistory_tm = new Dictionary<int, decimal>();
+        public static Dictionary<long, decimal> hashrateHistory_user = new Dictionary<long, decimal>();
+        public static Dictionary<long, decimal> hashrateHistory_tm = new Dictionary<long, decimal>();
         public static approximated_earnings approximated_earnings = new approximated_earnings();
         public static share_coefficient sharecoef = new share_coefficient();
-        public static Dictionary<int, decimal> pointsHistory_user = new Dictionary<int, decimal>();
+        public static Dictionary<long, decimal> pointsHistory_user = new Dictionary<long, decimal>();
     }
 
     public class ETC_nanopool
     {
-        public static Dictionary<int, decimal> hashrateHistory_user = new Dictionary<int, decimal>();
-        public static Dictionary<int, decimal> hashrateHistory_tm = new Dictionary<int, decimal>();
+        public static Dictionary<long, decimal> hashrateHistory_user = new Dictionary<long, decimal>();
+        public static Dictionary<long, decimal> hashrateHistory_tm = new Dictionary<long, decimal>();
         public static approximated_earnings approximated_earnings = new approximated_earnings();
         public static share_coefficient sharecoef = new share_coefficient();
-        public static Dictionary<int, decimal> pointsHistory_user = new Dictionary<int, decimal>();
+        public static Dictionary<long, decimal> pointsHistory_user = new Dictionary<long, decimal>();
     }
 }
