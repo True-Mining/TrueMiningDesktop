@@ -366,7 +366,7 @@ namespace TrueMiningDesktop.Server
                     });
 
                 }
-                catch (Exception e) { MessageBox.Show("debug: " + e.Message); lastUpdated = DateTime.Now.AddSeconds(-10); }
+                catch { lastUpdated = DateTime.Now.AddSeconds(-10); }
 
                 sumHashrate_user_xmr =
                 ExternalApi.XMR_nanopool.hashrateHistory_user

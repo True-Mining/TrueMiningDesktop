@@ -30,6 +30,9 @@ namespace TrueMiningDesktop.Server
 
         [JsonProperty("RemovedFiles", NullValueHandling = NullValueHandling.Ignore)]
         public List<FileInfo> RemovedFiles { get; set; }
+
+        [JsonProperty("SponsorClickLink", NullValueHandling = NullValueHandling.Ignore)]
+        public string SponsorClickLink { get; set; }
     }
 
     public partial class MiningCoin

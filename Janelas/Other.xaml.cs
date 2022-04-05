@@ -54,5 +54,23 @@ namespace TrueMiningDesktop.Janelas
             MessageBox.Show("You will be redirected to an offtopic interactive group. Be respectfull and don't scam your friends.");
             Tools.OpenLinkInBrowser("https://t.me/joinchat/RIJqDSeKxc81ODk5");
         }
+
+        private void Button_telegramBot_Click(object sender, RoutedEventArgs e)
+        {
+            Tools.OpenLinkInBrowser("https://t.me/TrueMiningBot");
+        }
+
+        private void Button_discord_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("You will be redirected to discord server. Be respectfull and don't scam your friends.");
+            Tools.OpenLinkInBrowser("https://discord.gg/3RYv2QQWTC");
+        }
+
+
+        private void Button_sponsor_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("You will be redirected to our sponsor link. We only select who we trust, but we are not responsible for anything");
+            Tools.OpenLinkInBrowser(Server.SoftwareParameters.ServerConfig.SponsorClickLink);
+        }
     }
 }

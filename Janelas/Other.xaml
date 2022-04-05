@@ -77,13 +77,36 @@
                     <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
                         <Button Width="290" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_telegramLOGChannel_Click">
                             <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
-                                <Image Source="https://telegram.org/img/t_logo.png" Width="23" Height="23" HorizontalAlignment="Stretch" TextBlock.Foreground="#F7F8FC" VerticalAlignment="Center" Grid.IsSharedSizeScope="True" />
+                                <materialDesign:PackIcon Kind="NoteCheck" Width="25" Height="25" Foreground="DodgerBlue" />
                                 <Label Content="Announcement / Transparency / LOG" FontWeight="Normal" FontFamily="Roboto" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
                             </WrapPanel>
                         </Button>
                     </WrapPanel>
+
+                    <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
+                        <Button Width="290" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_telegramBot_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="LanCheck" Width="25" Height="25" Foreground="DodgerBlue" />
+                                <Label Content="Telegram Bot" FontWeight="Normal" FontFamily="Roboto" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                    </WrapPanel>
+
+                    <WrapPanel Orientation="Horizontal" Width="300" Margin="0">
+                        <Button Width="290" Padding="0" Margin="0,5,10,5" HorizontalContentAlignment="Center" Background="{DynamicResource MaterialDesignSelection}" BorderBrush="{DynamicResource MaterialDesignCheckBoxDisabled}" HorizontalAlignment="Left" Click="Button_discord_Click">
+                            <WrapPanel HorizontalAlignment="Center" Margin="0,0,0,0">
+                                <materialDesign:PackIcon Kind="Discord" Width="25" Height="25" Foreground="SlateBlue" />
+                                <Label Content="Discord" FontWeight="Normal" FontFamily="Roboto" FontSize="14" Padding="0,0,0,0" ScrollViewer.CanContentScroll="True" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="10,0,0,0" />
+                            </WrapPanel>
+                        </Button>
+                    </WrapPanel>
                 </WrapPanel>
-                <Image Height="300" Width="300" Source="http://truemining.online/TrueMiningDesktop/TrueMiningFiles/Resources/other_image.png" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" />
+                <WrapPanel Width="300" HorizontalAlignment="Left">
+                    <Label Content="Our Sponsor:" Margin="0" FontSize="14" FontWeight="Bold" />
+                    <Button Click="Button_sponsor_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" Height="300" Width="300" Padding="0">
+                        <Image Height="300" Width="300" Source="https://truemining.online/TrueMiningDesktop/AppFiles/Resources/sponsor.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="None"/>
+                    </Button>
+                </WrapPanel>
             </WrapPanel>
         </WrapPanel>
     </Grid>
