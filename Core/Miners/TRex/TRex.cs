@@ -336,10 +336,9 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("  \"dataset-mode\": 0,");
             conf.AppendLine("  \"extra-dag-epoch\": -1,");
             conf.AppendLine("  \"low-load\": 0,");
-            conf.AppendLine("  \"lhr-tune\": -1,");
-            conf.AppendLine("  \"lhr-autotune-mode\": \"full\",");
-            conf.AppendLine("  \"lhr-autotune-step-size\": 0.25,");
-            conf.AppendLine("  \"lhr-autotune-interval\": 15,");
+            conf.AppendLine("  \"lhr-autotune-mode\": \"down\",");
+            conf.AppendLine("  \"lhr-autotune-step-size\": 0.1,");
+            conf.AppendLine("  \"lhr-autotune-interval\": 5,");
             conf.AppendLine("  \"lhr-low-power\": false,");
             conf.AppendLine("  \"hashrate-avr\": 60,");
             conf.AppendLine("  \"sharerate-avr\": 600,");
