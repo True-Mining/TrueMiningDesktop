@@ -66,7 +66,6 @@ namespace TrueMiningDesktop.Janelas
             Tools.OpenLinkInBrowser("https://discord.gg/3RYv2QQWTC");
         }
 
-
         private void Button_sponsor_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("You will be redirected to our sponsor link. We only select who we trust, but we are not responsible for anything");

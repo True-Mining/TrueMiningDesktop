@@ -102,7 +102,6 @@ namespace TrueMiningDesktop.Core
             {
                 try
                 {
-
                     HttpClient client = new(handler: useTor ? TorHttpClientHandler : new HttpClientHandler(), disposeHandler: !useTor);
 
                     client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MaxAge = new TimeSpan(0) };

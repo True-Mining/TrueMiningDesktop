@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Globalization;
-using System.Text.Json;
 using TrueMiningDesktop.Core;
 using TruePayment.Nanopool.Objects;
 

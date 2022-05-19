@@ -92,7 +92,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
                 TeamRedMinerProcessStartInfo.RedirectStandardOutput = false;
                 TeamRedMinerProcessStartInfo.CreateNoWindow = !User.Settings.User.ShowCLI;
                 TeamRedMinerProcessStartInfo.ErrorDialog = false;
-                TeamRedMinerProcessStartInfo.WindowStyle = User.Settings.User.ShowCLI? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden;
+                TeamRedMinerProcessStartInfo.WindowStyle = User.Settings.User.ShowCLI ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden;
 
                 TeamRedMinerProcess.StartInfo = TeamRedMinerProcessStartInfo;
 

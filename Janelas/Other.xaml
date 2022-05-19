@@ -104,7 +104,7 @@
                 <WrapPanel Width="300" HorizontalAlignment="Left">
                     <Label Content="Our Sponsor:" Margin="0" FontSize="14" FontWeight="Bold" />
                     <Button Click="Button_sponsor_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" Background="{x:Null}" Height="300" Width="300" Padding="0">
-                        <Image Height="300" Width="300" Source="https://truemining.online/TrueMiningDesktop/AppFiles/Resources/sponsor.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="None"/>
+                        <Image Height="300" Width="300" Source="https://truemining.online/TrueMiningDesktop/AppFiles/Resources/sponsor.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="None" />
                     </Button>
                 </WrapPanel>
             </WrapPanel>

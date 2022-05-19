@@ -104,14 +104,14 @@ namespace TrueMiningDesktop.Server
         public decimal AccumulatedBalance_Points_etc = 0;
         public decimal AccumulatedBalance_Coins = 0;
 
-        TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_xmr_user_raw = new();
-        TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_xmr_tm_raw = new();
+        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_xmr_user_raw = new();
+        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_xmr_tm_raw = new();
 
-        TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_rvn_user_raw = new();
-        TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_rvn_tm_raw = new();
+        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_rvn_user_raw = new();
+        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_rvn_tm_raw = new();
 
-        TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_etc_user_raw = new();
-        TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_etc_tm_raw = new();
+        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_etc_user_raw = new();
+        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_etc_tm_raw = new();
 
         public decimal HashesPerPoint_xmr;
         public decimal exchangeRatePontosXmrToMiningCoin;
@@ -120,21 +120,20 @@ namespace TrueMiningDesktop.Server
         public decimal HashesPerPoint_etc;
         public decimal exchangeRatePontosEtcToMiningCoin;
 
-        decimal sumHashrate_tm_xmr = 0;
-        decimal sumHashrate_user_xmr = 0;
-        decimal sumHashrate_tm_rvn = 0;
-        decimal sumHashrate_user_rvn = 0;
-        decimal sumHashrate_tm_etc = 0;
-        decimal sumHashrate_user_etc = 0;
+        private decimal sumHashrate_tm_xmr = 0;
+        private decimal sumHashrate_user_xmr = 0;
+        private decimal sumHashrate_tm_rvn = 0;
+        private decimal sumHashrate_user_rvn = 0;
+        private decimal sumHashrate_tm_etc = 0;
+        private decimal sumHashrate_user_etc = 0;
 
-        decimal totalXMRmineradoTrueMining = 0;
-        decimal totalRVNmineradoTrueMining = 0;
-        decimal totalETCmineradoTrueMining = 0;
+        private decimal totalXMRmineradoTrueMining = 0;
+        private decimal totalRVNmineradoTrueMining = 0;
+        private decimal totalETCmineradoTrueMining = 0;
 
-        decimal BTCpraVirarPaymentCoin = 0;
+        private decimal BTCpraVirarPaymentCoin = 0;
 
-        decimal PaymentCoinFinalPrice = 0;
-
+        private decimal PaymentCoinFinalPrice = 0;
 
         private static DateTime lastUpdated = DateTime.Now.AddMinutes(-10);
 
@@ -364,7 +363,6 @@ namespace TrueMiningDesktop.Server
                         }
                         catch { }
                     });
-
                 }
                 catch { lastUpdated = DateTime.Now.AddSeconds(-10); }
 
@@ -427,7 +425,7 @@ namespace TrueMiningDesktop.Server
                 {
                     return acc + now;
                 }));
-                
+
                 HashesPerPoint_xmr = XMR_nanopool.sharecoef.data * 16;
                 HashesPerPoint_rvn = RVN_nanopool.sharecoef.data * 6;
                 HashesPerPoint_etc = ETC_nanopool.sharecoef.data * 2;
@@ -435,8 +433,6 @@ namespace TrueMiningDesktop.Server
                 XMR_nanopool.pointsHistory_user = XMR_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / XMR_nanopool.sharecoef.data / 16)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
                 RVN_nanopool.pointsHistory_user = RVN_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / RVN_nanopool.sharecoef.data / 6)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
                 ETC_nanopool.pointsHistory_user = ETC_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / ETC_nanopool.sharecoef.data / 2)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
-
-
 
                 totalXMRmineradoTrueMining = (decimal)XMR_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_xmr;
                 totalRVNmineradoTrueMining = (decimal)RVN_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_rvn;
@@ -484,7 +480,7 @@ namespace TrueMiningDesktop.Server
 
                 AccumulatedBalance_Coins = Decimal.Round(
                 (totalXMRmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.XMRBTC, totalXMRmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * (sumHashrate_tm_xmr > 0 ? Decimal.Divide(sumHashrate_user_xmr, sumHashrate_tm_xmr) : 0)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) +
-                (totalRVNmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.RVNBTC, totalRVNmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * (sumHashrate_tm_rvn > 0 ? Decimal.Divide(sumHashrate_user_rvn, sumHashrate_tm_rvn) : 0)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) + 
+                (totalRVNmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.RVNBTC, totalRVNmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * (sumHashrate_tm_rvn > 0 ? Decimal.Divide(sumHashrate_user_rvn, sumHashrate_tm_rvn) : 0)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) +
                 (totalETCmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.ETCBTC, totalETCmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * (sumHashrate_tm_etc > 0 ? Decimal.Divide(sumHashrate_user_etc, sumHashrate_tm_etc) : 0)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee), 5);
 
                 string warningMessage = "Balance less than " + SoftwareParameters.ServerConfig.PaymentCoins.Find(x => Equals(x.CoinTicker, User.Settings.User.PayCoin.CoinTicker)).MinPayout + " " + User.Settings.User.PayCoin.CoinTicker.ToUpperInvariant() + " will be paid once a week when you reach the minimum amount. Your balance will disappear from the dashboard, but it will still be saved in our system";

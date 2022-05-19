@@ -428,7 +428,7 @@ namespace TrueMiningDesktop.Janelas
                 }
                 if ((File.Exists(file.Directory + file.FileName + ".dl") && Tools.FileSHA256(file.Directory + file.FileName + ".dl") == file.Sha256) || (File.Exists(file.Directory + file.FileName) && Tools.FileSHA256(file.Directory + file.FileName) == file.Sha256)) { return true; } else { return false; }
             }
-            catch 
+            catch
             {
                 // verifica se o erro está no processo de hashing do arquivo baixado. Se for isso então provavelmente é o Windows Defender bloqueando. Nesse caso, adiciona nas exclusões
                 try
@@ -514,10 +514,10 @@ namespace TrueMiningDesktop.Janelas
                     Tools.NotifyPropertyChanged();
                 }
             }
-            else 
-            { 
-                ProgressDetails = "download complete"; 
-                webClientTryesCount = 0; 
+            else
+            {
+                ProgressDetails = "download complete";
+                webClientTryesCount = 0;
             }
         }
 
