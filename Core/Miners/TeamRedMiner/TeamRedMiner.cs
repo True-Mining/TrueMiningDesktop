@@ -394,7 +394,6 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             args.AppendLine("--log_rotate=1M,4");
             args.AppendLine("--enable_compute");
             args.AppendLine("--eth_micro_delay=32");
-            args.AppendLine("--eth_no_4gb_kernels");
             args.AppendLine("--eth_stagger");
             args.AppendLine("--prog_stagger");
             args.AppendLine("--watchdog_disabled");
