@@ -21,6 +21,9 @@ namespace TrueMiningDesktop.Janelas
         public bool Tape = false;
         private readonly Task TaskChecker = new(() => { });
 
+        // data limite para não atualizar
+        DateTime notUpdateDateLimit = new DateTime(2022, 07, 01);
+
         public CheckerPopup(ToCheck toCheck = ToCheck.All)
         {
             InitializeComponent();
@@ -130,7 +133,7 @@ namespace TrueMiningDesktop.Janelas
                     FileName = "Updating software parameters";
                     SoftwareParameters.Update(uri);
 
-                    if ((File.Exists("DoNotUpdateNothing") && DateTime.UtcNow < new DateTime(2022, 05, 02)) || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates))
+                    if ((File.Exists("DoNotUpdateNothing") && DateTime.UtcNow < notUpdateDateLimit) || (Core.NextStart.Actions.loadedNextStartInstructions.useThisInstructions && Core.NextStart.Actions.loadedNextStartInstructions.ignoreUpdates))
                     {
                         FileName = "Force do not update";
                         Thread.Sleep(1000);
@@ -144,7 +147,7 @@ namespace TrueMiningDesktop.Janelas
                         List<Server.FileInfo> filesToCheck = new List<Server.FileInfo>();
 
                         // adiciona os arquivos esperados na lista, com base em qual categoria de arquivos foi solicitada
-                        if (toCheck == ToCheck.All && !(File.Exists("DoNotUpdateAll") && DateTime.UtcNow < new DateTime(2022, 05, 02)))
+                        if (toCheck == ToCheck.All && !(File.Exists("DoNotUpdateAll") && DateTime.UtcNow < notUpdateDateLimit))
                         {
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.AppFiles);
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.ExtraFiles.Tools);
@@ -155,7 +158,7 @@ namespace TrueMiningDesktop.Janelas
 
                             needRestartIfChanges = true;
                         }
-                        else if (toCheck == ToCheck.AppFiles && !(File.Exists("DoNotUpdateAppFiles") && DateTime.UtcNow < new DateTime(2022, 05, 02)))
+                        else if (toCheck == ToCheck.AppFiles && !(File.Exists("DoNotUpdateAppFiles") && DateTime.UtcNow < notUpdateDateLimit))
                         {
                             filesToCheck.AddRange(SoftwareParameters.ServerConfig.AppFiles);
 
