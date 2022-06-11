@@ -398,6 +398,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             args.AppendLine("--prog_stagger");
             args.AppendLine("--eth_hashwatch=1,600");
             args.AppendLine("--watchdog_script=watchdog.bat");
+            args.AppendLine("--ton_start -o stratum+tcp://tcp.whalestonpool.com:4001 -u EQDCSLB3UZWYCc4wu8ueMKV4Z6qLehrVJcWuiTdvP5xrg-QN." + User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet + " -p x --ton_end");
 
             if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 || User.Settings.Device.opencl.MemFansFullspeedTemp > 0)
             {
