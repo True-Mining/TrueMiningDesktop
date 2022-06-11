@@ -397,7 +397,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
             args.AppendLine("--eth_stagger");
             args.AppendLine("--prog_stagger");
             args.AppendLine("--eth_hashwatch=1,600");
-          //  args.AppendLine("--watchdog_disabled");
+            args.AppendLine("--watchdog_script=watchdog.bat");
 
             if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 || User.Settings.Device.opencl.MemFansFullspeedTemp > 0)
             {
