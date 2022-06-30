@@ -1,6 +1,6 @@
 # TRUE MINING LICENSE
 
-> Version 1.2, Janeiro de 2022
+> Version 1.3, Janeiro de 2022
 
 > Copyright (C) 2019-2022 True Mining
 
@@ -29,6 +29,6 @@ Todos têm permissão para copiar e distribuir este documento de licença como o
 
 8. A licença pode ser alterada a qualquer momento sem aviso prévio. A aceitação dos novos termos é automática.
 
-9. Entre em contato com o desenvolvedor se quiser negociar algo ou tiver dúvidas sobre a licença.
+9. Entre em contato com o desenvolvedor se quiser negociar algo ou tiver dúvidas sobre a licença. Esse software pode ser cedida para outras pessoas e/ou empresas, com autorização prévia, para que possam fazer uso comercial do software, limitado às condições acordadas entre partes.
 
 10. Usando o software ou fazendo qualquer coisa especificada neste documento de licença você concorda com os termos dispostos acima.
