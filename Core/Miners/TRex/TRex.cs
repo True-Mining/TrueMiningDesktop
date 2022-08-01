@@ -354,7 +354,6 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("  \"hide-date\": false,");
             conf.AppendLine("  \"send-stales\": false,");
             conf.AppendLine("  \"validate-shares\": false,");
-            conf.AppendLine("  \"no-nvml\": false,");
             conf.AppendLine("  \"no-strict-ssl\": true,");
             conf.AppendLine("  \"no-sni\": false,");
             conf.AppendLine("  \"no-hashrate-report\": false,");
@@ -364,13 +363,22 @@ namespace TrueMiningDesktop.Core.TRex
             conf.AppendLine("  \"temperature-color\": \"67,77\",");
             conf.AppendLine("  \"temperature-color-mem\": \"80,100\",");
 
-            if (User.Settings.Device.opencl.ChipPauseMiningTemp > 0)
+            if (!User.Settings.Device.cuda.DisableTempControl)
             {
-                conf.AppendLine("  \"temperature-limit\": " + (string)User.Settings.Device.cuda.ChipPauseMiningTemp.ToString() + ",");
-                conf.AppendLine("  \"temperature-start\": " + (string)(User.Settings.Device.cuda.ChipPauseMiningTemp - 30).ToString() + ",");
+                if (User.Settings.Device.cuda.ChipPauseMiningTemp > 0)
+                {
+                    conf.AppendLine("  \"no-nvml\": false,");
+
+                    conf.AppendLine("  \"temperature-limit\": " + (string)User.Settings.Device.cuda.ChipPauseMiningTemp.ToString() + ",");
+                    conf.AppendLine("  \"temperature-start\": " + (string)(User.Settings.Device.cuda.ChipPauseMiningTemp - 30).ToString() + ",");
+                }
+            }
+            else
+			{
+                conf.AppendLine("  \"no-nvml\": true,");
             }
 
-            if (User.Settings.Device.opencl.ChipFansFullspeedTemp > 0)
+            if (User.Settings.Device.cuda.ChipFansFullspeedTemp > 0)
             {
                 conf.AppendLine("  \"fan\": \"t:" + (string)User.Settings.Device.cuda.ChipFansFullspeedTemp.ToString() + "\",");
             }

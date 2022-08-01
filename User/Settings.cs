@@ -189,7 +189,9 @@ namespace TrueMiningDesktop.User
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "EtcHash", "KawPow", "RandomX" });
 
-        public int ChipPauseMiningTemp { get; set; } = 85;
+        public bool DisableTempControl { get; set; } = false;
+
+		public int ChipPauseMiningTemp { get; set; } = 85;
         public int ChipFansFullspeedTemp { get; set; } = 65;
 
         public int MemPauseMiningTemp { get; set; } = 95;
@@ -211,6 +213,8 @@ namespace TrueMiningDesktop.User
         { get { return algorithm; } set { algorithm = value; if (!Settings.LoadingSettings) { Device.Opencl.MiningAlgo = value; Settings.SettingsSaver(); } } }
 
         public List<string> AlgorithmsList { get; set; } = new List<string>(new[] { "EtcHash", "KawPow", "RandomX" });
+
+        public bool DisableTempControl { get; set; } = false;
 
         public int ChipPauseMiningTemp { get; set; } = 85;
         public int ChipFansFullspeedTemp { get; set; } = 65;

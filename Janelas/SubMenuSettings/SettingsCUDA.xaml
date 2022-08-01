@@ -52,6 +52,7 @@
                         </Grid>
                     </WrapPanel>
                 </WrapPanel>
+                <CheckBox x:Name="DisableTempControlCheckBox" IsChecked="{Binding DisableTempControl}" Style="{StaticResource MaterialDesignCheckBox}" Content="Disable True Mining temperature control (use in error case)" VerticalContentAlignment="Center" FontFamily="Roboto" FontWeight="Normal" Margin="0,5,0,5" FontSize="13" SnapsToDevicePixels="True" Checked="CheckBoxDisableTempControl_Checked" Unchecked="CheckBoxDisableTempControl_Unchecked" />
             </WrapPanel>
         </WrapPanel>
     </Grid>

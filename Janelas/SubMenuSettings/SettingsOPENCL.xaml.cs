@@ -13,6 +13,7 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
             InitializeComponent();
             DataContext = User.Settings.Device.opencl;
             AlgorithmComboBox.SelectedValue = User.Settings.Device.opencl.Algorithm;
+            DisableTempControlCheckBox.IsChecked = User.Settings.Device.opencl.DisableTempControl;
             ChipFansFullspeedTempTxt.Text = User.Settings.Device.opencl.ChipFansFullspeedTemp > 0 ? User.Settings.Device.opencl.ChipFansFullspeedTemp.ToString() + " °C" : "auto";
             MemFansFullspeedTempTxt.Text = User.Settings.Device.opencl.MemFansFullspeedTemp > 0 ? User.Settings.Device.opencl.MemFansFullspeedTemp.ToString() + " °C" : "auto";
             ChipPauseMiningTempTxt.Text = User.Settings.Device.opencl.ChipPauseMiningTemp > 0 ? User.Settings.Device.opencl.ChipPauseMiningTemp.ToString() + " °C" : "auto";
@@ -39,6 +40,16 @@ namespace TrueMiningDesktop.Janelas.SubMenuSettings
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             WrapPanel_ManualConfig.IsEnabled = true;
+        }
+
+        private void CheckBoxDisableTempControl_Checked(object sender, RoutedEventArgs e)
+        {
+            User.Settings.Device.opencl.DisableTempControl = true;
+        }
+
+        private void CheckBoxDisableTempControl_Unchecked(object sender, RoutedEventArgs e)
+        {
+            User.Settings.Device.opencl.DisableTempControl = false;
         }
 
         private void ChipFansFullspeedTempPlusNumber_Click(object sender, RoutedEventArgs e)
