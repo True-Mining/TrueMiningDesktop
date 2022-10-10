@@ -82,9 +82,6 @@ namespace TrueMiningDesktop
 
             Tools.timerSystemAwake.Elapsed += Tools.AwakeSystem;
             Tools.timerSystemAwake.Start();
-
-            // temp: rename xmrig dir to XMRig
-            // try { if (Directory.Exists("Miners") && Directory.Exists("Miners/xmrig")) { Directory.Move("Miners/xmrig", "Miners/XMRig"); } } catch { }
         }
 
         private void Tools_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

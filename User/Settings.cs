@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using TrueMiningDesktop.Core;
 using TrueMiningDesktop.Server;
 
@@ -366,9 +367,9 @@ namespace TrueMiningDesktop.User
         public bool UseAllInterfacesInsteadLocalhost
         { get { return useAllInterfacesInsteadLocalhost; } set { useAllInterfacesInsteadLocalhost = value; if (Miner.IsMining) { Miner.StopMiners(); Miner.StartMiners(); }; } }
 
-        private bool useTorSharpOnAll = false;
+        private bool useTorSharpOnMining = false;
 
         public bool UseTorSharpOnMining
-        { get { return useTorSharpOnAll; } set { useTorSharpOnAll = value; if (!User.Settings.LoadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiners(); Miner.StartMiners(); }; } }
+        { get { return useTorSharpOnMining; } set { useTorSharpOnMining = value; if (!User.Settings.LoadingSettings) { Tools.NotifyPropertyChanged(); } if (value) { new Task(() => _ = Tools.TorProxy).Start(); } if (Miner.IsMining) { Miner.StopMiners(); Miner.StartMiners(); }; } }
     }
 }

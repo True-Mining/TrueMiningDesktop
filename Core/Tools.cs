@@ -102,7 +102,7 @@ namespace TrueMiningDesktop.Core
             {
                 try
                 {
-                    HttpClient client = new(handler: useTor ? TorHttpClientHandler : new HttpClientHandler(), disposeHandler: !useTor);
+                    HttpClient client = new(handler: useTor ? new HttpClientHandler() { Proxy = TorProxy } : new HttpClientHandler(), disposeHandler: !useTor);
 
                     client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MaxAge = new TimeSpan(0) };
                     client.DefaultRequestHeaders.UserAgent.TryParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0");
@@ -243,6 +243,8 @@ namespace TrueMiningDesktop.Core
                 ControlPort = 8429,
                 ControlPassword = "TrueMining"
             },
+            ToolDownloadStrategy = ToolDownloadStrategy.Latest,
+            UseExistingTools = true,
         };
 
         public static readonly TorSharpProxy TorSharpProxy = new(TorSharpSettings);
@@ -355,11 +357,6 @@ namespace TrueMiningDesktop.Core
             }
             set { }
         }
-
-        public static HttpClientHandler TorHttpClientHandler = new HttpClientHandler
-        {
-            Proxy = TorProxy,
-        };
 
         public static void NotifyPropertyChanged()
         {
