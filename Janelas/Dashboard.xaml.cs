@@ -51,7 +51,7 @@ namespace TrueMiningDesktop.Janelas
 
         private bool firstTimeLoad = false;
 
-        private Saldo saldo;
+        private Server.Saldo saldo;
 
         private PlotModel chartModel;
         private OxyPlot.Series.ColumnSeries columnChartSeries;
@@ -76,7 +76,7 @@ namespace TrueMiningDesktop.Janelas
             {
                 loadingVisualElement.Visibility = Visibility.Visible;
                 DashboardContent.IsEnabled = false;
-                saldo = new Saldo();
+                saldo = new Server.Saldo();
                 firstTimeLoad = true;
             }
         }

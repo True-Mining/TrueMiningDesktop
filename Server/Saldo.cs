@@ -9,6 +9,7 @@ using System.Windows;
 using TrueMiningDesktop.Core;
 using TrueMiningDesktop.ExternalApi;
 using TrueMiningDesktop.Janelas;
+using TrueMiningDesktop.Saldo.ExternalApi;
 
 namespace TrueMiningDesktop.Server
 {
@@ -104,14 +105,14 @@ namespace TrueMiningDesktop.Server
         public decimal AccumulatedBalance_Points_etc = 0;
         public decimal AccumulatedBalance_Coins = 0;
 
-        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_xmr_user_raw = new();
-        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_xmr_tm_raw = new();
+        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_xmr_user_raw = new();
+        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_xmr_tm_raw = new();
 
-        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_rvn_user_raw = new();
-        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_rvn_tm_raw = new();
+        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_rvn_user_raw = new();
+        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_rvn_tm_raw = new();
 
-        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_etc_user_raw = new();
-        private TruePayment.Nanopool.Objects.HashrateHistory hashrateHystory_etc_tm_raw = new();
+        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_etc_user_raw = new();
+        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_etc_tm_raw = new();
 
         public decimal HashesPerPoint_xmr;
         public decimal exchangeRatePontosXmrToMiningCoin;
@@ -163,8 +164,8 @@ namespace TrueMiningDesktop.Server
 
                     //    decimal rvnPrice = new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("rvn-ravencoin", "BTC").Result.Value.Last().Close;
 
-                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_user_raw = NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_tm_raw = NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() =>
                     {
@@ -203,8 +204,8 @@ namespace TrueMiningDesktop.Server
                     getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
-                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_user_raw = NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_tm_raw = NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() =>
                     {
@@ -224,8 +225,8 @@ namespace TrueMiningDesktop.Server
                     getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
-                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_etc_user_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("etc", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("etc", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_etc_tm_raw = TruePayment.Nanopool.NanopoolData.GetHashrateHystory("etc", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("etc", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_etc_user_raw = NanopoolData.GetHashrateHystory("etc", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("etc", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_etc_tm_raw = NanopoolData.GetHashrateHystory("etc", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("etc", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() =>
                     {
@@ -268,7 +269,7 @@ namespace TrueMiningDesktop.Server
                         bool orderbookStisfied = false;
                         try
                         {
-                            if (!orderbookStisfied && User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("Crex24", StringComparison.OrdinalIgnoreCase)))
+                            if (!orderbookStisfied && User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("ExternalApi", StringComparison.OrdinalIgnoreCase)))
                             {
                                 string webRequestResult = Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpper() + "-BTC");
                                 ExternalApi.Orderbook orderbookObj = JsonConvert.DeserializeObject<ExternalApi.Orderbook>(webRequestResult);

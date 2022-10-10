@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TruePayment.Crex24.Objects
+namespace TrueMiningDesktop.Saldo.ExternalApi
 {
     public class Orderbook
     {
