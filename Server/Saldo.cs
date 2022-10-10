@@ -21,7 +21,7 @@ namespace TrueMiningDesktop.Server
         {
             Task.Run(() =>
             {
-                Server.SoftwareParameters.Update(new Uri("https://truemining.online/config.json"));
+                Server.SoftwareParameters.Update(new Uri("https://truemining.online/config.json"), new Uri("https://www.utivirtual.com.br/Truemining/config.json"));
 
                 while (User.Settings.LoadingSettings) { Thread.Sleep(500); }
 

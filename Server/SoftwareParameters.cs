@@ -164,7 +164,7 @@ namespace TrueMiningDesktop.Server
 
         private static DateTime lastUpdated = DateTime.Now.AddHours(-1).AddMinutes(-1);
 
-        public static void Update(Uri uri)
+        public static void Update(Uri uri, Uri backupUri = null)
         {
             while (!Tools.IsConnected()) { Thread.Sleep(3000); }
 
@@ -172,14 +172,18 @@ namespace TrueMiningDesktop.Server
             {
                 bool trying = true;
 
+                int tried = 0;
+
                 while (trying)
                 {
+                    tried++;
+
                     Task updateParameters = new(() =>
                     {
                         lastUpdated = DateTime.Now;
                         try
                         {
-                            SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet(uri.ToString(), Tools.UseTor), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); //update parameters
+                            SoftwareParameters.ServerConfig = JsonConvert.DeserializeObject<TrueMiningDesktopParameters>(Tools.HttpGet((tried <= 3 || tried >= 7) ? uri.ToString() : backupUri.ToString(), Tools.UseTor), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); //update parameters
                             trying = false;
                         }
                         catch
