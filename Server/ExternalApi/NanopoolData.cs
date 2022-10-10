@@ -12,7 +12,6 @@ namespace TrueMiningDesktop.ExternalApi
 			return JsonConvert.DeserializeObject<HashrateHistory>(Tools.HttpGet("http://api.nanopool.org/v1/" + coin + "/history/" + truemining_address + "/" + user_address), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
 		}
 
-
 		public class XMR_nanopool
 		{
 			public static Dictionary<long, decimal> hashrateHistory_user = new Dictionary<long, decimal>();
@@ -40,6 +39,7 @@ namespace TrueMiningDesktop.ExternalApi
 			public static Dictionary<long, decimal> pointsHistory_user = new Dictionary<long, decimal>();
 		}
 	}
+
 	public class Minute
 	{
 		public decimal coins { get; set; } = 0;
@@ -126,7 +126,6 @@ namespace TrueMiningDesktop.ExternalApi
 		public bool status { get; set; } = true;
 		public decimal data { get; set; } = (decimal)52.5;
 	}
-
 
 	public partial class HashrateHistory
 	{

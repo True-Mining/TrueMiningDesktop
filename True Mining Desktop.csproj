@@ -1,91 +1,91 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-	<TargetFramework>net5.0-windows</TargetFramework>
-    <RootNamespace>TrueMiningDesktop</RootNamespace>
-    <UseWPF>true</UseWPF>
-    <UseWindowsForms>true</UseWindowsForms>
-    <ApplicationIcon>icone.ico</ApplicationIcon>
-    <AssemblyVersion>4.19.6</AssemblyVersion>
-    <FileVersion>4.19.6</FileVersion>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <StartupObject>TrueMiningDesktop.App</StartupObject>
-    <AssemblyName>True Mining Desktop</AssemblyName>
-    <Company>True Mining</Company>
-    <Authors>Matheus Bach</Authors>
-    <Product>True Mining Desktop</Product>
-    <Copyright>Copyright (C) 2019-2022 True Mining</Copyright>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-    <PackageIcon>logo.png</PackageIcon>
-    <Description>True Mining Desktop Mining Software</Description>
-    <RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
-    <Version>4.19.6</Version>
-    <PackageProjectUrl>https://truemining.online</PackageProjectUrl>
-    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
-    <PackageId>TrueMiningDesktop</PackageId>
-    <PackageIconUrl />
-	<PlatformTarget>anycpu</PlatformTarget>
-	<DebugType>embedded</DebugType>
-	<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-	<PublishReadyToRun>true</PublishReadyToRun>
-	<Configuration>Release</Configuration>
-	<Platform>Any CPU</Platform>
-	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	<SelfContained>true</SelfContained>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="icone.ico" />
-    <None Include="logo.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CoinpaprikaAPI" Version="1.3.21103" />
-    <PackageReference Include="Knapcode.TorSharp" Version="2.8.1" />
-    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="OxyPlot.Wpf" Version="2.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="icone.ico" />
-    <Resource Include="logo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Janelas\Popups\ExhangeRates.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="LICENSEs %28libs, frameworks, etc.%29.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\icone.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\iconeTaskbar2.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\LICENSE.md">
-      <PackagePath></PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Pack>True</Pack>
-    </None>
-    <None Update="Resources\LICENSEs-other.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Janelas\Popups\ExhangeRates.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFrameworks>net6.0-windows</TargetFrameworks>
+		<RootNamespace>TrueMiningDesktop</RootNamespace>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<ApplicationIcon>icone.ico</ApplicationIcon>
+		<AssemblyVersion>4.20</AssemblyVersion>
+		<FileVersion>4.20</FileVersion>
+		<Version>4.20</Version>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+		<StartupObject>TrueMiningDesktop.App</StartupObject>
+		<AssemblyName>True Mining Desktop</AssemblyName>
+		<Company>True Mining</Company>
+		<Authors>Matheus Bach</Authors>
+		<Product>True Mining Desktop</Product>
+		<Copyright>Copyright (C) 2019-2022 True Mining</Copyright>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+		<PackageIcon>logo.png</PackageIcon>
+		<Description>True Mining Desktop Mining Software</Description>
+		<RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
+		<PackageProjectUrl>https://truemining.online</PackageProjectUrl>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<PackageId>TrueMiningDesktop</PackageId>
+		<DebugType>embedded</DebugType>
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+		<PublishReadyToRun>true</PublishReadyToRun>
+		<PublishReadyToRunEmitSymbols>true</PublishReadyToRunEmitSymbols>
+		<PublishReadyToRunComposite>true</PublishReadyToRunComposite>
+		<Configuration>Release</Configuration>
+		<SelfContained>true</SelfContained>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Remove="icone.ico" />
+		<None Include="logo.png">
+			<Pack>True</Pack>
+			<PackagePath>
+			</PackagePath>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CoinpaprikaAPI" Version="1.3.21103" />
+		<PackageReference Include="Knapcode.TorSharp" Version="2.8.1" />
+		<PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+		<PackageReference Include="OxyPlot.Wpf" Version="2.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="icone.ico" />
+		<Resource Include="logo.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Janelas\Popups\ExhangeRates.xaml.cs">
+			<SubType>Code</SubType>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="LICENSEs %28libs, frameworks, etc.%29.md">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\icone.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\iconeTaskbar2.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Resources\LICENSE.md">
+			<PackagePath>
+			</PackagePath>
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+			<Pack>True</Pack>
+		</None>
+		<None Update="Resources\LICENSEs-other.md">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<Page Update="Janelas\Popups\ExhangeRates.xaml">
+			<SubType>Designer</SubType>
+		</Page>
+	</ItemGroup>
 </Project>

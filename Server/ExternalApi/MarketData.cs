@@ -11,22 +11,22 @@ namespace TrueMiningDesktop.ExternalApi
 	}
 
 	public class Orderbook
-    {
-        public List<BuyLevel> buyLevels { get; set; }
-        public List<SellLevel> sellLevels { get; set; }
-    }
+	{
+		public List<BuyLevel> buyLevels { get; set; }
+		public List<SellLevel> sellLevels { get; set; }
+	}
 
-    public class BuyLevel
-    {
-        public decimal price { get; set; }
-        public decimal volume { get; set; }
-    }
+	public class BuyLevel
+	{
+		public decimal price { get; set; }
+		public decimal volume { get; set; }
+	}
 
-    public class SellLevel
-    {
-        public decimal price { get; set; }
-        public decimal volume { get; set; }
-    }
+	public class SellLevel
+	{
+		public decimal price { get; set; }
+		public decimal volume { get; set; }
+	}
 
 	public class BitcoinPrice
 	{
