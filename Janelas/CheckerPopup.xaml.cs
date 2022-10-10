@@ -22,7 +22,7 @@ namespace TrueMiningDesktop.Janelas
 		private readonly Task TaskChecker = new(() => { });
 
 		// data limite para não atualizar
-		private DateTime notUpdateDateLimit = new DateTime(2022, 07, 01);
+		private DateTime notUpdateDateLimit = new DateTime(2022, 12, 01);
 
 		public CheckerPopup(ToCheck toCheck = ToCheck.All)
 		{
