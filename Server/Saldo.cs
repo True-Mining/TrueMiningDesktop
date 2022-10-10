@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CoinpaprikaAPI.Entity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,7 +10,6 @@ using System.Windows;
 using TrueMiningDesktop.Core;
 using TrueMiningDesktop.ExternalApi;
 using TrueMiningDesktop.Janelas;
-using TrueMiningDesktop.Saldo.ExternalApi;
 
 namespace TrueMiningDesktop.Server
 {
@@ -105,14 +105,14 @@ namespace TrueMiningDesktop.Server
         public decimal AccumulatedBalance_Points_etc = 0;
         public decimal AccumulatedBalance_Coins = 0;
 
-        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_xmr_user_raw = new();
-        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_xmr_tm_raw = new();
+        private HashrateHistory hashrateHystory_xmr_user_raw = new();
+        private HashrateHistory hashrateHystory_xmr_tm_raw = new();
 
-        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_rvn_user_raw = new();
-        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_rvn_tm_raw = new();
+        private HashrateHistory hashrateHystory_rvn_user_raw = new();
+        private HashrateHistory hashrateHystory_rvn_tm_raw = new();
 
-        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_etc_user_raw = new();
-        private TrueMiningDesktop.Saldo.ExternalApi.NanopoolData.HashrateHistory hashrateHystory_etc_tm_raw = new();
+        private HashrateHistory hashrateHystory_etc_user_raw = new();
+        private HashrateHistory hashrateHystory_etc_tm_raw = new();
 
         public decimal HashesPerPoint_xmr;
         public decimal exchangeRatePontosXmrToMiningCoin;
@@ -174,10 +174,13 @@ namespace TrueMiningDesktop.Server
                         {
                             if (!orderbookStisfied)
                             {
-                                string webRequestResult = Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=XMR-BTC");
-                                ExternalApi.Orderbook orderbookObj = JsonConvert.DeserializeObject<ExternalApi.Orderbook>(webRequestResult);
+								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + "monero" + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
+								CoinData simplePrice = simplePrices["monero"];
+								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
 
-                                ExchangeOrderbooks.XMRBTC = orderbookObj;
+								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
+
+								ExchangeOrderbooks.XMRBTC = orderbookObj;
                                 orderbookStisfied = true;
                             }
                         }
@@ -189,92 +192,128 @@ namespace TrueMiningDesktop.Server
                             {
                                 CoinpaprikaAPI.Client coinpaprikaAPI = new();
 
-                                decimal coinLastPrice = coinpaprikaAPI.GetLatestOhlcForCoinAsync("xmr-monero", "BTC").Result.Value.Last().Close;
+								OhlcValue coinLatestOhlc = coinpaprikaAPI.GetLatestOhlcForCoinAsync("xmr-monero", "BTC").Result.Value.Last();
+								decimal coinLastPrice = coinLatestOhlc.Close;
+								decimal coinPriceVarPercent = (coinLatestOhlc.Open - coinLatestOhlc.Close) / coinLatestOhlc.Close * 100;
+								coinPriceVarPercent = coinPriceVarPercent < 0 ? coinPriceVarPercent * -1 : coinPriceVarPercent;
 
-                                ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice, volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice, volume = 1 } } };
+								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice * ((100 - coinPriceVarPercent / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice * ((100 + coinPriceVarPercent / 4) / 100), volume = 1 } } };
 
-                                ExchangeOrderbooks.XMRBTC = orderbookObj;
+								ExchangeOrderbooks.XMRBTC = orderbookObj;
                                 orderbookStisfied = true;
                             }
                         }
                         catch { }
-                        ; return null;
+                        return null;
                     }));
 
-                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { NanopoolData.XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { NanopoolData.XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_user_raw = NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_tm_raw = NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() =>
                     {
-                        try
-                        {
-                            CoinpaprikaAPI.Client coinpaprikaAPI = new();
+						bool orderbookStisfied = false;
+						try
+						{
+							if (!orderbookStisfied)
+							{
+								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + "ravencoin" + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
+								CoinData simplePrice = simplePrices["ravencoin"];
+								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
 
-                            decimal coinLastPrice = coinpaprikaAPI.GetLatestOhlcForCoinAsync("rvn-ravencoin", "BTC").Result.Value.Last().Close;
+								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
 
-                            ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice, volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice, volume = 1 } } };
+								ExchangeOrderbooks.RVNBTC = orderbookObj;
+								orderbookStisfied = true;
+							}
+						}
+						catch { }
 
-                            ExchangeOrderbooks.RVNBTC = orderbookObj;
-                        }
-                        catch { }
-                        ; return null;
-                    }));
-                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+						try
+						{
+							if (!orderbookStisfied)
+							{
+								CoinpaprikaAPI.Client coinpaprikaAPI = new();
+
+								OhlcValue coinLatestOhlc = coinpaprikaAPI.GetLatestOhlcForCoinAsync("rvn-ravencoin", "BTC").Result.Value.Last();
+								decimal coinLastPrice = coinLatestOhlc.Close;
+								decimal coinPriceVarPercent = (coinLatestOhlc.Open - coinLatestOhlc.Close) / coinLatestOhlc.Close * 100;
+								coinPriceVarPercent = coinPriceVarPercent < 0 ? coinPriceVarPercent * -1 : coinPriceVarPercent;
+
+								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice * ((100 - coinPriceVarPercent / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice * ((100 + coinPriceVarPercent / 4) / 100), volume = 1 } } };
+
+								ExchangeOrderbooks.RVNBTC = orderbookObj;
+								orderbookStisfied = true;
+							}
+						}
+						catch { }
+						return null;
+					}));
+                    getAPIsTask.Add(new Task<Action>(() => { NanopoolData.RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { NanopoolData.RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_etc_user_raw = NanopoolData.GetHashrateHystory("etc", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("etc", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
                     getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_etc_tm_raw = NanopoolData.GetHashrateHystory("etc", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("etc", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() =>
                     {
-                        bool orderbookStisfied = false;
-                        try
-                        {
-                            if (!orderbookStisfied)
-                            {
-                                string webRequestResult = Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=ETC-BTC");
-                                ExternalApi.Orderbook orderbookObj = JsonConvert.DeserializeObject<ExternalApi.Orderbook>(webRequestResult);
+						bool orderbookStisfied = false;
+						try
+						{
+							if (!orderbookStisfied)
+							{
+								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + "ethereum-classic" + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
+								CoinData simplePrice = simplePrices["ethereum-classic"];
+								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
 
-                                ExchangeOrderbooks.ETCBTC = orderbookObj;
-                                orderbookStisfied = true;
-                            }
-                        }
-                        catch { }
+								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
 
-                        try
-                        {
-                            if (!orderbookStisfied)
-                            {
-                                CoinpaprikaAPI.Client coinpaprikaAPI = new();
+								ExchangeOrderbooks.ETCBTC = orderbookObj;
+								orderbookStisfied = true;
+							}
+						}
+						catch { }
 
-                                decimal coinLastPrice = coinpaprikaAPI.GetLatestOhlcForCoinAsync("etc-ethereum-classic", "BTC").Result.Value.Last().Close;
+						try
+						{
+							if (!orderbookStisfied)
+							{
+								CoinpaprikaAPI.Client coinpaprikaAPI = new();
 
-                                ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice, volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice, volume = 1 } } };
+								OhlcValue coinLatestOhlc = coinpaprikaAPI.GetLatestOhlcForCoinAsync("etc-ethereum-classic", "BTC").Result.Value.Last();
+								decimal coinLastPrice = coinLatestOhlc.Close;
+								decimal coinPriceVarPercent = (coinLatestOhlc.Open - coinLatestOhlc.Close) / coinLatestOhlc.Close * 100;
+								coinPriceVarPercent = coinPriceVarPercent < 0 ? coinPriceVarPercent * -1 : coinPriceVarPercent;
 
-                                ExchangeOrderbooks.ETCBTC = orderbookObj;
-                                orderbookStisfied = true;
-                            }
-                        }
-                        catch { }
-                        ; return null;
-                    }));
-                    getAPIsTask.Add(new Task<Action>(() => { ETC_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/etc/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
-                    getAPIsTask.Add(new Task<Action>(() => { ETC_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/etc/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice * ((100 - coinPriceVarPercent / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice * ((100 + coinPriceVarPercent / 4) / 100), volume = 1 } } };
+
+								ExchangeOrderbooks.ETCBTC = orderbookObj;
+								orderbookStisfied = true;
+							}
+						}
+						catch { }
+						return null;
+					}));
+                    getAPIsTask.Add(new Task<Action>(() => { NanopoolData.ETC_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/etc/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+                    getAPIsTask.Add(new Task<Action>(() => { NanopoolData.ETC_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/etc/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
                     getAPIsTask.Add(new Task<Action>(() =>
                     {
                         bool orderbookStisfied = false;
                         try
                         {
-                            if (!orderbookStisfied && User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("ExternalApi", StringComparison.OrdinalIgnoreCase)))
+                            if (!orderbookStisfied && User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("coingecko", StringComparison.OrdinalIgnoreCase)))
                             {
-                                string webRequestResult = Tools.HttpGet("https://api.crex24.com/v2/public/orderBook?instrument=" + User.Settings.User.PayCoin.CoinTicker.ToUpper() + "-BTC");
-                                ExternalApi.Orderbook orderbookObj = JsonConvert.DeserializeObject<ExternalApi.Orderbook>(webRequestResult);
+								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + User.Settings.User.PayCoin.CoinName.ToLower().Replace(' ', '-') + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
+								CoinData simplePrice = simplePrices[User.Settings.User.PayCoin.CoinName.ToLower().Replace(' ', '-')];
+								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
 
-                                ExchangeOrderbooks.PaymentCoinBTC = orderbookObj;
+								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
+
+								ExchangeOrderbooks.PaymentCoinBTC = orderbookObj;
                                 orderbookStisfied = true;
                             }
                         }
@@ -282,7 +321,7 @@ namespace TrueMiningDesktop.Server
 
                         try
                         {
-                            if (!orderbookStisfied && User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("Coinpaprika", StringComparison.OrdinalIgnoreCase)))
+                            if (!orderbookStisfied && User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("coinpaprika", StringComparison.OrdinalIgnoreCase)))
                             {
                                 CoinpaprikaAPI.Client coinpaprikaAPI = new();
 
@@ -297,7 +336,7 @@ namespace TrueMiningDesktop.Server
                             }
                         }
                         catch { }
-                        ; return null;
+                        return null;
                     }));
 
                     getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("btc-bitcoin", "USD").Result.Value.Last().Close, 2); return null; }));
@@ -305,14 +344,14 @@ namespace TrueMiningDesktop.Server
                     getAPIsTask.ForEach(task => task.Start());
                     getAPIsTask.ForEach(task => task.Wait(60000));
 
-                    ExternalApi.XMR_nanopool.hashrateHistory_user.Clear();
-                    ExternalApi.XMR_nanopool.hashrateHistory_tm.Clear();
+                    NanopoolData.XMR_nanopool.hashrateHistory_user.Clear();
+					NanopoolData.XMR_nanopool.hashrateHistory_tm.Clear();
 
                     hashrateHystory_xmr_user_raw.Data.ForEach(data =>
                     {
                         try
                         {
-                            ExternalApi.XMR_nanopool.hashrateHistory_user.Add(data.Date, data.Hashrate);
+							NanopoolData.XMR_nanopool.hashrateHistory_user.Add(data.Date, data.Hashrate);
                         }
                         catch { }
                     });
@@ -320,19 +359,19 @@ namespace TrueMiningDesktop.Server
                     {
                         try
                         {
-                            ExternalApi.XMR_nanopool.hashrateHistory_tm.Add(data.Date, data.Hashrate);
+							NanopoolData.XMR_nanopool.hashrateHistory_tm.Add(data.Date, data.Hashrate);
                         }
                         catch { }
                     });
 
-                    ExternalApi.RVN_nanopool.hashrateHistory_user.Clear();
-                    ExternalApi.RVN_nanopool.hashrateHistory_tm.Clear();
+					NanopoolData.RVN_nanopool.hashrateHistory_user.Clear();
+					NanopoolData.RVN_nanopool.hashrateHistory_tm.Clear();
 
                     hashrateHystory_rvn_user_raw.Data.ForEach(data =>
                     {
                         try
                         {
-                            ExternalApi.RVN_nanopool.hashrateHistory_user.Add(data.Date, data.Hashrate);
+							NanopoolData.RVN_nanopool.hashrateHistory_user.Add(data.Date, data.Hashrate);
                         }
                         catch { }
                     });
@@ -340,19 +379,19 @@ namespace TrueMiningDesktop.Server
                     {
                         try
                         {
-                            ExternalApi.RVN_nanopool.hashrateHistory_tm.Add(data.Date, data.Hashrate);
+							NanopoolData.RVN_nanopool.hashrateHistory_tm.Add(data.Date, data.Hashrate);
                         }
                         catch { }
                     });
 
-                    ExternalApi.ETC_nanopool.hashrateHistory_user.Clear();
-                    ExternalApi.ETC_nanopool.hashrateHistory_tm.Clear();
+					NanopoolData.ETC_nanopool.hashrateHistory_user.Clear();
+					NanopoolData.ETC_nanopool.hashrateHistory_tm.Clear();
 
                     hashrateHystory_etc_user_raw.Data.ForEach(data =>
                     {
                         try
                         {
-                            ExternalApi.ETC_nanopool.hashrateHistory_user.Add(data.Date, data.Hashrate);
+							NanopoolData.ETC_nanopool.hashrateHistory_user.Add(data.Date, data.Hashrate);
                         }
                         catch { }
                     });
@@ -360,7 +399,7 @@ namespace TrueMiningDesktop.Server
                     {
                         try
                         {
-                            ExternalApi.ETC_nanopool.hashrateHistory_tm.Add(data.Date, data.Hashrate);
+							NanopoolData.ETC_nanopool.hashrateHistory_tm.Add(data.Date, data.Hashrate);
                         }
                         catch { }
                     });
@@ -368,7 +407,7 @@ namespace TrueMiningDesktop.Server
                 catch { lastUpdated = DateTime.Now.AddSeconds(-10); }
 
                 sumHashrate_user_xmr =
-                ExternalApi.XMR_nanopool.hashrateHistory_user
+				NanopoolData.XMR_nanopool.hashrateHistory_user
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -378,7 +417,7 @@ namespace TrueMiningDesktop.Server
                 }));
 
                 sumHashrate_tm_xmr =
-                ExternalApi.XMR_nanopool.hashrateHistory_tm
+				NanopoolData.XMR_nanopool.hashrateHistory_tm
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -388,7 +427,7 @@ namespace TrueMiningDesktop.Server
                 }));
 
                 sumHashrate_user_rvn =
-                ExternalApi.RVN_nanopool.hashrateHistory_user
+				NanopoolData.RVN_nanopool.hashrateHistory_user
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -398,7 +437,7 @@ namespace TrueMiningDesktop.Server
                 }));
 
                 sumHashrate_tm_rvn =
-                ExternalApi.RVN_nanopool.hashrateHistory_tm
+				NanopoolData.RVN_nanopool.hashrateHistory_tm
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -408,7 +447,7 @@ namespace TrueMiningDesktop.Server
                 }));
 
                 sumHashrate_user_etc =
-                ExternalApi.ETC_nanopool.hashrateHistory_user
+				NanopoolData.ETC_nanopool.hashrateHistory_user
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -418,7 +457,7 @@ namespace TrueMiningDesktop.Server
                 }));
 
                 sumHashrate_tm_etc =
-                ExternalApi.ETC_nanopool.hashrateHistory_tm
+				NanopoolData.ETC_nanopool.hashrateHistory_tm
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value * secondsPerAveragehashrateReportInterval)
@@ -427,24 +466,24 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                HashesPerPoint_xmr = XMR_nanopool.sharecoef.data * 16;
-                HashesPerPoint_rvn = RVN_nanopool.sharecoef.data * 6;
-                HashesPerPoint_etc = ETC_nanopool.sharecoef.data * 2;
+                HashesPerPoint_xmr = NanopoolData.XMR_nanopool.sharecoef.data * 16;
+                HashesPerPoint_rvn = NanopoolData.RVN_nanopool.sharecoef.data * 6;
+                HashesPerPoint_etc = NanopoolData.ETC_nanopool.sharecoef.data * 2;
 
-                XMR_nanopool.pointsHistory_user = XMR_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / XMR_nanopool.sharecoef.data / 16)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
-                RVN_nanopool.pointsHistory_user = RVN_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / RVN_nanopool.sharecoef.data / 6)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
-                ETC_nanopool.pointsHistory_user = ETC_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / ETC_nanopool.sharecoef.data / 2)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
+				NanopoolData.XMR_nanopool.pointsHistory_user = NanopoolData.XMR_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / NanopoolData.XMR_nanopool.sharecoef.data / 16)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
+				NanopoolData.RVN_nanopool.pointsHistory_user = NanopoolData.RVN_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / NanopoolData.RVN_nanopool.sharecoef.data / 6)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
+				NanopoolData.ETC_nanopool.pointsHistory_user = NanopoolData.ETC_nanopool.hashrateHistory_user.Select(x => new KeyValuePair<long, decimal>(x.Key, x.Value / NanopoolData.ETC_nanopool.sharecoef.data / 2)).ToDictionary((KeyValuePair<long, decimal> y) => y.Key, y => y.Value);
 
-                totalXMRmineradoTrueMining = (decimal)XMR_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_xmr;
-                totalRVNmineradoTrueMining = (decimal)RVN_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_rvn;
-                totalETCmineradoTrueMining = (decimal)ETC_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_etc;
+                totalXMRmineradoTrueMining = (decimal)NanopoolData.XMR_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_xmr;
+                totalRVNmineradoTrueMining = (decimal)NanopoolData.RVN_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_rvn;
+                totalETCmineradoTrueMining = (decimal)NanopoolData.ETC_nanopool.approximated_earnings.data.day.coins.SubtractFee(1) / (decimal)hashesToCompare / (decimal)TimeSpan.FromDays(1).TotalSeconds * (decimal)sumHashrate_tm_etc;
 
                 BTCpraVirarPaymentCoin = (totalXMRmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.XMRBTC, totalXMRmineradoTrueMining).SellPrice) + (totalRVNmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.RVNBTC, totalRVNmineradoTrueMining).SellPrice) + (totalETCmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.ETCBTC, totalETCmineradoTrueMining).SellPrice);
 
                 PaymentCoinFinalPrice = new Tools.LiquidityPrices(ExchangeOrderbooks.PaymentCoinBTC, BTCpraVirarPaymentCoin).BuyPrice;
 
                 AccumulatedBalance_Points_xmr =
-                ExternalApi.XMR_nanopool.pointsHistory_user
+				NanopoolData.XMR_nanopool.pointsHistory_user
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value)
@@ -453,10 +492,10 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                exchangeRatePontosXmrToMiningCoin = HashesPerPoint_xmr * secondsPerAveragehashrateReportInterval * (XMR_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
+                exchangeRatePontosXmrToMiningCoin = HashesPerPoint_xmr * secondsPerAveragehashrateReportInterval * (NanopoolData.XMR_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
                 AccumulatedBalance_Points_rvn =
-                ExternalApi.RVN_nanopool.pointsHistory_user
+				NanopoolData.RVN_nanopool.pointsHistory_user
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value)
@@ -465,10 +504,10 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                exchangeRatePontosRvnToMiningCoin = HashesPerPoint_rvn * secondsPerAveragehashrateReportInterval * (RVN_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
+                exchangeRatePontosRvnToMiningCoin = HashesPerPoint_rvn * secondsPerAveragehashrateReportInterval * (NanopoolData.RVN_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
                 AccumulatedBalance_Points_etc =
-                ExternalApi.ETC_nanopool.pointsHistory_user
+				NanopoolData.ETC_nanopool.pointsHistory_user
                 .Where((KeyValuePair<long, decimal> value) =>
                 value.Key >= ((DateTimeOffset)lastPayment).ToUnixTimeSeconds())
                 .Select((KeyValuePair<long, decimal> value) => value.Value)
@@ -477,7 +516,7 @@ namespace TrueMiningDesktop.Server
                     return acc + now;
                 }));
 
-                exchangeRatePontosEtcToMiningCoin = HashesPerPoint_etc * secondsPerAveragehashrateReportInterval * (ETC_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
+                exchangeRatePontosEtcToMiningCoin = HashesPerPoint_etc * secondsPerAveragehashrateReportInterval * (NanopoolData.ETC_nanopool.approximated_earnings.data.hour.coins.SubtractFee(1) / hashesToCompare / 60 / 60);
 
                 AccumulatedBalance_Coins = Decimal.Round(
                 (totalXMRmineradoTrueMining * new Tools.LiquidityPrices(ExchangeOrderbooks.XMRBTC, totalXMRmineradoTrueMining).SellPrice / PaymentCoinFinalPrice * (sumHashrate_tm_xmr > 0 ? Decimal.Divide(sumHashrate_user_xmr, sumHashrate_tm_xmr) : 0)).SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) +

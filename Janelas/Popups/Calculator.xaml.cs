@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using TrueMiningDesktop.Core;
+using TrueMiningDesktop.ExternalApi;
 
 namespace TrueMiningDesktop.Janelas.Popups
 {
@@ -57,17 +58,17 @@ namespace TrueMiningDesktop.Janelas.Popups
 
                     if ("RandomX".Equals(User.Settings.Device.cpu.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        CPUestimated_day_Coins = CPU_hashrate_decimal / 1000 * ExternalApi.XMR_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        CPUestimated_day_Coins = CPU_hashrate_decimal / 1000 * NanopoolData.XMR_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         CPUestimated_day_Bitcoin = CPUestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     if ("KawPow".Equals(User.Settings.Device.cpu.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        CPUestimated_day_Coins = CPU_hashrate_decimal / 1000 * ExternalApi.RVN_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        CPUestimated_day_Coins = CPU_hashrate_decimal / 1000 * NanopoolData.RVN_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         CPUestimated_day_Bitcoin = CPUestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     if ("Etchash".Equals(User.Settings.Device.cpu.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        CPUestimated_day_Coins = CPU_hashrate_decimal / 1000 * ExternalApi.ETC_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        CPUestimated_day_Coins = CPU_hashrate_decimal / 1000 * NanopoolData.ETC_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         CPUestimated_day_Bitcoin = CPUestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     CPUestimated_day_USD = CPUestimated_day_Bitcoin * (decimal)ExternalApi.BitcoinPrice.BTCUSD;
@@ -86,17 +87,17 @@ namespace TrueMiningDesktop.Janelas.Popups
 
                     if ("RandomX".Equals(User.Settings.Device.opencl.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        OPENCLestimated_day_Coins = OPENCL_hashrate_decimal / 1000 * ExternalApi.XMR_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        OPENCLestimated_day_Coins = OPENCL_hashrate_decimal / 1000 * NanopoolData.XMR_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         OPENCLestimated_day_Bitcoin = OPENCLestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     if ("KawPow".Equals(User.Settings.Device.opencl.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        OPENCLestimated_day_Coins = OPENCL_hashrate_decimal / 1000 * ExternalApi.RVN_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        OPENCLestimated_day_Coins = OPENCL_hashrate_decimal / 1000 * NanopoolData.RVN_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         OPENCLestimated_day_Bitcoin = OPENCLestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     if ("Etchash".Equals(User.Settings.Device.opencl.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        OPENCLestimated_day_Coins = OPENCL_hashrate_decimal / 1000 * ExternalApi.ETC_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        OPENCLestimated_day_Coins = OPENCL_hashrate_decimal / 1000 * NanopoolData.ETC_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         OPENCLestimated_day_Bitcoin = OPENCLestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     OPENCLestimated_day_USD = OPENCLestimated_day_Bitcoin * (decimal)ExternalApi.BitcoinPrice.BTCUSD;
@@ -115,17 +116,17 @@ namespace TrueMiningDesktop.Janelas.Popups
 
                     if ("RandomX".Equals(User.Settings.Device.cuda.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        CUDAestimated_day_Coins = CUDA_hashrate_decimal / 1000 * ExternalApi.XMR_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        CUDAestimated_day_Coins = CUDA_hashrate_decimal / 1000 * NanopoolData.XMR_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         CUDAestimated_day_Bitcoin = CUDAestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     if ("KawPow".Equals(User.Settings.Device.cuda.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        CUDAestimated_day_Coins = CUDA_hashrate_decimal / 1000 * ExternalApi.RVN_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        CUDAestimated_day_Coins = CUDA_hashrate_decimal / 1000 * NanopoolData.RVN_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         CUDAestimated_day_Bitcoin = CUDAestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     if ("Etchash".Equals(User.Settings.Device.cuda.Algorithm, StringComparison.OrdinalIgnoreCase))
                     {
-                        CUDAestimated_day_Coins = CUDA_hashrate_decimal / 1000 * ExternalApi.ETC_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
+                        CUDAestimated_day_Coins = CUDA_hashrate_decimal / 1000 * NanopoolData.ETC_nanopool.approximated_earnings.data.day.bitcoins.SubtractFee(Server.SoftwareParameters.ServerConfig.DynamicFee) / ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.buyLevels[0].price;
                         CUDAestimated_day_Bitcoin = CUDAestimated_day_Coins * (decimal)ExternalApi.ExchangeOrderbooks.PaymentCoinBTC.sellLevels[0].price;
                     }
                     CUDAestimated_day_USD = CUDAestimated_day_Bitcoin * (decimal)ExternalApi.BitcoinPrice.BTCUSD;

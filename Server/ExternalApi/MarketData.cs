@@ -1,22 +1,35 @@
 ﻿using System.Collections.Generic;
 
-namespace TrueMiningDesktop.Saldo.ExternalApi
+namespace TrueMiningDesktop.ExternalApi
 {
-    public class Orderbook
+	public class ExchangeOrderbooks
+	{
+		public static Orderbook XMRBTC = new Orderbook();
+		public static Orderbook RVNBTC = new Orderbook();
+		public static Orderbook ETCBTC = new Orderbook();
+		public static Orderbook PaymentCoinBTC = new Orderbook();
+	}
+
+	public class Orderbook
     {
-        public List<Buylevel> buyLevels { get; set; }
-        public List<Selllevel> sellLevels { get; set; }
+        public List<BuyLevel> buyLevels { get; set; }
+        public List<SellLevel> sellLevels { get; set; }
     }
 
-    public class Buylevel
+    public class BuyLevel
     {
         public decimal price { get; set; }
         public decimal volume { get; set; }
     }
 
-    public class Selllevel
+    public class SellLevel
     {
         public decimal price { get; set; }
         public decimal volume { get; set; }
     }
+
+	public class BitcoinPrice
+	{
+		public static decimal BTCUSD { get; set; }
+	}
 }
