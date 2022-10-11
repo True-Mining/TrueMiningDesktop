@@ -45,83 +45,58 @@ namespace TrueMiningDesktop.User
 		private static void WriteSettings()
 		{
 			timerSaveSettings.Stop();
-			if (!File.Exists("configsDevices.txt")) { File.WriteAllText("configsDevices.txt", JsonConvert.SerializeObject(Device, Formatting.Indented)); }
-			if (!File.Exists("configsUser.txt")) { File.WriteAllText("configsUser.txt", JsonConvert.SerializeObject(User, Formatting.Indented)); }
 
-			string tempPath = Path.GetTempFileName();
-			string backup = "configsDevices.txt" + ".backup";
+			string device_configFile = Path.Combine("Resources", "configDevice.cfg");
+			string device_configFile_bkp = Path.Combine(Path.GetTempPath(), "TrueMiningDesktopConfig", "configDevice.cfg.bkp");
+			string device_configFile_tmp = Path.GetTempFileName();
 
-			if (File.Exists(backup)) { File.Delete(backup); }
+			string user_configFile = Path.Combine("Resources", "configUser.cfg");
+			string user_configFile_bkp = Path.Combine(Path.GetTempPath(), "TrueMiningDesktopConfig", "configUser.cfg.bkp");
+			string user_configFile_tmp = Path.GetTempFileName();
+
+			Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "TrueMiningDesktopConfig"));
+			Directory.CreateDirectory("Resources");
+
+			if (!File.Exists(device_configFile)) { File.WriteAllText(device_configFile, JsonConvert.SerializeObject(Device, Formatting.Indented)); }
+			if (!File.Exists(user_configFile)) { File.WriteAllText(user_configFile, JsonConvert.SerializeObject(User, Formatting.Indented)); }
 
 			byte[] data = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(Device, Formatting.Indented));
 
-			using (FileStream tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+			using (FileStream tempFile = File.Create(device_configFile_tmp, 4096, FileOptions.WriteThrough))
 			{
 				tempFile.Write(data, 0, data.Length);
 			}
 
-			File.Replace(tempPath, "configsDevices.txt", backup);
-
-			tempPath = Path.GetTempFileName();
-			backup = "configsUser.txt" + ".backup";
-
-			if (File.Exists(backup)) { File.Delete(backup); }
+			File.Replace(device_configFile_tmp, device_configFile, device_configFile_bkp);
 
 			data = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(User, Formatting.Indented));
 
-			using (FileStream tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+			using (FileStream tempFile = File.Create(user_configFile_tmp, 4096, FileOptions.WriteThrough))
 			{
 				tempFile.Write(data, 0, data.Length);
 			}
 
-			File.Replace(tempPath, "configsUser.txt", backup);
+			File.Replace(user_configFile_tmp, user_configFile, user_configFile_bkp);
 		}
 
 		public static void SettingsRecover()
 		{
-			try
-			{
-				if (File.Exists("configsDevices.txt"))
-				{
-					Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
-				}
+			bool sucessLoadingDeviceSettings = false;
+			bool sucessLoadingUserSettings = false;
 
-				if (File.Exists("configsUser.txt"))
-				{
-					UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
-					User.LICENSE_read = up.LICENSE_read;
-					User.AutostartMining = up.AutostartMining;
-					User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
-					User.AvoidWindowsSuspend = up.AvoidWindowsSuspend;
-					User.UseAllInterfacesInsteadLocalhost = up.UseAllInterfacesInsteadLocalhost;
-					User.UseTorSharpOnMining = up.UseTorSharpOnMining;
-					User.ShowCLI = up.ShowCLI;
-					User.StartHide = up.StartHide;
-					User.ChangeTbIcon = up.ChangeTbIcon;
-					User.Payment_CoinsList = up.Payment_CoinsList;
-					User.PayCoin = up.PayCoin;
-					User.Payment_Coin = up.Payment_Coin;
-					if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
-					User.Payment_Wallet = up.Payment_Wallet;
-				}
-
-				LoadingSettings = false;
-			}
-			catch
-			{
+			for (int i = 1; i <= 4 && (!sucessLoadingDeviceSettings || !sucessLoadingUserSettings); i++)
 				try
 				{
-					if (File.Exists("configsDevices.txt.backup"))
+					if (!sucessLoadingDeviceSettings && File.Exists(i switch { 1 => Path.Combine("Resources", "configDevice.cfg"), 2 => "configsDevices.txt", 3 => Path.Combine(Path.GetTempPath(), "TrueMiningDesktopConfig", "configDevice.cfg.bkp"), 4 => "configsDevices.txt.backup" }))
 					{
-						Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText("configsDevices.txt.backup"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
-						if (!Device.cpu.AlgorithmsList.Contains(Device.cpu.Algorithm)) { Device.cpu.Algorithm = Device.cpu.AlgorithmsList.First(); }
-						if (!Device.cuda.AlgorithmsList.Contains(Device.cuda.Algorithm)) { Device.cuda.Algorithm = Device.cuda.AlgorithmsList.First(); }
-						if (!Device.opencl.AlgorithmsList.Contains(Device.opencl.Algorithm)) { Device.opencl.Algorithm = Device.opencl.AlgorithmsList.First(); }
+						Device = JsonConvert.DeserializeObject<DeviceSettings>(File.ReadAllText(i switch { 1 => Path.Combine("Resources", "configDevice.cfg"), 2 => "configsDevices.txt", 3 => Path.Combine(Path.GetTempPath(), "TrueMiningDesktopConfig", "configDevice.cfg.bkp"), 4 => "configsDevices.txt.backup" }), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+
+						sucessLoadingDeviceSettings = true;
 					}
 
-					if (File.Exists("configsUser.txt.backup"))
+					if (!sucessLoadingUserSettings && File.Exists(i switch { 1 => Path.Combine("Resources", "configUser.cfg"), 2 => "configsUser.txt", 3 => Path.Combine(Path.GetTempPath(), "TrueMiningDesktopConfig", "configUser.cfg.bkp"), 4 => "configsUser.txt.backup" }))
 					{
-						UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText("configsUser.txt.backup"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
+						UserPreferences up = JsonConvert.DeserializeObject<UserPreferences>(File.ReadAllText(i switch { 1 => Path.Combine("Resources", "configUser.cfg"), 2 => "configsUser.txt", 3 => Path.Combine(Path.GetTempPath(), "TrueMiningDesktopConfig", "configUser.cfg.bkp"), 4 => "configsUser.txt.backup" }), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
 						User.LICENSE_read = up.LICENSE_read;
 						User.AutostartMining = up.AutostartMining;
 						User.AutostartSoftwareWithWindows = up.AutostartSoftwareWithWindows;
@@ -136,12 +111,74 @@ namespace TrueMiningDesktop.User
 						User.Payment_Coin = up.Payment_Coin;
 						if (up.Payment_Coin == null && up.PayCoin != null && up.PayCoin.CoinTicker != null && up.PayCoin.CoinName != null) { User.Payment_Coin = up.PayCoin.CoinTicker + " - " + up.PayCoin.CoinName; }
 						User.Payment_Wallet = up.Payment_Wallet;
+
+						sucessLoadingUserSettings = true;
 					}
 
-					LoadingSettings = false;
+					if (sucessLoadingDeviceSettings && sucessLoadingUserSettings)
+					{
+						LoadingSettings = false;
+					}
 				}
 				catch { }
+
+			// Update location of config files if possible
+			try
+			{
+				if (sucessLoadingDeviceSettings && sucessLoadingUserSettings)
+				{
+					if (File.Exists("configsDevices.txt"))
+					{
+						if (File.Exists(Path.Combine("Resources", "configDevice.cfg")))
+						{
+							if (!Tools.IsFileLocked(new System.IO.FileInfo(Path.Combine("Resources", "configDevice.cfg"))) && !Tools.IsFileLocked(new System.IO.FileInfo("configsDevices.txt")))
+							{
+								File.Delete("configsDevices.txt");
+							}
+						}
+						else
+						{
+							File.Copy("configsDevices.txt", Path.Combine("Resources", "configDevice.cfg"), true);
+						}
+					}
+					else
+					{
+						if (File.Exists("configsDevices.txt.backup"))
+						{
+							if (!Tools.IsFileLocked(new System.IO.FileInfo(Path.Combine("configsDevices.txt.backup"))))
+							{
+								File.Delete("configsDevices.txt.backup");
+							}
+						}
+					}
+
+					if (File.Exists("configsUser.txt"))
+					{
+						if (File.Exists(Path.Combine("Resources", "configUser.cfg")))
+						{
+							if (!Tools.IsFileLocked(new System.IO.FileInfo(Path.Combine("Resources", "configUser.cfg"))) && !Tools.IsFileLocked(new System.IO.FileInfo("configsDevices.txt")))
+							{
+								File.Delete("configsUser.txt");
+							}
+						}
+						else
+						{
+							File.Copy("configsUser.txt", Path.Combine("Resources", "configUser.cfg"), true);
+						}
+					}
+					else
+					{
+						if (File.Exists("configsUser.txt.backup"))
+						{
+							if (!Tools.IsFileLocked(new System.IO.FileInfo(Path.Combine("configsUser.txt.backup"))))
+							{
+								File.Delete("configsUser.txt.backup");
+							}
+						}
+					}
+				}
 			}
+			catch { }
 		}
 	}
 
