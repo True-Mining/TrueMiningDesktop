@@ -329,7 +329,7 @@ namespace TrueMiningDesktop.Janelas
 				catch { };
 			});
 			removeOldFiles.Start();
-			removeOldFiles.Wait(4000);
+			removeOldFiles.Wait(millisecondsTimeout: 5000);
 
 			FileName = "Complete";
 			Thread.Sleep(100);
