@@ -321,6 +321,9 @@ namespace TrueMiningDesktop.Janelas
 					}
 				}
 				catch { };
+
+				//temp: remove pasta antiga de bibliotecas, que deixou de ser usada (foi substituída por outra pasta) a partir da versão 4.20
+				Directory.Delete("libraries", true);
 			});
 			removeOldFiles.Start();
 			removeOldFiles.Wait(4000);
