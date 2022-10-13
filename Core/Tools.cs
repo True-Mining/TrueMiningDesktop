@@ -88,7 +88,7 @@ namespace TrueMiningDesktop.Core
 				[HttpRequestHeader.ProxyAuthorization] = "Basic " + new TorSharpTorSettings().ControlPassword,
 				[HttpRequestHeader.Trailer] = "1",
 				[HttpRequestHeader.Upgrade] = "1",
-				[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0"
+				[HttpRequestHeader.UserAgent] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0"
 			};
 
 			return headers;
@@ -98,14 +98,14 @@ namespace TrueMiningDesktop.Core
 		{
 			bool useTor = forceUseTor;
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i <= 2; i++)
 			{
 				try
 				{
 					HttpClient client = new(handler: useTor ? new HttpClientHandler() { Proxy = TorProxy } : new HttpClientHandler(), disposeHandler: !useTor);
 
 					client.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue() { NoCache = true, NoStore = true, MaxAge = new TimeSpan(0) };
-					client.DefaultRequestHeaders.UserAgent.TryParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0");
+					client.DefaultRequestHeaders.UserAgent.TryParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0");
 
 					HttpResponseMessage response = client.GetAsync(uri).Result;
 					response.EnsureSuccessStatusCode();
@@ -115,7 +115,7 @@ namespace TrueMiningDesktop.Core
 
 					return responseBody;
 				}
-				catch { if (i > 1) useTor = true; UseTor = true; }
+				catch { if (i >= 1) { useTor = true; } }
 			}
 
 			throw new Exception();
@@ -293,7 +293,7 @@ namespace TrueMiningDesktop.Core
 				{
 					generatingTorProxy = true;
 
-					for (int i = 0; i < 3; i++)
+					for (int i = 0; i < 5; i++)
 					{
 						try
 						{
@@ -312,12 +312,13 @@ namespace TrueMiningDesktop.Core
 								{
 									TorSharpEnabled = true;
 
-									i = 4;
+									i = 5;
 								}
 								else { throw new Exception(); }
 							}
 							catch
 							{
+								MessageBox.Show("erro aqui");
 								TorSharpEnabled = false;
 
 								new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
@@ -327,9 +328,7 @@ namespace TrueMiningDesktop.Core
 									NotifyPropertyChanged();
 								}
 								TorSharpProxy.GetNewIdentityAsync().Wait();
-								TorSharpEnabled = true;
-
-								i = 4;
+								Thread.Sleep(1000);
 							}
 						}
 						catch
