@@ -15,7 +15,7 @@ namespace TrueMiningDesktop.Server
 {
 	public class Saldo
 	{
-		private readonly System.Timers.Timer timerUpdateDashboard = new(1000);
+		private readonly System.Timers.Timer timerUpdateDashboard = new(2000);
 
 		public Saldo()
 		{
@@ -68,7 +68,7 @@ namespace TrueMiningDesktop.Server
 						{
 							UpdateBalances();
 						}
-						catch { lastUpdated = DateTime.Now.AddSeconds(-5); }
+						catch { isUpdatingBalances = false; lastUpdated = DateTime.Now.AddSeconds(-5); }
 					}
 
 					Pages.Dashboard.LabelNextPayout = 23 - DateTime.UtcNow.Hour + " hours, " + (59 - DateTime.UtcNow.Minute) + " minutes";
@@ -161,8 +161,6 @@ namespace TrueMiningDesktop.Server
 				try
 				{
 					List<Task<Action>> getAPIsTask = new();
-
-					//    decimal rvnPrice = new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("rvn-ravencoin", "BTC").Result.Value.Last().Close;
 
 					getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_user_raw = NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
 					getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_xmr_tm_raw = NanopoolData.GetHashrateHystory("xmr", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("xmr", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));

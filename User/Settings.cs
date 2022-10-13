@@ -179,6 +179,8 @@ namespace TrueMiningDesktop.User
 				}
 			}
 			catch { }
+
+			LoadingSettings = false;
 		}
 	}
 

@@ -74,8 +74,6 @@ namespace TrueMiningDesktop.Janelas
 		{
 			if (!firstTimeLoad)
 			{
-				loadingVisualElement.Visibility = Visibility.Visible;
-				DashboardContent.IsEnabled = false;
 				saldo = new Server.Saldo();
 				firstTimeLoad = true;
 			}

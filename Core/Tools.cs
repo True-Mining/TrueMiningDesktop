@@ -318,7 +318,6 @@ namespace TrueMiningDesktop.Core
 							}
 							catch
 							{
-								MessageBox.Show("erro aqui");
 								TorSharpEnabled = false;
 
 								new TorSharpToolFetcher(TorSharpSettings, new System.Net.Http.HttpClient()).FetchAsync().Wait();
