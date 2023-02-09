@@ -6,9 +6,9 @@
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>icone.ico</ApplicationIcon>
-		<AssemblyVersion>4.20</AssemblyVersion>
-		<FileVersion>4.20</FileVersion>
-		<Version>4.20</Version>
+		<AssemblyVersion>4.20.1</AssemblyVersion>
+		<FileVersion>4.20.1</FileVersion>
+		<Version>4.20.1</Version>
 		<StartupObject>TrueMiningDesktop.App</StartupObject>
 		<AssemblyName>True Mining Desktop</AssemblyName>
 		<Company>True Mining</Company>

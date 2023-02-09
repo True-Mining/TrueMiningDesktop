@@ -76,12 +76,58 @@ namespace TrueMiningDesktop
 			Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseMove += Move;
 			Janelas.Pages.SettingsCUDA.TitleWrapPanel.MouseUp += Up;
 
-			Microsoft.Win32.SystemEvents.SessionEnding += SystemEvents_SessionEnding;
+			Application.Current.SessionEnding += Current_SessionEnding;
+			Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+			Application.Current.MainWindow.Closing += MainWindow_Closing;
 
 			Application.Current.Exit += Current_Exit;
 
 			Tools.timerSystemAwake.Elapsed += Tools.AwakeSystem;
 			Tools.timerSystemAwake.Start();
+		}
+
+		private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+		{
+			try
+			{
+				if (!windowsShutdowning && (Miner.IsMining || Miner.IsTryingStartMining))
+				{
+					if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+					{
+					}
+					else { e.Cancel = true; return; }
+				}
+
+				if (!windowsShutdowning && Tools.CheckerPopup != null && Tools.CheckerPopup.Tape)
+				{
+					if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
+					{ e.Cancel = true; return; }
+				}
+
+				User.Settings.SettingsSaver(true);
+
+				// this.Hide();
+
+				//	new Thread(() => Miner.StopMiners(true)).Start();
+
+				Miner.StopMiners(true);
+				NotifyIcon.Visible = false;
+				Miner.EmergencyExit = true;
+				Tools.CheckerPopup.Close();
+				Application.Current.Shutdown();
+			}
+			catch { }
+		}
+
+		private void Current_SessionEnding(object sender, SessionEndingCancelEventArgs e)
+		{
+			if (e.ReasonSessionEnding == ReasonSessionEnding.Shutdown || e.ReasonSessionEnding == ReasonSessionEnding.Logoff)
+			{
+				windowsShutdowning = true;
+				Miner.EmergencyExit = true;
+				Miner.StopMiners(true);
+				Application.Current.Shutdown();
+			}
 		}
 
 		private void Tools_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -95,14 +141,13 @@ namespace TrueMiningDesktop
 
 		private void Current_Exit(object sender, ExitEventArgs e)
 		{
-			try { Tools.TorSharpProxy.Stop(); } catch { }
-		}
-
-		private void SystemEvents_SessionEnding(object sender, Microsoft.Win32.SessionEndingEventArgs e)
-		{
-			Miner.EmergencyExit = true;
-			Miner.StopMiners(true);
-			Application.Current.Shutdown();
+			try
+			{
+				Tools.TorSharpProxy.Stop();
+				Miner.EmergencyExit = true;
+				Miner.StopMiners(true);
+			}
+			catch { }
 		}
 
 		public static void DispararEvento()
@@ -340,43 +385,7 @@ namespace TrueMiningDesktop
 			Close();
 		}
 
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-		{
-			try
-			{
-				if (Miner.IsMining || Miner.IsTryingStartMining)
-				{
-					if (MessageBoxResult.Yes == MessageBox.Show("Closing True Mining Desktop, mining will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
-					{
-						this.Hide();
-
-						new Thread(() => Miner.StopMiners(true)).Start();
-
-						NotifyIcon.Visible = false;
-
-						Thread.Sleep(1500);
-					}
-					else { e.Cancel = true; return; }
-				}
-
-				if (Tools.CheckerPopup != null && Tools.CheckerPopup.Tape)
-				{
-					if (MessageBoxResult.Yes != MessageBox.Show("True Mining is checking and updating software files. Closing True Mining Desktop, process will be stopped. Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.None, MessageBoxOptions.DefaultDesktopOnly))
-					{ e.Cancel = true; return; }
-				}
-
-				Miner.EmergencyExit = true;
-
-				User.Settings.SettingsSaver(true);
-
-				Thread.Sleep(150);
-
-				Tools.CheckerPopup.Close();
-
-				Application.Current.Shutdown();
-			}
-			catch { }
-		}
+		private bool windowsShutdowning = false;
 
 		public static bool Clicado;
 		private Point lm;

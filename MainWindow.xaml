@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Class="TrueMiningDesktop.MainWindow"
     mc:Ignorable="d"
-    Title="True Mining Desktop" Height="500" Width="950" FontSize="10" WindowStartupLocation="CenterScreen" HorizontalContentAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeMode="CanMinimize" ScrollViewer.VerticalScrollBarVisibility="Disabled" WindowStyle="None" Loaded="Window_Loaded" Closing="Window_Closing" BorderThickness="1,1,1,1" BorderBrush="#FF3E3E3E" StateChanged="Window_StateChanged" IsVisibleChanged="Window_IsVisibleChanged" LostMouseCapture="Window_LostMouseCapture" SnapsToDevicePixels="True" ShowInTaskbar="False"
+    Title="True Mining Desktop" Height="500" Width="950" FontSize="10" WindowStartupLocation="CenterScreen" HorizontalContentAlignment="Left" HorizontalAlignment="Center" VerticalAlignment="Center" ResizeMode="CanMinimize" ScrollViewer.VerticalScrollBarVisibility="Disabled" WindowStyle="None" Loaded="Window_Loaded" BorderThickness="1,1,1,1" BorderBrush="#FF3E3E3E" StateChanged="Window_StateChanged" IsVisibleChanged="Window_IsVisibleChanged" LostMouseCapture="Window_LostMouseCapture" SnapsToDevicePixels="True" ShowInTaskbar="False"
     RenderOptions.BitmapScalingMode="HighQuality">
 
     <Window.Background>
