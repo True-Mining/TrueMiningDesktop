@@ -218,7 +218,7 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 			}
 		}
 
-		public void Stop()
+		public void Stop(bool spawnCommandTaskkill = false)
 		{
 			try
 			{
@@ -248,7 +248,17 @@ namespace TrueMiningDesktop.Core.TeamRedMiner
 					}
 				});
 				tryCloseFancy.Start();
-				tryCloseFancy.Wait(4000);
+
+				try
+				{
+					if (spawnCommandTaskkill)
+					{
+						TeamRedMinerProcess.Kill(true);
+						Tools.KillProcessByName(TeamRedMinerProcess.ProcessName);
+						Tools.KillProcess(TeamRedMinerProcess.ProcessName);
+					}
+				}
+				catch { }
 
 				if (!tryCloseFancy.Wait(4000))
 				{

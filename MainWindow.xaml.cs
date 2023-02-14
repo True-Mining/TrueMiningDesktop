@@ -106,10 +106,7 @@ namespace TrueMiningDesktop
 
 				User.Settings.SettingsSaver(true);
 
-				// this.Hide();
-
-				//	new Thread(() => Miner.StopMiners(true)).Start();
-
+				this.Hide();
 				Miner.StopMiners(true);
 				NotifyIcon.Visible = false;
 				Miner.EmergencyExit = true;

@@ -199,7 +199,7 @@ namespace TrueMiningDesktop.Core.TRex
 			}
 		}
 
-		public void Stop()
+		public void Stop(bool spawnCommandTaskkill = false)
 		{
 			try
 			{
@@ -229,7 +229,17 @@ namespace TrueMiningDesktop.Core.TRex
 					}
 				});
 				tryCloseFancy.Start();
-				tryCloseFancy.Wait(4000);
+
+				try
+				{
+					if (spawnCommandTaskkill)
+					{
+						TRexProcess.Kill(true);
+						Tools.KillProcessByName(TRexProcess.ProcessName);
+						Tools.KillProcess(TRexProcess.ProcessName);
+					}
+				}
+				catch { }
 
 				if (!tryCloseFancy.Wait(4000))
 				{

@@ -153,7 +153,7 @@ namespace TrueMiningDesktop.Core
 			{
 				while (!force && DateTime.UtcNow < dateTimeStopInit && XMRigMiners.Any(miner => miner.IsTryingStartMining)) { System.Threading.Thread.Sleep(100); }
 
-				XMRigMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
+				XMRigMiners.ForEach(miner => { try { miner.Stop(force); } catch { } });
 
 				XMRigMiners.Clear();
 
@@ -164,7 +164,7 @@ namespace TrueMiningDesktop.Core
 			{
 				while (!force && DateTime.UtcNow < dateTimeStopInit && TRexMiners.Any(miner => miner.IsTryingStartMining)) { System.Threading.Thread.Sleep(100); }
 
-				TRexMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
+				TRexMiners.ForEach(miner => { try { miner.Stop(force); } catch { } });
 
 				TRexMiners.Clear();
 
@@ -175,7 +175,7 @@ namespace TrueMiningDesktop.Core
 			{
 				while (!force && DateTime.UtcNow < dateTimeStopInit && TeamRedMinerMiners.Any(miner => miner.IsTryingStartMining)) { System.Threading.Thread.Sleep(100); }
 
-				TeamRedMinerMiners.ForEach(miner => { try { miner.Stop(); } catch { } });
+				TeamRedMinerMiners.ForEach(miner => { try { miner.Stop(force); } catch { } });
 
 				TeamRedMinerMiners.Clear();
 
@@ -195,10 +195,7 @@ namespace TrueMiningDesktop.Core
 				IsStoppingMining = true;
 			}
 
-			if (!force)
-			{
-				Task.WaitAll(stopMinersTask.ToArray());
-			}
+			Task.WaitAll(stopMinersTask.ToArray(), force ? 3000 : 10000);
 		}
 
 		public static void ShowHideCLI()

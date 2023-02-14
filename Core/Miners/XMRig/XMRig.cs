@@ -202,7 +202,7 @@ namespace TrueMiningDesktop.Core.XMRig
 			}
 		}
 
-		public void Stop()
+		public void Stop(bool spawnCommandTaskkill = false)
 		{
 			try
 			{
@@ -232,7 +232,17 @@ namespace TrueMiningDesktop.Core.XMRig
 					}
 				});
 				tryCloseFancy.Start();
-				tryCloseFancy.Wait(4000);
+
+				try
+				{
+					if (spawnCommandTaskkill)
+					{
+						XMRigProcess.Kill(true);
+						Tools.KillProcessByName(XMRigProcess.ProcessName);
+						Tools.KillProcess(XMRigProcess.ProcessName);
+					}
+				}
+				catch { }
 
 				if (!tryCloseFancy.Wait(4000))
 				{
