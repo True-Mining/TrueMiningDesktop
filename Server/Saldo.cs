@@ -15,7 +15,7 @@ namespace TrueMiningDesktop.Server
 {
 	public class Saldo
 	{
-		private readonly System.Timers.Timer timerUpdateDashboard = new(2000);
+		private readonly System.Timers.Timer timerUpdateDashboard = new(10000);
 
 		public Saldo()
 		{
@@ -67,6 +67,9 @@ namespace TrueMiningDesktop.Server
 						try
 						{
 							UpdateBalances();
+							isUpdatingBalances = false;
+							Pages.Dashboard.loadingVisualElement.Visibility = Visibility.Hidden;
+							Pages.Dashboard.DashboardContent.IsEnabled = true;
 						}
 						catch { isUpdatingBalances = false; lastUpdated = DateTime.Now.AddSeconds(-5); }
 					}
@@ -145,6 +148,8 @@ namespace TrueMiningDesktop.Server
 		{
 			Task.Run(() =>
 			{
+				if (isUpdatingBalances) { return; }
+
 				isUpdatingBalances = true;
 
 				lastPayment = DateTime.UtcNow.AddHours(-DateTime.UtcNow.Hour).AddMinutes(-DateTime.UtcNow.Minute).AddSeconds(-DateTime.UtcNow.Second).AddMilliseconds(-DateTime.UtcNow.Millisecond);
@@ -172,172 +177,64 @@ namespace TrueMiningDesktop.Server
 						{
 							if (!orderbookStisfied)
 							{
-								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + "monero" + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
+								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + "monero,ravencoin,ethereum-classic,usd," + User.Settings.User.PayCoin.CoinName.ToLower().Replace(' ', '-') + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
+								//---
 								CoinData simplePrice = simplePrices["monero"];
 								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
 
 								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
 
 								ExchangeOrderbooks.XMRBTC = orderbookObj;
+								//---
+								simplePrice = simplePrices["ravencoin"];
+								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
+
+								orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
+
+								ExchangeOrderbooks.RVNBTC = orderbookObj;
 								orderbookStisfied = true;
+								//---
+								simplePrice = simplePrices["ethereum-classic"];
+								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
+
+								orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
+
+								ExchangeOrderbooks.ETCBTC = orderbookObj;
+								orderbookStisfied = true;
+								//---
+								simplePrice = simplePrices[User.Settings.User.PayCoin.CoinName.ToLower().Replace(' ', '-')];
+								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
+
+								orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
+
+								ExchangeOrderbooks.PaymentCoinBTC = orderbookObj;
+								orderbookStisfied = true;
+								//---
+								simplePrice = simplePrices["usd"];
+
+								BitcoinPrice.BTCUSD = 1 / simplePrice.Btc;
+								throw new Exception();
 							}
 						}
 						catch { }
 
-						try
-						{
-							if (!orderbookStisfied)
-							{
-								CoinpaprikaAPI.Client coinpaprikaAPI = new();
-
-								OhlcValue coinLatestOhlc = coinpaprikaAPI.GetLatestOhlcForCoinAsync("xmr-monero", "BTC").Result.Value.Last();
-								decimal coinLastPrice = coinLatestOhlc.Close;
-								decimal coinPriceVarPercent = (coinLatestOhlc.Open - coinLatestOhlc.Close) / coinLatestOhlc.Close * 100;
-								coinPriceVarPercent = coinPriceVarPercent < 0 ? coinPriceVarPercent * -1 : coinPriceVarPercent;
-
-								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice * ((100 - coinPriceVarPercent / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice * ((100 + coinPriceVarPercent / 4) / 100), volume = 1 } } };
-
-								ExchangeOrderbooks.XMRBTC = orderbookObj;
-								orderbookStisfied = true;
-							}
-						}
-						catch { }
 						return null;
 					}));
 
-					getAPIsTask.Add(new Task<Action>(() => { NanopoolData.XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
-					getAPIsTask.Add(new Task<Action>(() => { NanopoolData.XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/xmr/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+					getAPIsTask.Add(new Task<Action>(() => { NanopoolData.XMR_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("http://api.nanopool.org/v1/xmr/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
+					getAPIsTask.Add(new Task<Action>(() => { NanopoolData.XMR_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("http://api.nanopool.org/v1/xmr/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
 					getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_user_raw = NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
 					getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_rvn_tm_raw = NanopoolData.GetHashrateHystory("rvn", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("rvn", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
 
-					getAPIsTask.Add(new Task<Action>(() =>
-					{
-						bool orderbookStisfied = false;
-						try
-						{
-							if (!orderbookStisfied)
-							{
-								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + "ravencoin" + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
-								CoinData simplePrice = simplePrices["ravencoin"];
-								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
-
-								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
-
-								ExchangeOrderbooks.RVNBTC = orderbookObj;
-								orderbookStisfied = true;
-							}
-						}
-						catch { }
-
-						try
-						{
-							if (!orderbookStisfied)
-							{
-								CoinpaprikaAPI.Client coinpaprikaAPI = new();
-
-								OhlcValue coinLatestOhlc = coinpaprikaAPI.GetLatestOhlcForCoinAsync("rvn-ravencoin", "BTC").Result.Value.Last();
-								decimal coinLastPrice = coinLatestOhlc.Close;
-								decimal coinPriceVarPercent = (coinLatestOhlc.Open - coinLatestOhlc.Close) / coinLatestOhlc.Close * 100;
-								coinPriceVarPercent = coinPriceVarPercent < 0 ? coinPriceVarPercent * -1 : coinPriceVarPercent;
-
-								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice * ((100 - coinPriceVarPercent / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice * ((100 + coinPriceVarPercent / 4) / 100), volume = 1 } } };
-
-								ExchangeOrderbooks.RVNBTC = orderbookObj;
-								orderbookStisfied = true;
-							}
-						}
-						catch { }
-						return null;
-					}));
 					getAPIsTask.Add(new Task<Action>(() => { NanopoolData.RVN_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 					getAPIsTask.Add(new Task<Action>(() => { NanopoolData.RVN_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/rvn/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 
 					getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_etc_user_raw = NanopoolData.GetHashrateHystory("etc", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("etc", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining, User.Settings.User.PayCoin.CoinTicker.ToLowerInvariant() + '_' + User.Settings.User.Payment_Wallet); return null; }));
 					getAPIsTask.Add(new Task<Action>(() => { hashrateHystory_etc_tm_raw = NanopoolData.GetHashrateHystory("etc", SoftwareParameters.ServerConfig.MiningCoins.Find(x => x.CoinTicker.Equals("etc", StringComparison.OrdinalIgnoreCase)).DepositAddressTrueMining); return null; }));
 
-					getAPIsTask.Add(new Task<Action>(() =>
-					{
-						bool orderbookStisfied = false;
-						try
-						{
-							if (!orderbookStisfied)
-							{
-								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + "ethereum-classic" + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
-								CoinData simplePrice = simplePrices["ethereum-classic"];
-								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
-
-								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
-
-								ExchangeOrderbooks.ETCBTC = orderbookObj;
-								orderbookStisfied = true;
-							}
-						}
-						catch { }
-
-						try
-						{
-							if (!orderbookStisfied)
-							{
-								CoinpaprikaAPI.Client coinpaprikaAPI = new();
-
-								OhlcValue coinLatestOhlc = coinpaprikaAPI.GetLatestOhlcForCoinAsync("etc-ethereum-classic", "BTC").Result.Value.Last();
-								decimal coinLastPrice = coinLatestOhlc.Close;
-								decimal coinPriceVarPercent = (coinLatestOhlc.Open - coinLatestOhlc.Close) / coinLatestOhlc.Close * 100;
-								coinPriceVarPercent = coinPriceVarPercent < 0 ? coinPriceVarPercent * -1 : coinPriceVarPercent;
-
-								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice * ((100 - coinPriceVarPercent / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice * ((100 + coinPriceVarPercent / 4) / 100), volume = 1 } } };
-
-								ExchangeOrderbooks.ETCBTC = orderbookObj;
-								orderbookStisfied = true;
-							}
-						}
-						catch { }
-						return null;
-					}));
 					getAPIsTask.Add(new Task<Action>(() => { NanopoolData.ETC_nanopool.approximated_earnings = JsonConvert.DeserializeObject<ExternalApi.approximated_earnings>(Tools.HttpGet("https://api.nanopool.org/v1/etc/approximated_earnings/" + hashesToCompare), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
 					getAPIsTask.Add(new Task<Action>(() => { NanopoolData.ETC_nanopool.sharecoef = JsonConvert.DeserializeObject<ExternalApi.share_coefficient>(Tools.HttpGet("https://api.nanopool.org/v1/etc/pool/sharecoef"), new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture }); return null; }));
-
-					getAPIsTask.Add(new Task<Action>(() =>
-					{
-						bool orderbookStisfied = false;
-						try
-						{
-							if (!orderbookStisfied && User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("coingecko", StringComparison.OrdinalIgnoreCase)))
-							{
-								Dictionary<string, CoinData> simplePrices = JsonConvert.DeserializeObject<Dictionary<string, CoinData>>(Tools.HttpGet("https://api.coingecko.com/api/v3/simple/price?ids=" + User.Settings.User.PayCoin.CoinName.ToLower().Replace(' ', '-') + "&vs_currencies=btc&include_market_cap=false&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true&precision=full"), ExternalApi.Converter.Settings);
-								CoinData simplePrice = simplePrices[User.Settings.User.PayCoin.CoinName.ToLower().Replace(' ', '-')];
-								simplePrice.Btc24HChange = simplePrice.Btc24HChange < 0 ? simplePrice.Btc24HChange * -1 : simplePrice.Btc24HChange;
-
-								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = simplePrice.Btc * ((100 - simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = simplePrice.Btc * ((100 + simplePrice.Btc24HChange ?? 5 / 4) / 100), volume = 1 } } };
-
-								ExchangeOrderbooks.PaymentCoinBTC = orderbookObj;
-								orderbookStisfied = true;
-							}
-						}
-						catch { }
-
-						try
-						{
-							if (!orderbookStisfied && User.Settings.User.PayCoin.MarketDataSources.Any(nameDataSource => nameDataSource.Equals("coinpaprika", StringComparison.OrdinalIgnoreCase)))
-							{
-								CoinpaprikaAPI.Client coinpaprikaAPI = new();
-
-								List<CoinpaprikaAPI.Entity.CoinInfo> coinList = coinpaprikaAPI.GetCoinsAsync().Result.Value;
-
-								decimal coinLastPrice = coinpaprikaAPI.GetLatestOhlcForCoinAsync(coinList.First(cName => cName.Symbol.Equals(User.Settings.User.PayCoin.CoinTicker, StringComparison.OrdinalIgnoreCase) && cName.Name.Equals(User.Settings.User.PayCoin.CoinName, StringComparison.OrdinalIgnoreCase)).Id, "BTC").Result.Value.Last().Close;
-
-								ExternalApi.Orderbook orderbookObj = new() { buyLevels = new List<ExternalApi.BuyLevel>() { new ExternalApi.BuyLevel() { price = coinLastPrice, volume = 1 } }, sellLevels = new List<ExternalApi.SellLevel>() { new ExternalApi.SellLevel() { price = coinLastPrice, volume = 1 } } };
-
-								ExchangeOrderbooks.PaymentCoinBTC = orderbookObj;
-								orderbookStisfied = true;
-							}
-						}
-						catch { }
-						return null;
-					}));
-
-					getAPIsTask.Add(new Task<Action>(() => { BitcoinPrice.BTCUSD = Math.Round(new CoinpaprikaAPI.Client().GetLatestOhlcForCoinAsync("btc-bitcoin", "USD").Result.Value.Last().Close, 2); return null; }));
 
 					getAPIsTask.ForEach(task => task.Start());
 					getAPIsTask.ForEach(task => task.Wait(60000));
@@ -402,7 +299,7 @@ namespace TrueMiningDesktop.Server
 						catch { }
 					});
 				}
-				catch { lastUpdated = DateTime.Now.AddSeconds(-10); }
+				catch { lastUpdated = DateTime.Now.AddSeconds(-10); isUpdatingBalances = false; }
 
 				sumHashrate_user_xmr =
 				NanopoolData.XMR_nanopool.hashrateHistory_user

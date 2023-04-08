@@ -98,7 +98,7 @@ namespace TrueMiningDesktop.Core
 		{
 			bool useTor = forceUseTor;
 
-			for (int i = 0; i <= 2; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				try
 				{
@@ -108,7 +108,14 @@ namespace TrueMiningDesktop.Core
 					client.DefaultRequestHeaders.UserAgent.TryParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0");
 
 					HttpResponseMessage response = client.GetAsync(uri).Result;
+
+					if (response.StatusCode == HttpStatusCode.TooManyRequests)
+					{
+						Thread.Sleep(60000); // Wait for 60 seconds
+						continue; // Retry the request
+					}
 					response.EnsureSuccessStatusCode();
+
 					string responseBody = response.Content.ReadAsStringAsync().Result;
 
 					client.CancelPendingRequests();

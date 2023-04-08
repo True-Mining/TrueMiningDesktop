@@ -6,15 +6,15 @@
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>icone.ico</ApplicationIcon>
-		<AssemblyVersion>4.20.1</AssemblyVersion>
-		<FileVersion>4.20.1</FileVersion>
-		<Version>4.20.1</Version>
+		<AssemblyVersion>4.20.2</AssemblyVersion>
+		<FileVersion>4.20.2</FileVersion>
+		<Version>4.20.2</Version>
 		<StartupObject>TrueMiningDesktop.App</StartupObject>
 		<AssemblyName>True Mining Desktop</AssemblyName>
 		<Company>True Mining</Company>
 		<Authors>Matheus Bach</Authors>
 		<Product>True Mining Desktop</Product>
-		<Copyright>Copyright (C) 2019-2022 True Mining</Copyright>
+		<Copyright>Copyright (C) 2019-2023 True Mining</Copyright>
 		<PackageIcon>logo.png</PackageIcon>
 		<Description>True Mining Desktop Mining Software</Description>
 		<RepositoryUrl>https://github.com/True-Mining/TrueMiningDesktop</RepositoryUrl>
